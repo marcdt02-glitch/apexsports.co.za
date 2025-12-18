@@ -1,0 +1,332 @@
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { ApexLogo } from '../components/ApexLogo';
+import { ArrowRight, Quote, Award, GraduationCap, Briefcase, ChevronRight, ChevronLeft, Mail } from 'lucide-react';
+
+const Home: React.FC = () => {
+  // Founder images for rotation
+  const founderImages = [
+    "/images/Marc du Toit 1.JPG",
+    "/images/Marc du Toit 2.jpg"
+  ];
+
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % founderImages.length);
+    }, 5000); // Rotate every 5 seconds
+    return () => clearInterval(interval);
+  }, []);
+
+  const nextImage = () => setCurrentImageIndex((prev) => (prev + 1) % founderImages.length);
+  const prevImage = () => setCurrentImageIndex((prev) => (prev - 1 + founderImages.length) % founderImages.length);
+
+  return (
+    <div className="min-h-screen bg-black">
+
+      {/* Hero Section */}
+      <section className="h-screen flex flex-col items-center justify-center relative overflow-hidden px-4">
+        <div className="absolute inset-0 z-0">
+          <div className="absolute inset-0 bg-gradient-to-b from-black via-black/80 to-black z-10"></div>
+          {/* Background image: Dark Gym/Sports atmosphere */}
+          <img
+            src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&q=80"
+            alt="Hero Background"
+            className="w-full h-full object-cover opacity-40"
+          />
+        </div>
+
+        <div className="z-20 text-center flex flex-col items-center animate-fade-in-up">
+          <img src="/images/logo.png" alt="Apex Sports Logo" className="w-48 h-48 md:w-64 md:h-64 mb-8 object-contain mix-blend-screen" />
+          <h1 className="text-4xl md:text-6xl font-extrabold text-white tracking-widest uppercase mb-4">
+            Apex Sports
+          </h1>
+          <p className="text-3xl md:text-5xl font-extrabold text-white italic tracking-widest uppercase mb-6 drop-shadow-lg">
+            WHAT'S NEXT?
+          </p>
+          <p className="text-xl text-gray-300 font-light tracking-wide max-w-2xl">
+            Providing the support to those looking to achieve the peak of sporting success.
+          </p>
+        </div>
+
+        <div className="absolute bottom-10 z-20 animate-bounce">
+          <span className="text-white/50 text-sm tracking-widest">SCROLL TO EXPLORE</span>
+        </div>
+      </section>
+
+      {/* Services Section - Interactive Images */}
+      <section className="py-20 px-4 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-auto md:h-[600px]">
+
+          {/* S&C Card */}
+          <Link to="/strength" className="group relative overflow-hidden rounded-xl h-[400px] md:h-full border border-neutral-800 hover:border-white/30 transition-all duration-300">
+            <div className="absolute inset-0 bg-black/60 group-hover:bg-black/30 transition-all duration-500 z-10"></div>
+            {/* Image: Weights/Gym - specific Gym ID */}
+            <img
+              src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&q=80"
+              alt="Strength and Conditioning Gym"
+              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+            />
+            <div className="absolute bottom-0 left-0 w-full p-8 z-20 bg-gradient-to-t from-black via-black/80 to-transparent">
+              <h3 className="text-2xl font-bold text-white mb-2 translate-y-0 md:translate-y-2 group-hover:translate-y-0 transition-transform duration-300 uppercase tracking-wider">
+                Strength & Conditioning
+              </h3>
+              <p className="text-gray-400 text-sm mb-4 line-clamp-2 md:opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                Gym-based training focused on power, speed, and physiological adaptation.
+              </p>
+              <div className="flex items-center gap-2 text-sm text-white font-semibold opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <span>Explore Programs</span>
+                <ArrowRight className="w-4 h-4" />
+              </div>
+            </div>
+          </Link>
+
+          {/* Mentorship Card */}
+          <Link to="/mentorship" className="group relative overflow-hidden rounded-xl h-[400px] md:h-full border border-neutral-800 hover:border-white/30 transition-all duration-300">
+            <div className="absolute inset-0 bg-black/60 group-hover:bg-black/30 transition-all duration-500 z-10"></div>
+            {/* Image: Laptop/Analysis - specific Film Study ID */}
+            <img
+              src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80"
+              alt="Mentorship Analysis Film Study"
+              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+            />
+            <div className="absolute bottom-0 left-0 w-full p-8 z-20 bg-gradient-to-t from-black via-black/80 to-transparent">
+              <h3 className="text-2xl font-bold text-white mb-2 translate-y-0 md:translate-y-2 group-hover:translate-y-0 transition-transform duration-300 uppercase tracking-wider">
+                Mentorship
+              </h3>
+              <p className="text-gray-400 text-sm mb-4 line-clamp-2 md:opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                Film study, goal setting, and psychological skills training.
+              </p>
+              <div className="flex items-center gap-2 text-sm text-white font-semibold opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <span>Psychological Skills</span>
+                <ArrowRight className="w-4 h-4" />
+              </div>
+            </div>
+          </Link>
+
+          {/* Coaching Card (formerly Goalkeeper) */}
+          <Link to="/goalkeeper" className="group relative overflow-hidden rounded-xl h-[400px] md:h-full border border-neutral-800 hover:border-white/30 transition-all duration-300">
+            <div className="absolute inset-0 bg-black/60 group-hover:bg-black/30 transition-all duration-500 z-10"></div>
+            {/* Image: Goalkeeper Training - specific training ID */}
+            <img
+              src="https://images.unsplash.com/photo-1547347298-4074fc3086f0?auto=format&fit=crop&q=80"
+              alt="Coaching Training"
+              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+            />
+            <div className="absolute bottom-0 left-0 w-full p-8 z-20 bg-gradient-to-t from-black via-black/80 to-transparent">
+              <h3 className="text-2xl font-bold text-white mb-2 translate-y-0 md:translate-y-2 group-hover:translate-y-0 transition-transform duration-300 uppercase tracking-wider">
+                Coaching
+              </h3>
+              <p className="text-gray-400 text-sm mb-4 line-clamp-2 md:opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                Specialized field hockey goalkeeper training and biomechanical analysis.
+              </p>
+              <div className="flex items-center gap-2 text-sm text-white font-semibold opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <span>Form & Biomechanics</span>
+                <ArrowRight className="w-4 h-4" />
+              </div>
+            </div>
+          </Link>
+
+        </div>
+      </section>
+
+      {/* Mission & Values */}
+      <section className="py-20 bg-neutral-900 border-t border-gray-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
+            <div className="flex flex-col justify-center">
+              <h2 className="text-sm font-bold text-white uppercase tracking-widest mb-4 flex items-center gap-2">
+                <span className="w-8 h-px bg-white"></span>
+                Our Mission
+              </h2>
+              <p className="text-3xl md:text-5xl font-bold text-white leading-tight mb-8">
+                To provide world-class support to individuals and teams who are looking to achieve their goals.
+              </p>
+
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-xl font-bold text-white mb-4 border-l-4 border-white pl-4">What sets us apart?</h3>
+                  <ul className="space-y-4">
+                    <li className="flex items-center gap-3 text-gray-300 text-lg">
+                      <div className="w-2 h-2 bg-white rotate-45"></div> Scientific Rigor
+                    </li>
+                    <li className="flex items-center gap-3 text-gray-300 text-lg">
+                      <div className="w-2 h-2 bg-white rotate-45"></div> Technological Innovation
+                    </li>
+                    <li className="flex items-center gap-3 text-gray-300 text-lg">
+                      <div className="w-2 h-2 bg-white rotate-45"></div> Adaptive Innovation
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-col justify-center">
+              <div className="bg-black p-10 rounded-2xl border border-neutral-800 relative overflow-hidden">
+                {/* Decorative background element */}
+                <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+
+                <h2 className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-8">Our Core Values</h2>
+                <div className="space-y-10">
+                  <div className="group cursor-default">
+                    <h3 className="text-4xl font-extrabold text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-gray-500 transition-all duration-300">Passion</h3>
+                    <p className="text-gray-500 mt-2 pl-1 border-l-2 border-transparent group-hover:border-white transition-all duration-300">The fuel that drives us to exceed expectations every single day.</p>
+                  </div>
+                  <div className="group cursor-default">
+                    <h3 className="text-4xl font-extrabold text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-gray-500 transition-all duration-300">Persistence</h3>
+                    <p className="text-gray-500 mt-2 pl-1 border-l-2 border-transparent group-hover:border-white transition-all duration-300">The unwavering commitment to the process, regardless of obstacles.</p>
+                  </div>
+                  <div className="group cursor-default">
+                    <h3 className="text-4xl font-extrabold text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-gray-500 transition-all duration-300">Precision</h3>
+                    <p className="text-gray-500 mt-2 pl-1 border-l-2 border-transparent group-hover:border-white transition-all duration-300">The attention to detail in measurement, analysis, and execution.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* Founder Section */}
+      <section className="py-24 px-4 bg-black relative">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex flex-col lg:flex-row items-center gap-16">
+
+            {/* Image Side - Revolving Photo Frame */}
+            <div className="lg:w-2/5 relative">
+              <div className="absolute top-0 -left-4 w-full h-full border-2 border-white rounded-2xl transform -translate-x-4 -translate-y-4"></div>
+              <div className="relative z-10 w-full aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl bg-neutral-900 group">
+                <img
+                  src={founderImages[currentImageIndex]}
+                  alt="Marc du Toit"
+                  className="w-full h-full object-cover transition-opacity duration-700 ease-in-out"
+                />
+
+                {/* Carousel Controls */}
+                <button
+                  onClick={prevImage}
+                  className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-white/20 p-2 rounded-full text-white opacity-0 group-hover:opacity-100 transition-all"
+                >
+                  <ChevronLeft className="w-6 h-6" />
+                </button>
+                <button
+                  onClick={nextImage}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-white/20 p-2 rounded-full text-white opacity-0 group-hover:opacity-100 transition-all"
+                >
+                  <ChevronRight className="w-6 h-6" />
+                </button>
+
+                {/* Indicators */}
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+                  {founderImages.map((_, idx) => (
+                    <div
+                      key={idx}
+                      className={`w-2 h-2 rounded-full transition-all ${idx === currentImageIndex ? 'bg-white w-4' : 'bg-white/50'}`}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Content Side */}
+            <div className="lg:w-3/5">
+              <h2 className="text-sm font-bold text-white uppercase tracking-widest mb-2">About the Founder</h2>
+              <h3 className="text-4xl md:text-5xl font-bold text-white mb-6">Marc du Toit</h3>
+
+              <div className="space-y-8 text-gray-300 leading-relaxed">
+                <p>
+                  Marc du Toit is a Sports Scientist dedicated to bridging the gap between scientific theory and on-field performance. Holding a <strong className="text-white">BSc in Sports Science</strong> and <strong className="text-white">Honours in Performance Sport (Cum Laude)</strong>, he is currently pursuing his <strong className="text-white">Masters in Biomechanics</strong>.
+                </p>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+                  <div className="bg-neutral-900/50 p-6 rounded-xl border border-neutral-800">
+                    <div className="flex items-center gap-3 mb-3">
+                      <GraduationCap className="w-5 h-5 text-white" />
+                      <h4 className="font-bold text-white text-sm uppercase">Education</h4>
+                    </div>
+                    <ul className="text-sm space-y-2 text-gray-400">
+                      <li>• BSc Sports Science</li>
+                      <li>• Hons. Performance Sport (Cum Laude)</li>
+                      <li>• Masters Candidate (Biomechanics)</li>
+                    </ul>
+                  </div>
+
+                  <div className="bg-neutral-900/50 p-6 rounded-xl border border-neutral-800">
+                    <div className="flex items-center gap-3 mb-3">
+                      <Award className="w-5 h-5 text-white" />
+                      <h4 className="font-bold text-white text-sm uppercase">Athlete History</h4>
+                    </div>
+                    <ul className="text-sm space-y-2 text-gray-400">
+                      <li>• Junior National Squad Selection</li>
+                      <li>• Stellenbosch University 1st Team</li>
+                      <li>• Maties High Performance Unit</li>
+                    </ul>
+                  </div>
+
+                  <div className="bg-neutral-900/50 p-6 rounded-xl border border-neutral-800 md:col-span-2">
+                    <div className="flex items-center gap-3 mb-3">
+                      <Briefcase className="w-5 h-5 text-white" />
+                      <h4 className="font-bold text-white text-sm uppercase">Professional Experience</h4>
+                    </div>
+                    <ul className="text-sm space-y-2 text-gray-400 grid grid-cols-1 md:grid-cols-2 gap-2">
+                      <li>• <strong className="text-gray-300">SA Indoor Hockey Team</strong> (GK Trainer)</li>
+                      <li>• <strong className="text-gray-300">Western Province Schools HP</strong> (Trainer)</li>
+                      <li>• <strong className="text-gray-300">Boland Schools HP</strong> (Trainer & Selector)</li>
+                      <li>• <strong className="text-gray-300">Paul Roos & Bloemhof</strong> (Coach)</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* References Section */}
+      <section className="py-20 px-4 bg-neutral-900 border-t border-gray-800">
+        <div className="max-w-7xl mx-auto text-center">
+          <h2 className="text-3xl font-bold text-white mb-16">What Our Athletes Say</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="bg-black p-8 rounded-2xl relative border border-neutral-800 hover:border-gray-600 transition-colors">
+                <Quote className="absolute top-6 left-6 text-white/10 w-10 h-10" />
+                <p className="text-gray-300 italic mb-8 relative z-10 leading-relaxed">
+                  "Working with Apex Sports completely changed my approach to training. The data-driven insights allowed me to break through plateaus I'd been stuck at for years."
+                </p>
+                <div className="flex items-center justify-center gap-4">
+                  <div className="w-10 h-10 bg-gray-700 rounded-full overflow-hidden">
+                    <img src={`https://i.pravatar.cc/150?u=${i}`} alt="Avatar" className="w-full h-full object-cover" />
+                  </div>
+                  <div className="text-left">
+                    <h4 className="text-white font-bold text-sm">Professional Athlete</h4>
+                    <span className="text-xs text-gray-500">Hockey Player</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Specific Solutions / Contact Section */}
+      <section className="py-24 px-4 bg-black border-t border-gray-800">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-3xl font-extrabold text-white mb-6 tracking-wide uppercase">Specialized Performance Solutions</h2>
+          <p className="text-xl text-gray-300 mb-8 leading-relaxed">
+            Looking for a specific solution? For expert wellness strategies and performance consulting, please contact Marc du Toit directly to arrange a consultation.
+          </p>
+          <a href="mailto:marcdt02@gmail.com" className="inline-flex items-center gap-2 bg-white text-black px-8 py-4 rounded-full font-bold uppercase tracking-wider hover:bg-gray-200 transition-colors">
+            <Mail className="w-5 h-5" />
+            Contact Marc
+          </a>
+        </div>
+      </section>
+
+    </div>
+  );
+};
+
+export default Home;
