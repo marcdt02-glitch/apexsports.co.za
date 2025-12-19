@@ -31,6 +31,7 @@ const Footer: React.FC = () => {
             <ul className="space-y-2 text-gray-400">
               <li><a href="/#contact" className="hover:text-white transition-colors">Contact Us</a></li>
               <li><a href="/#/booking-policy" className="hover:text-white transition-colors">Booking & Service Policy</a></li>
+              <li><a href="/#/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</a></li>
             </ul>
           </div>
 
