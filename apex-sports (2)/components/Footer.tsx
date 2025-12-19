@@ -11,7 +11,7 @@ const Footer: React.FC = () => {
           {/* Brand */}
           <div className="flex flex-col items-center md:items-start">
             <div className="flex items-center gap-2 mb-4">
-              <img src="/images/logo.png" alt="Apex Sports Logo" className="w-24 h-auto object-contain" />
+              <img src="/images/logo.png" alt="Apex Sports Logo" className="w-24 h-auto object-contain border-2 border-white" />
               <span className="font-extrabold text-xl tracking-widest uppercase">APEX SPORTS</span>
             </div>
             <p className="text-gray-400 text-sm text-center md:text-left max-w-xs">
