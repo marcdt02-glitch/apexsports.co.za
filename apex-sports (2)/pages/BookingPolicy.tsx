@@ -16,16 +16,8 @@ const BookingPolicy: React.FC = () => {
                             <h2 className="text-2xl font-bold text-white">Mobile Service Area</h2>
                         </div>
                         <p className="text-gray-300 leading-relaxed">
-                            Apex Sports operates as a mobile service primarily in <strong>Somerset West and Stellenbosch</strong> (on-site) but also provides remote services globally. We come to you—whether that's your school, club, or home gym.
+                            Apex Sports operates as a mobile service primarily in <strong>Stellenbosch and Somerset West</strong>, and occasionally in <strong>Cape Town and Paarl</strong>. We come to you—whether that's your school, club, or home gym.
                         </p>
-                        <p className="text-gray-300 mt-2">
-                            Our primary service areas include:
-                        </p>
-                        <ul className="list-disc list-inside space-y-1 text-gray-300 ml-4">
-                            <li>Southern Suburbs</li>
-                            <li>Atlantic Seaboard</li>
-                            <li>Northern Suburbs</li>
-                        </ul>
                         <p className="text-gray-500 text-sm mt-4 italic">
                             *Travel fees may apply for locations outside of our standard radius. Please confirm during booking.
                         </p>
