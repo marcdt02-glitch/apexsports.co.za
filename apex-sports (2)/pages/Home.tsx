@@ -318,7 +318,7 @@ const Home: React.FC = () => {
           <div id="contact" className="space-y-6 text-gray-300">
             <p className="text-lg">
               <strong className="text-white block mb-2">Service Area:</strong>
-              Proudly serving the <span className="text-white">Greater Cape Town Region</span> (Southern Suburbs, Atlantic Seaboard, and Northern Suburbs).
+              Proudly serving <span className="text-white">Somerset West, Stellenbosch & Cape Town</span>
             </p>
 
             <p className="text-lg">
