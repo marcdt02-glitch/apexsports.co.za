@@ -55,9 +55,9 @@ const Footer: React.FC = () => {
                 <Instagram className="w-5 h-5" />
                 <span>@apex_sports_ZA</span>
               </a>
-              <div className="flex items-center gap-3">
-                <MapPin className="w-5 h-5" />
-                <span>South Africa</span>
+              <div className="flex items-start gap-3 mt-4 text-gray-400">
+                <MapPin className="w-5 h-5 mt-1 shrink-0" />
+                <p>Stellenbosch, South Africa</p>
               </div>
             </div>
           </div>
