@@ -9,6 +9,7 @@ import Goalkeeper from './pages/Goalkeeper';
 import Checkout from './pages/Checkout';
 import BookingPolicy from './pages/BookingPolicy';
 import ApexPrivacy from './pages/ApexPrivacy';
+import Contact from './pages/Contact';
 import { CartProvider } from './context/CartContext';
 
 // Wrapper to handle scroll to top on route change
@@ -38,6 +39,7 @@ const App: React.FC = () => {
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/booking-policy" element={<BookingPolicy />} />
               <Route path="/privacy-policy" element={<ApexPrivacy />} />
+              <Route path="/contact" element={<Contact />} />
             </Routes>
           </main>
           <Footer />
