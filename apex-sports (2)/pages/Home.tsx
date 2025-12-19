@@ -197,9 +197,10 @@ const Home: React.FC = () => {
           <h2 className="text-3xl md:text-4xl font-bold mb-12 text-white uppercase tracking-wider">
             Our Partners
           </h2>
-          <div className="flex flex-wrap justify-center items-center gap-12 md:gap-24 opacity-80 hover:opacity-100 transition-opacity duration-300">
-            <img src="/images/Move Health app.png" alt="Move Health" className="h-16 md:h-20 object-contain grayscale hover:grayscale-0 transition-all duration-300" />
-            <img src="/images/Vald Hub.png" alt="Vald Performance" className="h-12 md:h-16 object-contain grayscale hover:grayscale-0 transition-all duration-300" />
+          <div className="flex justify-center items-center">
+            <p className="text-xl md:text-2xl text-gray-500 italic font-light tracking-wide">
+              Coming Soon...
+            </p>
           </div>
         </div>
       </section>
