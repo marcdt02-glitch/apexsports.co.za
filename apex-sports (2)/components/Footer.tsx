@@ -7,12 +7,12 @@ const Footer: React.FC = () => {
     <footer className="bg-neutral-900 text-white pt-12 pb-8 border-t border-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-          
+
           {/* Brand */}
           <div className="flex flex-col items-center md:items-start">
             <div className="flex items-center gap-2 mb-4">
-               <ApexLogo className="w-8 h-8" />
-               <span className="font-extrabold text-xl tracking-widest uppercase">APEX SPORTS</span>
+              <img src="/images/logo.png" alt="Apex Sports Logo" className="w-24 h-auto object-contain" />
+              <span className="font-extrabold text-xl tracking-widest uppercase">APEX SPORTS</span>
             </div>
             <p className="text-gray-400 text-sm text-center md:text-left max-w-xs">
               Providing world-class support to individuals and teams looking to achieve their goals through scientific rigor and passion.
@@ -39,7 +39,7 @@ const Footer: React.FC = () => {
               </a>
               <a href="https://wa.me/27823788258" target="_blank" rel="noreferrer" className="flex items-center gap-3 hover:text-green-400 transition-colors">
                 <MessageCircle className="w-5 h-5" />
-                <span>WhatsApp</span>
+                <span>WhatsApp (+27 82 378 8258)</span>
               </a>
               <a href="mailto:marcdt02@gmail.com" className="flex items-center gap-3 hover:text-white transition-colors">
                 <Mail className="w-5 h-5" />
