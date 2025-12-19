@@ -332,7 +332,7 @@ const Home: React.FC = () => {
           <h2 className="text-3xl font-extrabold text-white mb-6 tracking-wide uppercase">Contact & Service</h2>
           <div id="contact" className="space-y-6 text-gray-300">
             <p className="text-lg">
-              Serving the <strong>Greater Stellenbosch Region</strong>, including Techno Park, Stellenbosch Central, and surrounding areas.
+              Serving the <strong>Greater Stellenbosch Region</strong> and surrounding areas.
             </p>
             <p className="text-lg">
               <strong className="text-white block mb-2">Service Area:</strong>
