@@ -22,7 +22,7 @@ const ApexPrivacy: React.FC = () => {
                         <p className="text-gray-400 mb-2">We collect information that you provide directly to us when booking a mobile sports service, including:</p>
                         <ul className="list-disc list-inside space-y-2 text-gray-300 ml-4">
                             <li>Name and contact information (Email and Phone Number).</li>
-                            <li>Physical address (for service delivery within Somerset West, Stellenbosch, and Cape Town).</li>
+                            <li>Physical address (for service delivery within Somerset West and Stellenbosch).</li>
                             <li>Payment information (processed securely via Paystack; we do not store your credit card details).</li>
                         </ul>
                     </section>
@@ -85,7 +85,7 @@ const ApexPrivacy: React.FC = () => {
                             </a>
                             <div className="flex items-center gap-3 text-white">
                                 <MapPin className="w-5 h-5" />
-                                Somerset West, South Africa
+                                Stellenbosch, South Africa
                             </div>
                         </div>
                     </section>
