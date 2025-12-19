@@ -1,7 +1,7 @@
 import React from 'react';
 import { Shield, Lock, FileText, Mail, MapPin } from 'lucide-react';
 
-const PrivacyPolicy: React.FC = () => {
+const ApexPrivacy: React.FC = () => {
     return (
         <div className="min-h-screen bg-black pt-24 pb-12 px-4">
             <div className="max-w-4xl mx-auto">
@@ -96,4 +96,4 @@ const PrivacyPolicy: React.FC = () => {
     );
 };
 
-export default PrivacyPolicy;
+export default ApexPrivacy;
