@@ -49,7 +49,7 @@ const Mentorship: React.FC = () => {
         <div className="absolute inset-0 bg-black/70 z-10"></div>
         {/* Image: Coach/Analysis vibe with sports field context */}
         <img
-          src="https://images.unsplash.com/photo-1541252260732-48221e29711d?auto=format&fit=crop&q=80"
+          src="/images/Mentorship header.png"
           alt="Sports Analysis"
           className="absolute inset-0 w-full h-full object-cover"
         />

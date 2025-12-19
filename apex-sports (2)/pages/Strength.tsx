@@ -72,8 +72,9 @@ const Strength: React.FC = () => {
       <div className="relative h-96 w-full overflow-hidden">
         <div className="absolute inset-0 bg-black/70 z-10"></div>
         {/* Gym background */}
+        {/* Gym background */}
         <img
-          src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&q=80"
+          src="/images/Strength and conditioning header.png"
           alt="Gym background"
           className="absolute inset-0 w-full h-full object-cover"
         />

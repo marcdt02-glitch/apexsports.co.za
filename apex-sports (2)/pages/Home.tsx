@@ -87,7 +87,7 @@ const Home: React.FC = () => {
             <div className="absolute inset-0 bg-black/60 group-hover:bg-black/30 transition-all duration-500 z-10"></div>
             {/* Image: Laptop/Analysis - specific Film Study ID */}
             <img
-              src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80"
+              src="/images/Mentorship header.png"
               alt="Mentorship Analysis Film Study"
               className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
             />
@@ -110,7 +110,7 @@ const Home: React.FC = () => {
             <div className="absolute inset-0 bg-black/60 group-hover:bg-black/30 transition-all duration-500 z-10"></div>
             {/* Image: Goalkeeper Training - specific training ID */}
             <img
-              src="https://images.unsplash.com/photo-1547347298-4074fc3086f0?auto=format&fit=crop&q=80"
+              src="/images/Coaching homepage.png"
               alt="Coaching Training"
               className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
             />
