@@ -20,12 +20,12 @@ const BookingPolicy: React.FC = () => {
                         </p>
                         <p className="text-gray-300 mt-2">
                             Our primary service areas include:
-                            <ul className="list-disc list-inside mt-2 ml-4 text-gray-400">
-                                <li>Southern Suburbs</li>
-                                <li>Atlantic Seaboard</li>
-                                <li>Northern Suburbs</li>
-                            </ul>
                         </p>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 ml-4">
+                            <li>Southern Suburbs</li>
+                            <li>Atlantic Seaboard</li>
+                            <li>Northern Suburbs</li>
+                        </ul>
                         <p className="text-gray-500 text-sm mt-4 italic">
                             *Travel fees may apply for locations outside of our standard radius. Please confirm during booking.
                         </p>
