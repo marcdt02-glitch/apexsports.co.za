@@ -7,12 +7,13 @@ import Strength from './pages/Strength';
 import Mentorship from './pages/Mentorship';
 import Goalkeeper from './pages/Goalkeeper';
 import Checkout from './pages/Checkout';
+import BookingPolicy from './pages/BookingPolicy';
 import { CartProvider } from './context/CartContext';
 
 // Wrapper to handle scroll to top on route change
 const ScrollToTop = () => {
   const { pathname } = React.useMemo(() => new URL(window.location.href), [window.location.href]);
-  
+
   React.useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
@@ -34,6 +35,7 @@ const App: React.FC = () => {
               <Route path="/mentorship" element={<Mentorship />} />
               <Route path="/goalkeeper" element={<Goalkeeper />} />
               <Route path="/checkout" element={<Checkout />} />
+              <Route path="/booking-policy" element={<BookingPolicy />} />
             </Routes>
           </main>
           <Footer />

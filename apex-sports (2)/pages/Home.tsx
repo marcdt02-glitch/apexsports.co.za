@@ -314,14 +314,29 @@ const Home: React.FC = () => {
       {/* Specific Solutions / Contact Section */}
       <section className="py-24 px-4 bg-black border-t border-gray-800">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl font-extrabold text-white mb-6 tracking-wide uppercase">Specialized Performance Solutions</h2>
-          <p className="text-xl text-gray-300 mb-8 leading-relaxed">
-            Looking for a specific solution? For expert wellness strategies and performance consulting, please contact Marc du Toit directly to arrange a consultation.
-          </p>
-          <a href="mailto:marcdt02@gmail.com" className="inline-flex items-center gap-2 bg-white text-black px-8 py-4 rounded-full font-bold uppercase tracking-wider hover:bg-gray-200 transition-colors">
-            <Mail className="w-5 h-5" />
-            Contact Marc
-          </a>
+          <h2 className="text-3xl font-extrabold text-white mb-6 tracking-wide uppercase">Contact & Service</h2>
+          <div id="contact" className="space-y-6 text-gray-300">
+            <p className="text-lg">
+              <strong className="text-white block mb-2">Service Area:</strong>
+              Proudly serving the <span className="text-white">Greater Cape Town Region</span> (Southern Suburbs, Atlantic Seaboard, and Northern Suburbs).
+            </p>
+
+            <p className="text-lg">
+              <strong className="text-white block mb-2">Contact:</strong>
+              <a href="tel:0823788258" className="hover:text-white transition-colors block">082 378 8258</a>
+              <a href="mailto:marcdt02@gmail.com" className="hover:text-white transition-colors block">marcdt02@gmail.com</a>
+            </p>
+
+            <p className="text-sm text-gray-500 italic mt-8 border-t border-gray-800 pt-4 max-w-lg mx-auto">
+              Note: Apex Sports is a mobile service business. No physical gear is shipped; all services are delivered on-site.
+            </p>
+          </div>
+          <div className="mt-8">
+            <a href="mailto:marcdt02@gmail.com" className="inline-flex items-center gap-2 bg-white text-black px-8 py-4 rounded-full font-bold uppercase tracking-wider hover:bg-gray-200 transition-colors">
+              <Mail className="w-5 h-5" />
+              Book a Session
+            </a>
+          </div>
         </div>
       </section>
 
