@@ -29,7 +29,7 @@ const Footer: React.FC = () => {
             </ul>
             <h3 className="text-lg font-semibold mt-6 mb-4 text-white">Legal</h3>
             <ul className="space-y-2 text-gray-400">
-              <li><a href="/#contact" className="hover:text-white transition-colors">Contact Us</a></li>
+              <li><a href="/#/contact" className="hover:text-white transition-colors">Contact Us</a></li>
               <li><a href="/#/booking-policy" className="hover:text-white transition-colors">Booking & Service Policy</a></li>
               <li><a href="/#/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</a></li>
             </ul>
