@@ -74,7 +74,7 @@ const Strength: React.FC = () => {
         {/* Gym background */}
         {/* Gym background */}
         <img
-          src="/images/Strength and conditioning header.png"
+          src="/images/strength-conditioning-header.png"
           alt="Gym background"
           className="absolute inset-0 w-full h-full object-cover"
         />
