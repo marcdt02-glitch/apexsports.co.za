@@ -30,8 +30,8 @@ const Footer: React.FC = () => {
             <h3 className="text-lg font-semibold mt-6 mb-4 text-white">Legal</h3>
             <ul className="space-y-2 text-gray-400">
               <li><a href="/#/contact" className="hover:text-white transition-colors">Contact Us</a></li>
-              <li><a href="/#/booking-policy" className="hover:text-white transition-colors">Booking & Service Policy</a></li>
-              <li><a href="/#/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</a></li>
+              <li><a href="/#/booking-policy" className="hover:text-white transition-colors">Booking Policy</a></li>
+              <li><a href="/#/privacy-policy" className="hover:text-white transition-colors">Privacy Policy (POPIA)</a></li>
             </ul>
           </div>
 
@@ -65,7 +65,7 @@ const Footer: React.FC = () => {
 
         <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-500 text-sm">
-            &copy; {new Date().getFullYear()} Apex Sports. All rights reserved.
+            &copy; {new Date().getFullYear()} Marc du Toit T/A Apex Sports. All rights reserved.
           </p>
         </div>
       </div>

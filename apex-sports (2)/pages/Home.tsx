@@ -40,7 +40,7 @@ const Home: React.FC = () => {
         <div className="z-20 text-center flex flex-col items-center animate-fade-in-up">
           <img src="/images/logo.png" alt="Apex Sports Logo" className="w-48 h-48 md:w-64 md:h-64 mb-8 object-contain" />
           <h1 className="text-4xl md:text-6xl font-extrabold text-white tracking-widest uppercase mb-4">
-            Apex Sports
+            Apex Sports: High-Performance Coaching in Stellenbosch
           </h1>
           <p className="text-3xl md:text-5xl font-extrabold text-white italic tracking-widest uppercase mb-6 drop-shadow-lg">
             WHAT'S NEXT?
@@ -303,7 +303,7 @@ const Home: React.FC = () => {
       {/* References Section */}
       <section className="py-20 px-4 bg-neutral-900 border-t border-gray-800">
         <div className="max-w-7xl mx-auto text-center">
-          <h2 className="text-3xl font-bold text-white mb-16">What Our Athletes Say</h2>
+          <h2 className="text-3xl font-bold text-white mb-16">Testimonials</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[1, 2, 3].map((i) => (
               <div key={i} className="bg-black p-8 rounded-2xl relative border border-neutral-800 hover:border-gray-600 transition-colors">
@@ -332,24 +332,27 @@ const Home: React.FC = () => {
           <h2 className="text-3xl font-extrabold text-white mb-6 tracking-wide uppercase">Contact & Service</h2>
           <div id="contact" className="space-y-6 text-gray-300">
             <p className="text-lg">
+              Serving the <strong>Greater Stellenbosch Region</strong>, including Techno Park, Stellenbosch Central, and surrounding areas.
+            </p>
+            <p className="text-lg">
               <strong className="text-white block mb-2">Service Area:</strong>
               Proudly serving <span className="text-white">Somerset West, Stellenbosch & Cape Town</span>
             </p>
 
             <p className="text-lg">
               <strong className="text-white block mb-2">Contact:</strong>
-              <a href="tel:0823788258" className="hover:text-white transition-colors block">082 378 8258</a>
+              <a href="tel:+27823788258" className="hover:text-white transition-colors block">+27 82 378 8258</a>
               <a href="mailto:marcdt02@gmail.com" className="hover:text-white transition-colors block">marcdt02@gmail.com</a>
             </p>
 
             <p className="text-sm text-gray-500 italic mt-8 border-t border-gray-800 pt-4 max-w-lg mx-auto">
-              Note: Apex Sports provides services <strong>on-site or remotely</strong>. No physical gear is shipped.
+              Note: Apex Sports is a mobile service business. No physical gear is shipped; all sessions are delivered on-site in the Stellenbosch region.
             </p>
           </div>
           <div className="mt-8">
-            <a href="mailto:marcdt02@gmail.com" className="inline-flex items-center gap-2 bg-white text-black px-8 py-4 rounded-full font-bold uppercase tracking-wider hover:bg-gray-200 transition-colors">
+            <a href="https://wa.me/27823788258" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 bg-white text-black px-8 py-4 rounded-full font-bold uppercase tracking-wider hover:bg-gray-200 transition-colors">
               <Mail className="w-5 h-5" />
-              Book a Session
+              Request a Session
             </a>
           </div>
         </div>

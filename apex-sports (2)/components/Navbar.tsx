@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { LINKS } from '../constants';
-import { Menu, X, Calendar, UserPlus, LogIn, ShoppingCart } from 'lucide-react';
+import { Menu, X, Calendar, UserPlus, LogIn, ShoppingCart, MessageCircle } from 'lucide-react';
 import { ApexLogo } from './ApexLogo';
 import { useCart } from '../context/CartContext';
 
@@ -77,8 +77,8 @@ const Navbar: React.FC = () => {
               {/* Book Button (Desktop) */}
               <div className="hidden xl:block">
                 <a href={LINKS.CALENDAR} target="_blank" rel="noreferrer" className="bg-white text-black hover:bg-gray-200 px-6 py-2 rounded-full text-sm font-bold flex items-center gap-2 transition-all transform hover:scale-105 shadow-[0_0_15px_rgba(255,255,255,0.3)]">
-                  <Calendar className="w-4 h-4" />
-                  <span>Book Now</span>
+                  <MessageCircle className="w-4 h-4" />
+                  <span>Request a Session</span>
                 </a>
               </div>
             </div>
@@ -111,8 +111,8 @@ const Navbar: React.FC = () => {
                 View Cart ({items.length})
               </Link>
               <a href={LINKS.CALENDAR} target="_blank" rel="noreferrer" className="w-full bg-white text-black hover:bg-gray-200 px-4 py-3 rounded-md font-bold flex items-center justify-center gap-2">
-                <Calendar className="w-4 h-4" />
-                <span>Book Appointment</span>
+                <MessageCircle className="w-4 h-4" />
+                <span>Request a Session</span>
               </a>
             </div>
           </div>

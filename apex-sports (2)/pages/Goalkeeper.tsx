@@ -6,7 +6,7 @@ const Goalkeeper: React.FC = () => {
   const packages = [
     {
       title: "5-Session Pack",
-      price: "R2,500",
+      price: "Starting from R2,500",
       priceValue: 2500,
       description: "Development block (R500/session).",
       features: [
