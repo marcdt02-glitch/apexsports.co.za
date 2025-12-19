@@ -8,7 +8,7 @@ const Mentorship: React.FC = () => {
   const packages = [
     {
       title: "Mentorship Package",
-      price: "R500 / month",
+      price: "Starting from R500 / month",
       priceValue: 500,
       description: "Or R5,000 per year (Upfront Discount).",
       features: [

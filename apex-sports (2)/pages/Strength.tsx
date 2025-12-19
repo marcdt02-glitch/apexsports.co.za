@@ -6,7 +6,7 @@ const Strength: React.FC = () => {
   const packages = [
     {
       title: "Performance Testing",
-      price: "R1,000",
+      price: "Starting from R1,000",
       priceValue: 1000,
       description: "Per session. Objective measurement using Vald technology.",
       features: [
