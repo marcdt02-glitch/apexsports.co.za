@@ -38,7 +38,7 @@ const Home: React.FC = () => {
         </div>
 
         <div className="z-20 text-center flex flex-col items-center animate-fade-in-up">
-          <img src="/images/logo.png" alt="Apex Sports Logo" className="w-48 h-48 md:w-64 md:h-64 mb-8 object-contain mix-blend-screen" />
+          <img src="/images/logo.png" alt="Apex Sports Logo" className="w-48 h-48 md:w-64 md:h-64 mb-8 object-contain" />
           <h1 className="text-4xl md:text-6xl font-extrabold text-white tracking-widest uppercase mb-4">
             Apex Sports
           </h1>
@@ -190,6 +190,20 @@ const Home: React.FC = () => {
         </div>
       </section>
 
+
+      {/* Partners Section */}
+      <section className="py-20 bg-neutral-900 border-t border-neutral-800">
+        <div className="max-w-7xl mx-auto px-4 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-12 text-white uppercase tracking-wider">
+            Our Partners
+          </h2>
+          <div className="flex flex-wrap justify-center items-center gap-12 md:gap-24 opacity-80 hover:opacity-100 transition-opacity duration-300">
+            <img src="/images/Move Health app.png" alt="Move Health" className="h-16 md:h-20 object-contain grayscale hover:grayscale-0 transition-all duration-300" />
+            <img src="/images/Vald Hub.png" alt="Vald Performance" className="h-12 md:h-16 object-contain grayscale hover:grayscale-0 transition-all duration-300" />
+          </div>
+        </div>
+      </section>
+
       {/* Founder Section */}
       <section className="py-24 px-4 bg-black relative">
         <div className="max-w-6xl mx-auto">
@@ -328,7 +342,7 @@ const Home: React.FC = () => {
             </p>
 
             <p className="text-sm text-gray-500 italic mt-8 border-t border-gray-800 pt-4 max-w-lg mx-auto">
-              Note: Apex Sports is a mobile service business. No physical gear is shipped; all services are delivered on-site.
+              Note: Apex Sports provides services <strong>on-site or remotely</strong>. No physical gear is shipped.
             </p>
           </div>
           <div className="mt-8">

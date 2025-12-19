@@ -45,7 +45,7 @@ const Navbar: React.FC = () => {
           {/* Logo Section (Center - Absolute) */}
           <div className="flex-shrink-0 flex items-center justify-center absolute left-1/2 transform -translate-x-1/2">
             <Link to="/" className="flex items-center gap-3 group">
-              <img src="/images/logo.png" alt="Apex Sports Logo" className="w-16 h-16 object-contain mix-blend-screen" />
+              <img src="/images/logo.png" alt="Apex Sports Logo" className="w-16 h-16 object-contain" />
             </Link>
           </div>
 
