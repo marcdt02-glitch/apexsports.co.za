@@ -18,13 +18,13 @@ interface PricingCardProps {
 const PricingCard: React.FC<PricingCardProps> = ({ title, price, description, features, isHighlighted = false, actions }) => {
   return (
     <div className={`relative flex flex-col p-8 rounded-2xl border transition-all duration-300 h-full ${isHighlighted
-        ? 'bg-neutral-900 border-white shadow-[0_0_30px_rgba(255,255,255,0.15)] md:pb-12 z-10'
-        : 'bg-black border-gray-800 hover:border-gray-600'
+      ? 'bg-neutral-900 border-white shadow-[0_0_30px_rgba(255,255,255,0.15)] md:pb-12 z-10'
+      : 'bg-black border-gray-800 hover:border-gray-600'
       }`}>
       {/* Badge */}
       <div className={`absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest whitespace-nowrap ${isHighlighted
-          ? 'bg-white text-black shadow-lg shadow-white/20'
-          : 'bg-gray-800 text-gray-300 border border-gray-700'
+        ? 'bg-white text-black shadow-lg shadow-white/20'
+        : 'bg-gray-800 text-gray-300 border border-gray-700'
         }`}>
         {isHighlighted ? 'Best Value' : 'Available Now'}
       </div>
@@ -55,14 +55,22 @@ const PricingCard: React.FC<PricingCardProps> = ({ title, price, description, fe
             href={action.link}
             target="_blank"
             rel="noreferrer"
-            className={`w-full py-3 px-4 rounded-lg font-bold text-sm uppercase tracking-wider transition-all duration-200 flex items-center justify-between gap-2 ${(action.primary || (!actions.some(a => a.primary) && idx === 0))
-                ? 'bg-white text-black hover:bg-gray-200 shadow-lg'
-                : 'bg-transparent border border-gray-700 text-white hover:border-white hover:bg-white/5'
+            className={`w-full py-4 px-6 rounded-xl font-bold text-sm uppercase tracking-wider transition-all duration-300 flex items-center justify-between group ${(action.primary || (!actions.some(a => a.primary) && idx === 0))
+                ? 'bg-white text-black hover:bg-gray-200 border border-transparent shadow-lg hover:shadow-xl hover:-translate-y-0.5'
+                : 'bg-transparent border border-gray-700 text-gray-300 hover:text-white hover:border-white hover:bg-white/5'
               }`}>
-            <span>{action.label}</span>
-            <div className="flex items-center gap-2">
-              {action.priceLabel && <span className="text-xs opacity-75 md:opacity-100 normal-case bg-black/10 px-1 rounded">{action.priceLabel}</span>}
-              <ExternalLink className="w-4 h-4" />
+            <span className="font-extrabold">{action.label}</span>
+            <div className="flex items-center gap-3">
+              {action.priceLabel && (
+                <span className={`text-xs font-mono py-1 px-2 rounded-md ${(action.primary || (!actions.some(a => a.primary) && idx === 0))
+                    ? 'bg-black/10 text-black/80'
+                    : 'bg-white/10 text-white/80'
+                  }`}>
+                  {action.priceLabel}
+                </span>
+              )}
+              <ExternalLink className={`w-4 h-4 transition-transform group-hover:translate-x-1 ${(action.primary || (!actions.some(a => a.primary) && idx === 0)) ? 'text-black' : 'text-gray-400 group-hover:text-white'
+                }`} />
             </div>
           </a>
         ))}
