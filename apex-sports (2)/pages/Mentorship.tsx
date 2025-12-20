@@ -175,7 +175,7 @@ const Mentorship: React.FC = () => {
             <p className="text-gray-400">Invest in your mind and your future.</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {packages.map((pkg, idx) => (
               <PricingCard
                 key={idx}

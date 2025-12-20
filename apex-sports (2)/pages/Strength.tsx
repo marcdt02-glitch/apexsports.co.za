@@ -316,7 +316,7 @@ const Strength: React.FC = () => {
             <p className="text-gray-400">Choose the level of support that fits your goals.</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-start">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {packages.map((pkg, idx) => (
               <PricingCard
                 key={idx}
