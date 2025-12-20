@@ -6,9 +6,11 @@ const Strength: React.FC = () => {
   const packages = [
     {
       title: "Performance Testing",
-      price: "Starting from R1,000",
+      price: "R1,000",
       description: "Per session. Objective measurement using Vald technology.",
-      link: "https://paystack.shop/pay/testingdynamo",
+      actions: [
+        { label: "Book Test", link: "https://paystack.shop/pay/testingdynamo", priceLabel: "R1,000", primary: true }
+      ],
       features: [
         "Vald Dynamometer Strength Testing",
         "Rate of Force Development Testing",
@@ -19,9 +21,12 @@ const Strength: React.FC = () => {
     },
     {
       title: "General Templates",
-      price: "Starting from R350",
-      description: "Pre-built 6-week program block.",
-      link: "https://paystack.shop/pay/12WeekGeneralProgram-Monthly",
+      price: "R350 / month",
+      description: "Pre-built 6-week program block. 12 Weeks total.",
+      actions: [
+        { label: "Subscribe", link: "https://paystack.shop/pay/12WeekGeneralProgram-Monthly", priceLabel: "R350/mo", primary: true },
+        { label: "Buy Once-off", link: "https://paystack.shop/pay/12weekgeneralprogram-onceoff", priceLabel: "R1,050", primary: false }
+      ],
       features: [
         "6-Week Training Template",
         "MoveHealth App Access",
@@ -32,9 +37,12 @@ const Strength: React.FC = () => {
     },
     {
       title: "Specific Program Design",
-      price: "Starting from R500",
+      price: "R500 / month",
       description: "Customized 6-week block based on testing.",
-      link: "https://paystack.shop/pay/12WeekSpecifcProgram-Monthly",
+      actions: [
+        { label: "Subscribe", link: "https://paystack.shop/pay/12WeekSpecifcProgram-Monthly", priceLabel: "R500/mo", primary: true },
+        { label: "Buy Once-off", link: "https://paystack.shop/pay/12weekspecifcprogram-onceoff", priceLabel: "R1,500", primary: false }
+      ],
       features: [
         "Tailored to Testing Data",
         "MoveHealth App Access",
@@ -46,8 +54,11 @@ const Strength: React.FC = () => {
     {
       title: "Apex Membership",
       price: "R2,000 / month",
-      description: <>Billed <strong>Annually</strong> at <strong>R24,000</strong>. The complete all-inclusive athletic package.</>,
-      link: "https://paystack.shop/pay/ApexMembership-Monthly",
+      description: <>Billed <strong>Annually</strong> at <strong>R21,000</strong>. The complete all-inclusive athletic package.</>,
+      actions: [
+        { label: "Subscribe", link: "https://paystack.shop/pay/ApexMembership-Monthly", priceLabel: "R2,000/mo", primary: true },
+        { label: "Pay Annual", link: "https://paystack.shop/pay/apexmembership-once-off", priceLabel: "R21,000/yr", primary: false }
+      ],
       features: [
         "25 Coaching Sessions",
         "4 Mentorship Packages",

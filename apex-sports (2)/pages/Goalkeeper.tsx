@@ -6,9 +6,11 @@ const Goalkeeper: React.FC = () => {
   const packages = [
     {
       title: "5-Session Pack",
-      price: "Starting from R2,500",
+      price: "R2,500",
       description: "Development block (R500/session).",
-      link: "https://paystack.shop/pay/5hourcoachingpack",
+      actions: [
+        { label: "Buy Pack", link: "https://paystack.shop/pay/5hourcoachingpack", priceLabel: "R2,500", primary: true }
+      ],
       features: [
         "5 Hours of Technical Training",
         "Video Analysis of Every Session",
@@ -18,10 +20,13 @@ const Goalkeeper: React.FC = () => {
       ]
     },
     {
-      title: "25-Session Pack (Upfront)",
-      price: "R9,000",
-      description: "Upfront Special. Standard Price R10,000.",
-      link: "https://paystack.shop/pay/25hourcoachingpack-onceoff",
+      title: "25-Session Pack",
+      price: "R833 / month",
+      description: "Upfront Special availible at R9,000.",
+      actions: [
+        { label: "Sub Weekly", link: "https://paystack.shop/pay/25HourCoachingPack-Monthly", priceLabel: "R833/mo", primary: true },
+        { label: "Buy Upfront", link: "https://paystack.shop/pay/25hourcoachingpack-onceoff", priceLabel: "R9,000", primary: false }
+      ],
       features: [
         "25 Hours of Technical Training",
         "Full Season Video Breakdown",
@@ -33,8 +38,11 @@ const Goalkeeper: React.FC = () => {
     {
       title: "Apex Membership",
       price: "R2,000 / month",
-      description: <>Billed <strong>Annually</strong> at <strong>R24,000</strong>. The all-inclusive elite performance package.</>,
-      link: "https://paystack.shop/pay/ApexMembership-Monthly",
+      description: <>Billed <strong>Annually</strong> at <strong>R21,000</strong>. Save R3,000</>,
+      actions: [
+        { label: "Subscribe", link: "https://paystack.shop/pay/ApexMembership-Monthly", priceLabel: "R2,000/mo", primary: true },
+        { label: "Pay Annual", link: "https://paystack.shop/pay/apexmembership-once-off", priceLabel: "R21,000/yr", primary: false }
+      ],
       features: [
         "25 Coaching Sessions",
         "Full S&C Program Design",

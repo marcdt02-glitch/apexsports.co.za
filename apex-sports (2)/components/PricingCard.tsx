@@ -7,10 +7,15 @@ interface PricingCardProps {
   description: React.ReactNode;
   features: string[];
   isHighlighted?: boolean;
-  link: string; // Direct Paystack URL
+  actions?: { // Array of buttons
+    label: string;
+    link: string;
+    priceLabel?: string; // Optional small price text inside button e.g. "R350"
+    primary?: boolean;
+  }[];
 }
 
-const PricingCard: React.FC<PricingCardProps> = ({ title, price, description, features, isHighlighted = false, link }) => {
+const PricingCard: React.FC<PricingCardProps> = ({ title, price, description, features, isHighlighted = false, actions }) => {
   return (
     <div className={`relative flex flex-col p-8 rounded-2xl border transition-all duration-300 h-full ${isHighlighted
         ? 'bg-neutral-900 border-white shadow-[0_0_30px_rgba(255,255,255,0.15)] md:pb-12 z-10'
@@ -43,17 +48,25 @@ const PricingCard: React.FC<PricingCardProps> = ({ title, price, description, fe
         ))}
       </ul>
 
-      <a
-        href={link}
-        target="_blank"
-        rel="noreferrer"
-        className={`w-full py-3 rounded-lg font-bold text-sm uppercase tracking-wider transition-all duration-200 flex items-center justify-center gap-2 ${isHighlighted
-            ? 'bg-white text-black hover:bg-gray-200 shadow-lg'
-            : 'bg-transparent border border-gray-700 text-white hover:border-white hover:bg-white/5'
-          }`}>
-        <span>{title.includes("Membership") ? "Subscribe Now" : "Purchase Now"}</span>
-        <ExternalLink className="w-4 h-4" />
-      </a>
+      <div className="space-y-3 mt-auto">
+        {actions && actions.map((action, idx) => (
+          <a
+            key={idx}
+            href={action.link}
+            target="_blank"
+            rel="noreferrer"
+            className={`w-full py-3 px-4 rounded-lg font-bold text-sm uppercase tracking-wider transition-all duration-200 flex items-center justify-between gap-2 ${(action.primary || (!actions.some(a => a.primary) && idx === 0))
+                ? 'bg-white text-black hover:bg-gray-200 shadow-lg'
+                : 'bg-transparent border border-gray-700 text-white hover:border-white hover:bg-white/5'
+              }`}>
+            <span>{action.label}</span>
+            <div className="flex items-center gap-2">
+              {action.priceLabel && <span className="text-xs opacity-75 md:opacity-100 normal-case bg-black/10 px-1 rounded">{action.priceLabel}</span>}
+              <ExternalLink className="w-4 h-4" />
+            </div>
+          </a>
+        ))}
+      </div>
     </div>
   );
 };
