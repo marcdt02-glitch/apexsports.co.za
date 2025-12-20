@@ -6,13 +6,13 @@ const WelcomeAthlete: React.FC = () => {
 
     // Placeholder for Meta Pixel
     useEffect(() => {
-        // console.log("Meta Pixel: PageView / WelcomeAthlete");
-        // if (window.fbq) window.fbq('track', 'PageView');
+        // console.log("Meta Pixel: Purchase Event (WelcomeAthlete Page)");
+        // if (window.fbq) window.fbq('track', 'Purchase', { currency: 'ZAR', value: 0.00 });
     }, []);
 
     const handleUnlock = () => {
         setIsFormSubmitted(true);
-        // console.log("Meta Pixel: Track Form Confirmation");
+        // console.log("Meta Pixel: Track Form Confirmation / Unlock");
     };
 
     return (
@@ -59,8 +59,8 @@ const WelcomeAthlete: React.FC = () => {
                             onClick={handleUnlock}
                             disabled={isFormSubmitted}
                             className={`flex items-center gap-2 px-6 py-2 rounded-lg font-bold transition-all ${isFormSubmitted
-                                    ? 'bg-green-600 text-white cursor-default'
-                                    : 'bg-white text-black hover:bg-gray-200'
+                                ? 'bg-green-600 text-white cursor-default'
+                                : 'bg-white text-black hover:bg-gray-200'
                                 }`}
                         >
                             {isFormSubmitted ? <CheckSquare className="w-4 h-4" /> : <Unlock className="w-4 h-4" />}
@@ -101,13 +101,13 @@ const WelcomeAthlete: React.FC = () => {
                                 target="_blank"
                                 rel="noreferrer"
                                 className={`inline-flex items-center gap-2 px-8 py-4 rounded-full font-bold uppercase tracking-wider transition-colors ${isFormSubmitted
-                                        ? 'bg-white text-black hover:bg-gray-200 cursor-pointer shadow-[0_0_20px_rgba(255,255,255,0.3)]'
-                                        : 'bg-neutral-700 text-neutral-500 cursor-not-allowed'
+                                    ? 'bg-white text-black hover:bg-gray-200 cursor-pointer shadow-[0_0_20px_rgba(255,255,255,0.3)]'
+                                    : 'bg-neutral-700 text-neutral-500 cursor-not-allowed'
                                     }`}
                                 onClick={(e) => !isFormSubmitted && e.preventDefault()}
                             >
                                 <Calendar className="w-5 h-5" />
-                                Book First Session
+                                Schedule My First Session
                             </a>
                         </div>
                     </div>

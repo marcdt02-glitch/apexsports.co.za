@@ -23,7 +23,7 @@ const Services: React.FC = () => {
                             <div className="w-12 h-12 bg-green-500/10 rounded-xl flex items-center justify-center mb-6">
                                 <Trophy className="w-6 h-6 text-green-500" />
                             </div>
-                            <h2 className="text-3xl font-bold text-white mb-2 uppercase italic tracking-wide">The Apex Membership</h2>
+                            <h2 className="text-3xl font-bold text-white mb-2 uppercase italic tracking-wide">The Apex Membership <span className="block text-sm not-italic font-normal text-gray-400 normal-case mt-1">(The Elite Tier)</span></h2>
                             <p className="text-gray-400 text-sm mb-6 min-h-[40px]">
                                 The ultimate all-in-one elite performance program. Fully comprehensive support.
                             </p>
@@ -57,7 +57,7 @@ const Services: React.FC = () => {
                                 rel="noreferrer"
                                 className="w-full flex items-center justify-between bg-white text-black font-bold py-4 px-6 rounded-lg hover:bg-gray-200 transition-colors group"
                             >
-                                <span>Pay Monthly <span className="block text-xs font-normal opacity-70">Starting Now</span></span>
+                                <span>Monthly Subscription</span>
                                 <span className="flex items-center gap-2">
                                     R2,000 <ExternalLink className="w-4 h-4 text-gray-500 group-hover:text-black" />
                                 </span>
@@ -68,7 +68,7 @@ const Services: React.FC = () => {
                                 rel="noreferrer"
                                 className="w-full flex items-center justify-between bg-neutral-800 text-white font-bold py-4 px-6 rounded-lg hover:bg-neutral-700 transition-colors border border-neutral-600 group"
                             >
-                                <span>Pay Once-off <span className="block text-xs font-normal opacity-70">Annual Discount</span></span>
+                                <span>Annual Once-off <span className="block text-xs font-normal text-green-400">Save R3,000</span></span>
                                 <span className="flex items-center gap-2">
                                     R21,000 <ExternalLink className="w-4 h-4 text-gray-500 group-hover:text-white" />
                                 </span>
@@ -82,7 +82,7 @@ const Services: React.FC = () => {
                             <div className="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center mb-6">
                                 <Activity className="w-6 h-6 text-white" />
                             </div>
-                            <h2 className="text-3xl font-bold text-white mb-2 uppercase italic tracking-wide">Performance & Testing</h2>
+                            <h2 className="text-3xl font-bold text-white mb-2 uppercase italic tracking-wide">Performance S&C & Testing</h2>
                             <p className="text-gray-400 text-sm mb-6 min-h-[40px]">
                                 Targeted 12-week blocks and objective data measurement through Vald technology.
                             </p>
@@ -126,7 +126,7 @@ const Services: React.FC = () => {
                                     <Activity className="w-4 h-4 text-purple-500" /> Individual Testing
                                 </h3>
                                 <a href="https://paystack.shop/pay/testingdynamo" target="_blank" rel="noreferrer" className="block w-full bg-neutral-800 hover:bg-neutral-700 text-center py-2 rounded text-sm text-white transition-colors">
-                                    Book Testing Set: <strong>R1,000</strong>
+                                    Book Dynamo Set: <strong>R1,000</strong>
                                 </a>
                             </div>
 
@@ -141,7 +141,7 @@ const Services: React.FC = () => {
                             <div className="w-12 h-12 bg-red-900/20 rounded-xl flex items-center justify-center mb-6">
                                 <Star className="w-6 h-6 text-red-500" />
                             </div>
-                            <h2 className="text-3xl font-bold text-white mb-2 uppercase italic tracking-wide">Mentorship & Coaching</h2>
+                            <h2 className="text-3xl font-bold text-white mb-2 uppercase italic tracking-wide">Mentorship & Coaching Packs</h2>
                             <p className="text-gray-400 text-sm mb-6 min-h-[40px]">
                                 Professional guidance and technical refinement for goalkeepers and field athletes.
                             </p>
