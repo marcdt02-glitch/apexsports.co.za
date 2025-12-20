@@ -181,9 +181,9 @@ const Mentorship: React.FC = () => {
                 key={idx}
                 title={pkg.title}
                 price={pkg.price}
-                priceValue={pkg.priceValue}
                 description={pkg.description}
                 features={pkg.features}
+                actions={pkg.actions}
                 isHighlighted={pkg.isHighlighted}
               />
             ))}
