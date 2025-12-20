@@ -9,8 +9,8 @@ const Mentorship: React.FC = () => {
     {
       title: "Mentorship Package",
       price: "Starting from R500 / month",
-      priceValue: 500,
       description: "Or R5,000 per year (Upfront Discount).",
+      link: "https://paystack.shop/pay/Mentorship-Monthly",
       features: [
         "Monthly 1-on-1 Strategy Call",
         "Season Planning & Goal Setting",
@@ -22,8 +22,8 @@ const Mentorship: React.FC = () => {
     {
       title: "Apex Membership",
       price: "R2,000 / month",
-      priceValue: 24000,
       description: <>Billed <strong>Annually</strong> at <strong>R24,000</strong>. Complete mental and physical integration.</>,
+      link: "https://paystack.shop/pay/ApexMembership-Monthly",
       features: [
         "4 Mentorship Packages",
         "Full S&C Program Design",

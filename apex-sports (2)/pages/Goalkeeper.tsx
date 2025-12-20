@@ -7,8 +7,8 @@ const Goalkeeper: React.FC = () => {
     {
       title: "5-Session Pack",
       price: "Starting from R2,500",
-      priceValue: 2500,
       description: "Development block (R500/session).",
+      link: "https://paystack.shop/pay/5hourcoachingpack",
       features: [
         "5 Hours of Technical Training",
         "Video Analysis of Every Session",
@@ -20,8 +20,8 @@ const Goalkeeper: React.FC = () => {
     {
       title: "25-Session Pack (Upfront)",
       price: "R9,000",
-      priceValue: 9000,
       description: "Upfront Special. Standard Price R10,000.",
+      link: "https://paystack.shop/pay/25hourcoachingpack-onceoff",
       features: [
         "25 Hours of Technical Training",
         "Full Season Video Breakdown",
@@ -33,8 +33,8 @@ const Goalkeeper: React.FC = () => {
     {
       title: "Apex Membership",
       price: "R2,000 / month",
-      priceValue: 24000,
       description: <>Billed <strong>Annually</strong> at <strong>R24,000</strong>. The all-inclusive elite performance package.</>,
+      link: "https://paystack.shop/pay/ApexMembership-Monthly",
       features: [
         "25 Coaching Sessions",
         "Full S&C Program Design",

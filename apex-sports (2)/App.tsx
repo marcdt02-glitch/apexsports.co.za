@@ -6,14 +6,12 @@ import Home from './pages/Home';
 import Strength from './pages/Strength';
 import Mentorship from './pages/Mentorship';
 import Goalkeeper from './pages/Goalkeeper';
-import Checkout from './pages/Checkout';
 import BookingPolicy from './pages/BookingPolicy';
 import ApexPrivacy from './pages/ApexPrivacy';
 import Contact from './pages/Contact';
 import PaymentSuccess from './pages/PaymentSuccess';
 import Services from './pages/Services';
 import WelcomeAthlete from './pages/WelcomeAthlete';
-import { CartProvider } from './context/CartContext';
 
 // Wrapper to handle scroll to top on route change
 const ScrollToTop = () => {
@@ -28,30 +26,27 @@ const ScrollToTop = () => {
 
 const App: React.FC = () => {
   return (
-    <CartProvider>
-      <Router>
-        <ScrollToTop />
-        <div className="flex flex-col min-h-screen bg-black text-white font-sans antialiased selection:bg-white selection:text-black">
-          <Navbar />
-          <main className="flex-grow">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/strength" element={<Strength />} />
-              <Route path="/mentorship" element={<Mentorship />} />
-              <Route path="/goalkeeper" element={<Goalkeeper />} />
-              <Route path="/checkout" element={<Checkout />} />
-              <Route path="/booking-policy" element={<BookingPolicy />} />
-              <Route path="/privacy-policy" element={<ApexPrivacy />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/services" element={<Services />} />
-              <Route path="/welcome-athlete" element={<WelcomeAthlete />} />
-              <Route path="/payment-success" element={<PaymentSuccess />} />
-            </Routes>
-          </main>
-          <Footer />
-        </div>
-      </Router>
-    </CartProvider>
+    <Router>
+      <ScrollToTop />
+      <div className="flex flex-col min-h-screen bg-black text-white font-sans antialiased selection:bg-white selection:text-black">
+        <Navbar />
+        <main className="flex-grow">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/strength" element={<Strength />} />
+            <Route path="/mentorship" element={<Mentorship />} />
+            <Route path="/goalkeeper" element={<Goalkeeper />} />
+            <Route path="/booking-policy" element={<BookingPolicy />} />
+            <Route path="/privacy-policy" element={<ApexPrivacy />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/services" element={<Services />} />
+            <Route path="/welcome-athlete" element={<WelcomeAthlete />} />
+            <Route path="/payment-success" element={<PaymentSuccess />} />
+          </Routes>
+        </main>
+        <Footer />
+      </div>
+    </Router>
   );
 };
 

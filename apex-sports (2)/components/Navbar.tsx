@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { LINKS } from '../constants';
-import { Menu, X, Calendar, UserPlus, LogIn, ShoppingCart, MessageCircle, Mail } from 'lucide-react';
+import { Menu, X, Calendar, UserPlus, LogIn, MessageCircle, Mail } from 'lucide-react';
 import { ApexLogo } from './ApexLogo';
-import { useCart } from '../context/CartContext';
+
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
-  const { items } = useCart();
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
@@ -67,14 +66,7 @@ const Navbar: React.FC = () => {
             {/* Desktop Actions */}
             <div className="hidden xl:flex items-center gap-3">
               {/* Cart Link (Visible on both) */}
-              <Link to="/checkout" className="relative group p-2 rounded hover:bg-white/10 transition-colors">
-                <ShoppingCart className="w-5 h-5 text-gray-300 group-hover:text-white" />
-                {items.length > 0 && (
-                  <span className="absolute top-0 right-0 -mt-1 -mr-1 bg-red-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
-                    {items.length}
-                  </span>
-                )}
-              </Link>
+
 
               {/* Contact Icons */}
               <div className="flex items-center gap-4 mr-4 border-r border-gray-800 pr-6">
@@ -118,10 +110,7 @@ const Navbar: React.FC = () => {
             ))}
 
             <div className="mt-4 pt-4 border-t border-gray-700 space-y-3">
-              <Link to="/checkout" onClick={() => setIsOpen(false)} className="w-full flex items-center justify-center gap-2 text-gray-300 hover:text-white py-2 rounded hover:bg-gray-800">
-                <ShoppingCart className="w-4 h-4" />
-                View Cart ({items.length})
-              </Link>
+
               <a href={LINKS.CALENDAR} target="_blank" rel="noreferrer" className="w-full bg-white text-black hover:bg-gray-200 px-4 py-3 rounded-md font-bold flex items-center justify-center gap-2">
                 <MessageCircle className="w-4 h-4" />
                 <span>Request a Session</span>

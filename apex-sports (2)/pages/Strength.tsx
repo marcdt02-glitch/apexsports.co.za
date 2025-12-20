@@ -7,8 +7,8 @@ const Strength: React.FC = () => {
     {
       title: "Performance Testing",
       price: "Starting from R1,000",
-      priceValue: 1000,
       description: "Per session. Objective measurement using Vald technology.",
+      link: "https://paystack.shop/pay/testingdynamo",
       features: [
         "Vald Dynamometer Strength Testing",
         "Rate of Force Development Testing",
@@ -19,9 +19,9 @@ const Strength: React.FC = () => {
     },
     {
       title: "General Templates",
-      price: "R500",
-      priceValue: 500,
+      price: "Starting from R350",
       description: "Pre-built 6-week program block.",
+      link: "https://paystack.shop/pay/12WeekGeneralProgram-Monthly",
       features: [
         "6-Week Training Template",
         "MoveHealth App Access",
@@ -32,9 +32,9 @@ const Strength: React.FC = () => {
     },
     {
       title: "Specific Program Design",
-      price: "R750",
-      priceValue: 750,
+      price: "Starting from R500",
       description: "Customized 6-week block based on testing.",
+      link: "https://paystack.shop/pay/12WeekSpecifcProgram-Monthly",
       features: [
         "Tailored to Testing Data",
         "MoveHealth App Access",
@@ -46,8 +46,8 @@ const Strength: React.FC = () => {
     {
       title: "Apex Membership",
       price: "R2,000 / month",
-      priceValue: 24000,
       description: <>Billed <strong>Annually</strong> at <strong>R24,000</strong>. The complete all-inclusive athletic package.</>,
+      link: "https://paystack.shop/pay/ApexMembership-Monthly",
       features: [
         "25 Coaching Sessions",
         "4 Mentorship Packages",
