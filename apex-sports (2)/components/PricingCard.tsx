@@ -18,7 +18,7 @@ interface PricingCardProps {
 const PricingCard: React.FC<PricingCardProps> = ({ title, price, description, features, isHighlighted = false, actions }) => {
   return (
     <div className={`relative flex flex-col p-8 rounded-2xl border transition-all duration-300 h-full ${isHighlighted
-      ? 'bg-neutral-900 border-white shadow-[0_0_30px_rgba(255,255,255,0.15)] md:pb-12 z-10'
+      ? 'bg-neutral-900 border-white shadow-[0_0_30px_rgba(255,255,255,0.15)] z-10'
       : 'bg-black border-gray-800 hover:border-gray-600'
       }`}>
       {/* Badge */}
