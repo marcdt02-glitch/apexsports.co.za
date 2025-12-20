@@ -111,7 +111,7 @@ const Navbar: React.FC = () => {
       {isOpen && (
         <div className="xl:hidden bg-black border-b border-gray-800 absolute w-full top-24 left-0">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            {navLinks.map((link) => (
+            {[...leftLinks, ...rightLinks].map((link) => (
               <Link
                 key={link.name}
                 to={link.path}
