@@ -189,40 +189,15 @@ const Goalkeeper: React.FC = () => {
 
             <div className="md:w-1/2 w-full">
               {/* Fake Video Player UI */}
-              <div className="relative rounded-xl overflow-hidden shadow-2xl border border-neutral-700 bg-neutral-900 aspect-video group cursor-pointer">
-                <img
-                  src="https://images.unsplash.com/photo-1632156942023-455b57d692f8?auto=format&fit=crop&q=80"
-                  alt="CoachNow Analysis Interface"
-                  className="w-full h-full object-cover opacity-60 group-hover:opacity-40 transition-opacity"
+              <div className="relative rounded-xl overflow-hidden shadow-2xl border border-neutral-700 bg-neutral-900 aspect-video group">
+                <video
+                  src="/videos/Training Footage 1.mov"
+                  className="w-full h-full object-cover"
+                  controls
+                  playsInline
+                  muted
+                  loop
                 />
-
-                {/* Overlay UI elements to mimic analysis app */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-16 h-16 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/50 group-hover:scale-110 transition-transform">
-                    <PlayCircle className="w-8 h-8 text-white fill-current" />
-                  </div>
-                </div>
-
-                <div className="absolute top-4 right-4 bg-red-600 px-2 py-1 rounded text-xs font-bold text-white animate-pulse">
-                  REC
-                </div>
-
-                {/* Analysis Lines Overlay */}
-                <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-80" viewBox="0 0 100 100">
-                  <line x1="20" y1="80" x2="50" y2="40" stroke="yellow" strokeWidth="0.5" strokeDasharray="2" />
-                  <line x1="80" y1="80" x2="50" y2="40" stroke="yellow" strokeWidth="0.5" strokeDasharray="2" />
-                  <circle cx="50" cy="40" r="2" stroke="red" strokeWidth="0.5" fill="transparent" />
-                </svg>
-
-                <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black to-transparent">
-                  <div className="flex items-center justify-between text-xs text-white font-mono">
-                    <span>00:14 / 01:30</span>
-                    <span>Angle: 45°</span>
-                  </div>
-                  <div className="w-full h-1 bg-gray-600 mt-2 rounded-full overflow-hidden">
-                    <div className="w-1/3 h-full bg-red-500"></div>
-                  </div>
-                </div>
               </div>
               <p className="text-center text-xs text-gray-500 mt-2 uppercase tracking-widest">Example Analysis Interface</p>
             </div>
