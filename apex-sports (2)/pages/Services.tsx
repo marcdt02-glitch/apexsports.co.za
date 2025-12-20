@@ -17,11 +17,11 @@ const Services: React.FC = () => {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
                     {/* BUCKET 1: THE APEX MEMBERSHIP */}
-                    <div className="bg-neutral-900 border border-neutral-700 rounded-2xl overflow-hidden flex flex-col relative shadow-2xl shadow-green-900/10 hover:border-green-500/50 transition-colors duration-300">
-                        <div className="absolute top-0 w-full h-2 bg-gradient-to-r from-green-600 to-green-400"></div>
+                    <div className="bg-neutral-900 border border-neutral-700 rounded-2xl overflow-hidden flex flex-col relative shadow-2xl hover:border-white transition-colors duration-300">
+                        <div className="absolute top-0 w-full h-1 bg-white"></div>
                         <div className="p-8 pb-0">
-                            <div className="w-12 h-12 bg-green-500/10 rounded-xl flex items-center justify-center mb-6">
-                                <Trophy className="w-6 h-6 text-green-500" />
+                            <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center mb-6">
+                                <Trophy className="w-6 h-6 text-white" />
                             </div>
                             <h2 className="text-3xl font-bold text-white mb-2 uppercase italic tracking-wide">The Apex Membership <span className="block text-sm not-italic font-normal text-gray-400 normal-case mt-1">(The Elite Tier)</span></h2>
                             <p className="text-gray-400 text-sm mb-6 min-h-[40px]">
@@ -32,19 +32,19 @@ const Services: React.FC = () => {
                         <div className="px-8 flex-grow">
                             <ul className="space-y-4 mb-8 text-gray-300 text-sm">
                                 <li className="flex items-start gap-3">
-                                    <Check className="w-5 h-5 text-green-500 flex-shrink-0" />
+                                    <Check className="w-5 h-5 text-white flex-shrink-0" />
                                     <span>Full Strength & Conditioning Program</span>
                                 </li>
                                 <li className="flex items-start gap-3">
-                                    <Check className="w-5 h-5 text-green-500 flex-shrink-0" />
+                                    <Check className="w-5 h-5 text-white flex-shrink-0" />
                                     <span>Regular Performance Testing</span>
                                 </li>
                                 <li className="flex items-start gap-3">
-                                    <Check className="w-5 h-5 text-green-500 flex-shrink-0" />
+                                    <Check className="w-5 h-5 text-white flex-shrink-0" />
                                     <span>Mentorship & Psych Skills</span>
                                 </li>
                                 <li className="flex items-start gap-3">
-                                    <Check className="w-5 h-5 text-green-500 flex-shrink-0" />
+                                    <Check className="w-5 h-5 text-white flex-shrink-0" />
                                     <span className="font-bold text-white">25 Hours of 1-on-1 Coaching</span>
                                 </li>
                             </ul>
@@ -68,7 +68,7 @@ const Services: React.FC = () => {
                                 rel="noreferrer"
                                 className="w-full flex items-center justify-between bg-neutral-800 text-white font-bold py-4 px-6 rounded-lg hover:bg-neutral-700 transition-colors border border-neutral-600 group"
                             >
-                                <span>Annual Once-off <span className="block text-xs font-normal text-green-400">Save R3,000</span></span>
+                                <span>Annual Once-off <span className="block text-xs font-normal text-gray-400">Save R3,000</span></span>
                                 <span className="flex items-center gap-2">
                                     R21,000 <ExternalLink className="w-4 h-4 text-gray-500 group-hover:text-white" />
                                 </span>
@@ -77,7 +77,7 @@ const Services: React.FC = () => {
                     </div>
 
                     {/* BUCKET 2: PERFORMANCE PROGRAMS & TESTING */}
-                    <div className="bg-neutral-900 border border-neutral-800 rounded-2xl overflow-hidden flex flex-col relative hover:border-neutral-600 transition-colors duration-300">
+                    <div className="bg-neutral-900 border border-neutral-800 rounded-2xl overflow-hidden flex flex-col relative hover:border-white transition-colors duration-300">
                         <div className="p-8 pb-0">
                             <div className="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center mb-6">
                                 <Activity className="w-6 h-6 text-white" />
@@ -93,7 +93,7 @@ const Services: React.FC = () => {
                             {/* General 12-Week */}
                             <div className="border-b border-gray-800 pb-4">
                                 <h3 className="text-white font-bold mb-2 flex items-center gap-2">
-                                    <Zap className="w-4 h-4 text-yellow-500" /> 12-Week General Program
+                                    <Zap className="w-4 h-4 text-white" /> 12-Week General Program
                                 </h3>
                                 <div className="grid grid-cols-2 gap-2">
                                     <a href="https://paystack.shop/pay/12weekgeneralprogram-onceoff" target="_blank" rel="noreferrer" className="bg-neutral-800 hover:bg-neutral-700 text-center py-2 rounded text-xs text-gray-300 transition-colors">
@@ -108,7 +108,7 @@ const Services: React.FC = () => {
                             {/* Specific 12-Week */}
                             <div className="border-b border-gray-800 pb-4">
                                 <h3 className="text-white font-bold mb-2 flex items-center gap-2">
-                                    <Shield className="w-4 h-4 text-blue-400" /> 12-Week Specific Program
+                                    <Shield className="w-4 h-4 text-white" /> 12-Week Specific Program
                                 </h3>
                                 <div className="grid grid-cols-2 gap-2">
                                     <a href="https://paystack.shop/pay/12weekspecifcprogram-onceoff" target="_blank" rel="noreferrer" className="bg-neutral-800 hover:bg-neutral-700 text-center py-2 rounded text-xs text-gray-300 transition-colors">
@@ -123,7 +123,7 @@ const Services: React.FC = () => {
                             {/* Testing */}
                             <div>
                                 <h3 className="text-white font-bold mb-2 flex items-center gap-2">
-                                    <Activity className="w-4 h-4 text-purple-500" /> Individual Testing
+                                    <Activity className="w-4 h-4 text-white" /> Individual Testing
                                 </h3>
                                 <a href="https://paystack.shop/pay/testingdynamo" target="_blank" rel="noreferrer" className="block w-full bg-neutral-800 hover:bg-neutral-700 text-center py-2 rounded text-sm text-white transition-colors">
                                     Book Dynamo Set: <strong>R1,000</strong>
@@ -135,11 +135,11 @@ const Services: React.FC = () => {
                     </div>
 
                     {/* BUCKET 3: MENTORSHIP & COACHING PACKS */}
-                    <div className="bg-neutral-900 border border-neutral-800 rounded-2xl overflow-hidden flex flex-col relative hover:border-red-500/50 transition-colors duration-300">
-                        <div className="absolute top-0 w-full h-1 bg-red-600"></div>
+                    <div className="bg-neutral-900 border border-neutral-800 rounded-2xl overflow-hidden flex flex-col relative hover:border-white transition-colors duration-300">
+                        <div className="absolute top-0 w-full h-1 bg-white"></div>
                         <div className="p-8 pb-0">
-                            <div className="w-12 h-12 bg-red-900/20 rounded-xl flex items-center justify-center mb-6">
-                                <Star className="w-6 h-6 text-red-500" />
+                            <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center mb-6">
+                                <Star className="w-6 h-6 text-white" />
                             </div>
                             <h2 className="text-3xl font-bold text-white mb-2 uppercase italic tracking-wide">Mentorship & Coaching Packs</h2>
                             <p className="text-gray-400 text-sm mb-6 min-h-[40px]">
@@ -182,7 +182,6 @@ const Services: React.FC = () => {
                                     </a>
                                 </div>
                             </div>
-
                         </div>
                         <div className="p-8 mt-auto"></div>
                     </div>

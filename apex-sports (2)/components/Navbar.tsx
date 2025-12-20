@@ -28,7 +28,7 @@ const Navbar: React.FC = () => {
         <div className="flex items-center justify-between h-24 relative">
 
           {/* Desktop Navigation (Left) */}
-          <div className="hidden xl:flex items-center gap-6 flex-1 justify-start">
+          <div className="hidden xl:flex items-center gap-10 flex-1 justify-start">
             {navLinks.map((link) => (
               <Link
                 key={link.name}

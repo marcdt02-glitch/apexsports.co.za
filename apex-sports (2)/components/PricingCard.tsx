@@ -55,16 +55,16 @@ const PricingCard: React.FC<PricingCardProps> = ({ title, price, description, fe
             href={action.link}
             target="_blank"
             rel="noreferrer"
-            className={`w-full py-4 px-6 rounded-xl font-bold text-sm uppercase tracking-wider transition-all duration-300 flex items-center justify-between group ${(action.primary || (!actions.some(a => a.primary) && idx === 0))
-                ? 'bg-white text-black hover:bg-gray-200 border border-transparent shadow-lg hover:shadow-xl hover:-translate-y-0.5'
-                : 'bg-transparent border border-gray-700 text-gray-300 hover:text-white hover:border-white hover:bg-white/5'
+            className={`w-full py-3.5 px-5 rounded-lg font-bold text-xs sm:text-sm uppercase tracking-wider transition-all duration-300 flex items-center justify-between group ${(action.primary || (!actions.some(a => a.primary) && idx === 0))
+                ? 'bg-neutral-200 text-black hover:bg-white border border-transparent shadow hover:shadow-lg'
+                : 'bg-transparent border border-neutral-700 text-neutral-400 hover:text-white hover:border-white hover:bg-white/5'
               }`}>
             <span className="font-extrabold">{action.label}</span>
             <div className="flex items-center gap-3">
               {action.priceLabel && (
                 <span className={`text-xs font-mono py-1 px-2 rounded-md ${(action.primary || (!actions.some(a => a.primary) && idx === 0))
-                    ? 'bg-black/10 text-black/80'
-                    : 'bg-white/10 text-white/80'
+                  ? 'bg-black/10 text-black/80'
+                  : 'bg-white/10 text-white/80'
                   }`}>
                   {action.priceLabel}
                 </span>
