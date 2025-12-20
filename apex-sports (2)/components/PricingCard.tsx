@@ -34,7 +34,7 @@ const PricingCard: React.FC<PricingCardProps> = ({ title, price, description, fe
         {price && (
           <p className="text-3xl font-extrabold text-white mb-2 tracking-tight">{price}</p>
         )}
-        <div className="text-gray-400 text-sm min-h-[40px] leading-relaxed">{description}</div>
+        <div className="text-gray-400 text-sm min-h-[60px] leading-relaxed flex items-center">{description}</div>
       </div>
 
       <div className={`h-px mb-6 ${isHighlighted ? 'bg-white' : 'bg-gray-800'}`}></div>
