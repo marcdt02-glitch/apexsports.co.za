@@ -48,7 +48,7 @@ const PricingCard: React.FC<PricingCardProps> = ({ title, price, description, fe
         ))}
       </ul>
 
-      <div className="space-y-3 mt-auto">
+      <div className="flex flex-col gap-3 mt-auto min-h-[7.5rem]">
         {actions && actions.map((action, idx) => (
           <a
             key={idx}
@@ -59,12 +59,12 @@ const PricingCard: React.FC<PricingCardProps> = ({ title, price, description, fe
                 ? 'bg-neutral-200 text-black hover:bg-white border border-transparent shadow hover:shadow-lg'
                 : 'bg-transparent border border-neutral-700 text-neutral-400 hover:text-white hover:border-white hover:bg-white/5'
               }`}>
-            <span className="font-extrabold">{action.label}</span>
+            <span className="font-bold">{action.label}</span>
             <div className="flex items-center gap-3">
               {action.priceLabel && (
                 <span className={`text-xs font-mono py-1 px-2 rounded-md ${(action.primary || (!actions.some(a => a.primary) && idx === 0))
-                  ? 'bg-black/10 text-black/80'
-                  : 'bg-white/10 text-white/80'
+                    ? 'bg-black/10 text-black/80'
+                    : 'bg-white/10 text-white/80'
                   }`}>
                   {action.priceLabel}
                 </span>
