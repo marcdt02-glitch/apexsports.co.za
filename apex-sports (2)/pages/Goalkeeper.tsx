@@ -7,7 +7,7 @@ const Goalkeeper: React.FC = () => {
     {
       title: "5-Session Pack",
       price: "R2,500",
-      description: "Development block (R500/session).",
+      description: "Flexible development block (R500/session).",
       actions: [
         { label: "Buy Pack", link: "https://paystack.shop/pay/5hourcoachingpack", priceLabel: "R2,500", primary: true }
       ],
@@ -22,7 +22,7 @@ const Goalkeeper: React.FC = () => {
     {
       title: "25-Session Pack",
       price: "R833 / month",
-      description: "Upfront Special availible at R9,000.",
+      description: "Pay Monthly (R833/mo) or Buy Upfront (R9,000).",
       actions: [
         { label: "Sub Weekly", link: "https://paystack.shop/pay/25HourCoachingPack-Monthly", priceLabel: "R833/mo", primary: true },
         { label: "Buy Upfront", link: "https://paystack.shop/pay/25hourcoachingpack-onceoff", priceLabel: "R9,000", primary: false }
@@ -38,7 +38,7 @@ const Goalkeeper: React.FC = () => {
     {
       title: "Apex Membership",
       price: "R2,000 / month",
-      description: <>Billed <strong>Annually</strong> at <strong>R21,000</strong>. Save R3,000</>,
+      description: <><strong>Monthly:</strong> R2,000 | <strong>Annual:</strong> R21,000 (Save R3,000).</>,
       actions: [
         { label: "Subscribe", link: "https://paystack.shop/pay/ApexMembership-Monthly", priceLabel: "R2,000/mo", primary: true },
         { label: "Pay Annual", link: "https://paystack.shop/pay/apexmembership-once-off", priceLabel: "R21,000/yr", primary: false }

@@ -22,7 +22,7 @@ const Strength: React.FC = () => {
     {
       title: "General Templates",
       price: "R350 / month",
-      description: "Pre-built 6-week program block. 12 Weeks total.",
+      description: "Pay Monthly (3 Months) or R1,050 Once-off.",
       actions: [
         { label: "Subscribe", link: "https://paystack.shop/pay/12WeekGeneralProgram-Monthly", priceLabel: "R350/mo", primary: true },
         { label: "Buy Once-off", link: "https://paystack.shop/pay/12weekgeneralprogram-onceoff", priceLabel: "R1,050", primary: false }
@@ -38,7 +38,7 @@ const Strength: React.FC = () => {
     {
       title: "Specific Program Design",
       price: "R500 / month",
-      description: "Customized 6-week block based on testing.",
+      description: "Pay Monthly (3 Months) or R1,500 Once-off.",
       actions: [
         { label: "Subscribe", link: "https://paystack.shop/pay/12WeekSpecifcProgram-Monthly", priceLabel: "R500/mo", primary: true },
         { label: "Buy Once-off", link: "https://paystack.shop/pay/12weekspecifcprogram-onceoff", priceLabel: "R1,500", primary: false }
@@ -54,7 +54,7 @@ const Strength: React.FC = () => {
     {
       title: "Apex Membership",
       price: "R2,000 / month",
-      description: <>Billed <strong>Annually</strong> at <strong>R21,000</strong>. The complete all-inclusive athletic package.</>,
+      description: <><strong>Monthly:</strong> R2,000 | <strong>Annual:</strong> R21,000 (Save R3,000).</>,
       actions: [
         { label: "Subscribe", link: "https://paystack.shop/pay/ApexMembership-Monthly", priceLabel: "R2,000/mo", primary: true },
         { label: "Pay Annual", link: "https://paystack.shop/pay/apexmembership-once-off", priceLabel: "R21,000/yr", primary: false }

@@ -9,7 +9,7 @@ const Mentorship: React.FC = () => {
     {
       title: "Mentorship Package",
       price: "R500 / month",
-      description: "Or R5,000 per year (Upfront Discount).",
+      description: <><strong>Monthly:</strong> R500 | <strong>Annual:</strong> R5,000 (Save R1,000).</>,
       actions: [
         { label: "Subscribe", link: "https://paystack.shop/pay/Mentorship-Monthly", priceLabel: "R500/mo", primary: true },
         { label: "Pay Annual", link: "https://paystack.shop/pay/mentorship-Onceoff", priceLabel: "R5,000/yr", primary: false }
@@ -25,7 +25,7 @@ const Mentorship: React.FC = () => {
     {
       title: "Apex Membership",
       price: "R2,000 / month",
-      description: <>Billed <strong>Annually</strong> at <strong>R21,000</strong>. Complete mental and physical integration.</>,
+      description: <><strong>Monthly:</strong> R2,000 | <strong>Annual:</strong> R21,000 (Save R3,000).</>,
       actions: [
         { label: "Subscribe", link: "https://paystack.shop/pay/ApexMembership-Monthly", priceLabel: "R2,000/mo", primary: true },
         { label: "Pay Annual", link: "https://paystack.shop/pay/apexmembership-once-off", priceLabel: "R21,000/yr", primary: false }
