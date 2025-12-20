@@ -40,7 +40,7 @@ const Home: React.FC = () => {
         <div className="z-20 text-center flex flex-col items-center animate-fade-in-up">
           <img src="/images/logo.png" alt="Apex Sports Logo" className="w-48 h-48 md:w-64 md:h-64 mb-8 object-contain" />
           <h1 className="text-4xl md:text-6xl font-extrabold text-white tracking-widest uppercase mb-4">
-            Apex Sports: High-Performance Coaching in Stellenbosch
+            Apex Sports
           </h1>
           <p className="text-3xl md:text-5xl font-extrabold text-white italic tracking-widest uppercase mb-6 drop-shadow-lg">
             WHAT'S NEXT?
