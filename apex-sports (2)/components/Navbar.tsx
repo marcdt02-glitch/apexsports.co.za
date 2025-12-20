@@ -31,7 +31,7 @@ const Navbar: React.FC = () => {
         <div className="flex items-center justify-between h-24 relative">
 
           {/* Desktop Navigation (Left) */}
-          <div className="hidden xl:flex items-center gap-8 flex-1 justify-start">
+          <div className="hidden xl:flex items-center gap-4 flex-1 justify-start pl-4">
             {leftLinks.map((link) => (
               <Link
                 key={link.name}
@@ -47,7 +47,7 @@ const Navbar: React.FC = () => {
           </div>
 
           {/* Logo Section (Center - Absolute) */}
-          <div className="flex-shrink-0 flex items-center justify-center absolute left-1/2 transform -translate-x-1/2">
+          <div className="flex-shrink-0 flex items-center justify-center absolute left-1/2 transform -translate-x-1/2 z-10">
             <Link to="/" className="flex items-center gap-3 group">
               <img src="/images/logo.png" alt="Apex Sports Logo" className="w-16 h-16 object-contain" />
             </Link>
@@ -67,7 +67,7 @@ const Navbar: React.FC = () => {
           <div className="flex items-center gap-4 flex-1 justify-end">
 
             {/* Desktop Navigation (Right Split) */}
-            <div className="hidden xl:flex items-center gap-8 mr-8 border-r border-gray-800 pr-8">
+            <div className="hidden xl:flex items-center gap-4 mr-4 border-r border-gray-800 pr-4">
               {rightLinks.map((link) => (
                 <Link
                   key={link.name}
