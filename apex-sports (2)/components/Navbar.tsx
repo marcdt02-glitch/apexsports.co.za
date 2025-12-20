@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { LINKS } from '../constants';
-import { Menu, X, Calendar, UserPlus, LogIn, ShoppingCart, MessageCircle } from 'lucide-react';
+import { Menu, X, Calendar, UserPlus, LogIn, ShoppingCart, MessageCircle, Mail } from 'lucide-react';
 import { ApexLogo } from './ApexLogo';
 import { useCart } from '../context/CartContext';
 
@@ -16,7 +16,9 @@ const Navbar: React.FC = () => {
     { name: 'Home', path: '/' },
     { name: 'Strength & Conditioning', path: '/strength' },
     { name: 'Mentorship', path: '/mentorship' },
+    { name: 'Mentorship', path: '/mentorship' },
     { name: 'Coaching', path: '/goalkeeper' },
+    { name: 'Athlete Hub', path: '/services' },
   ];
 
   const isActive = (path: string) => location.pathname === path;
@@ -73,6 +75,16 @@ const Navbar: React.FC = () => {
                   </span>
                 )}
               </Link>
+
+              {/* Contact Icons */}
+              <div className="flex items-center gap-4 mr-4 border-r border-gray-800 pr-6">
+                <a href="https://wa.me/27823788258" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-white transition-colors">
+                  <MessageCircle className="w-5 h-5" />
+                </a>
+                <a href="mailto:marcdt02@gmail.com" className="text-gray-400 hover:text-white transition-colors">
+                  <Mail className="w-5 h-5" />
+                </a>
+              </div>
 
               {/* Book Button (Desktop) */}
               <div className="hidden xl:block">
