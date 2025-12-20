@@ -11,11 +11,14 @@ const Navbar: React.FC = () => {
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
-  const navLinks = [
+  /* Split links for layout balance */
+  const leftLinks = [
     { name: 'Home', path: '/' },
     { name: 'Strength & Conditioning', path: '/strength' },
     { name: 'Mentorship', path: '/mentorship' },
+  ];
 
+  const rightLinks = [
     { name: 'Coaching', path: '/goalkeeper' },
     { name: 'Athlete Hub', path: '/services' },
   ];
@@ -28,8 +31,8 @@ const Navbar: React.FC = () => {
         <div className="flex items-center justify-between h-24 relative">
 
           {/* Desktop Navigation (Left) */}
-          <div className="hidden xl:flex items-center gap-10 flex-1 justify-start">
-            {navLinks.map((link) => (
+          <div className="hidden xl:flex items-center gap-8 flex-1 justify-start">
+            {leftLinks.map((link) => (
               <Link
                 key={link.name}
                 to={link.path}
@@ -50,7 +53,7 @@ const Navbar: React.FC = () => {
             </Link>
           </div>
 
-          {/* Mobile Menu Button (Left for Mobile to balance Cart on right?) or standard Right */}
+          {/* Mobile Menu Button */}
           <div className="flex xl:hidden absolute left-4">
             <button
               onClick={toggleMenu}
@@ -63,11 +66,24 @@ const Navbar: React.FC = () => {
           {/* Actions (Right) */}
           <div className="flex items-center gap-4 flex-1 justify-end">
 
+            {/* Desktop Navigation (Right Split) */}
+            <div className="hidden xl:flex items-center gap-8 mr-8 border-r border-gray-800 pr-8">
+              {rightLinks.map((link) => (
+                <Link
+                  key={link.name}
+                  to={link.path}
+                  className={`px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 ${isActive(link.path)
+                    ? 'text-white bg-gray-800'
+                    : 'text-gray-300 hover:text-white hover:bg-gray-800'
+                    }`}
+                >
+                  {link.name}
+                </Link>
+              ))}
+            </div>
+
             {/* Desktop Actions */}
             <div className="hidden xl:flex items-center gap-3">
-              {/* Cart Link (Visible on both) */}
-
-
               {/* Contact Icons */}
               <div className="flex items-center gap-4 mr-4 border-r border-gray-800 pr-6">
                 <a href="https://wa.me/27823788258" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-white transition-colors">
