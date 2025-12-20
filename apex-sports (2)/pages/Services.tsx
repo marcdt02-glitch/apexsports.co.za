@@ -3,10 +3,10 @@ import { Check, Star, Zap, Shield, Trophy, Activity, ArrowRight, ExternalLink } 
 
 const Services: React.FC = () => {
     return (
-        <div className="min-h-screen bg-black pt-24 pb-12 px-4">
+        <div className="min-h-screen bg-black pt-32 pb-12 px-4">
             <div className="max-w-7xl mx-auto">
                 <div className="text-center mb-16">
-                    <h1 className="text-4xl md:text-6xl font-extrabold text-white tracking-tighter uppercase mb-6">
+                    <h1 className="text-4xl md:text-6xl font-extrabold text-white tracking-widest uppercase mb-6">
                         Athlete Service Hub
                     </h1>
                     <p className="text-gray-400 text-xl max-w-2xl mx-auto">
