@@ -1,0 +1,143 @@
+import Papa from 'papaparse';
+
+export interface AthleteData {
+    id: string;
+    name: string;
+    date: string;
+    // Metrics mapped from request
+    hamstringQuadLeft: number; // H:Q L
+    hamstringQuadRight: number; // H:Q R
+    imtpPeakForce: number; // IMTP F200Ms (using Peak Force for simplicity if F200 not available, or mapping specifically)
+    peakForceAsymmetry: number; // PF ASM
+    neckExtension: number; // NECK EXT
+    ankleRomLeft: number; // Ankle ROM L
+    ankleRomRight: number; // Ankle ROM R
+
+    // Radar Axes (Normalization 0-100)
+    scoreHamstring: number;
+    scoreQuad: number;
+    scoreAdduction: number;
+    scoreAnkle: number;
+    scoreShoulder: number;
+    scoreNeck: number;
+}
+
+export interface DashboardMetrics {
+    athlete: AthleteData;
+    flags: {
+        isHighRisk: boolean; // PF ASM > 10%
+        notes: string[];
+    };
+    recommendation: {
+        focusArea: string;
+        description: string;
+    };
+}
+
+// Mock initial data to simulate Processed_Athlete_Data.csv
+// Columns: Athlete, Date, H:Q L, H:Q R, IMTP Peak, PF ASM, Adduction L, Adduction R, Ankle ROM L, Ankle ROM R, Shoulder IR L, Shoulder IR R, Neck Ext
+export const MOCK_CSV_DATA = `Athlete,Date,H:Q L,H:Q R,IMTP Peak,PF ASM,Adduction Strength,Ankle ROM L,Ankle ROM R,Shoulder Balance,Neck Ext,Quad Strength
+John Doe,2025-01-15,0.65,0.62,4500,12.5,350,38,42,0.95,250,550
+Jane Smith,2025-01-14,0.72,0.70,3800,4.2,310,45,45,0.98,210,480`;
+
+export const parseAthleteData = (csvString: string): AthleteData[] => {
+    const result = Papa.parse(csvString, {
+        header: true,
+        skipEmptyLines: true,
+        dynamicTyping: true,
+    });
+
+    if (result.errors.length > 0) {
+        console.error("CSV Parse Errors:", result.errors);
+    }
+
+    return result.data.map((row: any, index: number) => {
+        // robust fallback if columns missing
+        const ankleL = row['Ankle ROM L'] || 40;
+        const ankleR = row['Ankle ROM R'] || 40;
+
+        // Normalize logic (Mock for now - ideally based on population norms)
+        // E.g. Ankle > 45 = 100, < 25 = 0
+        const normAnkle = Math.min(100, Math.max(0, ((ankleL + ankleR) / 2 - 25) * 5));
+
+        return {
+            id: `athlete-${index}`, // Generating ID
+            name: row['Athlete'] || 'Unknown Athlete',
+            date: row['Date'] || new Date().toISOString().split('T')[0],
+
+            hamstringQuadLeft: row['H:Q L'] || 0,
+            hamstringQuadRight: row['H:Q R'] || 0,
+            imtpPeakForce: row['IMTP Peak'] || 0,
+            peakForceAsymmetry: row['PF ASM'] || 0,
+            neckExtension: row['Neck Ext'] || 0,
+            ankleRomLeft: ankleL,
+            ankleRomRight: ankleR,
+
+            // Radar Scores (mock normalized 0-100 based on raw values)
+            scoreHamstring: Math.min(100, (row['H:Q L'] || 0) * 120),
+            scoreQuad: Math.min(100, (row['Quad Strength'] || 400) / 6),
+            scoreAdduction: Math.min(100, (row['Adduction Strength'] || 300) / 4),
+            scoreAnkle: normAnkle,
+            scoreShoulder: Math.min(100, (row['Shoulder Balance'] || 1) * 100),
+            scoreNeck: Math.min(100, (row['Neck Ext'] || 200) / 3),
+        };
+    });
+};
+
+export const analyzeAthlete = (athlete: AthleteData): DashboardMetrics => {
+    const flags = {
+        isHighRisk: athlete.peakForceAsymmetry > 10,
+        notes: [] as string[],
+    };
+
+    if (flags.isHighRisk) {
+        flags.notes.push(`High Asymmetry detected (${athlete.peakForceAsymmetry}%). Monitor load.`);
+    }
+
+    // Determine lowest score for "What's Next"
+    const scores = [
+        { label: 'Hamstring Strength', score: athlete.scoreHamstring },
+        { label: 'Quad Strength', score: athlete.scoreQuad },
+        { label: 'Adduction', score: athlete.scoreAdduction },
+        { label: 'Ankle Mobility', score: athlete.scoreAnkle },
+        { label: 'Shoulder Balance', score: athlete.scoreShoulder },
+        { label: 'Neck Strength', score: athlete.scoreNeck },
+    ];
+
+    scores.sort((a, b) => a.score - b.score);
+    const lowest = scores[0];
+
+    let recTitle = "General Maintenance";
+    let recDesc = "Continue with your current balanced program.";
+
+    switch (lowest.label) {
+        case 'Ankle Mobility':
+            recTitle = "Focus on Ankle Dorsiflexion";
+            recDesc = "Incorporate banded distractions and soleus stretches daily.";
+            break;
+        case 'Hamstring Strength':
+            recTitle = "Posterior Chain focus";
+            recDesc = "Prioritize Nordic Hamstring curls and RDLs.";
+            break;
+        case 'Adduction':
+            recTitle = "Groin Strength";
+            recDesc = "Add Copenhagen Planks to your warm-up routine.";
+            break;
+        case 'Neck Strength':
+            recTitle = "Neck Stability";
+            recDesc = "Include Iron Neck or isometric hold protocols.";
+            break;
+        default:
+            recTitle = `Improve ${lowest.label}`;
+            recDesc = `Your ${lowest.label} is your lowest metric. Focus on specific accessory work.`;
+    }
+
+    return {
+        athlete,
+        flags,
+        recommendation: {
+            focusArea: recTitle,
+            description: recDesc,
+        },
+    };
+};

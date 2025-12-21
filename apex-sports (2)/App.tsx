@@ -13,6 +13,10 @@ import PaymentSuccess from './pages/PaymentSuccess';
 import Services from './pages/Services';
 import WelcomeAthlete from './pages/WelcomeAthlete';
 
+import { DataProvider } from './context/DataContext';
+import AdminUpload from './pages/Admin/AdminUpload';
+import AthleteDashboard from './pages/Portal/AthleteDashboard';
+
 // Wrapper to handle scroll to top on route change
 const ScrollToTop = () => {
   const { pathname } = React.useMemo(() => new URL(window.location.href), [window.location.href]);
@@ -26,27 +30,31 @@ const ScrollToTop = () => {
 
 const App: React.FC = () => {
   return (
-    <Router>
-      <ScrollToTop />
-      <div className="flex flex-col min-h-screen bg-black text-white font-sans antialiased selection:bg-white selection:text-black">
-        <Navbar />
-        <main className="flex-grow">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/strength" element={<Strength />} />
-            <Route path="/mentorship" element={<Mentorship />} />
-            <Route path="/goalkeeper" element={<Goalkeeper />} />
-            <Route path="/booking-policy" element={<BookingPolicy />} />
-            <Route path="/privacy-policy" element={<ApexPrivacy />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/services" element={<Services />} />
-            <Route path="/welcome-athlete" element={<WelcomeAthlete />} />
-            <Route path="/payment-success" element={<PaymentSuccess />} />
-          </Routes>
-        </main>
-        <Footer />
-      </div>
-    </Router>
+    <DataProvider>
+      <Router>
+        <ScrollToTop />
+        <div className="flex flex-col min-h-screen bg-black text-white font-sans antialiased selection:bg-white selection:text-black">
+          <Navbar />
+          <main className="flex-grow">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/strength" element={<Strength />} />
+              <Route path="/mentorship" element={<Mentorship />} />
+              <Route path="/goalkeeper" element={<Goalkeeper />} />
+              <Route path="/booking-policy" element={<BookingPolicy />} />
+              <Route path="/privacy-policy" element={<ApexPrivacy />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/services" element={<Services />} />
+              <Route path="/welcome-athlete" element={<WelcomeAthlete />} />
+              <Route path="/payment-success" element={<PaymentSuccess />} />
+              <Route path="/portal/:athleteId" element={<AthleteDashboard />} />
+              <Route path="/admin-upload" element={<AdminUpload />} />
+            </Routes>
+          </main>
+          <Footer />
+        </div>
+      </Router>
+    </DataProvider>
   );
 };
 
