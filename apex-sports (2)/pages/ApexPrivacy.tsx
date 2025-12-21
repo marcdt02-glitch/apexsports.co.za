@@ -79,9 +79,9 @@ const ApexPrivacy: React.FC = () => {
                             If you have any questions about this Privacy Policy or our data practices, please contact our Information Officer at:
                         </p>
                         <div className="space-y-3">
-                            <a href="mailto:marcdt02@gmail.com" className="flex items-center gap-3 text-white hover:text-gray-300 transition-colors">
+                            <a href="mailto:admin@apexsports.co.za" className="flex items-center gap-3 text-white hover:text-gray-300 transition-colors">
                                 <Mail className="w-5 h-5" />
-                                marcdt02@gmail.com
+                                admin@apexsports.co.za
                             </a>
                             <div className="flex items-center gap-3 text-white">
                                 <MapPin className="w-5 h-5" />

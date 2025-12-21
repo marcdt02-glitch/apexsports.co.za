@@ -37,13 +37,13 @@ const Contact: React.FC = () => {
                             </a>
 
                             {/* Email */}
-                            <a href="mailto:marcdt02@gmail.com" className="flex items-start gap-4 group hover:bg-white/5 p-4 rounded-xl transition-all duration-300">
+                            <a href="mailto:performance@apexsports.co.za" className="flex items-start gap-4 group hover:bg-white/5 p-4 rounded-xl transition-all duration-300">
                                 <div className="p-3 bg-blue-500/10 rounded-lg group-hover:bg-blue-500/20 transition-colors">
                                     <Mail className="w-6 h-6 text-blue-500" />
                                 </div>
                                 <div>
                                     <h3 className="text-white font-semibold mb-1">Email</h3>
-                                    <p className="text-gray-400 group-hover:text-white transition-colors">marcdt02@gmail.com</p>
+                                    <p className="text-gray-400 group-hover:text-white transition-colors">performance@apexsports.co.za</p>
                                     <span className="text-xs text-blue-500 mt-1 inline-block">For detailed enquiries</span>
                                 </div>
                             </a>

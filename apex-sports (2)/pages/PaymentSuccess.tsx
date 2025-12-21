@@ -38,7 +38,7 @@ const PaymentSuccess: React.FC = () => {
                         </div>
 
                         <p className="text-xs text-gray-500 mt-6">
-                            A receipt has been sent to your email. If you have any issues, please contact us at <a href="mailto:marcdt02@gmail.com" className="text-white hover:underline">marcdt02@gmail.com</a>.
+                            A receipt has been sent to your email. If you have any issues, please contact us at <a href="mailto:admin@apexsports.co.za" className="text-white hover:underline">admin@apexsports.co.za</a>.
                         </p>
                     </div>
                 </div>

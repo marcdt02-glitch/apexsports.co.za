@@ -342,7 +342,7 @@ const Home: React.FC = () => {
             <p className="text-lg">
               <strong className="text-white block mb-2">Contact:</strong>
               <a href="tel:+27823788258" className="hover:text-white transition-colors block">+27 82 378 8258</a>
-              <a href="mailto:marcdt02@gmail.com" className="hover:text-white transition-colors block">marcdt02@gmail.com</a>
+              <a href="mailto:marc@apexsports.co.za" className="hover:text-white transition-colors block">marc@apexsports.co.za</a>
             </p>
 
             <p className="text-sm text-gray-500 italic mt-8 border-t border-gray-800 pt-4 max-w-lg mx-auto">

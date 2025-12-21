@@ -53,9 +53,9 @@ const Footer: React.FC = () => {
                 <MessageCircle className="w-5 h-5" />
                 <span>WhatsApp (+27 82 378 8258)</span>
               </a>
-              <a href="mailto:marcdt02@gmail.com" className="flex items-center justify-center gap-3 hover:text-white transition-colors">
+              <a href="mailto:performance@apexsports.co.za" className="flex items-center justify-center gap-3 hover:text-white transition-colors">
                 <Mail className="w-5 h-5" />
-                <span>marcdt02@gmail.com</span>
+                <span>performance@apexsports.co.za</span>
               </a>
               <a href="https://instagram.com/apex_sports_ZA" target="_blank" rel="noreferrer" className="flex items-center justify-center gap-3 hover:text-pink-400 transition-colors">
                 <Instagram className="w-5 h-5" />

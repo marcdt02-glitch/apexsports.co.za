@@ -89,7 +89,7 @@ const Navbar: React.FC = () => {
                 <a href="https://wa.me/27823788258" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-white transition-colors">
                   <MessageCircle className="w-5 h-5" />
                 </a>
-                <a href="mailto:marcdt02@gmail.com" className="text-gray-400 hover:text-white transition-colors">
+                <a href="mailto:performance@apexsports.co.za" className="text-gray-400 hover:text-white transition-colors">
                   <Mail className="w-5 h-5" />
                 </a>
               </div>
