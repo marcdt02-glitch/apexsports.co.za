@@ -150,6 +150,7 @@ const AdminUpload: React.FC = () => {
                                 <tr>
                                     <th className="pb-3">ID</th>
                                     <th className="pb-3">Name</th>
+                                    <th className="pb-3">Email</th>
                                     <th className="pb-3">Date</th>
                                     <th className="pb-3">Score (H:Q L)</th>
                                     <th className="pb-3">Status</th>
@@ -160,6 +161,7 @@ const AdminUpload: React.FC = () => {
                                     <tr key={athlete.id} className="hover:bg-white/5 transition-colors">
                                         <td className="py-3 font-mono text-xs">{athlete.id}</td>
                                         <td className="py-3 font-bold text-white">{athlete.name}</td>
+                                        <td className="py-3 text-gray-400">{athlete.email || '-'}</td>
                                         <td className="py-3">{athlete.date}</td>
                                         <td className="py-3">{athlete.hamstringQuadLeft}</td>
                                         <td className="py-3">

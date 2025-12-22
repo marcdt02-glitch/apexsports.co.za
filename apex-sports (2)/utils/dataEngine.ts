@@ -3,6 +3,7 @@ import Papa from 'papaparse';
 export interface AthleteData {
     id: string;
     name: string;
+    email: string; // Added for Elite Portal
     date: string;
     // Metrics mapped from request
     hamstringQuadLeft: number; // H:Q L
@@ -31,6 +32,11 @@ export interface DashboardMetrics {
     recommendation: {
         focusArea: string;
         description: string;
+    };
+    scores: {
+        performance: number;
+        screening: number;
+        readiness: number;
     };
     performance: {
         acuteLoad: number;
@@ -68,10 +74,10 @@ const generateMockSessions = (): TrainingSession[] => {
 };
 
 // Mock initial data to simulate Processed_Athlete_Data.csv
-// Columns: Athlete, Date, H:Q L, H:Q R, IMTP Peak, PF ASM, Adduction L, Adduction R, Ankle ROM L, Ankle ROM R, Shoulder IR L, Shoulder IR R, Neck Ext
-export const MOCK_CSV_DATA = `Athlete,Date,H:Q L,H:Q R,IMTP Peak,PF ASM,Adduction Strength,Ankle ROM L,Ankle ROM R,Shoulder Balance,Neck Ext,Quad Strength
-John Doe,2025-01-15,0.65,0.62,4500,12.5,350,38,42,0.95,250,550
-Jane Smith,2025-01-14,0.72,0.70,3800,4.2,310,45,45,0.98,210,480`;
+// Columns: Athlete,Email,Date,H:Q L,H:Q R,IMTP Peak,PF ASM,Adduction Strength,Ankle ROM L,Ankle ROM R,Shoulder Balance,Neck Ext,Quad Strength
+export const MOCK_CSV_DATA = `Athlete,Email,Date,H:Q L,H:Q R,IMTP Peak,PF ASM,Adduction Strength,Ankle ROM L,Ankle ROM R,Shoulder Balance,Neck Ext,Quad Strength
+John Doe,john@example.com,2025-01-15,0.65,0.62,4500,12.5,350,38,42,0.95,250,550
+Jane Smith,jane@example.com,2025-01-14,0.72,0.70,3800,4.2,310,45,45,0.98,210,480`;
 
 export const parseAthleteData = (csvString: string): AthleteData[] => {
     const result = Papa.parse(csvString, {
@@ -96,6 +102,7 @@ export const parseAthleteData = (csvString: string): AthleteData[] => {
         return {
             id: `athlete-${index}`, // Generating ID
             name: row['Athlete'] || 'Unknown Athlete',
+            email: row['Email'] || 'no-email@apexsports.co.za',
             date: row['Date'] || new Date().toISOString().split('T')[0],
 
             hamstringQuadLeft: row['H:Q L'] || 0,
@@ -177,6 +184,11 @@ export const analyzeAthlete = (athlete: AthleteData): DashboardMetrics => {
             chronicLoad: 4000,
             acwr: 1.12,
             sessions: generateMockSessions()
+        },
+        scores: {
+            performance: Math.min(100, Math.round(athlete.imtpPeakForce / 50)), // Quick Mock: 5000N = 100%
+            screening: Math.max(0, 100 - (athlete.peakForceAsymmetry * 2)), // Penalty for asymmetry
+            readiness: Math.floor(Math.random() * 20) + 80 // Mock Daily Readiness 80-100
         }
     };
 };

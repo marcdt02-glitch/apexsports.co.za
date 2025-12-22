@@ -51,9 +51,15 @@ const PortalLogin: React.FC = () => {
                     </button>
                 </form>
 
-                <div className="mt-8 text-center border-t border-neutral-800 pt-6">
+                <div className="mt-8 text-center border-t border-neutral-800 pt-6 space-y-4">
+                    <button
+                        onClick={() => navigate('/welcome-athlete')}
+                        className="w-full bg-neutral-800 text-white font-bold py-3 rounded-lg hover:bg-neutral-700 transition-colors border border-gray-700"
+                    >
+                        Create New Account
+                    </button>
                     <p className="text-xs text-gray-500">
-                        Don't have an ID? <a href="mailto:admin@apexsports.co.za" className="text-white underline">Contact Support</a>
+                        Trouble logging in? <a href="mailto:admin@apexsports.co.za" className="text-white underline">Contact Support</a>
                     </p>
                 </div>
             </div>
