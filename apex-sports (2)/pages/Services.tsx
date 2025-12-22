@@ -52,8 +52,14 @@ const Services: React.FC = () => {
                         </ul>
                     </div>
 
-                    <div className="bg-neutral-900/50 p-8 rounded-3xl border border-neutral-800 space-y-6">
+                    <div className="bg-neutral-900/50 p-8 rounded-3xl border border-neutral-800 space-y-6 relative overflow-hidden">
+                        {/* Value Badge */}
+                        <div className="absolute top-0 right-0 bg-red-600 text-white text-xs font-bold px-4 py-1 rounded-bl-xl uppercase tracking-widest shadow-lg">
+                            Most Popular
+                        </div>
+
                         <div className="space-y-4">
+                            {/* Monthly Option */}
                             <a
                                 href="https://paystack.shop/pay/ApexMembership-Monthly"
                                 target="_blank"
@@ -61,26 +67,45 @@ const Services: React.FC = () => {
                                 className="w-full flex items-center justify-between bg-white text-black font-black text-lg py-6 px-8 rounded-xl hover:bg-gray-200 transition-all hover:scale-[1.02] group shadow-xl shadow-white/5"
                             >
                                 <span>Monthly Subscription</span>
-                                <span className="flex items-center gap-2 text-xl">
-                                    R2,000 <ExternalLink className="w-5 h-5 opacity-50 group-hover:opacity-100" />
-                                </span>
+                                <div className="text-right">
+                                    <span className="block text-2xl font-black">R2,500</span>
+                                    <span className="text-xs text-gray-500 font-normal">Per Month</span>
+                                </div>
                             </a>
+
+                            {/* Annual Option (High Value Anchor) */}
                             <a
                                 href="https://paystack.shop/pay/apexmembership-once-off"
                                 target="_blank"
                                 rel="noreferrer"
-                                className="w-full flex items-center justify-between bg-neutral-800 text-white font-black text-lg py-6 px-8 rounded-xl hover:bg-neutral-700 transition-all hover:scale-[1.02] group border border-neutral-700"
+                                className="w-full block bg-neutral-800 text-white p-6 rounded-xl hover:bg-neutral-700 transition-all hover:scale-[1.02] group border border-neutral-700 relative overflow-hidden"
                             >
-                                <div>
-                                    <span>Annual Once-off</span>
-                                    <span className="block text-xs font-normal text-green-400 mt-1">Save R3,000</span>
+                                <div className="flex justify-between items-start mb-4">
+                                    <div>
+                                        <span className="text-2xl font-black text-white">Upfront Payment</span>
+                                        <div className="flex items-center gap-2 mt-1">
+                                            <span className="text-gray-500 line-through text-sm font-bold">Value: R33,600</span>
+                                            <span className="text-green-400 text-sm font-bold animate-pulse">Save R6,600</span>
+                                        </div>
+                                    </div>
+                                    <div className="text-right">
+                                        <span className="block text-3xl font-black text-white">R27,000</span>
+                                        <span className="text-xs text-gray-400">Once-off</span>
+                                    </div>
                                 </div>
-                                <span className="flex items-center gap-2 text-xl">
-                                    R21,000 <ExternalLink className="w-5 h-5 opacity-50 group-hover:opacity-100" />
-                                </span>
+
+                                {/* Savings Bar Visual */}
+                                <div className="w-full bg-neutral-900 h-3 rounded-full overflow-hidden flex mb-2">
+                                    <div className="bg-white w-[80%] h-full"></div>
+                                    <div className="bg-green-500 w-[20%] h-full flex items-center justify-center"></div>
+                                </div>
+                                <div className="flex justify-between text-[10px] text-gray-400 font-bold uppercase tracking-wider">
+                                    <span>Cost Paid</span>
+                                    <span className="text-green-500">Instant Savings</span>
+                                </div>
                             </a>
                         </div>
-                        <p className="text-center text-gray-500 text-xs mt-4">Includes priority support and equipment gear check.</p>
+                        <p className="text-center text-gray-500 text-xs mt-4">Includes priority support, full kit package, and 24/7 access.</p>
                     </div>
                 </div>
             </div>
@@ -213,16 +238,28 @@ const Services: React.FC = () => {
                                     Buy for R2,500
                                 </a>
                             </div>
-                            <div className="bg-black p-4 rounded-xl border border-neutral-800">
-                                <div className="flex items-center justify-between mb-2">
-                                    <span className="text-white font-bold">25-Hour Coaching Pack</span>
+                            {/* 25-Hour Pack with Savings Logic */}
+                            <div className="bg-neutral-800 p-6 rounded-xl border border-neutral-700 relative overflow-hidden">
+                                <div className="absolute top-0 right-0 bg-green-600 text-white text-[10px] font-bold px-3 py-1 rounded-bl-lg">
+                                    SAVE R1,500
                                 </div>
-                                <div className="grid grid-cols-2 gap-2">
-                                    <a href="https://paystack.shop/pay/25hourcoachingpack-onceoff" target="_blank" rel="noreferrer" className="text-xs text-center bg-neutral-900 py-2 rounded text-gray-400 hover:text-white hover:bg-neutral-800 transition-colors">
-                                        Once-off: R9,000
-                                    </a>
-                                    <a href="https://paystack.shop/pay/25HourCoachingPack-Monthly" target="_blank" rel="noreferrer" className="text-xs text-center bg-neutral-900 py-2 rounded text-gray-400 hover:text-white hover:bg-neutral-800 transition-colors">
-                                        Monthly: R833.33
+                                <h3 className="text-white font-bold mb-2">25-Hour Elite Pack</h3>
+                                <p className="text-gray-400 text-xs mb-4">Serious technical development for committed athletes.</p>
+
+                                <div className="flex items-end justify-between mb-4">
+                                    <div>
+                                        <p className="text-gray-500 line-through text-xs font-bold">Standard: R10,000</p>
+                                        <p className="text-2xl font-black text-white">R8,500</p>
+                                    </div>
+                                    <span className="text-xs bg-white text-black font-bold px-2 py-1 rounded">Upfront Deal</span>
+                                </div>
+
+                                <a href="https://paystack.shop/pay/25hourcoachingpack-onceoff" target="_blank" rel="noreferrer" className="block w-full bg-white hover:bg-gray-200 text-black text-center py-3 rounded-lg font-bold transition-colors mb-2">
+                                    Grab the Deal
+                                </a>
+                                <div className="text-center">
+                                    <a href="https://paystack.shop/pay/25HourCoachingPack-Monthly" target="_blank" rel="noreferrer" className="text-xs text-gray-400 hover:text-white underline">
+                                        Or pay R833/mo (No Saving)
                                     </a>
                                 </div>
                             </div>
