@@ -16,6 +16,7 @@ import WelcomeAthlete from './pages/WelcomeAthlete';
 import { DataProvider } from './context/DataContext';
 import AdminUpload from './pages/Admin/AdminUpload';
 import AthleteDashboard from './pages/Portal/AthleteDashboard';
+import PortalLogin from './pages/Portal/PortalLogin';
 
 // Wrapper to handle scroll to top on route change
 const ScrollToTop = () => {
@@ -47,11 +48,7 @@ const App: React.FC = () => {
               <Route path="/services" element={<Services />} />
               <Route path="/welcome-athlete" element={<WelcomeAthlete />} />
               <Route path="/payment-success" element={<PaymentSuccess />} />
-              import PortalLogin from './pages/Portal/PortalLogin';
 
-              // ... (existing imports)
-
-              // ...
 
               <Route path="/portal" element={<PortalLogin />} />
               <Route path="/portal/:athleteId" element={<AthleteDashboard />} />
