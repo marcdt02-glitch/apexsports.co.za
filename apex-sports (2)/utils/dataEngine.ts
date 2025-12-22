@@ -5,6 +5,7 @@ export interface AthleteData {
     name: string;
     email: string; // Added for Elite Portal
     date: string;
+    lastUpdated?: string; // New Timestamp Field
     // Metrics mapped from request
     hamstringQuadLeft: number; // H:Q L
     hamstringQuadRight: number; // H:Q R

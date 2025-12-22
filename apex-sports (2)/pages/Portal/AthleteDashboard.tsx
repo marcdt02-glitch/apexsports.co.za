@@ -173,7 +173,18 @@ const AthleteDashboard: React.FC = () => {
                                 <span className="w-1 h-8 bg-red-600 rounded-full"></span>
                                 Performance Profile
                             </h2>
-                            <span className="text-xs text-gray-500 font-bold border border-gray-700 px-3 py-1 rounded-full uppercase tracking-wider">Live Feed</span>
+                            <div className="flex flex-col items-end gap-1">
+                                <span className="text-xs text-gray-500 font-bold border border-gray-700 px-3 py-1 rounded-full uppercase tracking-wider">Live Feed</span>
+                                {athlete.lastUpdated && (
+                                    <span className="text-[10px] text-gray-600 font-mono">
+                                        Last Updated: {
+                                            new Date(athlete.lastUpdated).toDateString() === new Date().toDateString()
+                                                ? "Today"
+                                                : athlete.lastUpdated
+                                        }
+                                    </span>
+                                )}
+                            </div>
                         </div>
                         <div className="h-[450px] w-full flex items-center justify-center -ml-4">
                             <ResponsiveContainer width="100%" height="100%">

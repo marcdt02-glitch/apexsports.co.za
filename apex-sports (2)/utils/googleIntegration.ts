@@ -54,6 +54,7 @@ const mapGoogleRowToAthlete = (row: any): AthleteData => {
         name: row.name || 'Unknown Athlete',
         email: row.email || '',
         date: new Date().toISOString().split('T')[0], // Always fresh
+        lastUpdated: row.last_updated || '', // Map from JSON
 
         hamstringQuadLeft: num(row.hq_left),
         hamstringQuadRight: num(row.hq_right),
