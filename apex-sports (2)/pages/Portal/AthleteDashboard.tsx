@@ -414,11 +414,9 @@ const AthleteDashboard: React.FC = () => {
                 </div>
                 {/* Debug Info */}
                 <div className="text-center text-gray-800 text-[10px] py-4 font-mono">
-                    Debug: {athlete.package} | Elite: {isEliteTier ? 'Yes' : 'No'} | ID: {athlete.id}
+                    Debug: Pkg="{athlete.package}" | Agility="{athlete.agilityTime}" | ID: {athlete.id}
                 </div>
             </div>
         </SafetyGuard>
     );
-};
-
-export default AthleteDashboard;
+    export default AthleteDashboard;

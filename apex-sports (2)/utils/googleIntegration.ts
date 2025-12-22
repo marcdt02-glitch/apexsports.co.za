@@ -79,7 +79,7 @@ const mapGoogleRowToAthlete = (row: any): AthleteData => {
         imtpRfd200: num(row['RFD 200ms'] || row.imtpRfd200),
         peakForceAsymmetry: num(row['PF ASM'] || row.asymmetry),
         broadJump: num(row['Broad Jump'] || row.broadJump || row['BJ'] || row['Broad Jump (cm)'] || row['Distance'] || row.distance),
-        agilityTime: num(row['Agility T'] || row['505 Agility'] || row['Agility 505'] || row['505'] || row.agilityTime || row.agility),
+        agilityTime: num(row['Agility T'] || row['Agility (s)'] || row['Agility'] || row['505 Agility'] || row['Agility 505'] || row['505'] || row['T-Test'] || row['T Test'] || row.agilityTime || row.agility || row.tTest),
 
         // Clinical
         hamstringQuadLeft: num(row['H:Q L']),
