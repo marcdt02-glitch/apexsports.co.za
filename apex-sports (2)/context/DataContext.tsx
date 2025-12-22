@@ -1,6 +1,38 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { AthleteData, parseAthleteData, MOCK_CSV_DATA } from '../utils/dataEngine';
 
+// Enhanced Athlete Interface for Google Integration
+export interface Athlete {
+    id: string; // Internal ID or generated
+    name: string;
+    email: string;
+    packageType: 'Camp' | 'Elite' | 'Pro'; // Navigation Guard
+
+    // Scores
+    scorePerformance: number;
+    scoreScreening: number;
+    scoreReadiness: number;
+
+    // Radar Data (Nullable)
+    hamstringQuadLeft?: number;
+    hamstringQuadRight?: number;
+    scoreAdduction?: number;
+    scoreAnkle?: number;
+    scoreShoulder?: number;
+    scoreNeck?: number;
+
+    // VALD Specific
+    imtpPeakForce?: number;
+    peakForceAsymmetry?: number;
+
+    // Daily
+    sRPE?: number;
+    sleep?: number;
+
+    // Meta
+    focusArea?: string;
+}
+
 interface DataContextType {
     data: AthleteData[];
     refreshData: (csvContent: string) => void;
@@ -31,11 +63,11 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     };
 
     const getAthlete = (idOrEmail: string): AthleteData | undefined => {
-        const term = idOrEmail.toLowerCase().trim();
+        // Search by ID or Email
+        const searchTerm = idOrEmail.toLowerCase().trim();
         return data.find(a =>
-            a.id.toLowerCase() === term ||
-            a.email.toLowerCase() === term ||
-            a.name.toLowerCase().replace(/\s+/g, '-').includes(term)
+            a.id.toLowerCase() === searchTerm ||
+            (a.email && a.email.toLowerCase() === searchTerm)
         );
     };
 
