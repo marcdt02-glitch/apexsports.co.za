@@ -425,75 +425,28 @@ const AthleteDashboard: React.FC = () => {
     };
 
     return (
-        <div className="min-h-screen bg-black text-white flex flex-col md:flex-row relative overflow-x-hidden" ref={dashboardRef}>
+        <div className="min-h-screen bg-black text-white flex flex-col md:flex-row relative overflow-x-hidden pt-24 md:pt-28" ref={dashboardRef}>
 
             {/* Mobile Header Toggle */}
-            <div className="md:hidden bg-neutral-900 p-4 border-b border-gray-800 flex justify-between items-center sticky top-0 z-50 no-print">
-                <div className="flex items-center gap-2">
-                    <img src="/images/logo.png" className="w-8 h-8 object-contain" alt="Logo" />
-                    <span className="font-bold uppercase tracking-wider">Apex Hub</span>
-                </div>
-                <button onClick={() => setSidebarOpen(!sidebarOpen)} className="text-white p-2">
-                    {sidebarOpen ? <X /> : <Menu />}
-                </button>
+            <div className="md:hidden bg-neutral-900 p-4 border-b border-gray-800 flex justify-between items-center sticky top-0 z-50 no-print -mt-24">
+                {/* Note: -mt-24 pulls it back up if the parent has padding, but actually the parent padding pushes everything down.
+                    For mobile, we want the toggle AT THE TOP.
+                    If parent has pt-24, the toggle starts at 96px.
+                    So we might need to adjust mobile strategy vs desktop strategy.
+                    Let's use specific padding for Desktop Main Content only?
+                    
+                    Strategy:
+                    Keep Parent clean.
+                    Add pt-28 to Desktop Sidebar AND Desktop Main Content.
+                */}
             </div>
 
-            {/* Sidebar Navigation */}
-            {/* Overlay for mobile when sidebar is open */}
-            {sidebarOpen && (
-                <div
-                    className="fixed inset-0 bg-black/80 z-40 md:hidden backdrop-blur-sm"
-                    onClick={() => setSidebarOpen(false)}
-                ></div>
-            )}
-
-            <div className={`
-       fixed inset-y-0 left-0 z-50 w-72 bg-neutral-900 border-r border-gray-800 transform transition-transform duration-300 ease-in-out md:relative md:translate-x-0 no-print h-full
-       ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-       md:block
-     `}>
-                <div className="p-10 border-b border-gray-800 flex flex-col items-center">
-                    <div className="w-24 h-24 bg-black rounded-full border-2 border-white flex items-center justify-center mb-6 shadow-2xl">
-                        <span className="text-3xl font-bold">{athlete.name.charAt(0)}</span>
-                    </div>
-                    <h2 className="text-xl font-bold text-white text-center mb-1">{athlete.name}</h2>
-                    <p className="text-xs text-gray-500 uppercase tracking-widest border border-gray-800 px-3 py-1 rounded-full">Athlete</p>
-                </div>
-
-                <nav className="p-6 space-y-4">
-                    <button onClick={() => { setActiveView('dashboard'); setSidebarOpen(false); }} className={`w-full flex items-center gap-4 px-6 py-4 rounded-xl transition-all font-bold ${activeView === 'dashboard' ? 'bg-white text-black shadow-lg shadow-white/5' : 'text-gray-400 hover:bg-white/5 hover:text-white'}`}>
-                        <LayoutDashboard className="w-5 h-5" /> Dashboard
-                    </button>
-                    <button onClick={() => { setActiveView('goals'); setSidebarOpen(false); }} className={`w-full flex items-center gap-4 px-6 py-4 rounded-xl transition-all font-bold ${activeView === 'goals' ? 'bg-white text-black shadow-lg shadow-white/5' : 'text-gray-400 hover:bg-white/5 hover:text-white'}`}>
-                        <Target className="w-5 h-5" /> My Roadmap
-                    </button>
-                    <button onClick={() => { setActiveView('library'); setSidebarOpen(false); }} className={`w-full flex items-center gap-4 px-6 py-4 rounded-xl transition-all font-bold ${activeView === 'library' ? 'bg-white text-black shadow-lg shadow-white/5' : 'text-gray-400 hover:bg-white/5 hover:text-white'}`}>
-                        <BookOpen className="w-5 h-5" /> The Library
-                    </button>
-                    <button onClick={() => { setActiveView('reports'); setSidebarOpen(false); }} className={`w-full flex items-center gap-4 px-6 py-4 rounded-xl transition-all font-bold ${activeView === 'reports' ? 'bg-white text-black shadow-lg shadow-white/5' : 'text-gray-400 hover:bg-white/5 hover:text-white'}`}>
-                        <FileText className="w-5 h-5" /> Reports
-                    </button>
-                </nav>
-
-                <div className="absolute bottom-0 w-full p-6 border-t border-gray-800">
-                    <Link to="/" className="flex items-center gap-2 text-gray-500 hover:text-white transition-colors text-sm font-bold">
-                        <ChevronLeft className="w-4 h-4" /> Return Home
-                    </Link>
-                </div>
-            </div>
-
-            {/* Main Content Area */}
-            <div className="flex-1 overflow-y-auto h-screen bg-black w-full">
-                <div className="p-6 md:p-16 pb-32 max-w-7xl mx-auto">
-                    {activeView === 'dashboard' && <DashboardView />}
-                    {activeView === 'goals' && <FullGoalsView />}
-                    {activeView === 'library' && <FullLibraryView />}
-                    {activeView === 'reports' && <FullReportsView />}
-                </div>
-            </div>
-
+            {/* CORRECTED STRATEGY BELOW - Reverting Parent Padding and applying separately */}
         </div>
     );
+};
+// WAIT - I need to modify the actual return block properly. I will cancel this generic block and target the specific lines with the better strategy.
+
 };
 
 export default AthleteDashboard;
