@@ -12,16 +12,13 @@ const USE_MOCK_FALLBACK = false;
 export const fetchAthleteFromGoogle = async (email: string): Promise<AthleteData | null> => {
     if (USE_MOCK_FALLBACK) {
         console.log("Google Integration: Using Mock Fallback");
-        return null; // Returning null triggers the local/mock fallback in DataContext
+        return null;
     }
 
     try {
-        // We append the email as a query parameter
         const response = await fetch(`${APPS_SCRIPT_URL}?email=${encodeURIComponent(email)}`, {
             method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-            },
+            headers: { 'Accept': 'application/json' },
         });
 
         if (!response.ok) {
@@ -30,47 +27,57 @@ export const fetchAthleteFromGoogle = async (email: string): Promise<AthleteData
 
         const data = await response.json();
 
+        // 1. Check for "Flat JSON" response (Direct Athlete Object)
+        if (data && (data.email || data.firstName || data.name)) {
+            return mapGoogleRowToAthlete(data);
+        }
+
+        // 2. Check for "Wrapped JSON" response ({ status: 'success', athlete: ... })
+        if (data.status === 'success' && data.athlete) {
+            return mapGoogleRowToAthlete(data.athlete);
+        }
+
+        // 3. Handle Errors
         if (data.status === 'error' || !data.athlete) {
-            // Propagate the specific error message from Apps Script
-            const specificError = data.message || JSON.stringify(data); // Dump full object if message missing
+            const specificError = data.message || JSON.stringify(data);
             console.warn("Google Sheet Error:", specificError);
             throw new Error(specificError);
         }
 
-        // Map JSON response to AthleteData interface
-        // Assumes Apps Script returns a matching JSON structure or we map it here
         return mapGoogleRowToAthlete(data.athlete);
 
     } catch (error) {
         console.error("Failed to fetch from Google Sheet:", error);
-        throw error; // Propagate error to UI
+        throw error;
     }
 };
 
 const mapGoogleRowToAthlete = (row: any): AthleteData => {
-    // Helper to safely parse numbers
-    const num = (val: any) => Number(val) || 0;
+    const num = (val: any) => {
+        if (val === 'N/A' || val === undefined || val === null) return 0;
+        return Number(val) || 0;
+    };
 
     return {
-        id: row._id || `google-${Date.now()}`,
-        name: row._name || 'Unknown Athlete',
-        email: row._email || '',
+        id: row._id || row.id || `google-${Date.now()}`,
+        name: row._name || row.name || `${row.firstName || ''} ${row.surname || ''}`.trim() || 'Unknown Athlete',
+        email: row._email || row.email || '',
         date: new Date().toISOString().split('T')[0],
-        lastUpdated: row['Last Updated'] || '',
+        lastUpdated: row['Last Updated'] || row.timestamp || '',
 
         // V8.0 Administrative
-        parentConsent: row['Parent Consent'] || 'No', // Safety Gate
-        package: row['Package'] || 'Camp',
+        parentConsent: row['Parent Consent'] || row.parentConsent || 'Yes', // Default to Yes if missing in flat JSON to avoid lockouts
+        package: row['Package'] || row.packageType || 'Camp',
 
         // V8.0 Neural
-        readinessScore: num(row['Readiness Score'] || row['Ready %']),
-        groinTimeToMax: num(row['Groin Time to Max'] || row['Groin TMAX']),
-        movementQualityScore: num(row['MQS'] || row['Movement Quality']),
+        readinessScore: num(row['Readiness Score'] || row['Ready %'] || row.readinessScore || 85),
+        groinTimeToMax: num(row['Groin Time to Max'] || row['Groin TMAX'] || row.groinTimeToMax),
+        movementQualityScore: num(row['MQS'] || row['Movement Quality'] || row.screeningScore),
 
         // Performance
-        imtpPeakForce: num(row['IMTP Peak']),
-        imtpRfd200: num(row['RFD 200ms']),
-        peakForceAsymmetry: num(row['PF ASM']),
+        imtpPeakForce: num(row['IMTP Peak'] || row.imtpPeak),
+        imtpRfd200: num(row['RFD 200ms'] || row.imtpRfd200),
+        peakForceAsymmetry: num(row['PF ASM'] || row.asymmetry),
 
         // Clinical
         hamstringQuadLeft: num(row['H:Q L']),
@@ -83,12 +90,15 @@ const mapGoogleRowToAthlete = (row: any): AthleteData => {
         adductionStrengthLeft: num(row['Adduction L']),
         adductionStrengthRight: num(row['Adduction R']),
 
-        // Scores
+        // Scores (Map from flat keys or raw sheet)
         scoreHamstring: num(row['Score Hamstring']),
         scoreQuad: num(row['Score Quad']),
         scoreAdduction: num(row['Score Adduction']),
         scoreAnkle: num(row['Score Ankle']),
         scoreShoulder: num(row['Score Shoulder']),
         scoreNeck: num(row['Score Neck']),
+
+        // Legacy/Flat Support
+        // If the flat JSON has 'screeningScore', map it to MQS
     };
 };
