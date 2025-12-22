@@ -78,24 +78,42 @@ const AthleteDashboard: React.FC = () => {
 
     const athlete = athleteId ? getAthlete(athleteId) : undefined;
 
-    // Auth Redirect (Effect to avoid render loop issues, although immediate return is often safer)
+    const [searchTimeout, setSearchTimeout] = useState(false);
+
+    // Auth Redirect & Timeout Logic
     React.useEffect(() => {
         if (!athlete && athleteId) {
-            // We might want to wait a split second if data is loading, but since getAthlete is sync,
-            // if it's not there, it's not there.
-            // However, if we just came from Login, it should be there.
+            const timer = setTimeout(() => {
+                setSearchTimeout(true);
+            }, 5000); // 5 seconds timeout
+            return () => clearTimeout(timer);
         }
     }, [athlete, athleteId]);
 
     if (!athlete) {
         return (
-            <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center">
-                <div className="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin mb-8"></div>
-                <h2 className="text-2xl font-bold mb-4">Searching Performance Database...</h2>
-                <p className="text-gray-400 mb-6">Checking ID: {athleteId}</p>
-                <button onClick={() => window.location.href = '/#/portal'} className="text-red-500 hover:text-red-400 font-bold underline">
-                    Return to Login
-                </button>
+            <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-4 text-center">
+                {!searchTimeout ? (
+                    <>
+                        <div className="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin mb-8"></div>
+                        <h2 className="text-2xl font-bold mb-4">Searching Performance Database...</h2>
+                        <p className="text-gray-400 mb-6">Checking ID: {athleteId}</p>
+                    </>
+                ) : (
+                    <>
+                        <div className="w-16 h-16 bg-neutral-900 rounded-full flex items-center justify-center mb-8 border border-neutral-800">
+                            <AlertTriangle className="w-8 h-8 text-red-500" />
+                        </div>
+                        <h2 className="text-2xl font-bold mb-4 text-red-500">Athlete Not Found</h2>
+                        <p className="text-gray-400 mb-8 max-w-md">
+                            We could not locate profile data for <span className="text-white font-mono">{athleteId}</span>.
+                            This may be due to a syncing issue or an incorrect ID.
+                        </p>
+                        <button onClick={() => window.location.href = '/#/portal'} className="bg-white text-black font-bold py-3 px-8 rounded-lg hover:bg-gray-200 transition-colors">
+                            Return to Login
+                        </button>
+                    </>
+                )}
             </div>
         );
     }

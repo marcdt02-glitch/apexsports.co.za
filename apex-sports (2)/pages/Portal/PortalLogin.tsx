@@ -19,7 +19,10 @@ const PortalLogin: React.FC = () => {
         setError('');
 
         try {
-            await fetchAndAddAthlete(term);
+            const result = await fetchAndAddAthlete(term);
+            if (!result) {
+                throw new Error("Athlete Profile not found. Please check the email address.");
+            }
             navigate(`/portal/${term}`);
         } catch (err: any) {
             console.error("Login failed:", err);

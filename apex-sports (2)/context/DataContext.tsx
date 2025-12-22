@@ -73,7 +73,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         );
     };
 
-    const fetchAndAddAthlete = async (emailOrId: string) => {
+    const fetchAndAddAthlete = async (emailOrId: string): Promise<AthleteData | null> => {
         setLoading(true);
         const newAthlete = await fetchAthleteFromGoogle(emailOrId);
 
@@ -87,6 +87,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             });
         }
         setLoading(false);
+        return newAthlete; // Return result for caller logic
     };
 
     return (
