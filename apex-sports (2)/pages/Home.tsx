@@ -358,7 +358,7 @@ const Home: React.FC = () => {
           <div className="mt-8">
             <a href="https://wa.me/27823788258" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 bg-white text-black px-8 py-4 rounded-full font-bold uppercase tracking-wider hover:bg-gray-200 transition-colors">
               <Mail className="w-5 h-5" />
-              Request a Session
+              Request a Consultation
             </a>
           </div>
         </div>
