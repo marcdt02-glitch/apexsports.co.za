@@ -21,15 +21,11 @@ const PortalLogin: React.FC = () => {
         try {
             await fetchAndAddAthlete(term);
             navigate(`/portal/${term}`);
-        } catch (err) {
+        } catch (err: any) {
             console.error("Login failed:", err);
-            // If fetchAndAddAthlete throws or returns promise that rejects
-            // We need to check if the context actually found it.
-            // Since fetchAndAddAthlete is async void, we might not know success easily unless we check `getAthlete`.
-            // But let's assume if it fails it throws, OR let's improve the feedback loop.
-            // Ideally, fetchAndAddAthlete should return the athlete or null.
-            // For now, let's catch standard errors.
-            setError("Could not match Athlete Profile. Please check your email.");
+            // Enhanced Debugging for User
+            const errorMessage = err?.message || JSON.stringify(err);
+            setError(`Connection Error: ${errorMessage}. Please verify your script deployment or email.`);
             setIsLoading(false);
             return;
         }
@@ -47,11 +43,11 @@ const PortalLogin: React.FC = () => {
                 </div>
 
                 {error && (
-                    <div className="mb-6 p-4 bg-red-950/50 border border-red-900 rounded-lg flex items-center gap-3">
-                        <div className="p-2 bg-red-900 rounded-full">
+                    <div className="mb-6 p-4 bg-red-950/50 border border-red-900 rounded-lg flex items-start gap-3">
+                        <div className="p-2 bg-red-900 rounded-full shrink-0">
                             <Lock className="w-4 h-4 text-white" />
                         </div>
-                        <p className="text-red-200 text-sm font-bold">{error}</p>
+                        <p className="text-red-200 text-sm font-bold break-all">{error}</p>
                     </div>
                 )}
 
