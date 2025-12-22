@@ -1,16 +1,18 @@
+```javascript
 
 
 // ==========================================
 // 1. API API ENDPOINT (Handle GET Requests)
 // ==========================================
 function doGet(e) {
+  try {
     // 1. Extract Parameters
     var email = e.parameter.email;
     var id = e.parameter.id;
 
     // 2. Validation
     if (!email && !id) {
-        return errorResponse('Missing email or id parameter');
+        return ContentService.createTextOutput(JSON.stringify({status: 'error', message: 'Missing parameters'})).setMimeType(ContentService.MimeType.JSON);
     }
 
     // 3. Open Sheet
@@ -18,23 +20,25 @@ function doGet(e) {
     if (!sheet) {
         // Debugging: List available sheets
         var allSheets = SpreadsheetApp.getActiveSpreadsheet().getSheets().map(function (s) { return s.getName(); });
-        return errorResponse('Sheet "Athlete Data" not found. Available sheets: ' + allSheets.join(", "));
+        return ContentService.createTextOutput(JSON.stringify({status: 'error', message: 'Sheet "Athlete Data" missing. Found: ' + allSheets.join(", ")})).setMimeType(ContentService.MimeType.JSON);
     }
 
     // 4. Search for Athlete
     var data = sheet.getDataRange().getValues();
-    if (data.length === 0) return errorResponse("Sheet is empty");
+    if (data.length === 0) return ContentService.createTextOutput(JSON.stringify({status: 'error', message: 'Sheet is empty'})).setMimeType(ContentService.MimeType.JSON);
 
     var headers = data[0];
     var athlete = null;
 
     // Debugging: Check for Email column
-    var emailIndex = headers.findIndex(function (h) { return h.toString().toLowerCase().trim() === 'email'; });
-    var idIndex = headers.findIndex(function (h) { return h.toString().toLowerCase().trim() === 'athlete id'; });
+    // var emailIndex = headers.findIndex(function (h) { return h.toString().toLowerCase().trim() === 'email'; });
+    // var idIndex = headers.findIndex(function (h) { return h.toString().toLowerCase().trim() === 'athlete id'; });
 
-    if (emailIndex === -1 && idIndex === -1) {
-        return errorResponse("Columns 'Email' or 'Athlete ID' not found in headers: " + headers.join(", "));
-    }
+    // if (emailIndex === -1 && idIndex === -1) {
+    //     return errorResponse("Columns 'Email' or 'Athlete ID' not found in headers: " + headers.join(", "));
+    // }
+
+    var normalize = function(str) { return str ? str.toString().toLowerCase().trim() : ""; };
 
     for (var i = 1; i < data.length; i++) {
         var row = data[i];

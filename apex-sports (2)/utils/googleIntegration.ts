@@ -32,7 +32,7 @@ export const fetchAthleteFromGoogle = async (email: string): Promise<AthleteData
 
         if (data.status === 'error' || !data.athlete) {
             // Propagate the specific error message from Apps Script
-            const specificError = data.message || "Unknown API Error";
+            const specificError = data.message || JSON.stringify(data); // Dump full object if message missing
             console.warn("Google Sheet Error:", specificError);
             throw new Error(specificError);
         }
