@@ -66,8 +66,8 @@ const mapGoogleRowToAthlete = (row: any): AthleteData => {
         lastUpdated: row['Last Updated'] || row.timestamp || '',
 
         // V8.0 Administrative
-        parentConsent: row['Parent Consent'] || row.parentConsent || 'Yes', // Default to Yes if missing in flat JSON to avoid lockouts
-        package: row['Package'] || row.packageType || 'Camp',
+        parentConsent: row['Parent Consent'] || row.parentConsent || 'Yes',
+        package: row['Package'] || row.packageType || row['Package Type'] || row.tier || 'Camp',
 
         // V8.0 Neural
         readinessScore: num(row['Readiness Score'] || row['Ready %'] || row.readinessScore || 85),
@@ -78,6 +78,8 @@ const mapGoogleRowToAthlete = (row: any): AthleteData => {
         imtpPeakForce: num(row['IMTP Peak'] || row.imtpPeak),
         imtpRfd200: num(row['RFD 200ms'] || row.imtpRfd200),
         peakForceAsymmetry: num(row['PF ASM'] || row.asymmetry),
+        broadJump: num(row['Broad Jump'] || row.broadJump || row['BJ'] || row['Broad Jump (cm)'] || row['Distance'] || row.distance),
+        agilityTime: num(row['Agility T'] || row['505 Agility'] || row['Agility 505'] || row['505'] || row.agilityTime || row.agility),
 
         // Clinical
         hamstringQuadLeft: num(row['H:Q L']),
@@ -91,12 +93,13 @@ const mapGoogleRowToAthlete = (row: any): AthleteData => {
         adductionStrengthRight: num(row['Adduction R']),
 
         // Scores (Map from flat keys or raw sheet)
-        scoreHamstring: num(row['Score Hamstring']),
-        scoreQuad: num(row['Score Quad']),
-        scoreAdduction: num(row['Score Adduction']),
-        scoreAnkle: num(row['Score Ankle']),
-        scoreShoulder: num(row['Score Shoulder']),
-        scoreNeck: num(row['Score Neck']),
+        // Scores (Map from flat keys or raw sheet)
+        scoreHamstring: num(row['Score Hamstring'] || row.scoreHamstring),
+        scoreQuad: num(row['Score Quad'] || row.scoreQuad),
+        scoreAdduction: num(row['Score Adduction'] || row.scoreAdduction),
+        scoreAnkle: num(row['Score Ankle'] || row.scoreAnkle),
+        scoreShoulder: num(row['Score Shoulder'] || row.scoreShoulder),
+        scoreNeck: num(row['Score Neck'] || row.scoreNeck),
 
         // Legacy/Flat Support
         // If the flat JSON has 'screeningScore', map it to MQS

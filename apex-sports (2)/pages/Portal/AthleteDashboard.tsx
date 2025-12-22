@@ -334,7 +334,7 @@ const AthleteDashboard: React.FC = () => {
                                     <MetricCard label="IMTP Peak" value={`${athlete.imtpPeakForce} N`} />
                                     <MetricCard label="RFD 200ms" value={`${athlete.imtpRfd200} N/s`} />
                                     <MetricCard label="Asymmetry" value={`${athlete.peakForceAsymmetry}%`} />
-                                    <MetricCard label="Jump Height" value={`${athlete.broadJump || '-'} cm`} />
+                                    <MetricCard label="Jump Dist." value={`${athlete.broadJump || '-'} cm`} />
                                     <MetricCard label="Agility T" value={`${athlete.agilityTime || '-'} s`} />
                                 </div>
                             </div>

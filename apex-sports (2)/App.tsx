@@ -1,5 +1,5 @@
 import React from 'react';
-import { HashRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -29,38 +29,44 @@ const ScrollToTop = () => {
   return null;
 }
 
-const App: React.FC = () => {
-  // Check location to conditionally render Navbar
-  const { pathname } = window.location;
-  const isPortal = pathname.startsWith('/portal') || window.location.hash.startsWith('#/portal');
+const InnerLayout: React.FC = () => {
+  const location = useLocation();
+  // With HashRouter, location.pathname is the path inside the hash (e.g. "/portal/123")
+  const isPortal = location.pathname.startsWith('/portal');
 
+  return (
+    <div className="flex flex-col min-h-screen bg-black text-white font-sans antialiased selection:bg-white selection:text-black">
+      {!isPortal && <Navbar />}
+      <main className="flex-grow">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/strength" element={<Strength />} />
+          <Route path="/mentorship" element={<Mentorship />} />
+          <Route path="/goalkeeper" element={<Goalkeeper />} />
+          <Route path="/booking-policy" element={<BookingPolicy />} />
+          <Route path="/privacy-policy" element={<ApexPrivacy />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/welcome-athlete" element={<WelcomeAthlete />} />
+          <Route path="/payment-success" element={<PaymentSuccess />} />
+
+
+          <Route path="/portal" element={<PortalLogin />} />
+          <Route path="/portal/:athleteId" element={<AthleteDashboard />} />
+          <Route path="/admin-upload" element={<AdminUpload />} />
+        </Routes>
+      </main>
+      <Footer />
+    </div>
+  );
+};
+
+const App: React.FC = () => {
   return (
     <DataProvider>
       <Router>
         <ScrollToTop />
-        <div className="flex flex-col min-h-screen bg-black text-white font-sans antialiased selection:bg-white selection:text-black">
-          {!isPortal && <Navbar />}
-          <main className="flex-grow">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/strength" element={<Strength />} />
-              <Route path="/mentorship" element={<Mentorship />} />
-              <Route path="/goalkeeper" element={<Goalkeeper />} />
-              <Route path="/booking-policy" element={<BookingPolicy />} />
-              <Route path="/privacy-policy" element={<ApexPrivacy />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/services" element={<Services />} />
-              <Route path="/welcome-athlete" element={<WelcomeAthlete />} />
-              <Route path="/payment-success" element={<PaymentSuccess />} />
-
-
-              <Route path="/portal" element={<PortalLogin />} />
-              <Route path="/portal/:athleteId" element={<AthleteDashboard />} />
-              <Route path="/admin-upload" element={<AdminUpload />} />
-            </Routes>
-          </main>
-          <Footer />
-        </div>
+        <InnerLayout />
       </Router>
     </DataProvider>
   );
