@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { AthleteData, parseAthleteData, MOCK_CSV_DATA } from '../utils/dataEngine';
+import { fetchAthleteFromGoogle } from '../utils/googleIntegration';
 
 // Enhanced Athlete Interface for Google Integration
 export interface Athlete {
@@ -37,6 +38,7 @@ interface DataContextType {
     data: AthleteData[];
     refreshData: (csvContent: string) => void;
     getAthlete: (id: string) => AthleteData | undefined;
+    fetchAndAddAthlete: (emailOrId: string) => Promise<void>;
 }
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
@@ -71,8 +73,24 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         );
     };
 
+    const fetchAndAddAthlete = async (emailOrId: string) => {
+        setLoading(true);
+        const newAthlete = await fetchAthleteFromGoogle(emailOrId);
+
+        if (newAthlete) {
+            setData(prev => {
+                // Remove existing if found (update)
+                const filtered = prev.filter(a => a.email !== newAthlete.email && a.id !== newAthlete.id);
+                const updated = [...filtered, newAthlete];
+                localStorage.setItem('apex_athlete_data', JSON.stringify(updated));
+                return updated;
+            });
+        }
+        setLoading(false);
+    };
+
     return (
-        <DataContext.Provider value={{ data, refreshData, getAthlete }}>
+        <DataContext.Provider value={{ data, refreshData, getAthlete, fetchAndAddAthlete }}>
             {children}
         </DataContext.Provider>
     );
