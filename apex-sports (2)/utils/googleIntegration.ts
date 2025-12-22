@@ -31,8 +31,10 @@ export const fetchAthleteFromGoogle = async (email: string): Promise<AthleteData
         const data = await response.json();
 
         if (data.status === 'error' || !data.athlete) {
-            console.warn("Google Sheet: Athlete not found", data.message);
-            return null;
+            // Propagate the specific error message from Apps Script
+            const specificError = data.message || "Unknown API Error";
+            console.warn("Google Sheet Error:", specificError);
+            throw new Error(specificError);
         }
 
         // Map JSON response to AthleteData interface

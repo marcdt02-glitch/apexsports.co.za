@@ -1,125 +1,130 @@
-/**
- * APEX Sports - Backend Automation
- * 
- * INSTRUCTIONS:
- * 1. Open your Google Sheet > Extensions > Apps Script.
- * 2. Paste this code, overwriting everything.
- * 3. Save.
- * 4. Deploy > New Deployment > Type: Web App > Execute as: Me > Who has access: Anyone.
- * 5. Copy the Web App URL and provide it to the Developer if changed.
- */
 
-// ----------------------------------------------------
-// 1. API Endpoint (GET Request)
-// ----------------------------------------------------
+
+// ==========================================
+// 1. API API ENDPOINT (Handle GET Requests)
+// ==========================================
 function doGet(e) {
+    // 1. Extract Parameters
     var email = e.parameter.email;
     var id = e.parameter.id;
 
-    // Return Error if no search term
+    // 2. Validation
     if (!email && !id) {
-        return ContentService.createTextOutput(JSON.stringify({
-            status: 'error',
-            message: 'Missing email or id parameter'
-        })).setMimeType(ContentService.MimeType.JSON);
+        return errorResponse('Missing email or id parameter');
     }
 
-    var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Athlete Data"); // Ensure Sheet Name matches!
+    // 3. Open Sheet
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Athlete Data");
     if (!sheet) {
-        return ContentService.createTextOutput(JSON.stringify({
-            status: 'error',
-            message: 'Sheet "Athlete Data" not found'
-        })).setMimeType(ContentService.MimeType.JSON);
+        // Debugging: List available sheets
+        var allSheets = SpreadsheetApp.getActiveSpreadsheet().getSheets().map(function (s) { return s.getName(); });
+        return errorResponse('Sheet "Athlete Data" not found. Available sheets: ' + allSheets.join(", "));
     }
 
+    // 4. Search for Athlete
     var data = sheet.getDataRange().getValues();
+    if (data.length === 0) return errorResponse("Sheet is empty");
+
     var headers = data[0];
     var athlete = null;
 
-    // Helper to normalize strings for comparison
-    var normalize = function (str) { return str ? str.toString().toLowerCase().trim() : ""; };
+    // Debugging: Check for Email column
+    var emailIndex = headers.findIndex(function (h) { return h.toString().toLowerCase().trim() === 'email'; });
+    var idIndex = headers.findIndex(function (h) { return h.toString().toLowerCase().trim() === 'athlete id'; });
 
-    // Find Athlete
+    if (emailIndex === -1 && idIndex === -1) {
+        return errorResponse("Columns 'Email' or 'Athlete ID' not found in headers: " + headers.join(", "));
+    }
+
     for (var i = 1; i < data.length; i++) {
         var row = data[i];
-        var rowObj = {};
 
-        // Map row to object based on headers
+        // Create a temporary object for this row
+        var rowObj = {};
         for (var j = 0; j < headers.length; j++) {
             rowObj[headers[j]] = row[j];
         }
 
-        // Check match
-        if (normalize(rowObj['Email']) === normalize(email) || normalize(rowObj['Athlete ID']) === normalize(id)) {
+        // Check if Email or ID matches (Case Insensitive)
+        if (normalize(rowObj['Email']) === normalize(email) ||
+            normalize(rowObj['Athlete ID']) === normalize(id)) {
             athlete = rowObj;
             break;
         }
     }
 
+    // 5. Return Result
     if (athlete) {
-        // Basic Mapping to standardize keys (optional, but helpful for frontend)
-        // Dynamic Mapping for v8.0 (Returns all columns as keys)
-        var mapped = {};
+        // Dynamic Mapping: Return all sheet columns as JSON keys
+        var mappedData = {};
+
         for (var k = 0; k < headers.length; k++) {
-            var header = headers[k].toString().trim();
-            if (header) {
-                mapped[header] = athlete[header];
+            var headerName = headers[k].toString().trim();
+            if (headerName) {
+                mappedData[headerName] = athlete[headerName];
             }
         }
 
-        // Add standardized metadata
-        mapped['_id'] = athlete['Athlete ID'] || 'generated-' + i;
-        mapped['_name'] = athlete['Athlete Name'] || athlete['Name'];
+        // Add Metadata keys (standardized for Frontend)
+        mappedData['_id'] = athlete['Athlete ID'] || 'generated-' + i;
+        mappedData['_name'] = athlete['Athlete Name'] || athlete['Name'];
         mapped['_email'] = athlete['Email'];
 
-        return ContentService.createTextOutput(JSON.stringify({
-            status: 'success',
-            athlete: mapped
-        })).setMimeType(ContentService.MimeType.JSON);
-
-        return ContentService.createTextOutput(JSON.stringify({
-            status: 'success',
-            athlete: mapped
-        })).setMimeType(ContentService.MimeType.JSON);
+        return successResponse(mappedData);
 
     } else {
-        return ContentService.createTextOutput(JSON.stringify({
-            status: 'error',
-            message: 'Athlete not found'
-        })).setMimeType(ContentService.MimeType.JSON);
+        return errorResponse('Athlete not found');
     }
 }
 
-// ----------------------------------------------------
-// 2. Auto-Timestamp (onEdit Trigger)
-// ----------------------------------------------------
+// ==========================================
+// 2. AUTOMATION TRIGGERS (Auto-Timestamp)
+// ==========================================
 function onEdit(e) {
     var sheet = e.source.getActiveSheet();
 
-    // Only run on 'Athlete Data' sheet
+    // Only target the 'Athlete Data' sheet
     if (sheet.getName() !== "Athlete Data") return;
 
     var range = e.range;
     var col = range.getColumn();
     var row = range.getRow();
 
-    // Skip header row
+    // Ignore Header Row
     if (row === 1) return;
 
-    // Get 'Last Updated' column index
-    // We assume it's a specific column, or we find it.
-    // Converting header finding to caching might be faster, but this is safer:
+    // Find "Last Updated" column dynamically
     var headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
     var updateColIndex = headers.indexOf("Last Updated") + 1;
 
-    // If column doesn't exist, Create it? Or exit?
-    // Let's protect against infinite loops (if we edit the Last Updated col itself)
-    if (updateColIndex === 0) return; // Column not found
-    if (col === updateColIndex) return; // Don't trigger on own update
+    // Safety Checks
+    if (updateColIndex === 0) return; // Column doesn't exist
+    if (col === updateColIndex) return; // Prevent infinite loop if we are editing the date itself
 
-    // Set Date
+    // Set the Timestamp
     var date = new Date();
     var formattedDate = Utilities.formatDate(date, Session.getScriptTimeZone(), "dd MMM yyyy");
-
     sheet.getRange(row, updateColIndex).setValue(formattedDate);
+}
+
+// ==========================================
+// HELPER FUNCTIONS
+// ==========================================
+
+function normalize(str) {
+    return str ? str.toString().toLowerCase().trim() : "";
+}
+
+function successResponse(data) {
+    return ContentService.createTextOutput(JSON.stringify({
+        status: 'success',
+        athlete: data
+    })).setMimeType(ContentService.MimeType.JSON);
+}
+
+function errorResponse(message) {
+    return ContentService.createTextOutput(JSON.stringify({
+        status: 'error',
+        message: message
+    })).setMimeType(ContentService.MimeType.JSON);
 }

@@ -75,19 +75,23 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     const fetchAndAddAthlete = async (emailOrId: string): Promise<AthleteData | null> => {
         setLoading(true);
-        const newAthlete = await fetchAthleteFromGoogle(emailOrId);
+        try {
+            const newAthlete = await fetchAthleteFromGoogle(emailOrId);
 
-        if (newAthlete) {
-            setData(prev => {
-                // Remove existing if found (update)
-                const filtered = prev.filter(a => a.email !== newAthlete.email && a.id !== newAthlete.id);
-                const updated = [...filtered, newAthlete];
-                localStorage.setItem('apex_athlete_data', JSON.stringify(updated));
-                return updated;
-            });
+            if (newAthlete) {
+                setData(prev => {
+                    const filtered = prev.filter(a => a.email !== newAthlete.email && a.id !== newAthlete.id);
+                    const updated = [...filtered, newAthlete];
+                    localStorage.setItem('apex_athlete_data', JSON.stringify(updated));
+                    return updated;
+                });
+            }
+            return newAthlete;
+        } catch (error) {
+            throw error; // Propagate to Login Component
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
-        return newAthlete; // Return result for caller logic
     };
 
     return (
