@@ -30,12 +30,16 @@ const ScrollToTop = () => {
 }
 
 const App: React.FC = () => {
+  // Check location to conditionally render Navbar
+  const { pathname } = window.location;
+  const isPortal = pathname.startsWith('/portal') || window.location.hash.startsWith('#/portal');
+
   return (
     <DataProvider>
       <Router>
         <ScrollToTop />
         <div className="flex flex-col min-h-screen bg-black text-white font-sans antialiased selection:bg-white selection:text-black">
-          <Navbar />
+          {!isPortal && <Navbar />}
           <main className="flex-grow">
             <Routes>
               <Route path="/" element={<Home />} />

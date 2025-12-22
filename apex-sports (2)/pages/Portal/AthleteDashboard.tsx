@@ -182,9 +182,9 @@ const AthleteDashboard: React.FC = () => {
                             Dashboard
                         </button>
 
-                        {/* MENTORSHIP LINK (LOCKED LOGIC) */}
+                        {/* MENTORSHIP LINK */}
                         {(() => {
-                            const isUnlocked = athlete.package === 'Elite' || athlete.package === 'Mentorship';
+                            const isUnlocked = athlete.package === 'Mentorship' || athlete.package === 'Elite';
                             return (
                                 <Link
                                     to="/mentorship"
@@ -203,17 +203,29 @@ const AthleteDashboard: React.FC = () => {
                             );
                         })()}
 
-                        <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 cursor-not-allowed opacity-50">
-                            <Target className="w-5 h-5" />
-                            <span>Goals</span>
-                            <Lock className="w-4 h-4 ml-auto" />
-                        </button>
+                        {/* GOALS */}
+                        {(() => {
+                            const isUnlocked = athlete.package === 'Mentorship' || athlete.package === 'Elite';
+                            return (
+                                <button className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${isUnlocked ? 'text-gray-400 hover:text-white hover:bg-neutral-800' : 'text-gray-600 cursor-not-allowed opacity-50'}`}>
+                                    <Target className="w-5 h-5" />
+                                    <span>Goals</span>
+                                    {!isUnlocked && <Lock className="w-4 h-4 ml-auto" />}
+                                </button>
+                            );
+                        })()}
 
-                        <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 cursor-not-allowed opacity-50">
-                            <FileText className="w-5 h-5" />
-                            <span>Reports</span>
-                            <Lock className="w-4 h-4 ml-auto" />
-                        </button>
+                        {/* REPORTS */}
+                        {(() => {
+                            const isUnlocked = athlete.package === 'Mentorship' || athlete.package === 'Elite';
+                            return (
+                                <button className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${isUnlocked ? 'text-gray-400 hover:text-white hover:bg-neutral-800' : 'text-gray-600 cursor-not-allowed opacity-50'}`}>
+                                    <FileText className="w-5 h-5" />
+                                    <span>Reports</span>
+                                    {!isUnlocked && <Lock className="w-4 h-4 ml-auto" />}
+                                </button>
+                            );
+                        })()}
                     </div>
 
                     <div className="mt-auto px-6">
@@ -309,7 +321,8 @@ const AthleteDashboard: React.FC = () => {
                                     <MetricCard label="IMTP Peak" value={`${athlete.imtpPeakForce} N`} />
                                     <MetricCard label="RFD 200ms" value={`${athlete.imtpRfd200} N/s`} />
                                     <MetricCard label="Asymmetry" value={`${athlete.peakForceAsymmetry}%`} />
-                                    <MetricCard label="Jump Height" value="-" subtext="Coming Soon" />
+                                    <MetricCard label="Jump Height" value={`${athlete.broadJump || '-'} cm`} />
+                                    <MetricCard label="Agility 505" value={`${athlete.agilityTime || '-'} s`} />
                                 </div>
                             </div>
 
