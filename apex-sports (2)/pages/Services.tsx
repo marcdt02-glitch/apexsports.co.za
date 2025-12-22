@@ -54,8 +54,8 @@ const Services: React.FC = () => {
 
                     <div className="bg-neutral-900/50 p-8 rounded-3xl border border-neutral-800 space-y-6 relative overflow-hidden">
                         {/* Value Badge */}
-                        <div className="absolute top-0 right-0 bg-red-600 text-white text-xs font-bold px-4 py-1 rounded-bl-xl uppercase tracking-widest shadow-lg">
-                            Most Popular
+                        <div className="absolute top-0 right-0 bg-red-600 text-white text-xs font-bold px-4 py-1 rounded-bl-xl uppercase tracking-widest shadow-lg z-10">
+                            Only 5 Spots Available
                         </div>
 
                         <div className="space-y-4">
@@ -84,7 +84,7 @@ const Services: React.FC = () => {
                                     <div>
                                         <span className="text-2xl font-black text-white">Upfront Payment</span>
                                         <div className="flex items-center gap-2 mt-1">
-                                            <span className="text-gray-500 line-through text-sm font-bold">Value: R33,600</span>
+                                            <span className="text-gray-500 line-through text-sm font-bold">R33,600</span>
                                             <span className="text-green-400 text-sm font-bold animate-pulse">Save R6,600</span>
                                         </div>
                                     </div>
@@ -94,14 +94,33 @@ const Services: React.FC = () => {
                                     </div>
                                 </div>
 
-                                {/* Savings Bar Visual */}
-                                <div className="w-full bg-neutral-900 h-3 rounded-full overflow-hidden flex mb-2">
-                                    <div className="bg-white w-[80%] h-full"></div>
-                                    <div className="bg-green-500 w-[20%] h-full flex items-center justify-center"></div>
+                                {/* Value Stack Table (New) */}
+                                <div className="bg-black/40 rounded-lg p-3 mb-4 text-xs space-y-1">
+                                    <div className="flex justify-between text-gray-400">
+                                        <span>Yearly S&C + Testing</span>
+                                        <span className="line-through">R15,000</span>
+                                    </div>
+                                    <div className="flex justify-between text-gray-400">
+                                        <span>Mentorship Curriculum</span>
+                                        <span className="line-through">R5,000</span>
+                                    </div>
+                                    <div className="flex justify-between text-gray-400">
+                                        <span>25 Hours Technical</span>
+                                        <span className="line-through">R13,600</span>
+                                    </div>
+                                    <div className="border-t border-gray-700 pt-1 flex justify-between font-bold text-white mt-1">
+                                        <span>Total Value</span>
+                                        <span>R33,600</span>
+                                    </div>
                                 </div>
-                                <div className="flex justify-between text-[10px] text-gray-400 font-bold uppercase tracking-wider">
-                                    <span>Cost Paid</span>
-                                    <span className="text-green-500">Instant Savings</span>
+
+                                {/* Savings Bar Visual */}
+                                <div className="w-full bg-neutral-900 h-2 rounded-full overflow-hidden flex mb-2">
+                                    <div className="bg-white w-[80%] h-full"></div>
+                                    <div className="bg-green-500 w-[20%] h-full"></div>
+                                </div>
+                                <div className="text-center text-[10px] text-green-500 font-bold uppercase tracking-wider">
+                                    Instant R6,600 Savings Applied
                                 </div>
                             </a>
                         </div>
@@ -240,8 +259,8 @@ const Services: React.FC = () => {
                             </div>
                             {/* 25-Hour Pack with Savings Logic */}
                             <div className="bg-neutral-800 p-6 rounded-xl border border-neutral-700 relative overflow-hidden">
-                                <div className="absolute top-0 right-0 bg-green-600 text-white text-[10px] font-bold px-3 py-1 rounded-bl-lg">
-                                    SAVE R1,500
+                                <div className="absolute top-0 right-0 bg-yellow-500 text-black text-[10px] font-black px-3 py-1 rounded-bl-lg animate-pulse">
+                                    LIMITED FLASH SALE
                                 </div>
                                 <h3 className="text-white font-bold mb-2">25-Hour Elite Pack</h3>
                                 <p className="text-gray-400 text-xs mb-4">Serious technical development for committed athletes.</p>
@@ -251,11 +270,11 @@ const Services: React.FC = () => {
                                         <p className="text-gray-500 line-through text-xs font-bold">Standard: R10,000</p>
                                         <p className="text-2xl font-black text-white">R8,500</p>
                                     </div>
-                                    <span className="text-xs bg-white text-black font-bold px-2 py-1 rounded">Upfront Deal</span>
+                                    <span className="text-xs bg-white text-black font-bold px-2 py-1 rounded">Save R1,500</span>
                                 </div>
 
                                 <a href="https://paystack.shop/pay/25hourcoachingpack-onceoff" target="_blank" rel="noreferrer" className="block w-full bg-white hover:bg-gray-200 text-black text-center py-3 rounded-lg font-bold transition-colors mb-2">
-                                    Grab the Deal
+                                    Claim This Offer
                                 </a>
                                 <div className="text-center">
                                     <a href="https://paystack.shop/pay/25HourCoachingPack-Monthly" target="_blank" rel="noreferrer" className="text-xs text-gray-400 hover:text-white underline">
