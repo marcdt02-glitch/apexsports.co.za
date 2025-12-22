@@ -1,16 +1,31 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Lock, ArrowRight, User } from 'lucide-react';
+import { useData } from '../../context/DataContext';
 
 const PortalLogin: React.FC = () => {
     const [athleteId, setAthleteId] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
+    const { fetchAndAddAthlete } = useData() as any; // Using the new extended type
 
-    const handleLogin = (e: React.FormEvent) => {
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (athleteId.trim()) {
-            navigate(`/portal/${athleteId.trim()}`);
+        const term = athleteId.trim();
+        if (!term) return;
+
+        setIsLoading(true);
+
+        try {
+            // Attempt to fetch from Google if it looks like an email, or just generic fetch
+            // This ensures latest data is pulled before navigating
+            await fetchAndAddAthlete(term);
+        } catch (err) {
+            console.log("Fetch attempted, proceeding to dashboard check...");
         }
+
+        setIsLoading(false);
+        navigate(`/portal/${term}`);
     };
 
     return (
@@ -43,11 +58,17 @@ const PortalLogin: React.FC = () => {
 
                     <button
                         type="submit"
-                        disabled={!athleteId.trim()}
+                        disabled={!athleteId.trim() || isLoading}
                         className="w-full bg-white text-black font-bold py-4 rounded-lg flex items-center justify-center gap-2 hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        <span>Access Dashboard</span>
-                        <ArrowRight className="w-4 h-4" />
+                        {isLoading ? (
+                            <span>Loading Profile...</span>
+                        ) : (
+                            <>
+                                <span>Access Dashboard</span>
+                                <ArrowRight className="w-4 h-4" />
+                            </>
+                        )}
                     </button>
                 </form>
 

@@ -78,14 +78,24 @@ const AthleteDashboard: React.FC = () => {
 
     const athlete = athleteId ? getAthlete(athleteId) : undefined;
 
+    // Auth Redirect (Effect to avoid render loop issues, although immediate return is often safer)
+    React.useEffect(() => {
+        if (!athlete && athleteId) {
+            // We might want to wait a split second if data is loading, but since getAthlete is sync,
+            // if it's not there, it's not there.
+            // However, if we just came from Login, it should be there.
+        }
+    }, [athlete, athleteId]);
+
     if (!athlete) {
         return (
-            <div className="min-h-screen bg-black text-white flex items-center justify-center">
-                <div className="text-center">
-                    <h2 className="text-2xl font-bold mb-4">Athlete Not Found</h2>
-                    <p className="text-gray-400 mb-6">Could not find data for ID: {athleteId}</p>
-                    <Link to="/" className="text-red-500 hover:text-red-400 font-bold">Return Home</Link>
-                </div>
+            <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center">
+                <div className="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin mb-8"></div>
+                <h2 className="text-2xl font-bold mb-4">Searching Performance Database...</h2>
+                <p className="text-gray-400 mb-6">Checking ID: {athleteId}</p>
+                <button onClick={() => window.location.href = '/#/portal'} className="text-red-500 hover:text-red-400 font-bold underline">
+                    Return to Login
+                </button>
             </div>
         );
     }
@@ -415,24 +425,33 @@ const AthleteDashboard: React.FC = () => {
     };
 
     return (
-        <div className="min-h-screen bg-black text-white flex flex-col md:flex-row" ref={dashboardRef}>
+        <div className="min-h-screen bg-black text-white flex flex-col md:flex-row relative overflow-x-hidden" ref={dashboardRef}>
 
             {/* Mobile Header Toggle */}
-            <div className="md:hidden bg-neutral-900 p-4 border-b border-gray-800 flex justify-between items-center no-print">
+            <div className="md:hidden bg-neutral-900 p-4 border-b border-gray-800 flex justify-between items-center sticky top-0 z-50 no-print">
                 <div className="flex items-center gap-2">
                     <img src="/images/logo.png" className="w-8 h-8 object-contain" alt="Logo" />
                     <span className="font-bold uppercase tracking-wider">Apex Hub</span>
                 </div>
-                <button onClick={() => setSidebarOpen(!sidebarOpen)} className="text-white">
+                <button onClick={() => setSidebarOpen(!sidebarOpen)} className="text-white p-2">
                     {sidebarOpen ? <X /> : <Menu />}
                 </button>
             </div>
 
             {/* Sidebar Navigation */}
+            {/* Overlay for mobile when sidebar is open */}
+            {sidebarOpen && (
+                <div
+                    className="fixed inset-0 bg-black/80 z-40 md:hidden backdrop-blur-sm"
+                    onClick={() => setSidebarOpen(false)}
+                ></div>
+            )}
+
             <div className={`
-        fixed inset-y-0 left-0 z-50 w-72 bg-neutral-900 border-r border-gray-800 transform transition-transform duration-300 ease-in-out md:relative md:translate-x-0 no-print
-        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-      `}>
+       fixed inset-y-0 left-0 z-50 w-72 bg-neutral-900 border-r border-gray-800 transform transition-transform duration-300 ease-in-out md:relative md:translate-x-0 no-print h-full
+       ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+       md:block
+     `}>
                 <div className="p-10 border-b border-gray-800 flex flex-col items-center">
                     <div className="w-24 h-24 bg-black rounded-full border-2 border-white flex items-center justify-center mb-6 shadow-2xl">
                         <span className="text-3xl font-bold">{athlete.name.charAt(0)}</span>
@@ -464,7 +483,7 @@ const AthleteDashboard: React.FC = () => {
             </div>
 
             {/* Main Content Area */}
-            <div className="flex-1 overflow-y-auto h-screen bg-black">
+            <div className="flex-1 overflow-y-auto h-screen bg-black w-full">
                 <div className="p-6 md:p-16 pb-32 max-w-7xl mx-auto">
                     {activeView === 'dashboard' && <DashboardView />}
                     {activeView === 'goals' && <FullGoalsView />}
