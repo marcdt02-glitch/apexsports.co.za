@@ -67,7 +67,7 @@ const mapGoogleRowToAthlete = (row: any): AthleteData => {
 
         // V8.0 Administrative
         parentConsent: row['Parent Consent'] || row.parentConsent || 'Yes',
-        package: row['Package'] || row.packageType || row['Package Type'] || row.tier || 'Camp',
+        package: row['Package'] || row['package'] || row.package || row.packageType || row['Package Type'] || row.tier || row.Level || 'Camp',
 
         // V8.0 Neural
         readinessScore: num(row['Readiness Score'] || row['Ready %'] || row.readinessScore || 85),

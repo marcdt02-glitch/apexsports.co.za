@@ -412,6 +412,10 @@ const AthleteDashboard: React.FC = () => {
 
                     </div>
                 </div>
+                {/* Debug Info */}
+                <div className="text-center text-gray-800 text-[10px] py-4 font-mono">
+                    Debug: {athlete.package} | Elite: {isEliteTier ? 'Yes' : 'No'} | ID: {athlete.id}
+                </div>
             </div>
         </SafetyGuard>
     );
