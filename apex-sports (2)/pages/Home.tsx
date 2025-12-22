@@ -48,6 +48,12 @@ const Home: React.FC = () => {
           <p className="text-xl text-gray-300 font-light tracking-wide max-w-2xl">
             Providing the support to those looking to achieve the peak of sporting success.
           </p>
+          <div className="flex flex-col md:flex-row gap-4 mt-8">
+            <Link to="/portal" className="bg-white text-black px-8 py-3 rounded-full font-bold uppercase tracking-wider hover:bg-gray-200 transition-colors flex items-center gap-2">
+              <span className="w-2 h-2 bg-black rounded-full"></span>
+              Athlete Login
+            </Link>
+          </div>
         </div>
 
         <div className="absolute bottom-10 z-20 animate-bounce">

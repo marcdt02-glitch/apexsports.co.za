@@ -47,6 +47,13 @@ const App: React.FC = () => {
               <Route path="/services" element={<Services />} />
               <Route path="/welcome-athlete" element={<WelcomeAthlete />} />
               <Route path="/payment-success" element={<PaymentSuccess />} />
+              import PortalLogin from './pages/Portal/PortalLogin';
+
+              // ... (existing imports)
+
+              // ...
+
+              <Route path="/portal" element={<PortalLogin />} />
               <Route path="/portal/:athleteId" element={<AthleteDashboard />} />
               <Route path="/admin-upload" element={<AdminUpload />} />
             </Routes>
