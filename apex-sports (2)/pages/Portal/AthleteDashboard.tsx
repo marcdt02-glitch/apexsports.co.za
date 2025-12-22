@@ -112,7 +112,16 @@ const AthleteDashboard: React.FC = () => {
     const acwrHighRisk = acwrValue > 1.5 || acwrValue < 0.8;
 
     // Tier Checks
-    const isElite = athlete.package !== 'Camp';
+    const pkg = (athlete.package || '').trim().toLowerCase();
+    const isElite = pkg.includes('elite') && pkg !== 'mentorship'; // Mentorship is valid but Elite specific features might be just for elite? 
+    // Actually, user said "Elite still doesn't have access to all services-Mentorship".
+    // Wait, isElite implies full unlock?
+    // Let's assume Elite gets everything. 
+    // Re-reading: "The elite tier MUST have access to all platforms!"
+    // So isElite check for UI elements (Radar etc) should probably include Elite.
+    // However, the Mentorship link logic was handled separately.
+    // Let's stick to the UI Logic:
+    const isEliteTier = pkg.includes('elite'); // Logic for Radar, Neural Stats etc.
 
     return (
         <SafetyGuard athlete={athlete}>
@@ -138,7 +147,7 @@ const AthleteDashboard: React.FC = () => {
 
                         <div className="flex items-center gap-8">
                             {/* v8.0 Neural Readiness Stats (Desktop) */}
-                            {isElite && (
+                            {isEliteTier && (
                                 <div className="hidden md:flex items-center gap-8 mr-8 border-r border-neutral-800 pr-8">
                                     <div className="text-right">
                                         <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Neural Readiness</p>
@@ -175,7 +184,7 @@ const AthleteDashboard: React.FC = () => {
                 <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-neutral-900 border-r border-neutral-800 transform transition-transform duration-300 lg:translate-x-0 pt-28 pb-10 flex flex-col ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
                     <div className="px-6 space-y-2">
                         <button
-                            onClick={() => setActiveView('dashboard')}
+                            onClick={() => { setActiveView('dashboard'); setSidebarOpen(false); }}
                             className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeView === 'dashboard' ? 'bg-white text-black font-bold' : 'text-gray-400 hover:bg-neutral-800 hover:text-white'}`}
                         >
                             <LayoutDashboard className="w-5 h-5" />
@@ -184,7 +193,8 @@ const AthleteDashboard: React.FC = () => {
 
                         {/* MENTORSHIP LINK */}
                         {(() => {
-                            const isUnlocked = athlete.package === 'Mentorship' || athlete.package === 'Elite';
+                            const pkg = (athlete.package || '').trim().toLowerCase();
+                            const isUnlocked = pkg.includes('mentorship') || pkg.includes('elite');
                             return (
                                 <Link
                                     to="/mentorship"
@@ -192,6 +202,8 @@ const AthleteDashboard: React.FC = () => {
                                         if (!isUnlocked) {
                                             e.preventDefault();
                                             alert("Mentorship Access Required. Please upgrade your package.");
+                                        } else {
+                                            setSidebarOpen(false);
                                         }
                                     }}
                                     className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${isUnlocked ? 'text-gray-400 hover:bg-neutral-800 hover:text-white' : 'text-gray-600 cursor-not-allowed opacity-50'}`}
@@ -205,7 +217,8 @@ const AthleteDashboard: React.FC = () => {
 
                         {/* GOALS */}
                         {(() => {
-                            const isUnlocked = athlete.package === 'Mentorship' || athlete.package === 'Elite';
+                            const pkg = (athlete.package || '').trim().toLowerCase();
+                            const isUnlocked = pkg.includes('mentorship') || pkg.includes('elite');
                             return (
                                 <button className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${isUnlocked ? 'text-gray-400 hover:text-white hover:bg-neutral-800' : 'text-gray-600 cursor-not-allowed opacity-50'}`}>
                                     <Target className="w-5 h-5" />
@@ -217,7 +230,8 @@ const AthleteDashboard: React.FC = () => {
 
                         {/* REPORTS */}
                         {(() => {
-                            const isUnlocked = athlete.package === 'Mentorship' || athlete.package === 'Elite';
+                            const pkg = (athlete.package || '').trim().toLowerCase();
+                            const isUnlocked = pkg.includes('mentorship') || pkg.includes('elite');
                             return (
                                 <button className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${isUnlocked ? 'text-gray-400 hover:text-white hover:bg-neutral-800' : 'text-gray-600 cursor-not-allowed opacity-50'}`}>
                                     <FileText className="w-5 h-5" />
@@ -237,11 +251,10 @@ const AthleteDashboard: React.FC = () => {
                 </div>
 
                 {/* Content Area */}
-                {/* Content Area */}
                 <div ref={dashboardRef} className="pt-28 px-4 max-w-7xl mx-auto space-y-12 lg:pl-72">
 
                     {/* v8.0 Neural Alerts */}
-                    {(isElite && (athlete.readinessScore < 65 || athlete.groinTimeToMax > 1.5)) && (
+                    {(isEliteTier && (athlete.readinessScore < 65 || athlete.groinTimeToMax > 1.5)) && (
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fade-in-down">
                             {athlete.readinessScore < 65 && (
                                 <div className="bg-red-950/20 border border-red-900/50 p-4 rounded-xl flex items-center gap-4">
@@ -267,7 +280,7 @@ const AthleteDashboard: React.FC = () => {
                     {/* KPI Dials */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 bg-neutral-900/40 p-8 rounded-3xl border border-neutral-800">
                         <CircleProgress percentage={analysis.scores?.performance ?? 0} color="#3b82f6" label="Performance" icon={TrendingUp} />
-                        {isElite ? (
+                        {isEliteTier ? (
                             <>
                                 <CircleProgress percentage={analysis.scores?.screening ?? 0} color="#a855f7" label="Screening" icon={Shield} />
                                 <CircleProgress percentage={analysis.scores?.readiness ?? 0} color="#22c55e" label="Readiness" icon={Activity} />
@@ -289,7 +302,7 @@ const AthleteDashboard: React.FC = () => {
                         <div className="lg:col-span-2 space-y-8">
 
                             {/* Radar Chart (Elite Only) */}
-                            {isElite && (
+                            {isEliteTier && (
                                 <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl relative">
                                     <div className="flex items-center justify-between mb-8">
                                         <h2 className="text-xl font-bold flex items-center gap-3">
@@ -322,12 +335,12 @@ const AthleteDashboard: React.FC = () => {
                                     <MetricCard label="RFD 200ms" value={`${athlete.imtpRfd200} N/s`} />
                                     <MetricCard label="Asymmetry" value={`${athlete.peakForceAsymmetry}%`} />
                                     <MetricCard label="Jump Height" value={`${athlete.broadJump || '-'} cm`} />
-                                    <MetricCard label="Agility 505" value={`${athlete.agilityTime || '-'} s`} />
+                                    <MetricCard label="Agility T" value={`${athlete.agilityTime || '-'} s`} />
                                 </div>
                             </div>
 
                             {/* v8.0 Elite Clinical Vault (Tabbed) */}
-                            {isElite && (
+                            {isEliteTier && (
                                 <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl">
                                     <div className="flex items-center justify-between mb-8">
                                         <h2 className="text-xl font-bold flex items-center gap-3">
