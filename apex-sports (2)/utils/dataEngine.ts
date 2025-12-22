@@ -9,7 +9,7 @@ export interface AthleteData {
     // Metrics mapped from request
     // v8.0 Administrative
     parentConsent: 'Yes' | 'No' | string;
-    package: 'Camp' | 'Individual' | 'Elite' | string;
+    package: 'Camp' | 'Individual' | 'Elite' | 'Mentorship' | string;
 
     // v8.0 Neural & MQS
     readinessScore: number;     // % (0-100)
@@ -20,6 +20,8 @@ export interface AthleteData {
     imtpPeakForce: number;
     imtpRfd200: number;
     peakForceAsymmetry: number;
+    broadJump?: number; // v8.0 New
+    agilityTime?: number; // v8.0 New
 
     // Clinical / MQS Metrics
     hamstringQuadLeft: number;
@@ -128,6 +130,8 @@ export const parseAthleteData = (csvString: string): AthleteData[] => {
             imtpPeakForce: row['IMTP Peak'] || 0,
             imtpRfd200: row['RFD 200ms'] || 0,
             peakForceAsymmetry: row['PF ASM'] || 0,
+            broadJump: row['Broad Jump'] || 0,
+            agilityTime: row['Agility T'] || 0,
             neckExtension: row['Neck Ext'] || 0,
             ankleRomLeft: ankleL,
             ankleRomRight: ankleR,

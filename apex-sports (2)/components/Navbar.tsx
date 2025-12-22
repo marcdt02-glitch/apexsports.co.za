@@ -20,7 +20,7 @@ const Navbar: React.FC = () => {
   ];
 
   const rightLinks = [
-    { name: 'Athlete Hub', path: '/services' },
+    { name: 'Services Hub', path: '/services' },
   ];
 
   const isActive = (path: string) => location.pathname === path;

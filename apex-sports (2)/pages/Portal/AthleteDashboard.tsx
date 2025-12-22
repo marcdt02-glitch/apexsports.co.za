@@ -10,7 +10,7 @@ import {
 import {
     AlertTriangle, CheckCircle, UploadCloud,
     LayoutDashboard, Target, BookOpen, FileText, Menu, X, Save, ExternalLink,
-    Activity, Shield, Battery, TrendingUp, ChevronRight, Lock, User
+    Activity, Shield, Battery, TrendingUp, ChevronRight, Lock, User, LogOut
 } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
@@ -122,12 +122,19 @@ const AthleteDashboard: React.FC = () => {
                 <div className="fixed top-0 left-0 right-0 z-40 bg-black/90 backdrop-blur-md border-b border-neutral-800">
                     <div className="flex items-center justify-between px-6 py-4 max-w-7xl mx-auto w-full">
                         <div className="flex items-center gap-4">
+                            {/* NEW: Menu Trigger */}
+                            <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 -ml-2 text-gray-400 hover:text-white lg:hidden">
+                                <Menu className="w-6 h-6" />
+                            </button>
+
                             <Link to="/" className="flex items-center gap-2 group">
                                 <div className="bg-white text-black font-black text-xl px-2 py-1 transform -skew-x-12 group-hover:bg-gray-200 transition-colors">
                                     APEX
                                 </div>
                             </Link>
                         </div>
+
+                        {/* Desktop: Sidebar actually renders as a sidebar, so we don't need top links here unless requested. Keeping existing stats. */}
 
                         <div className="flex items-center gap-8">
                             {/* v8.0 Neural Readiness Stats (Desktop) */}
@@ -161,8 +168,65 @@ const AthleteDashboard: React.FC = () => {
                     </div>
                 </div>
 
+                {/* SIDEBAR NAVIGATION */}
+                {/* Overlay for Mobile */}
+                {sidebarOpen && <div className="fixed inset-0 bg-black/80 z-40 lg:hidden" onClick={() => setSidebarOpen(false)} />}
+
+                <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-neutral-900 border-r border-neutral-800 transform transition-transform duration-300 lg:translate-x-0 pt-28 pb-10 flex flex-col ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+                    <div className="px-6 space-y-2">
+                        <button
+                            onClick={() => setActiveView('dashboard')}
+                            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeView === 'dashboard' ? 'bg-white text-black font-bold' : 'text-gray-400 hover:bg-neutral-800 hover:text-white'}`}
+                        >
+                            <LayoutDashboard className="w-5 h-5" />
+                            Dashboard
+                        </button>
+
+                        {/* MENTORSHIP LINK (LOCKED LOGIC) */}
+                        {(() => {
+                            const isUnlocked = athlete.package === 'Elite' || athlete.package === 'Mentorship';
+                            return (
+                                <Link
+                                    to="/mentorship"
+                                    onClick={(e) => {
+                                        if (!isUnlocked) {
+                                            e.preventDefault();
+                                            alert("Mentorship Access Required. Please upgrade your package.");
+                                        }
+                                    }}
+                                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${isUnlocked ? 'text-gray-400 hover:bg-neutral-800 hover:text-white' : 'text-gray-600 cursor-not-allowed opacity-50'}`}
+                                >
+                                    <BookOpen className="w-5 h-5" />
+                                    <span>Mentorship</span>
+                                    {!isUnlocked && <Lock className="w-4 h-4 ml-auto" />}
+                                </Link>
+                            );
+                        })()}
+
+                        <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 cursor-not-allowed opacity-50">
+                            <Target className="w-5 h-5" />
+                            <span>Goals</span>
+                            <Lock className="w-4 h-4 ml-auto" />
+                        </button>
+
+                        <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 cursor-not-allowed opacity-50">
+                            <FileText className="w-5 h-5" />
+                            <span>Reports</span>
+                            <Lock className="w-4 h-4 ml-auto" />
+                        </button>
+                    </div>
+
+                    <div className="mt-auto px-6">
+                        <Link to="/" className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-500 hover:bg-neutral-800 transition-all">
+                            <LogOut className="w-5 h-5" />
+                            Logout
+                        </Link>
+                    </div>
+                </div>
+
                 {/* Content Area */}
-                <div ref={dashboardRef} className="pt-28 px-4 max-w-7xl mx-auto space-y-12">
+                {/* Content Area */}
+                <div ref={dashboardRef} className="pt-28 px-4 max-w-7xl mx-auto space-y-12 lg:pl-72">
 
                     {/* v8.0 Neural Alerts */}
                     {(isElite && (athlete.readinessScore < 65 || athlete.groinTimeToMax > 1.5)) && (
