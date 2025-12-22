@@ -43,7 +43,7 @@ export const fetchAthleteFromGoogle = async (email: string): Promise<AthleteData
 
     } catch (error) {
         console.error("Failed to fetch from Google Sheet:", error);
-        return null;
+        throw error; // Propagate error to UI
     }
 };
 
