@@ -9,6 +9,7 @@ export interface AthleteData {
     hamstringQuadLeft: number; // H:Q L
     hamstringQuadRight: number; // H:Q R
     imtpPeakForce: number; // IMTP F200Ms (using Peak Force for simplicity if F200 not available, or mapping specifically)
+    imtpRfd200: number; // RFD @ 200ms
     peakForceAsymmetry: number; // PF ASM
     neckExtension: number; // NECK EXT
     ankleRomLeft: number; // Ankle ROM L
@@ -108,6 +109,7 @@ export const parseAthleteData = (csvString: string): AthleteData[] => {
             hamstringQuadLeft: row['H:Q L'] || 0,
             hamstringQuadRight: row['H:Q R'] || 0,
             imtpPeakForce: row['IMTP Peak'] || 0,
+            imtpRfd200: row['RFD 200ms'] || 0, // Mock mapping
             peakForceAsymmetry: row['PF ASM'] || 0,
             neckExtension: row['Neck Ext'] || 0,
             ankleRomLeft: ankleL,

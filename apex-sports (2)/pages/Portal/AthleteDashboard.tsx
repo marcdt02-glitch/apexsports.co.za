@@ -170,7 +170,7 @@ const AthleteDashboard: React.FC = () => {
 
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-8">
                             {[
-                                { label: 'IMTP Peak', val: `${athlete.imtpPeakForce} N` },
+                                { label: 'Explosivity (RFD 200ms)', val: `${athlete.imtpRfd200 || 0} N/s` },
                                 { label: 'Asymmetry', val: athlete.peakForceAsymmetry === 0 ? 'N/A' : `${athlete.peakForceAsymmetry}%`, color: athlete.peakForceAsymmetry === 0 ? 'text-gray-500' : (flags.isHighRisk ? 'text-red-500' : 'text-green-500') },
                                 { label: 'Ankle ROM', val: `${Math.round((athlete.ankleRomLeft + athlete.ankleRomRight) / 2)}°` },
                                 { label: 'H:Q Ratio', val: athlete.hamstringQuadLeft },

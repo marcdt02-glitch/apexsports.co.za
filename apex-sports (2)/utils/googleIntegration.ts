@@ -58,6 +58,7 @@ const mapGoogleRowToAthlete = (row: any): AthleteData => {
         hamstringQuadLeft: num(row.hq_left),
         hamstringQuadRight: num(row.hq_right),
         imtpPeakForce: num(row.imtp_peak),
+        imtpRfd200: num(row.rfd_200), // New RFD Column
         peakForceAsymmetry: num(row.pf_asym),
         neckExtension: num(row.neck),
         ankleRomLeft: num(row.ankle_l),
