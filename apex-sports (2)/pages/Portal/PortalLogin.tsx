@@ -6,8 +6,9 @@ import { useData } from '../../context/DataContext';
 const PortalLogin: React.FC = () => {
     const [athleteId, setAthleteId] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState('');
     const navigate = useNavigate();
-    const { fetchAndAddAthlete } = useData() as any; // Using the new extended type
+    const { fetchAndAddAthlete } = useData() as any;
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -15,17 +16,23 @@ const PortalLogin: React.FC = () => {
         if (!term) return;
 
         setIsLoading(true);
+        setError('');
 
         try {
-            // Attempt to fetch from Google if it looks like an email, or just generic fetch
-            // This ensures latest data is pulled before navigating
             await fetchAndAddAthlete(term);
+            navigate(`/portal/${term}`);
         } catch (err) {
-            console.log("Fetch attempted, proceeding to dashboard check...");
+            console.error("Login failed:", err);
+            // If fetchAndAddAthlete throws or returns promise that rejects
+            // We need to check if the context actually found it.
+            // Since fetchAndAddAthlete is async void, we might not know success easily unless we check `getAthlete`.
+            // But let's assume if it fails it throws, OR let's improve the feedback loop.
+            // Ideally, fetchAndAddAthlete should return the athlete or null.
+            // For now, let's catch standard errors.
+            setError("Could not match Athlete Profile. Please check your email.");
+            setIsLoading(false);
+            return;
         }
-
-        setIsLoading(false);
-        navigate(`/portal/${term}`);
     };
 
     return (
@@ -39,18 +46,27 @@ const PortalLogin: React.FC = () => {
                     <p className="text-gray-400 mt-2 text-sm">Enter your unique Athlete ID to access your performance dashboard.</p>
                 </div>
 
+                {error && (
+                    <div className="mb-6 p-4 bg-red-950/50 border border-red-900 rounded-lg flex items-center gap-3">
+                        <div className="p-2 bg-red-900 rounded-full">
+                            <Lock className="w-4 h-4 text-white" />
+                        </div>
+                        <p className="text-red-200 text-sm font-bold">{error}</p>
+                    </div>
+                )}
+
                 <form onSubmit={handleLogin} className="space-y-4">
                     <div>
                         <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">
-                            Athlete ID
+                            Email Address
                         </label>
                         <div className="relative">
                             <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
                             <input
-                                type="text"
+                                type="email"
                                 value={athleteId}
                                 onChange={(e) => setAthleteId(e.target.value)}
-                                placeholder="e.g. athlete-0"
+                                placeholder="e.g. athlete@apexsports.co.za"
                                 className="w-full bg-black border border-neutral-700 rounded-lg py-3 pl-12 pr-4 text-white focus:border-white transition-colors outline-none"
                             />
                         </div>
