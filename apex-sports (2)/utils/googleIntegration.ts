@@ -50,27 +50,43 @@ const mapGoogleRowToAthlete = (row: any): AthleteData => {
     const num = (val: any) => Number(val) || 0;
 
     return {
-        id: row.id || `google-${Date.now()}`,
-        name: row.name || 'Unknown Athlete',
-        email: row.email || '',
-        date: new Date().toISOString().split('T')[0], // Always fresh
-        lastUpdated: row.last_updated || '', // Map from JSON
+        id: row._id || `google-${Date.now()}`,
+        name: row._name || 'Unknown Athlete',
+        email: row._email || '',
+        date: new Date().toISOString().split('T')[0],
+        lastUpdated: row['Last Updated'] || '',
 
-        hamstringQuadLeft: num(row.hq_left),
-        hamstringQuadRight: num(row.hq_right),
-        imtpPeakForce: num(row.imtp_peak),
-        imtpRfd200: num(row.rfd_200), // New RFD Column
-        peakForceAsymmetry: num(row.pf_asym),
-        neckExtension: num(row.neck),
-        ankleRomLeft: num(row.ankle_l),
-        ankleRomRight: num(row.ankle_r),
+        // V8.0 Administrative
+        parentConsent: row['Parent Consent'] || 'No', // Safety Gate
+        package: row['Package'] || 'Camp',
 
-        // Calculated scores (or fetched if computed in Sheet)
-        scoreHamstring: num(row.score_hamstring) || Math.min(100, num(row.hq_left) * 120),
-        scoreQuad: num(row.score_quad) || 50,
-        scoreAdduction: num(row.score_adduction) || 50,
-        scoreAnkle: num(row.score_ankle) || 50,
-        scoreShoulder: num(row.score_shoulder) || 50,
-        scoreNeck: num(row.score_neck) || 50,
+        // V8.0 Neural
+        readinessScore: num(row['Readiness Score'] || row['Ready %']),
+        groinTimeToMax: num(row['Groin Time to Max'] || row['Groin TMAX']),
+        movementQualityScore: num(row['MQS'] || row['Movement Quality']),
+
+        // Performance
+        imtpPeakForce: num(row['IMTP Peak']),
+        imtpRfd200: num(row['RFD 200ms']),
+        peakForceAsymmetry: num(row['PF ASM']),
+
+        // Clinical
+        hamstringQuadLeft: num(row['H:Q L']),
+        hamstringQuadRight: num(row['H:Q R']),
+        neckExtension: num(row['Neck Ext']),
+        ankleRomLeft: num(row['Ankle ROM L']),
+        ankleRomRight: num(row['Ankle ROM R']),
+        shoulderRomLeft: num(row['Shoulder ROM L']),
+        shoulderRomRight: num(row['Shoulder ROM R']),
+        adductionStrengthLeft: num(row['Adduction L']),
+        adductionStrengthRight: num(row['Adduction R']),
+
+        // Scores
+        scoreHamstring: num(row['Score Hamstring']),
+        scoreQuad: num(row['Score Quad']),
+        scoreAdduction: num(row['Score Adduction']),
+        scoreAnkle: num(row['Score Ankle']),
+        scoreShoulder: num(row['Score Shoulder']),
+        scoreNeck: num(row['Score Neck']),
     };
 };

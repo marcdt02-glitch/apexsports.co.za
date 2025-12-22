@@ -7,16 +7,32 @@ export interface AthleteData {
     date: string;
     lastUpdated?: string; // New Timestamp Field
     // Metrics mapped from request
-    hamstringQuadLeft: number; // H:Q L
-    hamstringQuadRight: number; // H:Q R
-    imtpPeakForce: number; // IMTP F200Ms (using Peak Force for simplicity if F200 not available, or mapping specifically)
-    imtpRfd200: number; // RFD @ 200ms
-    peakForceAsymmetry: number; // PF ASM
-    neckExtension: number; // NECK EXT
-    ankleRomLeft: number; // Ankle ROM L
-    ankleRomRight: number; // Ankle ROM R
+    // v8.0 Administrative
+    parentConsent: 'Yes' | 'No' | string;
+    package: 'Camp' | 'Individual' | 'Elite' | string;
 
-    // Radar Axes (Normalization 0-100)
+    // v8.0 Neural & MQS
+    readinessScore: number;     // % (0-100)
+    groinTimeToMax: number;     // Seconds
+    movementQualityScore: number; // MQS (0-100)
+
+    // Performance Metrics
+    imtpPeakForce: number;
+    imtpRfd200: number;
+    peakForceAsymmetry: number;
+
+    // Clinical / MQS Metrics
+    hamstringQuadLeft: number;
+    hamstringQuadRight: number;
+    neckExtension: number;
+    ankleRomLeft: number;
+    ankleRomRight: number;
+    shoulderRomLeft: number;
+    shoulderRomRight: number;
+    adductionStrengthLeft: number;
+    adductionStrengthRight: number;
+
+    // Axes Scores
     scoreHamstring: number;
     scoreQuad: number;
     scoreAdduction: number;
@@ -110,11 +126,22 @@ export const parseAthleteData = (csvString: string): AthleteData[] => {
             hamstringQuadLeft: row['H:Q L'] || 0,
             hamstringQuadRight: row['H:Q R'] || 0,
             imtpPeakForce: row['IMTP Peak'] || 0,
-            imtpRfd200: row['RFD 200ms'] || 0, // Mock mapping
+            imtpRfd200: row['RFD 200ms'] || 0,
             peakForceAsymmetry: row['PF ASM'] || 0,
             neckExtension: row['Neck Ext'] || 0,
             ankleRomLeft: ankleL,
             ankleRomRight: ankleR,
+            shoulderRomLeft: 0,
+            shoulderRomRight: 0,
+            adductionStrengthLeft: 0,
+            adductionStrengthRight: 0,
+
+            // v8.0 Defaults
+            parentConsent: 'Yes',
+            package: 'Individual',
+            readinessScore: 85,
+            groinTimeToMax: 1.2,
+            movementQualityScore: 80,
 
             // Radar Scores (mock normalized 0-100 based on raw values)
             scoreHamstring: Math.min(100, (row['H:Q L'] || 0) * 120),

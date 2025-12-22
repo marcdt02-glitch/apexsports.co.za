@@ -58,29 +58,24 @@ function doGet(e) {
 
     if (athlete) {
         // Basic Mapping to standardize keys (optional, but helpful for frontend)
-        var mapped = {
-            id: athlete['Athlete ID'] || 'generated-' + i,
-            name: athlete['Athlete Name'] || athlete['Name'],
-            email: athlete['Email'],
+        // Dynamic Mapping for v8.0 (Returns all columns as keys)
+        var mapped = {};
+        for (var k = 0; k < headers.length; k++) {
+            var header = headers[k].toString().trim();
+            if (header) {
+                mapped[header] = athlete[header];
+            }
+        }
 
-            // Metrics (Ensure headers in Sheet match these or adjusting logic)
-            hq_left: athlete['H:Q L'],
-            hq_right: athlete['H:Q R'],
-            imtp_peak: athlete['IMTP Peak'],
-            rfd_200: athlete['RFD 200ms'], // New Column
-            pf_asym: athlete['PF ASM'],
-            neck: athlete['Neck Ext'],
-            ankle_l: athlete['Ankle ROM L'],
-            ankle_r: athlete['Ankle ROM R'],
+        // Add standardized metadata
+        mapped['_id'] = athlete['Athlete ID'] || 'generated-' + i;
+        mapped['_name'] = athlete['Athlete Name'] || athlete['Name'];
+        mapped['_email'] = athlete['Email'];
 
-            // Scores
-            score_hamstring: athlete['Score Hamstring'],
-            score_quad: athlete['Score Quad'],
-            // ... add others as needed
-
-            // Metadata
-            last_updated: athlete['Last Updated']
-        };
+        return ContentService.createTextOutput(JSON.stringify({
+            status: 'success',
+            athlete: mapped
+        })).setMimeType(ContentService.MimeType.JSON);
 
         return ContentService.createTextOutput(JSON.stringify({
             status: 'success',
