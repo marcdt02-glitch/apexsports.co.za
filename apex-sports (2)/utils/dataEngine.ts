@@ -32,7 +32,40 @@ export interface DashboardMetrics {
         focusArea: string;
         description: string;
     };
+    performance: {
+        acuteLoad: number;
+        chronicLoad: number;
+        acwr: number;
+        sessions: any[]; // mocked
+    };
 }
+
+export interface TrainingSession {
+    date: string;
+    durationMinutes: number;
+    rpe: number;
+    load: number;
+    maxHr?: number;
+    painScore?: number;
+}
+
+const generateMockSessions = (): TrainingSession[] => {
+    const sessions: TrainingSession[] = [];
+    const now = new Date();
+    for (let i = 0; i < 30; i++) {
+        const d = new Date(now);
+        d.setDate(d.getDate() - i);
+        sessions.push({
+            date: d.toISOString().split('T')[0],
+            durationMinutes: 60,
+            rpe: Math.floor(Math.random() * 5) + 5,
+            load: 60 * (Math.floor(Math.random() * 5) + 5),
+            maxHr: 160 + Math.floor(Math.random() * 30),
+            painScore: Math.floor(Math.random() * 3)
+        });
+    }
+    return sessions;
+};
 
 // Mock initial data to simulate Processed_Athlete_Data.csv
 // Columns: Athlete, Date, H:Q L, H:Q R, IMTP Peak, PF ASM, Adduction L, Adduction R, Ankle ROM L, Ankle ROM R, Shoulder IR L, Shoulder IR R, Neck Ext
@@ -139,5 +172,11 @@ export const analyzeAthlete = (athlete: AthleteData): DashboardMetrics => {
             focusArea: recTitle,
             description: recDesc,
         },
+        performance: {
+            acuteLoad: 4500, // Mock fixed
+            chronicLoad: 4000,
+            acwr: 1.12,
+            sessions: generateMockSessions()
+        }
     };
 };
