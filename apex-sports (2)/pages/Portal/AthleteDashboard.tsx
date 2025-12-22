@@ -127,8 +127,8 @@ const AthleteDashboard: React.FC = () => {
         <SafetyGuard athlete={athlete}>
             <div className="min-h-screen bg-black text-white pb-20 font-sans">
 
-                {/* Fixed Header */}
-                <div className="fixed top-0 left-0 right-0 z-40 bg-black/90 backdrop-blur-md border-b border-neutral-800">
+                {/* Fixed Header (Pushed down by Global Navbar h-24) */}
+                <div className="fixed top-24 left-0 right-0 z-40 bg-black/90 backdrop-blur-md border-b border-neutral-800">
                     <div className="flex items-center justify-between px-6 py-4 max-w-7xl mx-auto w-full">
                         <div className="flex items-center gap-4">
                             {/* NEW: Menu Trigger */}
@@ -181,7 +181,7 @@ const AthleteDashboard: React.FC = () => {
                 {/* Overlay for Mobile */}
                 {sidebarOpen && <div className="fixed inset-0 bg-black/80 z-40 lg:hidden" onClick={() => setSidebarOpen(false)} />}
 
-                <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-neutral-900 border-r border-neutral-800 transform transition-transform duration-300 lg:translate-x-0 pt-28 pb-10 flex flex-col ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+                <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-neutral-900 border-r border-neutral-800 transform transition-transform duration-300 lg:translate-x-0 pt-48 pb-10 flex flex-col mt-24 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
                     <div className="px-6 space-y-2">
                         <button
                             onClick={() => { setActiveView('dashboard'); setSidebarOpen(false); }}
@@ -251,7 +251,7 @@ const AthleteDashboard: React.FC = () => {
                 </div>
 
                 {/* Content Area */}
-                <div ref={dashboardRef} className="pt-28 px-4 max-w-7xl mx-auto space-y-12 lg:pl-72">
+                <div ref={dashboardRef} className="pt-56 px-4 max-w-7xl mx-auto space-y-12 lg:pl-72">
 
                     {/* v8.0 Neural Alerts */}
                     {(isEliteTier && (athlete.readinessScore < 65 || athlete.groinTimeToMax > 1.5)) && (

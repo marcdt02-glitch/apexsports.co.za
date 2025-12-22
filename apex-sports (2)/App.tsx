@@ -30,13 +30,9 @@ const ScrollToTop = () => {
 }
 
 const InnerLayout: React.FC = () => {
-  const location = useLocation();
-  // With HashRouter, location.pathname is the path inside the hash (e.g. "/portal/123")
-  const isPortal = location.pathname.startsWith('/portal');
-
   return (
     <div className="flex flex-col min-h-screen bg-black text-white font-sans antialiased selection:bg-white selection:text-black">
-      {!isPortal && <Navbar />}
+      <Navbar />
       <main className="flex-grow">
         <Routes>
           <Route path="/" element={<Home />} />
