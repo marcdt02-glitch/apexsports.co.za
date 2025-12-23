@@ -71,7 +71,7 @@ const mapGoogleRowToAthlete = (row: any): AthleteData => {
 
         // v8.0 Neural
         readinessScore: num(row['Readiness Score (%)'] || row['Readiness Score'] || row['Ready %'] || row.readinessScore || 85),
-        groinTimeToMax: num(row['Groin Time to Max (s)'] || row['Groin Time to Max'] || row['Groin TMAX'] || row.groinTimeToMax),
+        groinTimeToMax: num(row['Groin Time'] || row['Groin Time to Max (s)'] || row['Groin Time to Max'] || row.groinTimeToMax),
         movementQualityScore: num(row['Movement Quality Score'] || row['MQS'] || row['Movement Quality'] || row.screeningScore),
 
         // Performance
@@ -122,6 +122,10 @@ const mapGoogleRowToAthlete = (row: any): AthleteData => {
             const raw = num(row['Score Adduction']);
             if (raw) return raw;
             const bw = num(row['Body Weight (kg)']) || 70;
+            // Use Groin Force (Squeeze) if available, common fallback to L+R
+            const squeeze = num(row['Groin Force'] || row['Groin Squeeze (N)'] || row['Groin Squeeze'] || row['Adduction Peak']);
+            if (squeeze) return Math.min(100, Math.round((squeeze / bw) * 4)); // Force / BW * 4 (approx)
+
             const add = (num(row['Hip Add L (N)']) + num(row['Hip Add R (N)'])) / 2;
             return add ? Math.min(100, Math.round((add / bw) * 8)) : 0;
         })(),
@@ -157,7 +161,7 @@ const mapGoogleRowToAthlete = (row: any): AthleteData => {
         paymentStatus: row['Payment Status'] || row['Subscription'] || row.paymentStatus || 'Active', // Default Active for legacy
         waiverStatus: row['Waiver Status'] || row['Legal'] || row.waiverStatus || 'Signed', // Default Signed for legacy
         bodyWeight: num(row['Body Weight (kg)'] || row['Weight'] || row.bodyWeight || 70),
-        groinSqueeze: num(row['Groin Squeeze (N)'] || row['Groin Squeeze'] || row['Adduction Peak'] || (num(row['Hip Add L (N)']) + num(row['Hip Add R (N)']))),
+        groinSqueeze: num(row['Groin Force'] || row['Groin Squeeze (N)'] || row['Groin Squeeze'] || row['Adduction Peak'] || (num(row['Hip Add L (N)']) + num(row['Hip Add R (N)']))),
         // Note: Groin Squeeze is often sum of L+R Adduction or a specific test. 
         // Fallback to sum of mapped L+R if specific column missing.
 

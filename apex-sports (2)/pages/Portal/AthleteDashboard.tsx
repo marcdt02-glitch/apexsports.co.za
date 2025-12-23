@@ -357,7 +357,7 @@ const AthleteDashboard: React.FC = () => {
                                 {showAdvancedMetrics ? (
                                     <>
                                         <CircleProgress percentage={analysis.scores?.screening ?? 0} color="#a855f7" label="MQS" icon={Shield} />
-                                        <CircleProgress percentage={analysis.scores?.readiness ?? 0} color="#22c55e" label="Readiness" icon={Activity} />
+                                        <CircleProgress percentage={athlete.scoreAdduction ?? 0} color="#ef4444" label="Clinical Strength" icon={Activity} />
                                     </>
                                 ) : (
                                     <div className="col-span-2 flex items-center justify-center opacity-30 border-l border-neutral-800 bg-neutral-900/50 rounded-r-xl">

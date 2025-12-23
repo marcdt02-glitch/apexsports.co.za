@@ -1,134 +1,95 @@
-```javascript
-
-
-// ==========================================
-// 1. API API ENDPOINT (Handle GET Requests)
-// ==========================================
+// VERSION: v16.2 (Data Sync Update)
 function doGet(e) {
-  try {
-    // 1. Extract Parameters
-    var email = e.parameter.email;
-    var id = e.parameter.id;
+    try {
+        var email = e.parameter.email;
+        var pin = e.parameter.pin; // The new security key
+        var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Athlete Data");
 
-    // 2. Validation
-    if (!email && !id) {
-        return ContentService.createTextOutput(JSON.stringify({status: 'error', message: 'Missing parameters'})).setMimeType(ContentService.MimeType.JSON);
-    }
+        // 1. Health Check
+        if (!email || !sheet) return res({ status: "error", message: "APEX Engine Ready. Missing 'email' parameter." });
 
-    // 3. Open Sheet
-    var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Athlete Data");
-    if (!sheet) {
-        // Debugging: List available sheets
-        var allSheets = SpreadsheetApp.getActiveSpreadsheet().getSheets().map(function (s) { return s.getName(); });
-        return ContentService.createTextOutput(JSON.stringify({status: 'error', message: 'Sheet "Athlete Data" missing. Found: ' + allSheets.join(", ")})).setMimeType(ContentService.MimeType.JSON);
-    }
+        // 2. Fetch Data
+        var data = sheet.getDataRange().getValues();
+        if (!data || data.length === 0) return res({ status: "error", message: "Sheet is empty." });
 
-    // 4. Search for Athlete
-    var data = sheet.getDataRange().getValues();
-    if (data.length === 0) return ContentService.createTextOutput(JSON.stringify({status: 'error', message: 'Sheet is empty'})).setMimeType(ContentService.MimeType.JSON);
+        var headers = data[0];
+        // Safe Header Find
+        var emailIdx = headers.findIndex(function (h) { return String(h).toLowerCase().trim() === "email"; });
+        var pinIdx = headers.findIndex(function (h) { return String(h).toLowerCase().trim() === "passcode"; });
 
-    var headers = data[0];
-    var athlete = null;
+        if (emailIdx === -1) return res({ status: "error", message: "Checking Sheet: No 'Email' column found." });
 
-    // Debugging: Check for Email column
-    // var emailIndex = headers.findIndex(function (h) { return h.toString().toLowerCase().trim() === 'email'; });
-    // var idIndex = headers.findIndex(function (h) { return h.toString().toLowerCase().trim() === 'athlete id'; });
+        // 3. Search for Athlete
+        var athleteRow = null;
+        for (var i = 1; i < data.length; i++) {
+            // Safe String Conversion
+            var cellVal = data[i][emailIdx];
+            if (cellVal === null || cellVal === undefined) continue;
 
-    // if (emailIndex === -1 && idIndex === -1) {
-    //     return errorResponse("Columns 'Email' or 'Athlete ID' not found in headers: " + headers.join(", "));
-    // }
-
-    var normalize = function(str) { return str ? str.toString().toLowerCase().trim() : ""; };
-
-    for (var i = 1; i < data.length; i++) {
-        var row = data[i];
-
-        // Create a temporary object for this row
-        var rowObj = {};
-        for (var j = 0; j < headers.length; j++) {
-            rowObj[headers[j]] = row[j];
-        }
-
-        // Check if Email or ID matches (Case Insensitive)
-        if (normalize(rowObj['Email']) === normalize(email) ||
-            normalize(rowObj['Athlete ID']) === normalize(id)) {
-            athlete = rowObj;
-            break;
-        }
-    }
-
-    // 5. Return Result
-    if (athlete) {
-        // Dynamic Mapping: Return all sheet columns as JSON keys
-        var mappedData = {};
-
-        for (var k = 0; k < headers.length; k++) {
-            var headerName = headers[k].toString().trim();
-            if (headerName) {
-                mappedData[headerName] = athlete[headerName];
+            var rowEmail = String(cellVal).toLowerCase().trim();
+            // Safe Check vs Input Email
+            if (email && rowEmail === String(email).toLowerCase().trim()) {
+                athleteRow = data[i];
+                break;
             }
         }
 
-        // Add Metadata keys (standardized for Frontend)
-        mappedData['_id'] = athlete['Athlete ID'] || 'generated-' + i;
-        mappedData['_name'] = athlete['Athlete Name'] || athlete['Name'];
-        mapped['_email'] = athlete['Email'];
+        // 4. Validate & Return
+        if (athleteRow) {
+            // PASSCODE CHECK
+            if (pinIdx !== -1) {
+                var pinCell = athleteRow[pinIdx];
+                var storedPin = (pinCell === null || pinCell === undefined) ? "" : String(pinCell).trim();
 
-        return successResponse(mappedData);
+                // Strict Check
+                if (storedPin !== "" && storedPin !== pin) {
+                    return res({ status: "security_error", message: "Invalid Passcode." });
+                }
+            }
 
-    } else {
-        return errorResponse('Athlete not found');
+            // Map Data
+            var athleteData = {};
+            headers.forEach(function (h, idx) {
+                if (h !== null && h !== undefined && String(h).trim() !== "") {
+                    var key = String(h).trim();
+                    var val = athleteRow[idx];
+                    athleteData[key] = (val === null || val === undefined) ? "" : val;
+                }
+            });
+
+            // Logic Keys (Normalize for Frontend)
+            athleteData["consent"] = athleteData["Parent Consent"];
+            athleteData["readiness_score"] = athleteData["Readiness Score (%)"];
+            athleteData["groin_time"] = athleteData["Groin Time to Max (s)"];
+
+            return res({ status: "success", athlete: athleteData });
+        }
+
+        return res({ status: "error", message: "Athlete not found." });
+
+    } catch (err) {
+        return res({ status: "error", message: "System Error: " + String(err) + " Stack: " + String(err.stack) });
     }
 }
 
-// ==========================================
-// 2. AUTOMATION TRIGGERS (Auto-Timestamp)
-// ==========================================
+function res(data) {
+    return ContentService.createTextOutput(JSON.stringify(data)).setMimeType(ContentService.MimeType.JSON);
+}
+
 function onEdit(e) {
     var sheet = e.source.getActiveSheet();
+    var r = e.range;
 
-    // Only target the 'Athlete Data' sheet
+    // Guard Clauses
     if (sheet.getName() !== "Athlete Data") return;
+    if (r.getRow() === 1) return; // Header row
 
-    var range = e.range;
-    var col = range.getColumn();
-    var row = range.getRow();
-
-    // Ignore Header Row
-    if (row === 1) return;
-
-    // Find "Last Updated" column dynamically
+    // Find 'Last Updated' Column
     var headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
-    var updateColIndex = headers.indexOf("Last Updated") + 1;
+    var updateCol = headers.indexOf("Last Updated") + 1;
 
-    // Safety Checks
-    if (updateColIndex === 0) return; // Column doesn't exist
-    if (col === updateColIndex) return; // Prevent infinite loop if we are editing the date itself
-
-    // Set the Timestamp
-    var date = new Date();
-    var formattedDate = Utilities.formatDate(date, Session.getScriptTimeZone(), "dd MMM yyyy");
-    sheet.getRange(row, updateColIndex).setValue(formattedDate);
-}
-
-// ==========================================
-// HELPER FUNCTIONS
-// ==========================================
-
-function normalize(str) {
-    return str ? str.toString().toLowerCase().trim() : "";
-}
-
-function successResponse(data) {
-    return ContentService.createTextOutput(JSON.stringify({
-        status: 'success',
-        athlete: data
-    })).setMimeType(ContentService.MimeType.JSON);
-}
-
-function errorResponse(message) {
-    return ContentService.createTextOutput(JSON.stringify({
-        status: 'error',
-        message: message
-    })).setMimeType(ContentService.MimeType.JSON);
+    // Update Timestamp (if column exists and we aren't editing it)
+    if (updateCol > 0 && r.getColumn() !== updateCol) {
+        sheet.getRange(r.getRow(), updateCol).setValue(Utilities.formatDate(new Date(), "GMT+2", "dd MMM yyyy"));
+    }
 }
