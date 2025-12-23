@@ -66,7 +66,7 @@ const mapGoogleRowToAthlete = (row: any): AthleteData => {
         lastUpdated: row['Last Updated'] || row.timestamp || '',
 
         // V8.0 Administrative
-        parentConsent: row['Parent Consent'] || row.parentConsent || 'Yes',
+        parentConsent: row['Parent Consent'] || row['Parental Consent'] || row['Consent'] || row.parentConsent || row.consent || 'Yes',
         package: row['Package'] || row['package'] || row.package || row.packageType || row['Package Type'] || row.tier || row.Level || 'Camp',
 
         // V8.0 Neural
