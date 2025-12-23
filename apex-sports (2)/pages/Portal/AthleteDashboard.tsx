@@ -119,7 +119,8 @@ const AthleteDashboard: React.FC = () => {
     // Show Advanced only if NOT General/S&C.
     // "Testing" and "Elite" get the goods.
     const isZeroAdmin = pkg.includes('general') || pkg.includes('s&c') || pkg === 'camp';
-    const showAdvancedMetrics = !isZeroAdmin && (pkg.includes('elite') || pkg.includes('testing') || pkg.includes('individual'));
+    const isEliteTier = pkg.includes('elite'); // Legacy helper
+    const showAdvancedMetrics = !isZeroAdmin && (isEliteTier || pkg.includes('testing') || pkg.includes('individual'));
 
     // Hero Stat Triggers
     const isFatigued = athlete.readinessScore < 65 || athlete.groinTimeToMax > 1.5;
