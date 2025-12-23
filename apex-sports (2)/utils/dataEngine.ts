@@ -52,12 +52,20 @@ export interface AthleteData {
     dailyLoad: number; // AU
     acwr: number; // Ratio
     s2Duration: number; // Minutes
+
+    // v15.1 Gates & DynaMo
+    paymentStatus: string; // 'Active' | 'Inactive'
+    waiverStatus: string; // 'Signed' | 'Pending'
+    bodyWeight: number; // kg
+    groinSqueeze: number; // N (Peak Force)
 }
 
 export interface DashboardMetrics {
     athlete: AthleteData;
     flags: {
         isHighRisk: boolean; // PF ASM > 10%
+        isNeuralFatigue: boolean; // Groin TMAX > 1.5s
+        isInjuryRedZone: boolean; // ACWR > 1.5
         notes: string[];
     };
     recommendation: {
@@ -169,6 +177,12 @@ export const parseAthleteData = (csvString: string): AthleteData[] => {
             acwr: 1.1 + (Math.random() * 0.4 - 0.2),
             s2Duration: Math.random() > 0.7 ? 45 : 0, // 30% chance of double session
 
+            // v15.1 Mock
+            paymentStatus: 'Active',
+            waiverStatus: 'Signed',
+            bodyWeight: 75,
+            groinSqueeze: 450,
+
             // Radar Scores (mock normalized 0-100 based on raw values)
             scoreHamstring: Math.min(100, (row['H:Q L'] || 0) * 120),
             scoreQuad: Math.min(100, (row['Quad Strength'] || 400) / 6),
@@ -183,11 +197,19 @@ export const parseAthleteData = (csvString: string): AthleteData[] => {
 export const analyzeAthlete = (athlete: AthleteData): DashboardMetrics => {
     const flags = {
         isHighRisk: athlete.peakForceAsymmetry > 10,
+        isNeuralFatigue: athlete.groinTimeToMax > 1.5,
+        isInjuryRedZone: athlete.acwr > 1.5,
         notes: [] as string[],
     };
 
     if (flags.isHighRisk) {
         flags.notes.push(`High Asymmetry detected (${athlete.peakForceAsymmetry}%). Monitor load.`);
+    }
+    if (flags.isNeuralFatigue) {
+        flags.notes.push(`Neural Fatigue Detected (DTmax ${athlete.groinTimeToMax}s).`);
+    }
+    if (flags.isInjuryRedZone) {
+        flags.notes.push(`ACWR > 1.5 (High Injury Risk). Reduce Volume.`);
     }
 
     // Determine lowest score for "What's Next"

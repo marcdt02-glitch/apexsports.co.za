@@ -447,7 +447,7 @@ const AthleteDashboard: React.FC = () => {
                                     )}
                                 </div>
 
-                                {/* Right Column: Recommendations & Load */}
+                                {/* Right Column: Recommendations & Workload (v15.1) */}
                                 <div className="space-y-8">
 
                                     {/* Recommendations */}
@@ -460,12 +460,47 @@ const AthleteDashboard: React.FC = () => {
                                         </button>
                                     </div>
 
-                                    {/* ACWR / Load */}
-                                    <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl text-center">
-                                        <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-6">Acute:Chronic Ratio</h3>
-                                        <div className="text-5xl font-black text-white mb-2">{acwrValue}</div>
-                                        <div className={`inline-block px-3 py-1 rounded-full text-xs font-bold border ${acwrHighRisk ? 'border-red-900 text-red-500 bg-red-900/10' : 'border-green-900 text-green-500 bg-green-900/10'}`}>
-                                            {acwrHighRisk ? 'High Risk' : 'Optimal Zone'}
+                                    {/* v15.1 Workload Management */}
+                                    <div className="bg-neutral-900/40 border border-neutral-800 p-6 rounded-3xl">
+                                        <div className="flex items-center justify-between mb-6">
+                                            <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500">Workload (7-Day)</h3>
+                                            <div className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${acwrHighRisk ? 'bg-red-900/30 text-red-500 border border-red-900' : 'bg-green-900/30 text-green-500 border border-green-900'}`}>
+                                                {acwrHighRisk ? 'Injury Red Zone' : 'Optimal Zone'}
+                                            </div>
+                                        </div>
+
+                                        {/* Chart */}
+                                        <div className="h-32 w-full mb-6">
+                                            <ResponsiveContainer width="100%" height="100%">
+                                                <AreaChart data={recentSessions}>
+                                                    <defs>
+                                                        <linearGradient id="colorLoad" x1="0" y1="0" x2="0" y2="1">
+                                                            <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
+                                                            <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                                                        </linearGradient>
+                                                    </defs>
+                                                    <XAxis dataKey="date" hide />
+                                                    <Tooltip
+                                                        contentStyle={{ backgroundColor: '#111', borderColor: '#333', borderRadius: '8px', fontSize: '12px' }}
+                                                        itemStyle={{ color: '#fff' }}
+                                                        labelStyle={{ display: 'none' }}
+                                                    />
+                                                    <Area type="monotone" dataKey="load" stroke="#3b82f6" fillOpacity={1} fill="url(#colorLoad)" />
+                                                </AreaChart>
+                                            </ResponsiveContainer>
+                                        </div>
+
+                                        <div className="flex items-center justify-between border-t border-white/5 pt-4">
+                                            <div>
+                                                <p className="text-[10px] text-gray-500 font-bold uppercase">Daily Load</p>
+                                                <p className="text-2xl font-black text-white">{athlete.dailyLoad || 0}</p>
+                                            </div>
+                                            <div className="text-right">
+                                                <p className="text-[10px] text-gray-500 font-bold uppercase">ACWR</p>
+                                                <p className={`text-2xl font-black ${acwrHighRisk ? 'text-red-500' : 'text-green-500'}`}>
+                                                    {acwrValue.toFixed(2)}
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

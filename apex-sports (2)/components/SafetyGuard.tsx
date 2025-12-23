@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { ShieldAlert, FileSignature } from 'lucide-react';
+import { ShieldAlert, FileSignature, Lock } from 'lucide-react';
 import { AthleteData } from '../utils/dataEngine';
 
 interface SafetyGuardProps {
@@ -9,8 +8,49 @@ interface SafetyGuardProps {
 }
 
 const SafetyGuard: React.FC<SafetyGuardProps> = ({ athlete, children }) => {
-    // v9.5 Strict Consent Block
-    // Must be exactly 'yes' (case-insensitive)
+    // 1. Payment Gate (Highest Priority)
+    if (athlete.paymentStatus && athlete.paymentStatus.toLowerCase() !== 'active') {
+        return (
+            <div className="fixed inset-0 z-50 bg-black/95 flex flex-col items-center justify-center p-6 text-center">
+                <div className="bg-neutral-900 border border-neutral-800 rounded-3xl p-12 max-w-lg">
+                    <div className="w-20 h-20 bg-neutral-800 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <Lock className="w-10 h-10 text-gray-400" />
+                    </div>
+                    <h1 className="text-3xl font-black text-white mb-4">Subscription Inactive</h1>
+                    <p className="text-gray-400 mb-8">
+                        Your access to the APEX Athlete Portal is currently paused.
+                        Please check your payment method or contact support.
+                    </p>
+                    <a href="mailto:admin@apexsports.co.za" className="text-white font-bold underline">Contact Billing Support</a>
+                </div>
+            </div>
+        );
+    }
+
+    // 2. Legal / Waiver Gate
+    if (athlete.waiverStatus && athlete.waiverStatus.toLowerCase() !== 'signed') {
+        return (
+            <div className="fixed inset-0 z-50 bg-black/95 flex flex-col items-center justify-center p-6 text-center">
+                <div className="bg-blue-950/20 border-2 border-blue-600 rounded-3xl p-12 max-w-2xl backdrop-blur-md">
+                    <div className="w-24 h-24 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-8 animate-pulse">
+                        <FileSignature className="w-12 h-12 text-white" />
+                    </div>
+                    <h1 className="text-4xl font-black text-white uppercase mb-6">Waiver Required</h1>
+                    <p className="text-lg text-blue-200 mb-8">
+                        For your safety, we require a signed liability waiver before you can access your performance data.
+                    </p>
+                    <a
+                        href="#" // TODO: Add Waiver Link
+                        className="bg-white text-black font-bold py-4 px-8 rounded-xl hover:bg-gray-200 transition-colors uppercase tracking-widest"
+                    >
+                        Sign Digital Waiver
+                    </a>
+                </div>
+            </div>
+        );
+    }
+
+    // 3. Consent Gate (Minors)
     const hasConsent = String(athlete.parentConsent || '').toLowerCase() === 'yes';
 
     if (!hasConsent) {

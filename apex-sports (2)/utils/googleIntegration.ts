@@ -153,6 +153,14 @@ const mapGoogleRowToAthlete = (row: any): AthleteData => {
         acwr: num(row['ACWR'] || row['Acute:Chronic'] || row.acwr),
         s2Duration: num(row['S2 Duration'] || row['Session 2'] || row.s2Duration),
 
+        // v15.1 Hardware Integration Matches
+        paymentStatus: row['Payment Status'] || row['Subscription'] || row.paymentStatus || 'Active', // Default Active for legacy
+        waiverStatus: row['Waiver Status'] || row['Legal'] || row.waiverStatus || 'Signed', // Default Signed for legacy
+        bodyWeight: num(row['Body Weight (kg)'] || row['Weight'] || row.bodyWeight || 70),
+        groinSqueeze: num(row['Groin Squeeze (N)'] || row['Groin Squeeze'] || row['Adduction Peak'] || (num(row['Hip Add L (N)']) + num(row['Hip Add R (N)']))),
+        // Note: Groin Squeeze is often sum of L+R Adduction or a specific test. 
+        // Fallback to sum of mapped L+R if specific column missing.
+
         // Legacy/Flat Support
         // If the flat JSON has 'screeningScore', map it to MQS
     };
