@@ -52,12 +52,25 @@ export interface AthleteData {
     dailyLoad: number; // AU
     acwr: number; // Ratio
     s2Duration: number; // Minutes
+    sRPE?: number; // Session RPE (1-10)
 
     // v15.1 Gates & DynaMo
     paymentStatus: string; // 'Active' | 'Inactive'
     waiverStatus: string; // 'Signed' | 'Pending'
     bodyWeight: number; // kg
     groinSqueeze: number; // N (Peak Force)
+
+    // v16.1 Ecosystem
+    valdProfileId: string; // GUID
+    moveHealth: {
+        lastExercises: Array<{
+            name: string;
+            sets: number;
+            reps: number;
+            weight: number;
+            rpe: number; // Exercise RPE
+        }>;
+    };
 }
 
 export interface DashboardMetrics {
@@ -66,6 +79,7 @@ export interface DashboardMetrics {
         isHighRisk: boolean; // PF ASM > 10%
         isNeuralFatigue: boolean; // Groin TMAX > 1.5s
         isInjuryRedZone: boolean; // ACWR > 1.5
+        isRpeDiscrepancy: boolean; // Session RPE vs Exercise RPE > 2
         notes: string[];
     };
     recommendation: {
@@ -113,7 +127,6 @@ const generateMockSessions = (): TrainingSession[] => {
 };
 
 // Mock initial data to simulate Processed_Athlete_Data.csv
-// Columns: Athlete,Email,Date,H:Q L,H:Q R,IMTP Peak,PF ASM,Adduction Strength,Ankle ROM L,Ankle ROM R,Shoulder Balance,Neck Ext,Quad Strength
 export const MOCK_CSV_DATA = `Athlete,Email,Date,H:Q L,H:Q R,IMTP Peak,PF ASM,Adduction Strength,Ankle ROM L,Ankle ROM R,Shoulder Balance,Neck Ext,Quad Strength
 John Doe,john@example.com,2025-01-15,0.65,0.62,4500,12.5,350,38,42,0.95,250,550
 Jane Smith,jane@example.com,2025-01-14,0.72,0.70,3800,4.2,310,45,45,0.98,210,480`;
@@ -134,8 +147,7 @@ export const parseAthleteData = (csvString: string): AthleteData[] => {
         const ankleL = row['Ankle ROM L'] || 40;
         const ankleR = row['Ankle ROM R'] || 40;
 
-        // Normalize logic (Mock for now - ideally based on population norms)
-        // E.g. Ankle > 45 = 100, < 25 = 0
+        // Normalize logic
         const normAnkle = Math.min(100, Math.max(0, ((ankleL + ankleR) / 2 - 25) * 5));
 
         return {
@@ -170,20 +182,31 @@ export const parseAthleteData = (csvString: string): AthleteData[] => {
             sleep: Math.floor(Math.random() * 5) + 1, // 1-5
             stress: Math.floor(Math.random() * 5) + 1, // 1-5
             soreness: Math.floor(Math.random() * 5) + 1, // 1-5
-            baselineJump: (row['Broad Jump'] || 250) + 15, // Simulate a baseline slightly higher than current for testing gap
+            baselineJump: (row['Broad Jump'] || 250) + 15,
 
             // v12.5 Load Mock
             dailyLoad: (Math.floor(Math.random() * 300) + 300),
             acwr: 1.1 + (Math.random() * 0.4 - 0.2),
             s2Duration: Math.random() > 0.7 ? 45 : 0, // 30% chance of double session
+            sRPE: Math.floor(Math.random() * 4) + 6, // Mock Session RPE (6-10)
 
-            // v15.1 Mock
+            // v15.1 Gates & DynaMo Mock
             paymentStatus: 'Active',
             waiverStatus: 'Signed',
             bodyWeight: 75,
             groinSqueeze: 450,
 
-            // Radar Scores (mock normalized 0-100 based on raw values)
+            // v16.1 Ecosystem Mock
+            valdProfileId: Math.random() > 0.3 ? 'VALD-123-456' : '', // 30% chance missing for testing button
+            moveHealth: {
+                lastExercises: [
+                    { name: 'Back Squat', sets: 4, reps: 5, weight: 120, rpe: 8 },
+                    { name: 'Nordic Hamstring Curl', sets: 3, reps: 8, weight: 0, rpe: 9 },
+                    { name: 'DB Bench Press', sets: 3, reps: 10, weight: 35, rpe: 7 }
+                ]
+            },
+
+            // Radar Scores
             scoreHamstring: Math.min(100, (row['H:Q L'] || 0) * 120),
             scoreQuad: Math.min(100, (row['Quad Strength'] || 400) / 6),
             scoreAdduction: Math.min(100, (row['Adduction Strength'] || 300) / 4),
@@ -195,10 +218,17 @@ export const parseAthleteData = (csvString: string): AthleteData[] => {
 };
 
 export const analyzeAthlete = (athlete: AthleteData): DashboardMetrics => {
+    // RPE Logic
+    const sessionRpe = athlete.sRPE || 5;
+    const exerciseRpe = athlete.moveHealth?.lastExercises[0]?.rpe || 5;
+    const rpeDiff = Math.abs(sessionRpe - exerciseRpe);
+    const isRpeDiscrepancy = rpeDiff > 2;
+
     const flags = {
         isHighRisk: athlete.peakForceAsymmetry > 10,
         isNeuralFatigue: athlete.groinTimeToMax > 1.5,
         isInjuryRedZone: athlete.acwr > 1.5,
+        isRpeDiscrepancy,
         notes: [] as string[],
     };
 
@@ -211,8 +241,11 @@ export const analyzeAthlete = (athlete: AthleteData): DashboardMetrics => {
     if (flags.isInjuryRedZone) {
         flags.notes.push(`ACWR > 1.5 (High Injury Risk). Reduce Volume.`);
     }
+    if (flags.isRpeDiscrepancy) {
+        flags.notes.push(`Data Discrepancy: Subjective Fatigue exceeds Training Load.`);
+    }
 
-    // Determine lowest score for "What's Next"
+    // Determine lowest score for recommendation
     const scores = [
         { label: 'Hamstring Strength', score: athlete.scoreHamstring },
         { label: 'Quad Strength', score: athlete.scoreQuad },
@@ -221,33 +254,18 @@ export const analyzeAthlete = (athlete: AthleteData): DashboardMetrics => {
         { label: 'Shoulder Balance', score: athlete.scoreShoulder },
         { label: 'Neck Strength', score: athlete.scoreNeck },
     ];
-
     scores.sort((a, b) => a.score - b.score);
     const lowest = scores[0];
 
+    // ... (Recommendations Logic same as before) ...
     let recTitle = "General Maintenance";
     let recDesc = "Continue with your current balanced program.";
-
     switch (lowest.label) {
-        case 'Ankle Mobility':
-            recTitle = "Focus on Ankle Dorsiflexion";
-            recDesc = "Incorporate banded distractions and soleus stretches daily.";
-            break;
-        case 'Hamstring Strength':
-            recTitle = "Posterior Chain focus";
-            recDesc = "Prioritize Nordic Hamstring curls and RDLs.";
-            break;
-        case 'Adduction':
-            recTitle = "Groin Strength";
-            recDesc = "Add Copenhagen Planks to your warm-up routine.";
-            break;
-        case 'Neck Strength':
-            recTitle = "Neck Stability";
-            recDesc = "Include Iron Neck or isometric hold protocols.";
-            break;
-        default:
-            recTitle = `Improve ${lowest.label}`;
-            recDesc = `Your ${lowest.label} is your lowest metric. Focus on specific accessory work.`;
+        case 'Ankle Mobility': recTitle = "Focus on Ankle Dorsiflexion"; recDesc = "Incorporate banded distractions and soleus stretches daily."; break;
+        case 'Hamstring Strength': recTitle = "Posterior Chain focus"; recDesc = "Prioritize Nordic Hamstring curls and RDLs."; break;
+        case 'Adduction': recTitle = "Groin Strength"; recDesc = "Add Copenhagen Planks to your warm-up routine."; break;
+        case 'Neck Strength': recTitle = "Neck Stability"; recDesc = "Include Iron Neck or isometric hold protocols."; break;
+        default: recTitle = `Improve ${lowest.label}`; recDesc = `Your ${lowest.label} is your lowest metric. Focus on specific accessory work.`;
     }
 
     return {
@@ -264,9 +282,9 @@ export const analyzeAthlete = (athlete: AthleteData): DashboardMetrics => {
             sessions: generateMockSessions()
         },
         scores: {
-            performance: Math.min(100, Math.round(athlete.imtpPeakForce / 50)), // Quick Mock: 5000N = 100%
-            screening: Math.max(0, 100 - (athlete.peakForceAsymmetry * 2)), // Penalty for asymmetry
-            readiness: Math.floor(Math.random() * 20) + 80 // Mock Daily Readiness 80-100
+            performance: Math.min(100, Math.round(athlete.imtpPeakForce / 50)),
+            screening: Math.max(0, 100 - (athlete.peakForceAsymmetry * 2)),
+            readiness: Math.floor(Math.random() * 20) + 80
         }
     };
 };

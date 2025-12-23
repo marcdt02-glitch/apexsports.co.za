@@ -161,7 +161,10 @@ const mapGoogleRowToAthlete = (row: any): AthleteData => {
         // Note: Groin Squeeze is often sum of L+R Adduction or a specific test. 
         // Fallback to sum of mapped L+R if specific column missing.
 
-        // Legacy/Flat Support
-        // If the flat JSON has 'screeningScore', map it to MQS
+        // v16.1 Ecosystem
+        valdProfileId: row['VALD ID'] || row['Profile ID'] || row.valdProfileId || '',
+        moveHealth: {
+            lastExercises: [] // Google Sheet doesn't have live feed, defaulting to empty until enriched
+        }
     };
 };

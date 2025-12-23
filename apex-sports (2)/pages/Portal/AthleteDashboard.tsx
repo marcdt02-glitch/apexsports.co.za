@@ -164,6 +164,17 @@ const AthleteDashboard: React.FC = () => {
                                             {athlete.groinTimeToMax || '-'}s
                                         </p>
                                     </div>
+
+                                    {/* v16.1 Clinical Link Status */}
+                                    {athlete.valdProfileId && (
+                                        <div className="flex flex-col items-end">
+                                            <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">Ecosystem</p>
+                                            <div className="bg-green-900/20 border border-green-800 px-2 py-1 rounded flex items-center gap-1">
+                                                <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
+                                                <span className="text-[10px] font-bold text-green-500 uppercase">Clinical Link Active</span>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                             )}
 
@@ -266,6 +277,25 @@ const AthleteDashboard: React.FC = () => {
 
                 {/* Content Area */}
                 <div ref={dashboardRef} className="pt-56 px-4 max-w-7xl mx-auto space-y-12 lg:pl-72">
+
+                    {/* v16.1 Onboarding: Coach Trigger for Missing VALD ID */}
+                    {(!athlete.valdProfileId && (pkg.includes('testing') || pkg.includes('elite'))) && (
+                        <div className="bg-gradient-to-r from-neutral-900 to-neutral-800 border border-neutral-700 p-6 rounded-2xl flex items-center justify-between mb-8 animate-fade-in">
+                            <div className="flex items-center gap-4">
+                                <div className="p-3 bg-neutral-700 rounded-full">
+                                    <User className="w-6 h-6 text-gray-300" />
+                                </div>
+                                <div>
+                                    <h3 className="text-white font-bold">Clinical Profile Missing</h3>
+                                    <p className="text-gray-400 text-xs">This athlete is active but missing a VALD Profile ID.</p>
+                                </div>
+                            </div>
+                            <button className="bg-white text-black font-bold py-2 px-6 rounded-lg text-sm hover:bg-gray-200 transition-colors flex items-center gap-2">
+                                <UploadCloud className="w-4 h-4" />
+                                Generate VALD Profile
+                            </button>
+                        </div>
+                    )}
 
                     {/* VIEW: DASHBOARD */}
                     {activeView === 'dashboard' && (
@@ -458,6 +488,55 @@ const AthleteDashboard: React.FC = () => {
                                         <button className="w-full bg-black text-white font-bold py-4 rounded-xl hover:bg-neutral-800 transition-transform hover:scale-[1.02]">
                                             View Protocol
                                         </button>
+                                    </div>
+
+                                    {/* v16.1 MoveHealth Live Feed */}
+                                    <div className="bg-neutral-900/40 border border-neutral-800 p-6 rounded-3xl">
+                                        <div className="flex items-center justify-between mb-4">
+                                            <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500 flex items-center gap-2">
+                                                <Activity className="w-4 h-4 text-purple-500" />
+                                                Recent Training
+                                            </h3>
+                                            <span className="text-[10px] text-gray-600 bg-neutral-900 border border-neutral-800 px-2 py-1 rounded">MoveHealth</span>
+                                        </div>
+
+                                        {/* RPE Integrity Alert */}
+                                        {flags.isRpeDiscrepancy && (
+                                            <div className="mb-4 bg-red-900/20 border border-red-900/50 p-3 rounded-lg flex items-start gap-3">
+                                                <AlertTriangle className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
+                                                <div>
+                                                    <p className="text-xs font-bold text-red-500 uppercase">Data Discrepancy</p>
+                                                    <p className="text-[10px] text-gray-300 leading-tight mt-1">
+                                                        Session RPE ({athlete.sRPE}) differs significantly from Exercise RPE. Check compliance.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        <div className="space-y-3">
+                                            {athlete.moveHealth?.lastExercises?.length > 0 ? (
+                                                athlete.moveHealth.lastExercises.slice(0, 3).map((ex, i) => (
+                                                    <div key={i} className="bg-neutral-900 border border-neutral-800 p-3 rounded-xl flex justify-between items-center group hover:border-neutral-700 transition-colors">
+                                                        <div>
+                                                            <p className="font-bold text-sm text-white group-hover:text-blue-400 transition-colors">{ex.name}</p>
+                                                            <p className="text-[10px] text-gray-500 font-mono">
+                                                                {ex.sets} x {ex.reps} @ {ex.weight}kg
+                                                            </p>
+                                                        </div>
+                                                        <div className="text-right">
+                                                            <div className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${ex.rpe >= 8 ? 'bg-red-900/30 text-red-500' : 'bg-green-900/30 text-green-500'}`}>
+                                                                RPE {ex.rpe}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                ))
+                                            ) : (
+                                                <div className="text-center py-6">
+                                                    <Activity className="w-8 h-8 text-neutral-800 mx-auto mb-2" />
+                                                    <p className="text-xs text-gray-600">No recent activity logged.</p>
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
 
                                     {/* v15.1 Workload Management */}
