@@ -94,6 +94,12 @@ const mapGoogleRowToAthlete = (row: any): AthleteData => {
             if (flexR && extR) return Number((flexR / extR).toFixed(2));
             return num(row['H:Q R']);
         })(),
+        kneeExtensionLeft: num(row['Knee Ext L (N)'] || row['Knee Ext L']),
+        kneeExtensionRight: num(row['Knee Ext R (N)'] || row['Knee Ext R']),
+        hipAbductionLeft: num(row['Hip Abd L (N)'] || row['Hip Abd L']),
+        hipAbductionRight: num(row['Hip Abd R (N)'] || row['Hip Abd R']),
+        shoulderInternalRotationLeft: num(row['Shoulder IR L (N)'] || row['Shoulder IR L']),
+        shoulderInternalRotationRight: num(row['Shoulder IR R (N)'] || row['Shoulder IR R']),
         neckExtension: num(row['Neck Ext (N)'] || row['Neck Ext']),
         ankleRomLeft: num(row['Ankle ROM L (deg)'] || row['Ankle ROM L']),
         ankleRomRight: num(row['Ankle ROM R (deg)'] || row['Ankle ROM R']),

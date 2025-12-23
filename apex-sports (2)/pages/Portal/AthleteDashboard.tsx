@@ -357,15 +357,40 @@ const AthleteDashboard: React.FC = () => {
                                 {showAdvancedMetrics ? (
                                     <>
                                         <CircleProgress percentage={analysis.scores?.screening ?? 0} color="#a855f7" label="MQS" icon={Shield} />
-                                        <CircleProgress percentage={athlete.scoreAdduction ?? 0} color="#ef4444" label="Clinical Strength" icon={Activity} />
+                                        <CircleProgress percentage={athlete.scoreAdduction ?? 0} color="#ef4444" label="Strength" icon={Activity} />
+                                        <CircleProgress percentage={analysis.scores?.powerIndex ?? 0} color="#f59e0b" label="Power Index" icon={Zap} />
                                     </>
                                 ) : (
-                                    <div className="col-span-2 flex items-center justify-center opacity-30 border-l border-neutral-800 bg-neutral-900/50 rounded-r-xl">
+                                    <div className="col-span-3 flex items-center justify-center opacity-30 border-l border-neutral-800 bg-neutral-900/50 rounded-r-xl">
                                         <Lock className="w-5 h-5 mr-3 text-gray-500" />
-                                        <p className="text-sm font-mono text-gray-500">DYNAMO & READINESS LOCKED</p>
+                                        <p className="text-sm font-mono text-gray-500">DYNAMO & POWER LOCKED</p>
                                     </div>
                                 )}
                             </div>
+
+                            {/* v17.0 Dynamic Alerts */}
+                            {(analysis.flags.isShoulderImbalance || analysis.flags.isLimbAsymmetry) && showAdvancedMetrics && (
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fade-in">
+                                    {analysis.flags.isShoulderImbalance && (
+                                        <div className="bg-orange-950/40 border border-orange-900/50 p-4 rounded-xl flex items-center gap-3">
+                                            <AlertTriangle className="w-6 h-6 text-orange-500" />
+                                            <div>
+                                                <h4 className="text-orange-400 font-bold text-sm">Shoulder Imbalance</h4>
+                                                <p className="text-orange-200/60 text-xs">ER Strength {'<'} 80% of IR. Stability work recommended.</p>
+                                            </div>
+                                        </div>
+                                    )}
+                                    {analysis.flags.isLimbAsymmetry && (
+                                        <div className="bg-amber-950/40 border border-amber-900/50 p-4 rounded-xl flex items-center gap-3">
+                                            <AlertCircle className="w-6 h-6 text-amber-500" />
+                                            <div>
+                                                <h4 className="text-amber-400 font-bold text-sm">Limb Symmetry Alert</h4>
+                                                <p className="text-amber-200/60 text-xs">{'>'}15% Asymmetry detected in Lower Body Key Lifts.</p>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
 
                             {/* Main Grid: Charts & Performance */}
                             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -373,25 +398,59 @@ const AthleteDashboard: React.FC = () => {
                                 {/* Left Column: Performance Profile (Radar) */}
                                 <div className="lg:col-span-2 space-y-8">
 
-                                    {/* Radar Chart (Advanced Only) */}
+                                    {/* Radar Charts Grid */}
                                     {showAdvancedMetrics && (
-                                        <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl relative">
-                                            <div className="flex items-center justify-between mb-8">
-                                                <h2 className="text-xl font-bold flex items-center gap-3">
-                                                    <span className="w-1 h-6 bg-purple-600 rounded-full"></span>
-                                                    Dynamo Screening Profile
-                                                </h2>
-                                                {athlete.lastUpdated && <span className="text-[10px] text-gray-500 font-mono border border-neutral-800 px-2 py-1 rounded">Updated: {athlete.lastUpdated}</span>}
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                            {/* Standard Screening Profile */}
+                                            <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl relative">
+                                                <div className="flex items-center justify-between mb-8">
+                                                    <h2 className="text-lg font-bold flex items-center gap-3">
+                                                        <span className="w-1 h-6 bg-purple-600 rounded-full"></span>
+                                                        Dynamo Screening
+                                                    </h2>
+                                                </div>
+                                                <div className="h-[250px] w-full">
+                                                    <ResponsiveContainer width="100%" height="100%">
+                                                        <RadarChart cx="50%" cy="50%" outerRadius="75%" data={radarData}>
+                                                            <PolarGrid stroke="#333" />
+                                                            <PolarAngleAxis dataKey="subject" tick={{ fill: '#666', fontSize: 10 }} />
+                                                            <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
+                                                            <Radar name="Athlete" dataKey="A" stroke="#a855f7" strokeWidth={3} fill="#a855f7" fillOpacity={0.3} />
+                                                        </RadarChart>
+                                                    </ResponsiveContainer>
+                                                </div>
                                             </div>
-                                            <div className="h-[350px] w-full">
-                                                <ResponsiveContainer width="100%" height="100%">
-                                                    <RadarChart cx="50%" cy="50%" outerRadius="75%" data={radarData}>
-                                                        <PolarGrid stroke="#333" />
-                                                        <PolarAngleAxis dataKey="subject" tick={{ fill: '#666', fontSize: 12 }} />
-                                                        <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
-                                                        <Radar name="Athlete" dataKey="A" stroke="#a855f7" strokeWidth={3} fill="#a855f7" fillOpacity={0.3} />
-                                                    </RadarChart>
-                                                </ResponsiveContainer>
+
+                                            {/* v17.0 Limb Symmetry Radar */}
+                                            <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl relative">
+                                                <div className="flex items-center justify-between mb-8">
+                                                    <h2 className="text-lg font-bold flex items-center gap-3">
+                                                        <span className="w-1 h-6 bg-blue-500 rounded-full"></span>
+                                                        Limb Symmetry
+                                                    </h2>
+                                                </div>
+                                                <div className="h-[250px] w-full">
+                                                    <ResponsiveContainer width="100%" height="100%">
+                                                        <RadarChart cx="50%" cy="50%" outerRadius="75%" data={[
+                                                            { subject: 'Knee Ext', A: athlete.kneeExtensionLeft, B: athlete.kneeExtensionRight, fullMark: 1000 },
+                                                            { subject: 'Hip Abd', A: athlete.hipAbductionLeft, B: athlete.hipAbductionRight, fullMark: 600 },
+                                                            { subject: 'Hip Add', A: athlete.adductionStrengthLeft, B: athlete.adductionStrengthRight, fullMark: 600 },
+                                                            { subject: 'Shoulder IR', A: athlete.shoulderInternalRotationLeft, B: athlete.shoulderInternalRotationRight, fullMark: 300 },
+                                                            { subject: 'Shoulder ER', A: athlete.shoulderRomLeft, B: athlete.shoulderRomRight, fullMark: 300 },
+                                                        ]}>
+                                                            <PolarGrid stroke="#333" />
+                                                            <PolarAngleAxis dataKey="subject" tick={{ fill: '#666', fontSize: 10 }} />
+                                                            <PolarRadiusAxis angle={30} tick={false} axisLine={false} />
+                                                            <Radar name="Left" dataKey="A" stroke="#3b82f6" strokeWidth={2} fill="#3b82f6" fillOpacity={0.3} />
+                                                            <Radar name="Right" dataKey="B" stroke="#22c55e" strokeWidth={2} fill="#22c55e" fillOpacity={0.3} />
+                                                            <Tooltip
+                                                                contentStyle={{ backgroundColor: '#171717', border: '1px solid #333' }}
+                                                                itemStyle={{ color: '#fff' }}
+                                                            />
+                                                            <Legend />
+                                                        </RadarChart>
+                                                    </ResponsiveContainer>
+                                                </div>
                                             </div>
                                         </div>
                                     )}
@@ -425,7 +484,7 @@ const AthleteDashboard: React.FC = () => {
                                                     Dynamo Detail
                                                 </h2>
                                                 <div className="flex bg-black rounded-lg p-1 border border-neutral-800">
-                                                    {['lower', 'upper', 'symmetry'].map((tab) => (
+                                                    {['lower', 'upper', 'symmetry', 'table'].map((tab) => (
                                                         <button
                                                             key={tab}
                                                             onClick={() => setClinicalTab(tab as any)}

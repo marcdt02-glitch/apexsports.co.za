@@ -26,6 +26,12 @@ export interface AthleteData {
     // Clinical / MQS Metrics
     hamstringQuadLeft: number;
     hamstringQuadRight: number;
+    kneeExtensionLeft: number; // v17.0
+    kneeExtensionRight: number; // v17.0
+    hipAbductionLeft: number; // v17.0
+    hipAbductionRight: number; // v17.0
+    shoulderInternalRotationLeft: number; // v17.0
+    shoulderInternalRotationRight: number; // v17.0
     neckExtension: number;
     ankleRomLeft: number;
     ankleRomRight: number;
@@ -80,6 +86,8 @@ export interface DashboardMetrics {
         isNeuralFatigue: boolean; // Groin TMAX > 1.5s
         isInjuryRedZone: boolean; // ACWR > 1.5
         isRpeDiscrepancy: boolean; // Session RPE vs Exercise RPE > 2
+        isLimbAsymmetry: boolean; // v17.0 > 15% diff
+        isShoulderImbalance: boolean; // v17.0 ER < 80% IR
         notes: string[];
     };
     recommendation: {
@@ -90,6 +98,7 @@ export interface DashboardMetrics {
         performance: number;
         screening: number;
         readiness: number;
+        powerIndex: number; // v17.0
     };
     performance: {
         acuteLoad: number;
@@ -158,6 +167,13 @@ export const parseAthleteData = (csvString: string): AthleteData[] => {
 
             hamstringQuadLeft: row['H:Q L'] || 0,
             hamstringQuadRight: row['H:Q R'] || 0,
+            kneeExtensionLeft: 0,
+            kneeExtensionRight: 0,
+            hipAbductionLeft: 0,
+            hipAbductionRight: 0,
+            shoulderInternalRotationLeft: 0,
+            shoulderInternalRotationRight: 0,
+
             imtpPeakForce: row['IMTP Peak'] || 0,
             imtpRfd200: row['RFD 200ms'] || 0,
             peakForceAsymmetry: row['PF ASM'] || 0,
@@ -224,11 +240,32 @@ export const analyzeAthlete = (athlete: AthleteData): DashboardMetrics => {
     const rpeDiff = Math.abs(sessionRpe - exerciseRpe);
     const isRpeDiscrepancy = rpeDiff > 2;
 
+    // v17.0 Limb Symmetry Logic
+    const calcDiff = (l: number, r: number) => {
+        if (!l || !r) return 0;
+        return Math.abs((l - r) / Math.max(l, r) * 100);
+    };
+    const kneeDiff = calcDiff(athlete.kneeExtensionLeft, athlete.kneeExtensionRight);
+    const hipAbdDiff = calcDiff(athlete.hipAbductionLeft, athlete.hipAbductionRight);
+    const isLimbAsymmetry = kneeDiff > 15 || hipAbdDiff > 15;
+
+    // v17.0 Shoulder Imbalance (ER < 80% IR)
+    // Using shoulderRomLeft/Right if that's where we store Force? No, we mapped Score Shoulder from ER.
+    // We added shoulderInternalRotationLeft/Right.
+    // Assuming 'shoulderRom' currently holds ER force based on `googleIntegration.ts` comments ("Assuming ER is the main ROM metric...").
+    // Let's rely on that for now, or clarify. In `googleIntegration`, we map `Shoulder ER L (N)` to `shoulderRomLeft`.
+    // So ER force = shoulderRomLeft.
+    const erAvg = (athlete.shoulderRomLeft + athlete.shoulderRomRight) / 2;
+    const irAvg = (athlete.shoulderInternalRotationLeft + athlete.shoulderInternalRotationRight) / 2;
+    const isShoulderImbalance = irAvg > 0 && erAvg < (irAvg * 0.8);
+
     const flags = {
         isHighRisk: athlete.peakForceAsymmetry > 10,
         isNeuralFatigue: athlete.groinTimeToMax > 1.5,
         isInjuryRedZone: athlete.acwr > 1.5,
         isRpeDiscrepancy,
+        isLimbAsymmetry,
+        isShoulderImbalance,
         notes: [] as string[],
     };
 
@@ -243,6 +280,12 @@ export const analyzeAthlete = (athlete: AthleteData): DashboardMetrics => {
     }
     if (flags.isRpeDiscrepancy) {
         flags.notes.push(`Data Discrepancy: Subjective Fatigue exceeds Training Load.`);
+    }
+    if (flags.isLimbAsymmetry) {
+        flags.notes.push(`Limb Symmetry Alert: >15% difference in Knee/Hip strength.`);
+    }
+    if (flags.isShoulderImbalance) {
+        flags.notes.push(`Shoulder Imbalance: Stability Training Recommended.`);
     }
 
     // Determine lowest score for recommendation
@@ -284,7 +327,12 @@ export const analyzeAthlete = (athlete: AthleteData): DashboardMetrics => {
         scores: {
             performance: Math.min(100, Math.round(athlete.imtpPeakForce / 50)),
             screening: Math.max(0, 100 - (athlete.peakForceAsymmetry * 2)),
-            readiness: Math.floor(Math.random() * 20) + 80
+            readiness: Math.floor(Math.random() * 20) + 80,
+            powerIndex: (() => {
+                const imtpScore = Math.min(100, Math.round(athlete.imtpPeakForce / 50));
+                const jumpScore = Math.min(100, Math.round((athlete.broadJump || 0) / 3)); // 300cm = 100
+                return Math.round((imtpScore + jumpScore) / 2);
+            })()
         }
     };
 };
