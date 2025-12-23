@@ -476,8 +476,8 @@ const AthleteDashboard: React.FC = () => {
 
                 </div>
                 {/* Debug Info */}
-                <div className="text-center text-gray-800 text-[10px] py-4 font-mono">
-                    Debug: Pkg="{athlete.package}" | Agility="{athlete.agilityTime}" | ID: {athlete.id}
+                <div className="text-center text-gray-800 text-[10px] py-4 font-mono break-words px-4">
+                    Debug: {athlete.package} | H:{athlete.scoreHamstring} Q:{athlete.scoreQuad} Add:{athlete.scoreAdduction} Ank:{athlete.scoreAnkle} Sh:{athlete.scoreShoulder} Nk:{athlete.scoreNeck}
                 </div>
             </div>
         </SafetyGuard>

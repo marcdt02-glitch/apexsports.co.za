@@ -94,12 +94,12 @@ const mapGoogleRowToAthlete = (row: any): AthleteData => {
 
         // Scores (Map from flat keys or raw sheet)
         // Scores (Map from flat keys or raw sheet)
-        scoreHamstring: num(row['Score Hamstring'] || row.scoreHamstring),
-        scoreQuad: num(row['Score Quad'] || row.scoreQuad),
-        scoreAdduction: num(row['Score Adduction'] || row.scoreAdduction),
-        scoreAnkle: num(row['Score Ankle'] || row.scoreAnkle),
-        scoreShoulder: num(row['Score Shoulder'] || row.scoreShoulder),
-        scoreNeck: num(row['Score Neck'] || row.scoreNeck),
+        scoreHamstring: num(row['Score Hamstring'] || row['Hamstring Score'] || row['Hamstring %'] || row['Dynamo Hamstring'] || row.scoreHamstring || row.hamstringScore),
+        scoreQuad: num(row['Score Quad'] || row['Quad Score'] || row['Quad %'] || row['Dynamo Quad'] || row.scoreQuad || row.quadScore),
+        scoreAdduction: num(row['Score Adduction'] || row['Adduction Score'] || row['Adduction %'] || row['Dynamo Adduction'] || row['Groin Score'] || row.scoreAdduction),
+        scoreAnkle: num(row['Score Ankle'] || row['Ankle Score'] || row['Ankle %'] || row['Dynamo Ankle'] || row.scoreAnkle),
+        scoreShoulder: num(row['Score Shoulder'] || row['Shoulder Score'] || row['Shoulder %'] || row['Dynamo Shoulder'] || row.scoreShoulder),
+        scoreNeck: num(row['Score Neck'] || row['Neck Score'] || row['Neck %'] || row['Dynamo Neck'] || row.scoreNeck),
 
         // Legacy/Flat Support
         // If the flat JSON has 'screeningScore', map it to MQS
