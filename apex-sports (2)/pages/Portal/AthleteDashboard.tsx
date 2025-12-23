@@ -113,15 +113,14 @@ const AthleteDashboard: React.FC = () => {
 
     // Tier Checks
     const pkg = (athlete.package || '').trim().toLowerCase();
-    const isElite = pkg.includes('elite') && pkg !== 'mentorship'; // Mentorship is valid but Elite specific features might be just for elite? 
-    // Actually, user said "Elite still doesn't have access to all services-Mentorship".
-    // Wait, isElite implies full unlock?
-    // Let's assume Elite gets everything. 
-    // Re-reading: "The elite tier MUST have access to all platforms!"
-    // So isElite check for UI elements (Radar etc) should probably include Elite.
-    // However, the Mentorship link logic was handled separately.
-    // Let's stick to the UI Logic:
-    const isEliteTier = pkg.includes('elite'); // Logic for Radar, Neural Stats etc.
+    // Dynamo Access: Elite, Individual, or explicit 'Testing' packages
+    const hasDynamoAccess = pkg.includes('elite') || pkg.includes('individual') || pkg.includes('testing');
+
+    // Legacy support: In some contexts 'isEliteTier' was used for everything. 
+    // Now we distinguish:
+    // - Readiness/Neural: Only Elite? Or everyone with data? Let's use hasDynamoAccess for now as it implies higher level monitoring.
+    // - Radar/Dynamo: hasDynamoAccess
+    const showAdvancedMetrics = hasDynamoAccess;
 
     return (
         <SafetyGuard athlete={athlete}>
@@ -147,7 +146,7 @@ const AthleteDashboard: React.FC = () => {
 
                         <div className="flex items-center gap-8">
                             {/* v8.0 Neural Readiness Stats (Desktop) */}
-                            {isEliteTier && (
+                            {showAdvancedMetrics && (
                                 <div className="hidden md:flex items-center gap-8 mr-8 border-r border-neutral-800 pr-8">
                                     <div className="text-right">
                                         <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Neural Readiness</p>
@@ -193,7 +192,6 @@ const AthleteDashboard: React.FC = () => {
 
                         {/* MENTORSHIP LINK */}
                         {(() => {
-                            const pkg = (athlete.package || '').trim().toLowerCase();
                             const isUnlocked = pkg.includes('mentorship') || pkg.includes('elite');
                             return (
                                 <Link
@@ -217,7 +215,6 @@ const AthleteDashboard: React.FC = () => {
 
                         {/* GOALS */}
                         {(() => {
-                            const pkg = (athlete.package || '').trim().toLowerCase();
                             const isUnlocked = pkg.includes('mentorship') || pkg.includes('elite');
                             return (
                                 <button className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${isUnlocked ? 'text-gray-400 hover:text-white hover:bg-neutral-800' : 'text-gray-600 cursor-not-allowed opacity-50'}`}>
@@ -230,7 +227,6 @@ const AthleteDashboard: React.FC = () => {
 
                         {/* REPORTS */}
                         {(() => {
-                            const pkg = (athlete.package || '').trim().toLowerCase();
                             const isUnlocked = pkg.includes('mentorship') || pkg.includes('elite');
                             return (
                                 <button className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${isUnlocked ? 'text-gray-400 hover:text-white hover:bg-neutral-800' : 'text-gray-600 cursor-not-allowed opacity-50'}`}>
@@ -257,7 +253,7 @@ const AthleteDashboard: React.FC = () => {
                     {activeView === 'dashboard' && (
                         <div className="space-y-12 animate-fade-in">
                             {/* v8.0 Neural Alerts */}
-                            {(isEliteTier && (athlete.readinessScore < 65 || athlete.groinTimeToMax > 1.5)) && (
+                            {(showAdvancedMetrics && (athlete.readinessScore < 65 || athlete.groinTimeToMax > 1.5)) && (
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fade-in-down">
                                     {athlete.readinessScore < 65 && (
                                         <div className="bg-red-950/20 border border-red-900/50 p-4 rounded-xl flex items-center gap-4">
@@ -283,15 +279,15 @@ const AthleteDashboard: React.FC = () => {
                             {/* KPI Dials */}
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 bg-neutral-900/40 p-8 rounded-3xl border border-neutral-800">
                                 <CircleProgress percentage={analysis.scores?.performance ?? 0} color="#3b82f6" label="Performance" icon={TrendingUp} />
-                                {isEliteTier ? (
+                                {showAdvancedMetrics ? (
                                     <>
-                                        <CircleProgress percentage={analysis.scores?.screening ?? 0} color="#a855f7" label="Screening" icon={Shield} />
+                                        <CircleProgress percentage={analysis.scores?.screening ?? 0} color="#a855f7" label="Dynamo" icon={Shield} />
                                         <CircleProgress percentage={analysis.scores?.readiness ?? 0} color="#22c55e" label="Readiness" icon={Activity} />
                                     </>
                                 ) : (
                                     <div className="col-span-2 flex items-center justify-center opacity-30 border-l border-neutral-800">
                                         <Lock className="w-5 h-5 mr-3 text-gray-500" />
-                                        <p className="text-sm font-mono text-gray-500">CLINICAL DATA LOCKED (CAMP TIER)</p>
+                                        <p className="text-sm font-mono text-gray-500">DYNAMO DATA LOCKED (CAMP TIER)</p>
                                     </div>
                                 )}
                             </div>
@@ -302,13 +298,13 @@ const AthleteDashboard: React.FC = () => {
                                 {/* Left Column: Performance Profile (Radar) */}
                                 <div className="lg:col-span-2 space-y-8">
 
-                                    {/* Radar Chart (Elite Only) */}
-                                    {isEliteTier && (
+                                    {/* Radar Chart (Advanced Only) */}
+                                    {showAdvancedMetrics && (
                                         <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl relative">
                                             <div className="flex items-center justify-between mb-8">
                                                 <h2 className="text-xl font-bold flex items-center gap-3">
                                                     <span className="w-1 h-6 bg-purple-600 rounded-full"></span>
-                                                    Clinical Screening Profile
+                                                    Dynamo Screening Profile
                                                 </h2>
                                                 {athlete.lastUpdated && <span className="text-[10px] text-gray-500 font-mono border border-neutral-800 px-2 py-1 rounded">Updated: {athlete.lastUpdated}</span>}
                                             </div>
@@ -340,13 +336,13 @@ const AthleteDashboard: React.FC = () => {
                                         </div>
                                     </div>
 
-                                    {/* v8.0 Elite Clinical Vault (Tabbed) */}
-                                    {isEliteTier && (
+                                    {/* v8.0 Dynamo Detail Vault (Tabbed - Advanced Only) */}
+                                    {showAdvancedMetrics && (
                                         <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl">
                                             <div className="flex items-center justify-between mb-8">
                                                 <h2 className="text-xl font-bold flex items-center gap-3">
                                                     <span className="w-1 h-6 bg-green-500 rounded-full"></span>
-                                                    Clinical Detail
+                                                    Dynamo Detail
                                                 </h2>
                                                 <div className="flex bg-black rounded-lg p-1 border border-neutral-800">
                                                     {['lower', 'upper', 'symmetry'].map((tab) => (
