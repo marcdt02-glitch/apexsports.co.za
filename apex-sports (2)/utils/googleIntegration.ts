@@ -4,7 +4,7 @@ import { AthleteData, parseAthleteData, MOCK_CSV_DATA } from './dataEngine';
 // In a real app, this would be an environment variable.
 // For this static site, we'll use a public Google Apps Script URL or a published CSV URL.
 // The user will need to Deploy their Apps Script as a Web App and paste the URL here.
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyctSXieX83wSaagWh3Qq3yOiz5KAD6Ux9ucjlhTUbAkcY8JIdBHTRGQL_-NF58BBQo4Q/exec'; // v4.0
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwKu1CBVS_C1VAQqbaTwe--4JBiS5RqvyxWOHXc9rHaVTiNLdJGEy-tT5EB3grmy1Meiw/exec'; // v7.0 Fix Crash
 
 // Temporary fallback to Mock until user provides their Script URL
 const USE_MOCK_FALLBACK = false;
