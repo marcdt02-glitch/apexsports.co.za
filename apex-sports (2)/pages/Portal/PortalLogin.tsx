@@ -30,8 +30,10 @@ const PortalLogin: React.FC = () => {
         } catch (err: any) {
             console.error("Login failed:", err);
             const errorMessage = err?.message || JSON.stringify(err);
-            if (errorMessage.includes('security_error')) {
+            if (errorMessage.includes('security_error') || errorMessage.includes('Invalid Passcode')) {
                 setError('Incorrect Passcode. Please try again.');
+            } else if (errorMessage.includes('Athlete not found') || errorMessage.includes('not found')) {
+                setError('Account Pending Verification. Please contact your coach.');
             } else {
                 setError(`Access Denied: ${errorMessage}.`);
             }
@@ -110,12 +112,14 @@ const PortalLogin: React.FC = () => {
                 </form>
 
                 <div className="mt-8 text-center border-t border-neutral-800 pt-6 space-y-4">
-                    <button
-                        onClick={() => navigate('/welcome-athlete')}
-                        className="w-full bg-neutral-800 text-white font-bold py-3 rounded-lg hover:bg-neutral-700 transition-colors border border-gray-700"
+                    <a
+                        href="https://forms.google.com/your-onboarding-form" // TODO: Update with user provided link
+                        target="_blank"
+                        rel="noreferrer"
+                        className="block w-full bg-neutral-800 text-white font-bold py-3 rounded-lg hover:bg-neutral-700 transition-colors border border-gray-700"
                     >
-                        Create New Account
-                    </button>
+                        Join APEX Sports
+                    </a>
                     <p className="text-xs text-gray-500">
                         Trouble logging in? <a href="mailto:admin@apexsports.co.za" className="text-white underline">Contact Support</a>
                     </p>
