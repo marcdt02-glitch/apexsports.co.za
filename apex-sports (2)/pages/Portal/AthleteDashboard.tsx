@@ -543,13 +543,13 @@ const AthleteDashboard: React.FC = () => {
                                     <p className="text-gray-400 mt-2">Track your recovery trends and neural readiness.</p>
                                 </div>
                                 <a
-                                    href="https://forms.google.com/your-form-link-here" // TODO: Update with User Link
+                                    href="https://docs.google.com/forms/d/e/1FAIpQLSebjaiFLu2pJS56XPidWAZI74xWQXra4SzbUB22UI9LSyRGbA/viewform?usp=header"
                                     target="_blank"
                                     rel="noreferrer"
                                     className="bg-blue-600 text-white font-bold py-3 px-6 rounded-xl hover:bg-blue-500 transition-colors flex items-center gap-2"
                                 >
                                     <Activity className="w-5 h-5" />
-                                    Submit Today's Readiness
+                                    Submit Daily Wellness & Load
                                 </a>
                             </div>
 
@@ -599,30 +599,60 @@ const AthleteDashboard: React.FC = () => {
                                 );
                             })()}
 
-                            {/* Subjective Wellness Charts */}
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                {[
-                                    { label: 'Sleep Quality', val: athlete.sleep, color: '#3b82f6' },
-                                    { label: 'Stress Levels', val: athlete.stress, color: '#a855f7' }, // Higher stress usually bad, but assuming 10 is 'High Stress' or 'Good'? Usually reversed. Assuming 10=Good/Low Stress for simple viz or 10=High. Let's assume 10 is Optimal for all "Scores"
-                                    { label: 'Soreness', val: athlete.soreness, color: '#f59e0b' }
-                                ].map((item) => (
-                                    <div key={item.label} className="bg-neutral-900/40 border border-neutral-800 p-6 rounded-2xl flex flex-col items-center">
-                                        <h4 className="text-gray-400 font-bold uppercase text-xs mb-4">{item.label}</h4>
-                                        <div className="relative w-32 h-32 flex items-center justify-center">
-                                            {/* Simple Ring Chart */}
-                                            <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                                                <circle cx="50" cy="50" r="45" fill="none" stroke="#333" strokeWidth="8" />
-                                                <circle
-                                                    cx="50" cy="50" r="45" fill="none" stroke={item.color} strokeWidth="8"
-                                                    strokeDasharray={`${(item.val || 5) * 10 * 2.82} 282`} // Approx calc for 0-10 scale
-                                                    strokeLinecap="round"
-                                                />
-                                            </svg>
-                                            <span className="absolute text-4xl font-black text-white">{item.val || '-'}</span>
-                                        </div>
-                                        <p className="text-gray-600 text-xs mt-4">Score out of 10</p>
+                            {/* WORKLOAD & WELLNESS GRID */}
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                {/* Load & ACWR */}
+                                <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl">
+                                    <div className="flex items-center justify-between mb-8">
+                                        <h3 className="font-bold text-xl flex items-center gap-2">
+                                            <TrendingUp className="w-5 h-5 text-blue-500" />
+                                            Training Load
+                                        </h3>
+                                        {athlete.s2Duration > 0 && (
+                                            <span className="px-3 py-1 bg-purple-900/30 text-purple-400 text-xs font-bold rounded-full uppercase border border-purple-900/50">
+                                                Double Session
+                                            </span>
+                                        )}
                                     </div>
-                                ))}
+                                    <div className="grid grid-cols-2 gap-8">
+                                        <div>
+                                            <p className="text-gray-500 text-xs uppercase font-bold mb-1">Daily Load (AU)</p>
+                                            <p className="text-5xl font-black text-white">{athlete.dailyLoad || '-'}</p>
+                                        </div>
+                                        <div>
+                                            <p className="text-gray-500 text-xs uppercase font-bold mb-1">ACWR</p>
+                                            <div className={`text-5xl font-black ${athlete.acwr > 1.5 || athlete.acwr < 0.8 ? 'text-red-500' : 'text-green-500'}`}>
+                                                {athlete.acwr ? athlete.acwr.toFixed(2) : '-'}
+                                            </div>
+                                            <p className="text-xs text-gray-600 mt-2">Target: 0.8 - 1.3</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Subjective Wellness Charts (1-5 Scale) */}
+                                <div className="grid grid-cols-3 gap-4">
+                                    {[
+                                        { label: 'Sleep', val: athlete.sleep, color: '#3b82f6' },
+                                        { label: 'Stress', val: athlete.stress, color: '#a855f7' },
+                                        { label: 'Soreness', val: athlete.soreness, color: '#f59e0b' }
+                                    ].map((item) => (
+                                        <div key={item.label} className="bg-neutral-900/40 border border-neutral-800 p-4 rounded-2xl flex flex-col items-center justify-center">
+                                            <h4 className="text-gray-400 font-bold uppercase text-[10px] mb-3">{item.label}</h4>
+                                            <div className="relative w-24 h-24 flex items-center justify-center">
+                                                <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                                                    <circle cx="50" cy="50" r="45" fill="none" stroke="#222" strokeWidth="8" />
+                                                    <circle
+                                                        cx="50" cy="50" r="45" fill="none" stroke={item.color} strokeWidth="8"
+                                                        strokeDasharray={`${(item.val || 3) * 20 * 2.82} 282`} // 1-5 Scale: val * 20 = percentage
+                                                        strokeLinecap="round"
+                                                    />
+                                                </svg>
+                                                <span className="absolute text-2xl font-black text-white">{item.val || '-'}</span>
+                                            </div>
+                                            <p className="text-gray-600 text-[10px] mt-2">/ 5</p>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
                         </div>
                     )}

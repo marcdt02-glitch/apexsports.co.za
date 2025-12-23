@@ -148,6 +148,11 @@ const mapGoogleRowToAthlete = (row: any): AthleteData => {
         soreness: num(row['Soreness Score'] || row['Soreness'] || row.soreness),
         baselineJump: num(row['Baseline Jump (cm)'] || row['Baseline Jump'] || row.baselineJump || 0),
 
+        // v12.5 Workload
+        dailyLoad: num(row['Daily Load'] || row['Total Daily Load'] || row['Load'] || row.dailyLoad),
+        acwr: num(row['ACWR'] || row['Acute:Chronic'] || row.acwr),
+        s2Duration: num(row['S2 Duration'] || row['Session 2'] || row.s2Duration),
+
         // Legacy/Flat Support
         // If the flat JSON has 'screeningScore', map it to MQS
     };
