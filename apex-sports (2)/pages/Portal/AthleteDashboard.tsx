@@ -115,6 +115,7 @@ const AthleteDashboard: React.FC = () => {
     // Elite or Testing S&C -> Full Access
     // Camp or Basic -> Restricted
     const tier = (athlete.productTier || '').trim().toLowerCase();
+    const pkg = tier; // Alias for legacy logic
     const isFullAccess = tier.includes('elite') || tier.includes('testing s&c');
 
     const showAdvancedMetrics = isFullAccess;
