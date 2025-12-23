@@ -229,8 +229,7 @@ const AthleteDashboard: React.FC = () => {
                             );
                         })()}
 
-                        );
-                        })()}
+
 
                         {/* REPORTS */}
                         {(() => {
