@@ -205,36 +205,23 @@ const AthleteDashboard: React.FC = () => {
                             Dashboard
                         </button>
 
-                        {/* MENTORSHIP LINK */}
+                        {/* MENTORSHIP & GOALS (Internal View) */}
                         {(() => {
                             const isUnlocked = pkg.includes('mentorship') || pkg.includes('elite');
                             return (
-                                <Link
-                                    to="/mentorship"
-                                    onClick={(e) => {
+                                <button
+                                    onClick={() => {
                                         if (!isUnlocked) {
-                                            e.preventDefault();
                                             alert("Mentorship Access Required. Please upgrade your package.");
                                         } else {
+                                            setActiveView('mentorship');
                                             setSidebarOpen(false);
                                         }
                                     }}
-                                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${isUnlocked ? 'text-gray-400 hover:bg-neutral-800 hover:text-white' : 'text-gray-600 cursor-not-allowed opacity-50'}`}
+                                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeView === 'mentorship' ? 'bg-white text-black font-bold' : isUnlocked ? 'text-gray-400 hover:text-white hover:bg-neutral-800' : 'text-gray-600 cursor-not-allowed opacity-50'}`}
                                 >
                                     <BookOpen className="w-5 h-5" />
                                     <span>Mentorship</span>
-                                    {!isUnlocked && <Lock className="w-4 h-4 ml-auto" />}
-                                </Link>
-                            );
-                        })()}
-
-                        {/* GOALS */}
-                        {(() => {
-                            const isUnlocked = pkg.includes('mentorship') || pkg.includes('elite');
-                            return (
-                                <button className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${isUnlocked ? 'text-gray-400 hover:text-white hover:bg-neutral-800' : 'text-gray-600 cursor-not-allowed opacity-50'}`}>
-                                    <Target className="w-5 h-5" />
-                                    <span>Goals</span>
                                     {!isUnlocked && <Lock className="w-4 h-4 ml-auto" />}
                                 </button>
                             );
@@ -369,7 +356,7 @@ const AthleteDashboard: React.FC = () => {
                                 <CircleProgress percentage={analysis.scores?.performance ?? 0} color="#3b82f6" label="Performance" icon={TrendingUp} />
                                 {showAdvancedMetrics ? (
                                     <>
-                                        <CircleProgress percentage={analysis.scores?.movementQualityScore ?? analysis.scores?.screening ?? 0} color="#a855f7" label="MQS" icon={Shield} />
+                                        <CircleProgress percentage={analysis.scores?.screening ?? 0} color="#a855f7" label="MQS" icon={Shield} />
                                         <CircleProgress percentage={analysis.scores?.readiness ?? 0} color="#22c55e" label="Readiness" icon={Activity} />
                                     </>
                                 ) : (

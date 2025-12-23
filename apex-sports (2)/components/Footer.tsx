@@ -27,9 +27,13 @@ const Footer: React.FC = () => {
                 <li><a href="#/strength" className="hover:text-white transition-colors">Strength & Conditioning</a></li>
                 <li><a href="#/mentorship" className="hover:text-white transition-colors">Mentorship</a></li>
                 <li><a href="#/goalkeeper" className="hover:text-white transition-colors">Coaching</a></li>
-                <li><a href="#/services" className="hover:text-white transition-colors">Athlete Service Hub</a></li>
-                <li><a href="#/portal" className="hover:text-white transition-colors font-bold text-white">Athlete Login</a></li>
+                <li><a href="#/services" className="hover:text-white transition-colors">Service Hub</a></li>
               </ul>
+              <div className="mt-4 pt-4 border-t border-gray-800 w-full">
+                <a href="#/portal" className="block w-full bg-white text-black font-bold py-2 px-4 rounded text-center hover:bg-gray-200 transition-colors text-sm">
+                  Athlete Login
+                </a>
+              </div>
             </div>
 
             <div className="flex flex-col items-center">
