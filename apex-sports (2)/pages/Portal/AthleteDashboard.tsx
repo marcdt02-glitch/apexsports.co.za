@@ -482,4 +482,6 @@ const AthleteDashboard: React.FC = () => {
             </div>
         </SafetyGuard>
     );
-    export default AthleteDashboard;
+};
+
+export default AthleteDashboard;
