@@ -56,7 +56,7 @@ const MetricCard = ({ label, value, subtext }: { label: string, value: string | 
 const AthleteDashboard: React.FC = () => {
     const { athleteId } = useParams<{ athleteId: string }>();
     const { getAthlete } = useData();
-    const [activeView, setActiveView] = useState<'dashboard' | 'goals' | 'library' | 'reports'>('dashboard');
+    const [activeView, setActiveView] = useState<'dashboard' | 'goals' | 'library' | 'reports' | 'wellness'>('dashboard');
     const [clinicalTab, setClinicalTab] = useState<'lower' | 'upper' | 'symmetry'>('lower');
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const dashboardRef = useRef<HTMLDivElement>(null);
@@ -229,17 +229,32 @@ const AthleteDashboard: React.FC = () => {
                             );
                         })()}
 
+                        );
+                        })()}
+
                         {/* REPORTS */}
                         {(() => {
                             const isUnlocked = pkg.includes('mentorship') || pkg.includes('elite');
                             return (
-                                <button className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${isUnlocked ? 'text-gray-400 hover:text-white hover:bg-neutral-800' : 'text-gray-600 cursor-not-allowed opacity-50'}`}>
+                                <button
+                                    onClick={() => { if (isUnlocked) { setActiveView('reports'); setSidebarOpen(false); } }}
+                                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeView === 'reports' ? 'bg-white text-black font-bold' : isUnlocked ? 'text-gray-400 hover:text-white hover:bg-neutral-800' : 'text-gray-600 cursor-not-allowed opacity-50'}`}
+                                >
                                     <FileText className="w-5 h-5" />
                                     <span>Reports</span>
                                     {!isUnlocked && <Lock className="w-4 h-4 ml-auto" />}
                                 </button>
                             );
                         })()}
+
+                        {/* WELLNESS (v11.5) */}
+                        <button
+                            onClick={() => { setActiveView('wellness'); setSidebarOpen(false); }}
+                            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeView === 'wellness' ? 'bg-white text-black font-bold' : 'text-gray-400 hover:text-white hover:bg-neutral-800'}`}
+                        >
+                            <Activity className="w-5 h-5" />
+                            <span>Wellness & CNS</span>
+                        </button>
                     </div>
 
                     <div className="mt-auto px-6">
@@ -515,6 +530,100 @@ const AthleteDashboard: React.FC = () => {
                             <h2 className="text-3xl font-black text-white">Performance Reports</h2>
                             <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl">
                                 <p className="text-gray-500">No quarterly reports available yet.</p>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* VIEW: WELLNESS (v11.5) */}
+                    {activeView === 'wellness' && (
+                        <div className="space-y-8 animate-fade-in">
+                            {/* Header & CTA */}
+                            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                                <div>
+                                    <h2 className="text-3xl font-black text-white">Wellness & CNS Status</h2>
+                                    <p className="text-gray-400 mt-2">Track your recovery trends and neural readiness.</p>
+                                </div>
+                                <a
+                                    href="https://forms.google.com/your-form-link-here" // TODO: Update with User Link
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="bg-blue-600 text-white font-bold py-3 px-6 rounded-xl hover:bg-blue-500 transition-colors flex items-center gap-2"
+                                >
+                                    <Activity className="w-5 h-5" />
+                                    Submit Today's Readiness
+                                </a>
+                            </div>
+
+                            {/* CNS Readiness (Jump Gap) */}
+                            {(() => {
+                                const current = athlete.broadJump || 0;
+                                const baseline = athlete.baselineJump || current; // Fallback to current if no baseline
+                                const gap = baseline - current;
+                                const gapPercent = (gap / baseline) * 100;
+                                const isNeuralFatigue = gapPercent > 10;
+
+                                return (
+                                    <div className={`p-8 rounded-3xl border ${isNeuralFatigue ? 'bg-red-950/20 border-red-900/50' : 'bg-green-950/20 border-green-900/50'}`}>
+                                        <div className="flex items-center gap-4 mb-6">
+                                            <div className={`p-3 rounded-full ${isNeuralFatigue ? 'bg-red-900/20 text-red-500' : 'bg-green-900/20 text-green-500'}`}>
+                                                <Battery className="w-8 h-8" />
+                                            </div>
+                                            <div>
+                                                <h3 className={`font-bold uppercase tracking-wider ${isNeuralFatigue ? 'text-red-500' : 'text-green-500'}`}>
+                                                    CNS Readiness Status
+                                                </h3>
+                                                {isNeuralFatigue && (
+                                                    <span className="inline-block mt-1 px-2 py-0.5 bg-red-900/50 text-red-200 text-xs font-bold rounded uppercase">
+                                                        Neural Recovery Needed
+                                                    </span>
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                                            <div>
+                                                <p className="text-gray-500 text-xs uppercase font-bold mb-1">Current Broad Jump</p>
+                                                <p className="text-4xl font-black text-white">{current} cm</p>
+                                            </div>
+                                            <div className="md:border-x border-white/10">
+                                                <p className="text-gray-500 text-xs uppercase font-bold mb-1">Baseline</p>
+                                                <p className="text-4xl font-black text-gray-400">{baseline} cm</p>
+                                            </div>
+                                            <div>
+                                                <p className="text-gray-500 text-xs uppercase font-bold mb-1">Deficit</p>
+                                                <p className={`text-4xl font-black ${isNeuralFatigue ? 'text-red-500' : 'text-green-500'}`}>
+                                                    {gap > 0 ? `-${Math.round(gapPercent)}%` : '0%'}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            })()}
+
+                            {/* Subjective Wellness Charts */}
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                {[
+                                    { label: 'Sleep Quality', val: athlete.sleep, color: '#3b82f6' },
+                                    { label: 'Stress Levels', val: athlete.stress, color: '#a855f7' }, // Higher stress usually bad, but assuming 10 is 'High Stress' or 'Good'? Usually reversed. Assuming 10=Good/Low Stress for simple viz or 10=High. Let's assume 10 is Optimal for all "Scores"
+                                    { label: 'Soreness', val: athlete.soreness, color: '#f59e0b' }
+                                ].map((item) => (
+                                    <div key={item.label} className="bg-neutral-900/40 border border-neutral-800 p-6 rounded-2xl flex flex-col items-center">
+                                        <h4 className="text-gray-400 font-bold uppercase text-xs mb-4">{item.label}</h4>
+                                        <div className="relative w-32 h-32 flex items-center justify-center">
+                                            {/* Simple Ring Chart */}
+                                            <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                                                <circle cx="50" cy="50" r="45" fill="none" stroke="#333" strokeWidth="8" />
+                                                <circle
+                                                    cx="50" cy="50" r="45" fill="none" stroke={item.color} strokeWidth="8"
+                                                    strokeDasharray={`${(item.val || 5) * 10 * 2.82} 282`} // Approx calc for 0-10 scale
+                                                    strokeLinecap="round"
+                                                />
+                                            </svg>
+                                            <span className="absolute text-4xl font-black text-white">{item.val || '-'}</span>
+                                        </div>
+                                        <p className="text-gray-600 text-xs mt-4">Score out of 10</p>
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     )}

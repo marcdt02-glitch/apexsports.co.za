@@ -142,6 +142,12 @@ const mapGoogleRowToAthlete = (row: any): AthleteData => {
             return neck ? Math.min(100, Math.round((neck / bw) * 10)) : 0;
         })(),
 
+        // v11.5 Wellness & CNS
+        sleep: num(row['Sleep Score'] || row['Sleep'] || row.sleep),
+        stress: num(row['Stress Score'] || row['Stress'] || row.stress),
+        soreness: num(row['Soreness Score'] || row['Soreness'] || row.soreness),
+        baselineJump: num(row['Baseline Jump (cm)'] || row['Baseline Jump'] || row.baselineJump || 0),
+
         // Legacy/Flat Support
         // If the flat JSON has 'screeningScore', map it to MQS
     };

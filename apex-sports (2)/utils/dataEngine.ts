@@ -41,6 +41,12 @@ export interface AthleteData {
     scoreAnkle: number;
     scoreShoulder: number;
     scoreNeck: number;
+
+    // v11.5 Wellness & CNS
+    sleep: number; // 0-10
+    stress: number; // 0-10
+    soreness: number; // 0-10
+    baselineJump: number; // cm
 }
 
 export interface DashboardMetrics {
@@ -146,6 +152,12 @@ export const parseAthleteData = (csvString: string): AthleteData[] => {
             readinessScore: 85,
             groinTimeToMax: 1.2,
             movementQualityScore: 80,
+
+            // v11.5 Mock (Randomized for realism in dev)
+            sleep: Math.floor(Math.random() * 5) + 5,
+            stress: Math.floor(Math.random() * 5) + 2,
+            soreness: Math.floor(Math.random() * 5) + 1,
+            baselineJump: (row['Broad Jump'] || 250) + 15, // Simulate a baseline slightly higher than current for testing gap
 
             // Radar Scores (mock normalized 0-100 based on raw values)
             scoreHamstring: Math.min(100, (row['H:Q L'] || 0) * 120),
