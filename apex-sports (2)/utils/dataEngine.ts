@@ -23,6 +23,10 @@ export interface AthleteData {
     broadJump?: number; // v8.0 New
     agilityTime?: number; // v8.0 New
 
+    // v17.1 Access Control
+    productTier: string; // 'Elite', 'Testing S&C', 'Basic', 'Camp'
+    accountActive: string; // 'YES' or 'NO'
+
     // Clinical / MQS Metrics
     hamstringQuadLeft: number;
     hamstringQuadRight: number;
@@ -167,6 +171,11 @@ export const parseAthleteData = (csvString: string): AthleteData[] => {
 
             hamstringQuadLeft: row['H:Q L'] || 0,
             hamstringQuadRight: row['H:Q R'] || 0,
+
+            // v17.1 Access Control
+            productTier: row['Product Tier'] || 'Basic',
+            accountActive: row['Account Active'] || 'NO', // Default blocked for CSV safety
+
             kneeExtensionLeft: 0,
             kneeExtensionRight: 0,
             hipAbductionLeft: 0,

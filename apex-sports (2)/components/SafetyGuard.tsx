@@ -9,19 +9,28 @@ interface SafetyGuardProps {
 
 const SafetyGuard: React.FC<SafetyGuardProps> = ({ athlete, children }) => {
     // 1. Payment Gate (Highest Priority)
-    if (athlete.paymentStatus && athlete.paymentStatus.toLowerCase() !== 'active') {
+    // v17.1: Check Account Active status
+    const isActive = athlete.accountActive && athlete.accountActive.trim().toUpperCase() === 'YES';
+
+    if (!isActive) {
         return (
             <div className="fixed inset-0 z-50 bg-black/95 flex flex-col items-center justify-center p-6 text-center">
                 <div className="bg-neutral-900 border border-neutral-800 rounded-3xl p-12 max-w-lg">
                     <div className="w-20 h-20 bg-neutral-800 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <Lock className="w-10 h-10 text-gray-400" />
+                        <Lock className="w-10 h-10 text-red-500" />
                     </div>
-                    <h1 className="text-3xl font-black text-white mb-4">Subscription Inactive</h1>
+                    <h1 className="text-3xl font-black text-white mb-4">Account Inactive</h1>
                     <p className="text-gray-400 mb-8">
-                        Your access to the APEX Athlete Portal is currently paused.
-                        Please check your payment method or contact support.
+                        Your account is currently inactive. To restore access to the APEX Athlete Portal, please complete your subscription payment.
                     </p>
-                    <a href="mailto:admin@apexsports.co.za" className="text-white font-bold underline">Contact Billing Support</a>
+                    <a
+                        href="https://paystack.com/pay/apex-missed-payment"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="bg-red-600 text-white font-bold py-4 px-8 rounded-xl hover:bg-red-500 transition-colors uppercase tracking-widest inline-flex items-center gap-2"
+                    >
+                        Reactivate Membership
+                    </a>
                 </div>
             </div>
         );

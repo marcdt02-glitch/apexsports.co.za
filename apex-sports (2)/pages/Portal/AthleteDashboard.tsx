@@ -111,16 +111,13 @@ const AthleteDashboard: React.FC = () => {
     const acwrValue = analysis.performance ? analysis.performance.acwr : 1.1;
     const acwrHighRisk = acwrValue > 1.5 || acwrValue < 0.8;
 
-    // Tier Checks
-    const pkg = (athlete.package || '').trim().toLowerCase();
+    // v17.1 Access Logic
+    // Elite or Testing S&C -> Full Access
+    // Camp or Basic -> Restricted
+    const tier = (athlete.productTier || '').trim().toLowerCase();
+    const isFullAccess = tier.includes('elite') || tier.includes('testing s&c');
 
-    // v9.5 Logic
-    // Zero-Admin Tiers: 'General' only (S&C Upgraded v12.5)
-    // Show Advanced only if NOT General/ZeroAdmin
-    // "Testing", "Elite", "S&C", "Individual" get the goods.
-    const isZeroAdmin = pkg.includes('general') || pkg === 'camp';
-    const isEliteTier = pkg.includes('elite'); // Legacy helper
-    const showAdvancedMetrics = !isZeroAdmin && (isEliteTier || pkg.includes('testing') || pkg.includes('individual') || pkg.includes('s&c'));
+    const showAdvancedMetrics = isFullAccess;
 
     // Hero Stat Triggers
     const isFatigued = athlete.readinessScore < 65 || athlete.groinTimeToMax > 1.5;
