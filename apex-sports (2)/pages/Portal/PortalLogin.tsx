@@ -5,6 +5,7 @@ import { useData } from '../../context/DataContext';
 
 const PortalLogin: React.FC = () => {
     const [athleteId, setAthleteId] = useState('');
+    const [pin, setPin] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
     const navigate = useNavigate();
@@ -13,22 +14,27 @@ const PortalLogin: React.FC = () => {
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         const term = athleteId.trim();
-        if (!term) return;
+        const securePin = pin.trim();
+
+        if (!term || !securePin) return;
 
         setIsLoading(true);
         setError('');
 
         try {
-            const result = await fetchAndAddAthlete(term);
+            const result = await fetchAndAddAthlete(term, securePin);
             if (!result) {
-                throw new Error("Athlete Profile not found. Please check the email address.");
+                throw new Error("Invalid Email or Passcode.");
             }
-            navigate(`/portal/${term}`);
+            navigate(`/portal/${result.id}`);
         } catch (err: any) {
             console.error("Login failed:", err);
-            // Enhanced Debugging for User
             const errorMessage = err?.message || JSON.stringify(err);
-            setError(`Connection Error: ${errorMessage}. Please verify your script deployment or email.`);
+            if (errorMessage.includes('security_error')) {
+                setError('Incorrect Passcode. Please try again.');
+            } else {
+                setError(`Access Denied: ${errorMessage}.`);
+            }
             setIsLoading(false);
             return;
         }
@@ -42,7 +48,7 @@ const PortalLogin: React.FC = () => {
                         <User className="w-8 h-8 text-black" />
                     </div>
                     <h1 className="text-2xl font-black uppercase tracking-wider text-white">Athlete Portal</h1>
-                    <p className="text-gray-400 mt-2 text-sm">Enter your unique Athlete ID to access your performance dashboard.</p>
+                    <p className="text-gray-400 mt-2 text-sm">Enter your credentials to access your performance dashboard.</p>
                 </div>
 
                 {error && (
@@ -71,13 +77,29 @@ const PortalLogin: React.FC = () => {
                         </div>
                     </div>
 
+                    <div>
+                        <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">
+                            Passcode
+                        </label>
+                        <div className="relative">
+                            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                            <input
+                                type="password"
+                                value={pin}
+                                onChange={(e) => setPin(e.target.value)}
+                                placeholder="Enter your 4-digit pin"
+                                className="w-full bg-black border border-neutral-700 rounded-lg py-3 pl-12 pr-4 text-white focus:border-white transition-colors outline-none"
+                            />
+                        </div>
+                    </div>
+
                     <button
                         type="submit"
-                        disabled={!athleteId.trim() || isLoading}
+                        disabled={!athleteId.trim() || !pin.trim() || isLoading}
                         className="w-full bg-white text-black font-bold py-4 rounded-lg flex items-center justify-center gap-2 hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         {isLoading ? (
-                            <span>Loading Profile...</span>
+                            <span>Verifying Credentials...</span>
                         ) : (
                             <>
                                 <span>Access Dashboard</span>

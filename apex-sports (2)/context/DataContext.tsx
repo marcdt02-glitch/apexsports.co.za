@@ -73,24 +73,34 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         );
     };
 
-    const fetchAndAddAthlete = async (emailOrId: string): Promise<AthleteData | null> => {
-        setLoading(true);
+    const fetchAndAddAthlete = async (email: string, pin: string): Promise<AthleteData | null> => {
         try {
-            const newAthlete = await fetchAthleteFromGoogle(emailOrId);
+            console.log("Fetching athlete:", email);
+            const athlete = await fetchAthleteFromGoogle(email, pin);
 
-            if (newAthlete) {
+            if (athlete) {
+                // Determine ID based on email to ensure consistent URL
+                const safeId = email.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase();
+                athlete.id = safeId;
+
                 setData(prev => {
-                    const filtered = prev.filter(a => a.email !== newAthlete.email && a.id !== newAthlete.id);
-                    const updated = [...filtered, newAthlete];
-                    localStorage.setItem('apex_athlete_data', JSON.stringify(updated));
-                    return updated;
+                    // Check if exists
+                    const exists = prev.find(a => a.id === safeId);
+                    let updatedData;
+                    if (exists) {
+                        updatedData = prev.map(a => a.id === safeId ? athlete : a);
+                    } else {
+                        updatedData = [...prev, athlete];
+                    }
+                    localStorage.setItem('apex_athlete_data', JSON.stringify(updatedData));
+                    return updatedData;
                 });
+                return athlete;
             }
-            return newAthlete;
+            return null;
         } catch (error) {
-            throw error; // Propagate to Login Component
-        } finally {
-            setLoading(false);
+            console.error("Context Fetch Error:", error);
+            throw error;
         }
     };
 

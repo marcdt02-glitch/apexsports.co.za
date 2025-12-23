@@ -9,14 +9,14 @@ const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyctSXieX83wSaa
 // Temporary fallback to Mock until user provides their Script URL
 const USE_MOCK_FALLBACK = false;
 
-export const fetchAthleteFromGoogle = async (email: string): Promise<AthleteData | null> => {
+export const fetchAthleteFromGoogle = async (email: string, pin: string): Promise<AthleteData | null> => {
     if (USE_MOCK_FALLBACK) {
         console.log("Google Integration: Using Mock Fallback");
-        return null;
+        return null; // Mock doesn't support pin yet conceptually, but valid for now
     }
 
     try {
-        const response = await fetch(`${APPS_SCRIPT_URL}?email=${encodeURIComponent(email)}`, {
+        const response = await fetch(`${APPS_SCRIPT_URL}?email=${encodeURIComponent(email)}&pin=${encodeURIComponent(pin)}`, {
             method: 'GET',
             headers: { 'Accept': 'application/json' },
         });
