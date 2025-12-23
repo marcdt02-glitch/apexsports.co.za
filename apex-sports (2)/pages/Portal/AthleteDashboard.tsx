@@ -113,8 +113,8 @@ const AthleteDashboard: React.FC = () => {
 
     // Tier Checks
     const pkg = (athlete.package || '').trim().toLowerCase();
-    // Dynamo Access: Elite, Individual, or explicit 'Testing' packages
-    const hasDynamoAccess = pkg.includes('elite') || pkg.includes('individual') || pkg.includes('testing');
+    // Dynamo Access: Elite, or explicit 'Testing' packages
+    const hasDynamoAccess = pkg.includes('elite') || pkg.includes('testing');
 
     // Legacy support: In some contexts 'isEliteTier' was used for everything. 
     // Now we distinguish:
