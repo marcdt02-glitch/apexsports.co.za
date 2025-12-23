@@ -252,24 +252,58 @@ const AthleteDashboard: React.FC = () => {
                     {/* VIEW: DASHBOARD */}
                     {activeView === 'dashboard' && (
                         <div className="space-y-12 animate-fade-in">
-                            {/* v8.0 Neural Alerts */}
-                            {(showAdvancedMetrics && (athlete.readinessScore < 65 || athlete.groinTimeToMax > 1.5)) && (
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fade-in-down">
-                                    {athlete.readinessScore < 65 && (
-                                        <div className="bg-red-950/20 border border-red-900/50 p-4 rounded-xl flex items-center gap-4">
-                                            <div className="p-3 bg-red-900/20 rounded-full"><Battery className="w-6 h-6 text-red-500" /></div>
-                                            <div>
-                                                <h3 className="text-red-500 font-bold text-sm uppercase tracking-wider">Recovery Required</h3>
-                                                <p className="text-red-200 text-xs">Neural Readiness is critical ({athlete.readinessScore}%). Reduce load.</p>
-                                            </div>
+
+                            {/* Upsell for General Tier */}
+                            {!showAdvancedMetrics && (
+                                <div className="bg-gradient-to-r from-blue-900/40 to-purple-900/40 border border-blue-800/50 p-6 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4">
+                                    <div className="flex items-center gap-4">
+                                        <div className="p-3 bg-blue-500/20 rounded-full">
+                                            <Shield className="w-6 h-6 text-blue-400" />
                                         </div>
-                                    )}
-                                    {athlete.groinTimeToMax > 1.5 && (
-                                        <div className="bg-yellow-950/20 border border-yellow-900/50 p-4 rounded-xl flex items-center gap-4">
-                                            <div className="p-3 bg-yellow-900/20 rounded-full"><Activity className="w-6 h-6 text-yellow-500" /></div>
+                                        <div>
+                                            <h3 className="text-white font-bold">Unlock Clinical Readiness Monitoring</h3>
+                                            <p className="text-blue-200 text-xs">Get professional insights to know exactly when to train and when to rest.</p>
+                                        </div>
+                                    </div>
+                                    <button className="bg-white text-black font-bold py-2 px-6 rounded-lg text-sm hover:bg-gray-200 transition-colors whitespace-nowrap">
+                                        Upgrade to Testing + Program Design
+                                    </button>
+                                </div>
+                            )}
+
+                            {/* v8.0 Neural Readiness (HERO STAT for Testing Tier / Alert for Elite) */}
+                            {/* Logic: If Testing Tier, ALWAYS show. If Elite, show only if critical. */}
+                            {((pkg.includes('testing') || (isEliteTier && (athlete.readinessScore < 65 || athlete.groinTimeToMax > 1.5)))) && (
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fade-in-down">
+                                    <div className={`p-6 rounded-3xl flex items-center gap-6 ${athlete.readinessScore < 65 ? 'bg-red-950/40 border border-red-900/50' : 'bg-green-950/40 border border-green-900/50'}`}>
+                                        <div className={`p-4 rounded-full ${athlete.readinessScore < 65 ? 'bg-red-900/20' : 'bg-green-900/20'}`}>
+                                            <Battery className={`w-8 h-8 ${athlete.readinessScore < 65 ? 'text-red-500' : 'text-green-500'}`} />
+                                        </div>
+                                        <div>
+                                            <h3 className={`font-bold text-sm uppercase tracking-wider mb-1 ${athlete.readinessScore < 65 ? 'text-red-500' : 'text-green-500'}`}>
+                                                {athlete.readinessScore < 65 ? 'Recovery Required' : 'Neural State: Prime'}
+                                            </h3>
+                                            <p className="text-white font-black text-3xl">{athlete.readinessScore}%</p>
+                                            <p className="text-gray-400 text-xs mt-1">
+                                                {athlete.readinessScore < 65 ? 'Reduce intensity. Your CNS is fatigued.' : 'System ready for high load.'}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    {/* Groin T-Max (Only show if data present or if high risk) */}
+                                    {(athlete.groinTimeToMax > 0 && (pkg.includes('testing') || athlete.groinTimeToMax > 1.5)) && (
+                                        <div className={`p-6 rounded-3xl flex items-center gap-6 ${athlete.groinTimeToMax > 1.5 ? 'bg-yellow-950/40 border border-yellow-900/50' : 'bg-neutral-900/40 border border-neutral-800'}`}>
+                                            <div className={`p-4 rounded-full ${athlete.groinTimeToMax > 1.5 ? 'bg-yellow-900/20' : 'bg-neutral-800'}`}>
+                                                <Activity className={`w-8 h-8 ${athlete.groinTimeToMax > 1.5 ? 'text-yellow-500' : 'text-gray-400'}`} />
+                                            </div>
                                             <div>
-                                                <h3 className="text-yellow-500 font-bold text-sm uppercase tracking-wider">Neural Fatigue</h3>
-                                                <p className="text-yellow-200 text-xs">Slow reaction time ({athlete.groinTimeToMax}s). Explosive output limited.</p>
+                                                <h3 className={`font-bold text-sm uppercase tracking-wider mb-1 ${athlete.groinTimeToMax > 1.5 ? 'text-yellow-500' : 'text-gray-400'}`}>
+                                                    {athlete.groinTimeToMax > 1.5 ? 'Neural Fatigue' : 'Reaction Speed'}
+                                                </h3>
+                                                <p className="text-white font-black text-3xl">{athlete.groinTimeToMax}s</p>
+                                                <p className="text-gray-400 text-xs mt-1">
+                                                    Groin Time to Max Force
+                                                </p>
                                             </div>
                                         </div>
                                     )}
@@ -281,13 +315,13 @@ const AthleteDashboard: React.FC = () => {
                                 <CircleProgress percentage={analysis.scores?.performance ?? 0} color="#3b82f6" label="Performance" icon={TrendingUp} />
                                 {showAdvancedMetrics ? (
                                     <>
-                                        <CircleProgress percentage={analysis.scores?.screening ?? 0} color="#a855f7" label="Dynamo" icon={Shield} />
+                                        <CircleProgress percentage={analysis.scores?.movementQualityScore ?? analysis.scores?.screening ?? 0} color="#a855f7" label="MQS" icon={Shield} />
                                         <CircleProgress percentage={analysis.scores?.readiness ?? 0} color="#22c55e" label="Readiness" icon={Activity} />
                                     </>
                                 ) : (
-                                    <div className="col-span-2 flex items-center justify-center opacity-30 border-l border-neutral-800">
+                                    <div className="col-span-2 flex items-center justify-center opacity-30 border-l border-neutral-800 bg-neutral-900/50 rounded-r-xl">
                                         <Lock className="w-5 h-5 mr-3 text-gray-500" />
-                                        <p className="text-sm font-mono text-gray-500">DYNAMO DATA LOCKED (CAMP TIER)</p>
+                                        <p className="text-sm font-mono text-gray-500">DYNAMO & READINESS LOCKED</p>
                                     </div>
                                 )}
                             </div>
@@ -321,18 +355,23 @@ const AthleteDashboard: React.FC = () => {
                                         </div>
                                     )}
 
-                                    {/* v8.0 Performance Vault (Camp & Elite) */}
+                                    {/* v8.0 Performance Metrics Vault */}
                                     <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl">
                                         <h2 className="text-xl font-bold flex items-center gap-3 mb-6">
                                             <span className="w-1 h-6 bg-blue-600 rounded-full"></span>
-                                            Performance Metrics
+                                            {showAdvancedMetrics ? 'Performance Metrics' : 'Field Test Results'}
                                         </h2>
                                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                                            <MetricCard label="IMTP Peak" value={`${athlete.imtpPeakForce} N`} />
-                                            <MetricCard label="RFD 200ms" value={`${athlete.imtpRfd200} N/s`} />
-                                            <MetricCard label="Asymmetry" value={`${athlete.peakForceAsymmetry}%`} />
-                                            <MetricCard label="Jump Dist." value={`${athlete.broadJump || '-'} cm`} />
                                             <MetricCard label="Agility T" value={`${athlete.agilityTime || '-'} s`} />
+                                            <MetricCard label="Jump Dist." value={`${athlete.broadJump || '-'} cm`} />
+
+                                            {showAdvancedMetrics && (
+                                                <>
+                                                    <MetricCard label="IMTP Peak" value={`${athlete.imtpPeakForce} N`} />
+                                                    <MetricCard label="RFD 200ms" value={`${athlete.imtpRfd200} N/s`} />
+                                                    <MetricCard label="Asymmetry" value={`${athlete.peakForceAsymmetry}%`} />
+                                                </>
+                                            )}
                                         </div>
                                     </div>
 
