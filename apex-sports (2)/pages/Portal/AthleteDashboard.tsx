@@ -5,10 +5,10 @@ import { analyzeAthlete } from '../../utils/dataEngine';
 import SafetyGuard from '../../components/SafetyGuard';
 import {
     Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer,
-    BarChart, Bar, XAxis, YAxis, Tooltip, AreaChart, Area, Line
+    BarChart, Bar, XAxis, YAxis, Tooltip, AreaChart, Area, Line, Legend
 } from 'recharts';
 import {
-    AlertTriangle, CheckCircle, UploadCloud,
+    AlertTriangle, CheckCircle, UploadCloud, AlertCircle, Zap,
     LayoutDashboard, Target, BookOpen, FileText, Menu, X, Save, ExternalLink,
     Activity, Shield, Battery, TrendingUp, ChevronRight, Lock, User, LogOut
 } from 'lucide-react';
