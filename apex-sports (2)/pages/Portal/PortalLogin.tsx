@@ -123,6 +123,9 @@ const PortalLogin: React.FC = () => {
                     <p className="text-xs text-gray-500">
                         Trouble logging in? <a href="mailto:admin@apexsports.co.za" className="text-white underline">Contact Support</a>
                     </p>
+                    <p className="text-[10px] text-gray-700 font-mono mt-4 pt-4 border-t border-neutral-800/50">
+                        System v16.1 (Auth Patch v8.0)
+                    </p>
                 </div>
             </div>
         </div>
