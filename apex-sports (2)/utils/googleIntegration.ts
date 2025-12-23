@@ -69,37 +69,78 @@ const mapGoogleRowToAthlete = (row: any): AthleteData => {
         parentConsent: row['Parent Consent'] || row['Parental Consent'] || row['Consent'] || row.parentConsent || row.consent || 'Yes',
         package: row['Package'] || row['package'] || row.package || row.packageType || row['Package Type'] || row.tier || row.Level || 'Camp',
 
-        // V8.0 Neural
-        readinessScore: num(row['Readiness Score'] || row['Ready %'] || row.readinessScore || 85),
-        groinTimeToMax: num(row['Groin Time to Max'] || row['Groin TMAX'] || row.groinTimeToMax),
-        movementQualityScore: num(row['MQS'] || row['Movement Quality'] || row.screeningScore),
+        // v8.0 Neural
+        readinessScore: num(row['Readiness Score (%)'] || row['Readiness Score'] || row['Ready %'] || row.readinessScore || 85),
+        groinTimeToMax: num(row['Groin Time to Max (s)'] || row['Groin Time to Max'] || row['Groin TMAX'] || row.groinTimeToMax),
+        movementQualityScore: num(row['Movement Quality Score'] || row['MQS'] || row['Movement Quality'] || row.screeningScore),
 
         // Performance
-        imtpPeakForce: num(row['IMTP Peak'] || row.imtpPeak),
-        imtpRfd200: num(row['RFD 200ms'] || row.imtpRfd200),
-        peakForceAsymmetry: num(row['PF ASM'] || row.asymmetry),
-        broadJump: num(row['Broad Jump'] || row.broadJump || row['BJ'] || row['Broad Jump (cm)'] || row['Distance'] || row.distance),
-        agilityTime: num(row['Agility T'] || row['Agility (s)'] || row['Agility'] || row['505 Agility'] || row['Agility 505'] || row['505'] || row['T-Test'] || row['T Test'] || row.agilityTime || row.agility || row.tTest),
+        imtpPeakForce: num(row['IMTP Peak (N)'] || row['IMTP Peak'] || row.imtpPeak),
+        imtpRfd200: num(row['RFD @ 200ms (N/s)'] || row['RFD 200ms'] || row.imtpRfd200),
+        peakForceAsymmetry: num(row['PF ASM'] || row.asymmetry), // Not in provided headers, keeping fallback
+        broadJump: num(row['Broad Jump (cm)'] || row['Broad Jump'] || row['BJ'] || row['Distance'] || row.distance),
+        agilityTime: num(row['Agility T-Time (s)'] || row['Agility T'] || row['Agility (s)'] || row['Agility'] || row['T-Test'] || row['T Test']),
 
-        // Clinical
-        hamstringQuadLeft: num(row['H:Q L']),
-        hamstringQuadRight: num(row['H:Q R']),
-        neckExtension: num(row['Neck Ext']),
-        ankleRomLeft: num(row['Ankle ROM L']),
-        ankleRomRight: num(row['Ankle ROM R']),
-        shoulderRomLeft: num(row['Shoulder ROM L']),
-        shoulderRomRight: num(row['Shoulder ROM R']),
-        adductionStrengthLeft: num(row['Adduction L']),
-        adductionStrengthRight: num(row['Adduction R']),
+        // Clinical (Calculated from Raw or mapped directly)
+        hamstringQuadLeft: (() => {
+            const flexL = num(row['Knee Flex L (N)']);
+            const extL = num(row['Knee Ext L (N)']);
+            if (flexL && extL) return Number((flexL / extL).toFixed(2));
+            return num(row['H:Q L']);
+        })(),
+        hamstringQuadRight: (() => {
+            const flexR = num(row['Knee Flex R (N)']);
+            const extR = num(row['Knee Ext R (N)']);
+            if (flexR && extR) return Number((flexR / extR).toFixed(2));
+            return num(row['H:Q R']);
+        })(),
+        neckExtension: num(row['Neck Ext (N)'] || row['Neck Ext']),
+        ankleRomLeft: num(row['Ankle ROM L (deg)'] || row['Ankle ROM L']),
+        ankleRomRight: num(row['Ankle ROM R (deg)'] || row['Ankle ROM R']),
+        shoulderRomLeft: num(row['Shoulder ER L (N)'] || row['Shoulder ROM L']), // Assuming ER is the main ROM metric or just mapping force for now? User said "Shoulder ER L (N)".
+        shoulderRomRight: num(row['Shoulder ER R (N)'] || row['Shoulder ROM R']),
+        adductionStrengthLeft: num(row['Hip Add L (N)'] || row['Adduction L']),
+        adductionStrengthRight: num(row['Hip Add R (N)'] || row['Adduction R']),
 
-        // Scores (Map from flat keys or raw sheet)
-        // Scores (Map from flat keys or raw sheet)
-        scoreHamstring: num(row['Score Hamstring'] || row['Hamstring Score'] || row['Hamstring %'] || row['Dynamo Hamstring'] || row.scoreHamstring || row.hamstringScore),
-        scoreQuad: num(row['Score Quad'] || row['Quad Score'] || row['Quad %'] || row['Dynamo Quad'] || row.scoreQuad || row.quadScore),
-        scoreAdduction: num(row['Score Adduction'] || row['Adduction Score'] || row['Adduction %'] || row['Dynamo Adduction'] || row['Groin Score'] || row.scoreAdduction),
-        scoreAnkle: num(row['Score Ankle'] || row['Ankle Score'] || row['Ankle %'] || row['Dynamo Ankle'] || row.scoreAnkle),
-        scoreShoulder: num(row['Score Shoulder'] || row['Shoulder Score'] || row['Shoulder %'] || row['Dynamo Shoulder'] || row.scoreShoulder),
-        scoreNeck: num(row['Score Neck'] || row['Neck Score'] || row['Neck %'] || row['Dynamo Neck'] || row.scoreNeck),
+        // Scores (Map from flat keys OR Calculate from Raw vs BW)
+        scoreHamstring: (() => {
+            const raw = num(row['Score Hamstring']);
+            if (raw) return raw;
+            // Fallback: Knee Flex / BW * 2 (approx conversion to arbitrary score for viz)
+            const bw = num(row['Body Weight (kg)']) || 70;
+            const flex = (num(row['Knee Flex L (N)']) + num(row['Knee Flex R (N)'])) / 2;
+            return flex ? Math.min(100, Math.round((flex / bw) * 10)) : 0;
+        })(),
+        scoreQuad: (() => {
+            const raw = num(row['Score Quad']);
+            if (raw) return raw;
+            const bw = num(row['Body Weight (kg)']) || 70;
+            const ext = (num(row['Knee Ext L (N)']) + num(row['Knee Ext R (N)'])) / 2;
+            return ext ? Math.min(100, Math.round((ext / bw) * 5)) : 0; // Quads are stronger, lower multiplier
+        })(),
+        scoreAdduction: (() => {
+            const raw = num(row['Score Adduction']);
+            if (raw) return raw;
+            const bw = num(row['Body Weight (kg)']) || 70;
+            const add = (num(row['Hip Add L (N)']) + num(row['Hip Add R (N)'])) / 2;
+            return add ? Math.min(100, Math.round((add / bw) * 8)) : 0;
+        })(),
+        scoreAnkle: num(row['Score Ankle'] || 0), // No force data in headers for ankle strength, only ROM
+        scoreShoulder: (() => {
+            const raw = num(row['Score Shoulder']);
+            if (raw) return raw;
+            const bw = num(row['Body Weight (kg)']) || 70;
+            // Using External Rotation strength
+            const er = (num(row['Shoulder ER L (N)']) + num(row['Shoulder ER R (N)'])) / 2;
+            return er ? Math.min(100, Math.round((er / bw) * 15)) : 0;
+        })(),
+        scoreNeck: (() => {
+            const raw = num(row['Score Neck']);
+            if (raw) return raw;
+            const bw = num(row['Body Weight (kg)']) || 70;
+            const neck = num(row['Neck Ext (N)']);
+            return neck ? Math.min(100, Math.round((neck / bw) * 10)) : 0;
+        })(),
 
         // Legacy/Flat Support
         // If the flat JSON has 'screeningScore', map it to MQS
