@@ -113,14 +113,17 @@ const AthleteDashboard: React.FC = () => {
 
     // Tier Checks
     const pkg = (athlete.package || '').trim().toLowerCase();
-    // Dynamo Access: Elite, or explicit 'Testing' packages
-    const hasDynamoAccess = pkg.includes('elite') || pkg.includes('testing');
 
-    // Legacy support: In some contexts 'isEliteTier' was used for everything. 
-    // Now we distinguish:
-    // - Readiness/Neural: Only Elite? Or everyone with data? Let's use hasDynamoAccess for now as it implies higher level monitoring.
-    // - Radar/Dynamo: hasDynamoAccess
-    const showAdvancedMetrics = hasDynamoAccess;
+    // v9.5 Logic
+    // Zero-Admin Tiers: 'General' and 'S&C' -> Hide Clinical/Dynamo cards.
+    // Show Advanced only if NOT General/S&C.
+    // "Testing" and "Elite" get the goods.
+    const isZeroAdmin = pkg.includes('general') || pkg.includes('s&c') || pkg === 'camp';
+    const showAdvancedMetrics = !isZeroAdmin && (pkg.includes('elite') || pkg.includes('testing') || pkg.includes('individual'));
+
+    // Hero Stat Triggers
+    const isFatigued = athlete.readinessScore < 65 || athlete.groinTimeToMax > 1.5;
+    const showHeroStat = showAdvancedMetrics; // Only show for Advanced tiers (Clinical)
 
     return (
         <SafetyGuard athlete={athlete}>
@@ -271,9 +274,17 @@ const AthleteDashboard: React.FC = () => {
                                 </div>
                             )}
 
-                            {/* v8.0 Neural Readiness (HERO STAT for Testing Tier / Alert for Elite) */}
-                            {/* Logic: If Testing Tier, ALWAYS show. If Elite, show only if critical. */}
-                            {((pkg.includes('testing') || (isEliteTier && (athlete.readinessScore < 65 || athlete.groinTimeToMax > 1.5)))) && (
+                            {/* v9.5 Last Updated (Master's Efficiency) */}
+                            <div className="flex justify-end -mt-6 mb-2">
+                                <span className="text-[10px] text-gray-500 font-mono border border-neutral-800 px-3 py-1 rounded-full flex items-center gap-2">
+                                    <Activity className="w-3 h-3" />
+                                    Last Updated: {athlete.lastUpdated || 'Unknown'}
+                                </span>
+                            </div>
+
+                            {/* v9.5 Neural Readiness (HERO STAT for Clinical Tiers) */}
+                            {/* Trigger Alert if Groin Time > 1.5s */}
+                            {showHeroStat && (
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fade-in-down">
                                     <div className={`p-6 rounded-3xl flex items-center gap-6 ${athlete.readinessScore < 65 ? 'bg-red-950/40 border border-red-900/50' : 'bg-green-950/40 border border-green-900/50'}`}>
                                         <div className={`p-4 rounded-full ${athlete.readinessScore < 65 ? 'bg-red-900/20' : 'bg-green-900/20'}`}>
@@ -290,23 +301,21 @@ const AthleteDashboard: React.FC = () => {
                                         </div>
                                     </div>
 
-                                    {/* Groin T-Max (Only show if data present or if high risk) */}
-                                    {(athlete.groinTimeToMax > 0 && (pkg.includes('testing') || athlete.groinTimeToMax > 1.5)) && (
-                                        <div className={`p-6 rounded-3xl flex items-center gap-6 ${athlete.groinTimeToMax > 1.5 ? 'bg-yellow-950/40 border border-yellow-900/50' : 'bg-neutral-900/40 border border-neutral-800'}`}>
-                                            <div className={`p-4 rounded-full ${athlete.groinTimeToMax > 1.5 ? 'bg-yellow-900/20' : 'bg-neutral-800'}`}>
-                                                <Activity className={`w-8 h-8 ${athlete.groinTimeToMax > 1.5 ? 'text-yellow-500' : 'text-gray-400'}`} />
-                                            </div>
-                                            <div>
-                                                <h3 className={`font-bold text-sm uppercase tracking-wider mb-1 ${athlete.groinTimeToMax > 1.5 ? 'text-yellow-500' : 'text-gray-400'}`}>
-                                                    {athlete.groinTimeToMax > 1.5 ? 'Neural Fatigue' : 'Reaction Speed'}
-                                                </h3>
-                                                <p className="text-white font-black text-3xl">{athlete.groinTimeToMax}s</p>
-                                                <p className="text-gray-400 text-xs mt-1">
-                                                    Groin Time to Max Force
-                                                </p>
-                                            </div>
+                                    {/* Groin T-Max Alert */}
+                                    <div className={`p-6 rounded-3xl flex items-center gap-6 ${athlete.groinTimeToMax > 1.5 ? 'bg-yellow-950/40 border border-yellow-900/50' : 'bg-neutral-900/40 border border-neutral-800'}`}>
+                                        <div className={`p-4 rounded-full ${athlete.groinTimeToMax > 1.5 ? 'bg-yellow-900/20' : 'bg-neutral-800'}`}>
+                                            <Activity className={`w-8 h-8 ${athlete.groinTimeToMax > 1.5 ? 'text-yellow-500' : 'text-gray-400'}`} />
                                         </div>
-                                    )}
+                                        <div>
+                                            <h3 className={`font-bold text-sm uppercase tracking-wider mb-1 ${athlete.groinTimeToMax > 1.5 ? 'text-yellow-500' : 'text-gray-400'}`}>
+                                                {athlete.groinTimeToMax > 1.5 ? 'Fatigue Alert' : 'Reaction Speed'}
+                                            </h3>
+                                            <p className="text-white font-black text-3xl">{athlete.groinTimeToMax}s</p>
+                                            <p className="text-gray-400 text-xs mt-1">
+                                                {athlete.groinTimeToMax > 1.5 ? 'Groin response is slow (>1.5s).' : 'Groin Time to Max Force'}
+                                            </p>
+                                        </div>
+                                    </div>
                                 </div>
                             )}
 
