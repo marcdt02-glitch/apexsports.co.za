@@ -115,12 +115,12 @@ const AthleteDashboard: React.FC = () => {
     const pkg = (athlete.package || '').trim().toLowerCase();
 
     // v9.5 Logic
-    // Zero-Admin Tiers: 'General' and 'S&C' -> Hide Clinical/Dynamo cards.
-    // Show Advanced only if NOT General/S&C.
-    // "Testing" and "Elite" get the goods.
-    const isZeroAdmin = pkg.includes('general') || pkg.includes('s&c') || pkg === 'camp';
+    // Zero-Admin Tiers: 'General' only (S&C Upgraded v12.5)
+    // Show Advanced only if NOT General/ZeroAdmin
+    // "Testing", "Elite", "S&C", "Individual" get the goods.
+    const isZeroAdmin = pkg.includes('general') || pkg === 'camp';
     const isEliteTier = pkg.includes('elite'); // Legacy helper
-    const showAdvancedMetrics = !isZeroAdmin && (isEliteTier || pkg.includes('testing') || pkg.includes('individual'));
+    const showAdvancedMetrics = !isZeroAdmin && (isEliteTier || pkg.includes('testing') || pkg.includes('individual') || pkg.includes('s&c'));
 
     // Hero Stat Triggers
     const isFatigued = athlete.readinessScore < 65 || athlete.groinTimeToMax > 1.5;
