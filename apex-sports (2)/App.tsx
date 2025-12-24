@@ -16,7 +16,9 @@ import WelcomeAthlete from './pages/WelcomeAthlete';
 import { DataProvider } from './context/DataContext';
 import AdminUpload from './pages/Admin/AdminUpload';
 import AthleteDashboard from './pages/Portal/AthleteDashboard';
+import TeamDashboard from './pages/Portal/TeamDashboard';
 import PortalLogin from './pages/Portal/PortalLogin';
+import ErrorBoundary from './components/ErrorBoundary';
 
 // Wrapper to handle scroll to top on route change
 const ScrollToTop = () => {
@@ -48,7 +50,8 @@ const InnerLayout: React.FC = () => {
 
 
           <Route path="/portal" element={<PortalLogin />} />
-          <Route path="/portal/:athleteId" element={<AthleteDashboard />} />
+          <Route path="/portal/team" element={<ErrorBoundary><TeamDashboard /></ErrorBoundary>} />
+          <Route path="/portal/:athleteId" element={<ErrorBoundary><AthleteDashboard /></ErrorBoundary>} />
           <Route path="/admin-upload" element={<AdminUpload />} />
         </Routes>
       </main>

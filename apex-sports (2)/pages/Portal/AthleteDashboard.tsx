@@ -91,6 +91,13 @@ const getReadinessColor = (recent: number, max: number) => {
     return '#ef4444'; // Red
 };
 
+import Loading from '../../components/Loading';
+
+// ... (Keep existing top level imports if possible, or just ignore this comment and user the view to know what to keep)
+// Actually I need to be careful not to delete the OTHER imports.
+// The file view shows lines 1-19 are imports.
+// I will target the lines from 94 down to where the duplication ends.
+
 const AthleteDashboard: React.FC = () => {
     const { athleteId } = useParams<{ athleteId: string }>();
     const { getAthlete } = useData();
@@ -101,18 +108,16 @@ const AthleteDashboard: React.FC = () => {
 
     const athlete = athleteId ? getAthlete(athleteId) : undefined;
 
-    // DEBUG: Check what the Dashboard "Sees"
-    if (athlete) {
-        console.log('👤 DASHBOARD ATHLETE DATA:', {
-            tier: athlete.productTier,
-            package: athlete.package,
-            tierRaw: athlete.productTier,
-            accountActive: athlete.accountActive
-        });
-    }
+    // DEBUG: Component Mount Log
+    React.useEffect(() => {
+        if (athlete) {
+            console.log("📊 Dashboard Loaded for:", athlete.name);
+            console.log("🔑 Access Object:", athlete.access);
+        }
+    }, [athlete]);
 
+    // Loading State
     const [searchTimeout, setSearchTimeout] = useState(false);
-
     React.useEffect(() => {
         if (!athlete && athleteId) {
             const timer = setTimeout(() => setSearchTimeout(true), 5000);
@@ -121,29 +126,38 @@ const AthleteDashboard: React.FC = () => {
     }, [athlete, athleteId]);
 
     if (!athlete) {
-        return (
-            <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-4 text-center">
-                {!searchTimeout ? (
-                    <>
-                        <div className="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin mb-8"></div>
-                        <h2 className="text-2xl font-bold mb-4">Searching Performance Database...</h2>
-                        <p className="text-gray-400 mb-6">Checking ID: {athleteId}</p>
-                    </>
-                ) : (
-                    <>
-                        <div className="w-16 h-16 bg-neutral-900 rounded-full flex items-center justify-center mb-8 border border-neutral-800">
-                            <AlertTriangle className="w-8 h-8 text-red-500" />
-                        </div>
-                        <h2 className="text-2xl font-bold mb-4 text-red-500">Athlete Not Found</h2>
-                        <button onClick={() => window.location.href = '/#/portal'} className="bg-white text-black font-bold py-3 px-8 rounded-lg hover:bg-gray-200 transition-colors">Return to Login</button>
-                    </>
-                )}
-            </div>
-        );
+        if (searchTimeout) {
+            return (
+                <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-4 text-center">
+                    <AlertTriangle className="w-16 h-16 text-red-500 mb-4" />
+                    <h2 className="text-2xl font-bold mb-4 text-red-500">Athlete Not Found</h2>
+                    <button onClick={() => window.location.href = '/#/portal'} className="bg-white text-black font-bold py-3 px-8 rounded-lg hover:bg-gray-200 transition-colors">Return to Login</button>
+                </div>
+            );
+        }
+        return <Loading message="Syncing Performance Data..." />;
     }
 
+    // SAFE ANALYSIS
     const analysis = analyzeAthlete(athlete);
     const { flags, recommendation } = analysis;
+
+    // v19.0 Access Logic (Safe Fallback)
+    const tier = (athlete.productTier || '').trim().toLowerCase();
+
+    // Legacy Logic (if access object missing)
+    let isFullAccess = tier.includes('elite') || tier.includes('testing s&c') || tier.includes('apex membership') || athlete.email === 'admin@apexsports.co.za';
+    let showMentorship = isFullAccess || tier.includes('mentorship');
+    let showReports = isFullAccess;
+
+    // New Logic (if access object present)
+    if (athlete.access) {
+        isFullAccess = athlete.access.isFullAccess;
+        showMentorship = athlete.access.showMentorship;
+        showReports = athlete.access.showReports;
+    }
+
+    const showAdvancedMetrics = isFullAccess;
 
     // Charts
     const radarData = [
@@ -159,21 +173,9 @@ const AthleteDashboard: React.FC = () => {
     const recentSessions = analysis.performance ? analysis.performance.sessions.slice(0, 7).reverse() : [];
     const acwrValue = analysis.performance ? analysis.performance.acwr : 1.1;
     const acwrHighRisk = acwrValue > 1.5 || acwrValue < 0.8;
-
-    // v17.1 Access Logic
-    // Elite or Testing S&C -> Full Access
-    // Camp or Basic -> Restricted
-    const tier = (athlete.productTier || '').trim().toLowerCase();
-    const pkg = tier; // Alias for legacy logic
-
-    // v17.3 Master Unlock: 'Apex Membership' OR Admin Email Override
-    const isAdminOverride = athlete.email === 'admin@apexsports.co.za';
-    const isFullAccess = tier.includes('elite') || tier.includes('testing s&c') || tier.includes('apex membership') || isAdminOverride;
-
-    const showAdvancedMetrics = isFullAccess;
+    const pkg = tier; // Alias
 
     // Hero Stat Triggers
-    const isFatigued = athlete.readinessScore < 65 || athlete.groinTimeToMax > 1.5;
     const showHeroStat = showAdvancedMetrics; // Only show for Advanced tiers (Clinical)
 
     return (
