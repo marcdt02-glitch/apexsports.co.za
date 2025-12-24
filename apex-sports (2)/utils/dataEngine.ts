@@ -174,7 +174,7 @@ export const parseAthleteData = (csvString: string): AthleteData[] => {
 
             // v17.1 Access Control
             productTier: row['Product Tier'] || 'Basic',
-            accountActive: row['Account Active'] || 'NO', // Default blocked for CSV safety
+            accountActive: row['Account Active'] || 'YES', // v17.2 Permissive Default
 
             kneeExtensionLeft: 0,
             kneeExtensionRight: 0,

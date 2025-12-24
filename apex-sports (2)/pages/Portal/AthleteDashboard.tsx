@@ -4,8 +4,10 @@ import { useData } from '../../context/DataContext';
 import { analyzeAthlete } from '../../utils/dataEngine';
 import SafetyGuard from '../../components/SafetyGuard';
 import {
-    Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer,
-    BarChart, Bar, XAxis, YAxis, Tooltip, AreaChart, Area, Line, Legend
+    RadialBarChart, RadialBar, PolarAngleAxis,
+    Radar, RadarChart, PolarGrid, PolarRadiusAxis,
+    Area, AreaChart, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer,
+    Legend
 } from 'recharts';
 import {
     AlertTriangle, CheckCircle, UploadCloud, AlertCircle, Zap,

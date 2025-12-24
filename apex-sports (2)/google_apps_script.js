@@ -62,7 +62,52 @@ function doGet(e) {
             athleteData["readiness_score"] = athleteData["Readiness Score (%)"];
             athleteData["groin_time"] = athleteData["Groin Time to Max (s)"];
 
-            return res({ status: "success", athlete: athleteData });
+            // v19.0: Tier Logic & Access Control
+            var tier = (athleteData["Product Tier"] || athleteData["Package"] || "").toString().toLowerCase();
+            var isApex = tier.indexOf("apex membership") !== -1 || tier.indexOf("elite") !== -1 || tier.indexOf("testing s&c") !== -1 || email === 'admin@apexsports.co.za';
+            var isMentorship = tier.indexOf("mentorship") !== -1;
+
+            var access = {
+                tier: tier,
+                isFullAccess: isApex,
+                showMentorship: isApex || isMentorship,
+                showReports: isApex,
+                showStrengthDials: isApex, // Locked for Camp
+                showWellnessHistory: isApex
+            };
+
+            // v19.0: Fetch History (Last 10 Logs)
+            var history = [];
+            try {
+                var logSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Logs");
+                if (logSheet) {
+                    var logData = logSheet.getDataRange().getValues();
+                    var logHeaders = logData[0];
+                    var logEmailIdx = logHeaders.findIndex(function (h) { return String(h).toLowerCase().trim() === "email"; });
+
+                    if (logEmailIdx !== -1) {
+                        // Filter logs for this athlete
+                        var athleteLogs = logData.slice(1).filter(function (row) {
+                            return String(row[logEmailIdx]).toLowerCase().trim() === email.toLowerCase().trim();
+                        });
+                        // Take last 10, newest first
+                        history = athleteLogs.slice(-10).reverse().map(function (row) {
+                            // Map relevant history columns (adjust keys as needed based on actual Log sheet)
+                            // Assuming similar structure or key metrics
+                            return {
+                                date: row[0], // Assuming Date is first
+                                readiness: row[logHeaders.indexOf("Readiness Score (%)")] || 0,
+                                soreness: row[logHeaders.indexOf("Soreness Score")] || 0,
+                                sleep: row[logHeaders.indexOf("Sleep Score")] || 0
+                            };
+                        });
+                    }
+                }
+            } catch (e) {
+                // Ignore history errors, return empty array
+            }
+
+            return res({ status: "success", athlete: athleteData, access: access, history: history });
         }
 
         return res({ status: "error", message: "Athlete not found." });

@@ -61,9 +61,14 @@ export const fetchAthleteFromGoogle = async (email: string, pin: string): Promis
             return mapGoogleRowToAthlete(data);
         }
 
-        // 2. Check for "Wrapped JSON" response ({ status: 'success', athlete: ... })
         if (data.status === 'success' && data.athlete) {
-            return mapGoogleRowToAthlete(data.athlete);
+            const athlete = mapGoogleRowToAthlete(data.athlete);
+
+            // v19.0: Enrich with Access & History if provided by backend
+            if (data.access) athlete.access = data.access;
+            if (data.history) athlete.wellnessHistory = data.history;
+
+            return athlete;
         }
 
         // 3. Handle Errors
