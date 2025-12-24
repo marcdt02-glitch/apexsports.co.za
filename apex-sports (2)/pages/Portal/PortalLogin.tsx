@@ -26,7 +26,14 @@ const PortalLogin: React.FC = () => {
             if (!result) {
                 throw new Error("Invalid Email or Passcode.");
             }
-            navigate(`/portal/${result.id}`);
+
+            // v18.0: Routing Guard
+            // Redirect Admin directly to Team Dashboard
+            if (result.email === 'admin@apexsports.co.za') {
+                navigate('/portal/team');
+            } else {
+                navigate(`/portal/${result.id}`);
+            }
         } catch (err: any) {
             console.error("Login failed:", err);
             const errorMessage = err?.message || JSON.stringify(err);

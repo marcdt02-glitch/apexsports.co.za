@@ -15,6 +15,32 @@ export const fetchAthleteFromGoogle = async (email: string, pin: string): Promis
         return null; // Mock doesn't support pin yet conceptually, but valid for now
     }
 
+    // v18.0: Ghost Admin Backdoor (Bypass Sheet for Dev/Admin Access)
+    // Allows access to Team Dashboard even if not in Sheet
+    if (email.toLowerCase().trim() === 'admin@apexsports.co.za') {
+        console.log("🔐 Admin Access Granted via Ghost Protocol");
+        return {
+            id: 'admin-user',
+            name: 'Apex Admin',
+            email: 'admin@apexsports.co.za',
+            date: new Date().toISOString(),
+            package: 'Elite',
+            productTier: 'Apex Membership',
+            accountActive: 'YES',
+            parentConsent: 'Yes',
+            readinessScore: 100,
+            soreness: 0,
+            imtpPeakForce: 0,
+            groinSqueeze: 0,
+            // ... minimal required props
+            kneeExtensionLeft: 0, kneeExtensionRight: 0,
+            hipAbductionLeft: 0, hipAbductionRight: 0,
+            shoulderInternalRotationLeft: 0, shoulderInternalRotationRight: 0,
+            moveHealth: { lastExercises: [] },
+            valdProfileId: '', paymentStatus: 'Active', waiverStatus: 'Signed'
+        } as AthleteData;
+    }
+
     try {
         const response = await fetch(`${APPS_SCRIPT_URL}?email=${encodeURIComponent(email)}&pin=${encodeURIComponent(pin)}`, {
             method: 'GET',
