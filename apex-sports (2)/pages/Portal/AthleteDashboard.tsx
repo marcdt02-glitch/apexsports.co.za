@@ -118,6 +118,7 @@ const AthleteDashboard: React.FC = () => {
 
     // Loading State
     const [searchTimeout, setSearchTimeout] = useState(false);
+    const [showDebug, setShowDebug] = useState(false); // Debug Toggle
     React.useEffect(() => {
         if (!athlete && athleteId) {
             const timer = setTimeout(() => setSearchTimeout(true), 5000);
@@ -867,40 +868,37 @@ const AthleteDashboard: React.FC = () => {
                                 </div>
                             </div>
                         </div>
+                            </div>
+            </div>
                     )}
 
-    // Debug State
-                    const [showDebug, setShowDebug] = useState(false);
+            {/* Debug Footer */}
+            <div className="py-8 text-center border-t border-neutral-900 mt-12">
+                <button
+                    onClick={() => setShowDebug(!showDebug)}
+                    className="text-[10px] text-neutral-800 hover:text-neutral-500 font-mono transition-colors uppercase tracking-widest"
+                >
+                    {showDebug ? 'Hide System Data' : 'System Status: Online'}
+                </button>
 
-                    return (
-                    <SafetyGuard athlete={athlete}>
-                        <div className="min-h-screen bg-black text-white pb-20 font-sans">
-                            {/* ... existing content ... */}
+                {showDebug && (
+                    <div className="mt-4 mx-auto max-w-4xl p-4 bg-neutral-900 rounded-xl border border-neutral-800 text-left overflow-x-auto">
+                        <h4 className="text-xs font-bold text-green-500 mb-2 font-mono">RAW DATA INSPECTOR</h4>
+                        <p className="text-[10px] text-gray-500 mb-4">
+                            If data is missing here, it is not being read from the Sheet correctly. Check column names.
+                        </p>
+                        <pre className="text-[10px] text-gray-400 font-mono whitespace-pre-wrap">
+                            {JSON.stringify(athlete, null, 2)}
+                        </pre>
+                    </div>
+                )}
+            </div>
 
-                            {/* Debug Footer */}
-                            <div className="py-8 text-center">
-                                <button
-                                    onClick={() => setShowDebug(!showDebug)}
-                                    className="text-[10px] text-neutral-800 hover:text-neutral-500 font-mono transition-colors uppercase tracking-widest"
-                                >
-                                    {showDebug ? 'Hide System Data' : 'System Status: Online'}
-                                </button>
-
-                                {showDebug && (
-                                    <div className="mt-4 mx-auto max-w-4xl p-4 bg-neutral-900 rounded-xl border border-neutral-800 text-left overflow-x-auto">
-                                        <h4 className="text-xs font-bold text-green-500 mb-2 font-mono">RAW DATA INSPECTOR</h4>
-                                        <p className="text-[10px] text-gray-500 mb-4">
-                                            If data is missing here, it is not being read from the Sheet correctly. Check column names.
-                                        </p>
-                                        <pre className="text-[10px] text-gray-400 font-mono whitespace-pre-wrap">
-                                            {JSON.stringify(athlete, null, 2)}
-                                        </pre>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    </SafetyGuard>
-                    );
+        </div>
+                 {/* Debug Info (Legacy - Removing to avoid confusion) */ }
+            </div >
+        </SafetyGuard >
+    );
 };
 
-                    export default AthleteDashboard;
+export default AthleteDashboard;
