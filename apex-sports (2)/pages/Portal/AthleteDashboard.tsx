@@ -893,6 +893,7 @@ const AthleteDashboard: React.FC = () => {
                     </div>
 
                 </div>
+            </div>
         </SafetyGuard >
     );
 };
