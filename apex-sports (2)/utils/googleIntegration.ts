@@ -69,6 +69,10 @@ const mapGoogleRowToAthlete = (row: any): AthleteData => {
         parentConsent: row['Parent Consent'] || row['Parental Consent'] || row['Consent'] || row.parentConsent || row.consent || 'Yes',
         package: row['Package'] || row['package'] || row.package || row.packageType || row['Package Type'] || row.tier || row.Level || 'Camp',
 
+        // v17.1 Access Control
+        productTier: row['Product Tier'] || 'Basic',
+        accountActive: row['Account Active'] || 'YES', // v17.2 Permissive Default
+
         // v8.0 Neural
         readinessScore: num(row['Readiness Score (%)'] || row['Readiness Score'] || row['Ready %'] || row.readinessScore || 85),
         groinTimeToMax: num(row['Groin Time'] || row['Groin Time to Max (s)'] || row['Groin Time to Max'] || row.groinTimeToMax),
