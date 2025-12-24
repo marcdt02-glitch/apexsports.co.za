@@ -55,6 +55,42 @@ const MetricCard = ({ label, value, subtext }: { label: string, value: string | 
 
 // --- Main Dashboard ---
 
+// Helper Functions for Traffic Light Logic
+const getRomColor = (label: string, value: number) => {
+    if (label.includes('Hamstring')) { // Target 90
+        if (value > 90) return 'text-green-500';
+        if (value >= 80) return 'text-yellow-500';
+        return 'text-red-500';
+    }
+    if (label.includes('Ankle')) { // Target 40
+        if (value > 40) return 'text-green-500';
+        if (value >= 35) return 'text-yellow-500';
+        return 'text-red-500';
+    }
+    // Default High is Good (Hip Ext etc)
+    if (value > 15) return 'text-green-500';
+    return 'text-white';
+};
+
+const getAsymmetryColor = (l: number, r: number) => {
+    if (!l || !r) return 'text-gray-500';
+    const diff = Math.abs(l - r);
+    const max = Math.max(l, r);
+    const pct = (diff / max) * 100;
+
+    if (pct <= 10) return 'text-green-500';
+    if (pct <= 20) return 'text-yellow-500';
+    return 'text-red-500';
+};
+
+const getReadinessColor = (recent: number, max: number) => {
+    if (!max) return '#3b82f6'; // Default Blue if no baseline
+    const pct = (recent / max) * 100;
+    if (pct >= 95) return '#22c55e'; // Green
+    if (pct >= 90) return '#eab308'; // Yellow
+    return '#ef4444'; // Red
+};
+
 const AthleteDashboard: React.FC = () => {
     const { athleteId } = useParams<{ athleteId: string }>();
     const { getAthlete } = useData();
