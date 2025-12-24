@@ -127,6 +127,11 @@ const mapGoogleRowToAthlete = (row: any): AthleteData => {
         groinTimeToMax: num(row['Groin Time'] || row['Groin Time to Max (s)'] || row.groinTimeToMax),
         movementQualityScore: num(row['MQS'] || row['Movement Quality Score'] || row.screeningScore),
 
+        // v38.0 Backend Scores (Direct override)
+        performanceScore: num(row['Performance Score'] || row.performanceScore),
+        screeningScore: num(row['Screening Score'] || row.screeningScore),
+        asymmetries: row.asymmetries || {},
+
         // Performance
         imtpPeakForce: num(row['Lower Body Peak Force'] || row['IMTP Peak (N)'] || row.imtpPeak),
         imtpRfd200: num(row['RFD @ 200ms (N/s)'] || row['RFD 200ms'] || row.imtpRfd200),

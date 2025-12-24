@@ -9,10 +9,12 @@ interface SafetyGuardProps {
 
 const SafetyGuard: React.FC<SafetyGuardProps> = ({ athlete, children }) => {
     // 1. Payment Gate (Highest Priority)
-    // v17.1: Check Account Active status
-    const isActive = athlete.accountActive && athlete.accountActive.trim().toUpperCase() === 'YES';
+    // v17.2: Check Account Active status (Permissive by default)
+    // Only block if explicitly 'NO' or 'FALSE'
+    const status = (athlete.accountActive || '').trim().toUpperCase();
+    const isBlocked = status === 'NO' || status === 'FALSE';
 
-    if (!isActive) {
+    if (isBlocked) {
         return (
             <div className="fixed inset-0 z-50 bg-black/95 flex flex-col items-center justify-center p-6 text-center">
                 <div className="bg-neutral-900 border border-neutral-800 rounded-3xl p-12 max-w-lg">

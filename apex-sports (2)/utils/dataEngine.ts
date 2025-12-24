@@ -85,6 +85,7 @@ export interface AthleteData {
     // v19.0 Access & History
     access?: {
         isFullAccess: boolean;
+        isCampUser?: boolean; // v38.0 Protocol
         showMentorship: boolean;
         showReports: boolean;
         showStrengthDials: boolean;
@@ -96,6 +97,15 @@ export interface AthleteData {
         soreness: number;
         sleep: number;
     }>;
+
+    // v38.0 Direct Score Mapping (Backend Calculated)
+    performanceScore?: number;
+    screeningScore?: number;
+    asymmetries?: {
+        kneeExtension?: number;
+        hipAbduction?: number;
+        [key: string]: number | undefined;
+    };
 }
 
 export interface DashboardMetrics {
@@ -349,8 +359,8 @@ export const analyzeAthlete = (athlete: AthleteData): DashboardMetrics => {
             sessions: generateMockSessions()
         },
         scores: {
-            performance: Math.min(100, Math.round(athlete.imtpPeakForce / 50)),
-            screening: Math.max(0, 100 - (athlete.peakForceAsymmetry * 2)),
+            performance: athlete.performanceScore ? athlete.performanceScore : Math.min(100, Math.round(athlete.imtpPeakForce / 50)),
+            screening: athlete.screeningScore ? athlete.screeningScore : Math.max(0, 100 - (athlete.peakForceAsymmetry * 2)),
             readiness: Math.floor(Math.random() * 20) + 80,
             powerIndex: (() => {
                 const imtpScore = Math.min(100, Math.round(athlete.imtpPeakForce / 50));

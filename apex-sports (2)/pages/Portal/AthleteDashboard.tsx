@@ -148,17 +148,21 @@ const AthleteDashboard: React.FC = () => {
 
     // Legacy Logic (if access object missing)
     let isFullAccess = tier.includes('elite') || tier.includes('testing s&c') || tier.includes('apex membership') || athlete.email === 'admin@apexsports.co.za';
+    // Camp User Override (v38.0)
+    let isCampUser = tier.includes('camp') || tier.includes('basic');
     let showMentorship = isFullAccess || tier.includes('mentorship');
     let showReports = isFullAccess;
 
     // New Logic (if access object present)
     if (athlete.access) {
         isFullAccess = athlete.access.isFullAccess;
+        isCampUser = athlete.access.isCampUser ?? isCampUser; // Use backend flag if present
         showMentorship = athlete.access.showMentorship;
         showReports = athlete.access.showReports;
     }
 
-    const showAdvancedMetrics = isFullAccess;
+    // Toggle Restricted View
+    const showAdvancedMetrics = isFullAccess && !isCampUser;
 
     // Charts
     const radarData = [
