@@ -99,8 +99,11 @@ const mapGoogleRowToAthlete = (row: any): AthleteData => {
     });
 
     const num = (val: any) => {
-        if (val === 'N/A' || val === undefined || val === null) return 0;
-        return Number(val) || 0;
+        if (val === 'N/A' || val === undefined || val === null || val === '') return 0;
+        if (typeof val === 'number') return val;
+        // String cleaning: Remove commas, 'kg', 'sec', 's', 'cm', 'N', etc. (keep dots and negative signs)
+        const cleanStr = String(val).replace(/,/g, '').replace(/[^\d.-]/g, '');
+        return parseFloat(cleanStr) || 0;
     };
 
     return {
