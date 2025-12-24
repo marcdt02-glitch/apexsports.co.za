@@ -895,8 +895,6 @@ const AthleteDashboard: React.FC = () => {
             </div>
 
         </div>
-                 {/* Debug Info (Legacy - Removing to avoid confusion) */ }
-            </div >
         </SafetyGuard >
     );
 };
