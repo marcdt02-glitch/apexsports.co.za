@@ -27,6 +27,9 @@ export const fetchAthleteFromGoogle = async (email: string, pin: string): Promis
 
         const data = await response.json();
 
+        // DEBUG: Log the full raw response to identify correct keys/values
+        console.log('🔍 RAW GOOGLE SHEET RESPONSE:', JSON.stringify(data, null, 2));
+
         // 1. Check for "Flat JSON" response (Direct Athlete Object)
         if (data && (data.email || data.firstName || data.name)) {
             return mapGoogleRowToAthlete(data);
@@ -53,6 +56,17 @@ export const fetchAthleteFromGoogle = async (email: string, pin: string): Promis
 };
 
 const mapGoogleRowToAthlete = (row: any): AthleteData => {
+    // Helper to find key case-insensitively if needed, though GAS usually preserves case.
+    const findKey = (search: string) => Object.keys(row).find(k => k.toLowerCase().trim() === search.toLowerCase().trim());
+
+    // Debug specific tier keys
+    console.log('🔍 Row Keys for Tier Debug:', {
+        'Product Tier': row['Product Tier'],
+        'Package': row['Package'],
+        'foundProductTier': row[findKey('product tier') || ''],
+        'foundPackage': row[findKey('package') || '']
+    });
+
     const num = (val: any) => {
         if (val === 'N/A' || val === undefined || val === null) return 0;
         return Number(val) || 0;
@@ -70,8 +84,9 @@ const mapGoogleRowToAthlete = (row: any): AthleteData => {
         package: row['Package'] || row['package'] || row.package || row.packageType || row['Package Type'] || row.tier || row.Level || 'Camp',
 
         // v17.1 Access Control
-        productTier: row['Product Tier'] || row['Package'] || 'Basic',
-        accountActive: row['Account Active'] || 'YES', // v17.2 Permissive Default
+        // Robust fallback logic: Explicit Key -> Case Insensitive Key -> Fallback to Package -> Default 'Basic'
+        productTier: row['Product Tier'] || row[findKey('product tier') || ''] || row['Package'] || row[findKey('package') || ''] || 'Basic',
+        accountActive: row['Account Active'] || row[findKey('account active') || ''] || 'YES', // v17.2 Permissive Default
 
         // v8.0 Neural
         readinessScore: num(row['Readiness Score (%)'] || row['Readiness Score'] || row['Ready %'] || row.readinessScore || 85),

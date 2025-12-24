@@ -62,6 +62,17 @@ const AthleteDashboard: React.FC = () => {
     const dashboardRef = useRef<HTMLDivElement>(null);
 
     const athlete = athleteId ? getAthlete(athleteId) : undefined;
+
+    // DEBUG: Check what the Dashboard "Sees"
+    if (athlete) {
+        console.log('👤 DASHBOARD ATHLETE DATA:', {
+            tier: athlete.productTier,
+            package: athlete.package,
+            tierRaw: athlete.productTier,
+            accountActive: athlete.accountActive
+        });
+    }
+
     const [searchTimeout, setSearchTimeout] = useState(false);
 
     React.useEffect(() => {
@@ -116,7 +127,10 @@ const AthleteDashboard: React.FC = () => {
     // Camp or Basic -> Restricted
     const tier = (athlete.productTier || '').trim().toLowerCase();
     const pkg = tier; // Alias for legacy logic
-    const isFullAccess = tier.includes('elite') || tier.includes('testing s&c');
+
+    // v17.3 Master Unlock: 'Apex Membership' OR Admin Email Override
+    const isAdminOverride = athlete.email === 'admin@apexsports.co.za';
+    const isFullAccess = tier.includes('elite') || tier.includes('testing s&c') || tier.includes('apex membership') || isAdminOverride;
 
     const showAdvancedMetrics = isFullAccess;
 
