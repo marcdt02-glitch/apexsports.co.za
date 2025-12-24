@@ -81,6 +81,21 @@ export interface AthleteData {
             rpe: number; // Exercise RPE
         }>;
     };
+
+    // v19.0 Access & History
+    access?: {
+        isFullAccess: boolean;
+        showMentorship: boolean;
+        showReports: boolean;
+        showStrengthDials: boolean;
+        showWellnessHistory: boolean;
+    };
+    wellnessHistory?: Array<{
+        date: string;
+        readiness: number;
+        soreness: number;
+        sleep: number;
+    }>;
 }
 
 export interface DashboardMetrics {

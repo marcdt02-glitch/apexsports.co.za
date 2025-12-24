@@ -495,7 +495,7 @@ const AthleteDashboard: React.FC = () => {
                                                             <PolarRadiusAxis angle={30} tick={false} axisLine={false} />
                                                             <Radar name="Left" dataKey="A" stroke="#3b82f6" strokeWidth={2} fill="#3b82f6" fillOpacity={0.3} />
                                                             <Radar name="Right" dataKey="B" stroke="#22c55e" strokeWidth={2} fill="#22c55e" fillOpacity={0.3} />
-                                                            <Tooltip
+                                                            <RechartsTooltip
                                                                 contentStyle={{ backgroundColor: '#171717', border: '1px solid #333' }}
                                                                 itemStyle={{ color: '#fff' }}
                                                             />
@@ -657,7 +657,7 @@ const AthleteDashboard: React.FC = () => {
                                                         </linearGradient>
                                                     </defs>
                                                     <XAxis dataKey="date" hide />
-                                                    <Tooltip
+                                                    <RechartsTooltip
                                                         contentStyle={{ backgroundColor: '#111', borderColor: '#333', borderRadius: '8px', fontSize: '12px' }}
                                                         itemStyle={{ color: '#fff' }}
                                                         labelStyle={{ display: 'none' }}
