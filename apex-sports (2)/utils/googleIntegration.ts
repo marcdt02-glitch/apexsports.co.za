@@ -70,7 +70,7 @@ const mapGoogleRowToAthlete = (row: any): AthleteData => {
         package: row['Package'] || row['package'] || row.package || row.packageType || row['Package Type'] || row.tier || row.Level || 'Camp',
 
         // v17.1 Access Control
-        productTier: row['Product Tier'] || 'Basic',
+        productTier: row['Product Tier'] || row['Package'] || 'Basic',
         accountActive: row['Account Active'] || 'YES', // v17.2 Permissive Default
 
         // v8.0 Neural
