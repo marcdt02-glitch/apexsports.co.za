@@ -219,7 +219,7 @@ const AthleteDashboard: React.FC = () => {
 
                         {/* MENTORSHIP & GOALS (Internal View) */}
                         {(() => {
-                            const isUnlocked = pkg.includes('mentorship') || pkg.includes('elite');
+                            const isUnlocked = isFullAccess; // v17.4: Now linked to master full access (Apex/Elite/Testing)
                             return (
                                 <button
                                     onClick={() => {
@@ -243,7 +243,7 @@ const AthleteDashboard: React.FC = () => {
 
                         {/* REPORTS */}
                         {(() => {
-                            const isUnlocked = pkg.includes('mentorship') || pkg.includes('elite');
+                            const isUnlocked = isFullAccess; // v17.4: Now linked to master full access
                             return (
                                 <button
                                     onClick={() => { if (isUnlocked) { setActiveView('reports'); setSidebarOpen(false); } }}
