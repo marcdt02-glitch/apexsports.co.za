@@ -108,108 +108,106 @@ const mapGoogleRowToAthlete = (row: any): AthleteData => {
 
     return {
         id: row._id || row.id || `google-${Date.now()}`,
-        name: row._name || row.name || `${row.firstName || ''} ${row.surname || ''}`.trim() || 'Unknown Athlete',
-        email: row._email || row.email || '',
+        // Administrative: User uses "Name" and "Surname"
+        name: row._name || row.name || row['Name'] ? `${row['Name']} ${row['Surname'] || ''}`.trim() : `${row.firstName || ''} ${row.surname || ''}`.trim() || 'Unknown Athlete',
+        email: row._email || row.email || row['Email'] || '',
         date: new Date().toISOString().split('T')[0],
         lastUpdated: row['Last Updated'] || row.timestamp || '',
 
         // V8.0 Administrative
-        parentConsent: row['Parent Consent'] || row['Parental Consent'] || row['Consent'] || row.parentConsent || row.consent || 'Yes',
-        package: row['Package'] || row['package'] || row.package || row.packageType || row['Package Type'] || row.tier || row.Level || 'Camp',
+        parentConsent: row['Parent Consent'] || row['Parental Consent'] || row['Consent'] || row.parentConsent || 'Yes',
+        package: row['Package'] || row['Product Tier'] || row['package'] || 'Camp',
 
         // v17.1 Access Control
-        // Robust fallback logic: Explicit Key -> Case Insensitive Key -> Fallback to Package -> Default 'Basic'
-        productTier: row['Product Tier'] || row[findKey('product tier') || ''] || row['Package'] || row[findKey('package') || ''] || 'Basic',
-        accountActive: row['Account Active'] || row[findKey('account active') || ''] || 'YES', // v17.2 Permissive Default
+        productTier: row['Product Tier'] || row['Package'] || 'Basic',
+        accountActive: row['Account Active'] || 'YES',
 
         // v8.0 Neural
-        readinessScore: num(row['Readiness Score (%)'] || row['Readiness Score'] || row['Ready %'] || row.readinessScore || 85),
-        groinTimeToMax: num(row['Groin Time'] || row['Groin Time to Max (s)'] || row['Groin Time to Max'] || row.groinTimeToMax),
-        movementQualityScore: num(row['Movement Quality Score'] || row['MQS'] || row['Movement Quality'] || row.screeningScore),
+        readinessScore: num(row['Readiness %'] || row['Readiness Score (%)'] || row['Readiness Score'] || row.readinessScore || 85),
+        groinTimeToMax: num(row['Groin Time'] || row['Groin Time to Max (s)'] || row.groinTimeToMax),
+        movementQualityScore: num(row['MQS'] || row['Movement Quality Score'] || row.screeningScore),
 
         // Performance
-        imtpPeakForce: num(row['IMTP Peak (N)'] || row['IMTP Peak'] || row.imtpPeak),
+        imtpPeakForce: num(row['Lower Body Peak Force'] || row['IMTP Peak (N)'] || row.imtpPeak),
         imtpRfd200: num(row['RFD @ 200ms (N/s)'] || row['RFD 200ms'] || row.imtpRfd200),
-        peakForceAsymmetry: num(row['PF ASM'] || row.asymmetry), // Not in provided headers, keeping fallback
-        broadJump: num(row['Broad Jump (cm)'] || row['Broad Jump'] || row['BJ'] || row['Distance'] || row.distance),
-        agilityTime: num(row['Agility T-Time (s)'] || row['Agility T'] || row['Agility (s)'] || row['Agility'] || row['T-Test'] || row['T Test']),
+        peakForceAsymmetry: num(row['PF ASM'] || row.asymmetry),
+        broadJump: num(row['Broad Jump(Cm)'] || row['Broad Jump (cm)'] || row['Broad Jump'] || row.distance),
+        agilityTime: num(row['Agility T(s)'] || row['Agility T-Time (s)'] || row['Agility T'] || row['Agility']),
 
         // Clinical (Calculated from Raw or mapped directly)
         hamstringQuadLeft: (() => {
-            const flexL = num(row['Knee Flex L (N)']);
-            const extL = num(row['Knee Ext L (N)']);
+            const flexL = num(row['Knee Flex L'] || row['Knee Flex L (N)']);
+            const extL = num(row['Knee Ext L'] || row['Knee Ext L (N)']);
             if (flexL && extL) return Number((flexL / extL).toFixed(2));
             return num(row['H:Q L']);
         })(),
         hamstringQuadRight: (() => {
-            const flexR = num(row['Knee Flex R (N)']);
-            const extR = num(row['Knee Ext R (N)']);
+            const flexR = num(row['Knee Flex R'] || row['Knee Flex R (N)']);
+            const extR = num(row['Knee Ext R'] || row['Knee Ext R (N)']);
             if (flexR && extR) return Number((flexR / extR).toFixed(2));
             return num(row['H:Q R']);
         })(),
-        kneeExtensionLeft: num(row['Knee Ext L (N)'] || row['Knee Ext L']),
-        kneeExtensionRight: num(row['Knee Ext R (N)'] || row['Knee Ext R']),
-        hipAbductionLeft: num(row['Hip Abd L (N)'] || row['Hip Abd L']),
-        hipAbductionRight: num(row['Hip Abd R (N)'] || row['Hip Abd R']),
-        shoulderInternalRotationLeft: num(row['Shoulder IR L (N)'] || row['Shoulder IR L']),
-        shoulderInternalRotationRight: num(row['Shoulder IR R (N)'] || row['Shoulder IR R']),
-        neckExtension: num(row['Neck Ext (N)'] || row['Neck Ext']),
-        ankleRomLeft: num(row['Ankle ROM L (deg)'] || row['Ankle ROM L']),
-        ankleRomRight: num(row['Ankle ROM R (deg)'] || row['Ankle ROM R']),
-        shoulderRomLeft: num(row['Shoulder ER L (N)'] || row['Shoulder ROM L']), // Assuming ER is the main ROM metric or just mapping force for now? User said "Shoulder ER L (N)".
-        shoulderRomRight: num(row['Shoulder ER R (N)'] || row['Shoulder ROM R']),
-        adductionStrengthLeft: num(row['Hip Add L (N)'] || row['Adduction L']),
-        adductionStrengthRight: num(row['Hip Add R (N)'] || row['Adduction R']),
+        kneeExtensionLeft: num(row['Knee Ext L'] || row['Knee Ext L (N)']),
+        kneeExtensionRight: num(row['Knee Ext R'] || row['Knee Ext R (N)']),
+        hipAbductionLeft: num(row['Hip Abd L'] || row['Hip Abd L (N)']),
+        hipAbductionRight: num(row['Hip Abd R'] || row['Hip Abd R (N)']),
+        shoulderInternalRotationLeft: num(row['Shoulder IR L'] || row['Shoulder IR L (N)']),
+        shoulderInternalRotationRight: num(row['Shoulder IR R'] || row['Shoulder IR R (N)']),
+        neckExtension: num(row['Neck Ext'] || row['Neck Ext (N)']),
+        ankleRomLeft: num(row['Ankle ROM L'] || row['Ankle ROM L (deg)']),
+        ankleRomRight: num(row['Ankle ROM R'] || row['Ankle ROM R (deg)']),
+        shoulderRomLeft: num(row['Shoulder ER L'] || row['Shoulder ER L (N)']),
+        shoulderRomRight: num(row['Shoulder ER R'] || row['Shoulder ER R (N)']),
+        adductionStrengthLeft: num(row['Hip Add L'] || row['Hip Add L (N)']),
+        adductionStrengthRight: num(row['Hip Add R'] || row['Hip Add R (N)']),
 
         // Scores (Map from flat keys OR Calculate from Raw vs BW)
         scoreHamstring: (() => {
             const raw = num(row['Score Hamstring']);
             if (raw) return raw;
-            // Fallback: Knee Flex / BW * 2 (approx conversion to arbitrary score for viz)
+            // Fallback: Knee Flex / BW * 2 (approx conversion)
             const bw = num(row['Body Weight (kg)']) || 70;
-            const flex = (num(row['Knee Flex L (N)']) + num(row['Knee Flex R (N)'])) / 2;
+            const flex = (num(row['Knee Flex L']) + num(row['Knee Flex R'])) / 2;
             return flex ? Math.min(100, Math.round((flex / bw) * 10)) : 0;
         })(),
         scoreQuad: (() => {
             const raw = num(row['Score Quad']);
             if (raw) return raw;
             const bw = num(row['Body Weight (kg)']) || 70;
-            const ext = (num(row['Knee Ext L (N)']) + num(row['Knee Ext R (N)'])) / 2;
-            return ext ? Math.min(100, Math.round((ext / bw) * 5)) : 0; // Quads are stronger, lower multiplier
+            const ext = (num(row['Knee Ext L']) + num(row['Knee Ext R'])) / 2;
+            return ext ? Math.min(100, Math.round((ext / bw) * 5)) : 0;
         })(),
         scoreAdduction: (() => {
             const raw = num(row['Score Adduction']);
             if (raw) return raw;
             const bw = num(row['Body Weight (kg)']) || 70;
-            // Use Groin Force (Squeeze) if available, common fallback to L+R
-            const squeeze = num(row['Groin Force'] || row['Groin Squeeze (N)'] || row['Groin Squeeze'] || row['Adduction Peak']);
-            if (squeeze) return Math.min(100, Math.round((squeeze / bw) * 4)); // Force / BW * 4 (approx)
+            const squeeze = num(row['Groin Force'] || row['Groin Squeeze (N)']);
+            if (squeeze) return Math.min(100, Math.round((squeeze / bw) * 4));
 
-            const add = (num(row['Hip Add L (N)']) + num(row['Hip Add R (N)'])) / 2;
+            const add = (num(row['Hip Add L']) + num(row['Hip Add R'])) / 2;
             return add ? Math.min(100, Math.round((add / bw) * 8)) : 0;
         })(),
-        scoreAnkle: num(row['Score Ankle'] || 0), // No force data in headers for ankle strength, only ROM
+        scoreAnkle: num(row['Score Ankle'] || 0),
         scoreShoulder: (() => {
             const raw = num(row['Score Shoulder']);
             if (raw) return raw;
             const bw = num(row['Body Weight (kg)']) || 70;
-            // Using External Rotation strength
-            const er = (num(row['Shoulder ER L (N)']) + num(row['Shoulder ER R (N)'])) / 2;
+            const er = (num(row['Shoulder ER L']) + num(row['Shoulder ER R'])) / 2;
             return er ? Math.min(100, Math.round((er / bw) * 15)) : 0;
         })(),
         scoreNeck: (() => {
             const raw = num(row['Score Neck']);
             if (raw) return raw;
             const bw = num(row['Body Weight (kg)']) || 70;
-            const neck = num(row['Neck Ext (N)']);
+            const neck = num(row['Neck Ext']);
             return neck ? Math.min(100, Math.round((neck / bw) * 10)) : 0;
         })(),
 
         // v11.5 Wellness & CNS
-        sleep: num(row['Sleep Score'] || row['Sleep'] || row.sleep),
-        stress: num(row['Stress Score'] || row['Stress'] || row.stress),
-        soreness: num(row['Soreness Score'] || row['Soreness'] || row.soreness),
-        baselineJump: num(row['Baseline Jump (cm)'] || row['Baseline Jump'] || row.baselineJump || 0),
+        sleep: num(row['Sleep Quality'] || row['Sleep Score'] || row['Sleep']),
+        stress: num(row['Stress'] || row['Stress Score']),
+        soreness: num(row['Soreness'] || row['Soreness Score']),
+        baselineJump: num(row['Baseline Jump (cm)'] || row['Baseline Jump'] || 0),
 
         // v12.5 Workload
         dailyLoad: num(row['Daily Load'] || row['Total Daily Load'] || row['Load'] || row.dailyLoad),
