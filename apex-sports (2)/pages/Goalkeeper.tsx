@@ -7,7 +7,7 @@ const Goalkeeper: React.FC = () => {
 
   const galleryMedia = [
     { type: 'video', src: '/videos/Training Footage 1.mov' }, // Existing
-    { type: 'video', src: '/videos/Training Footage 2.mp4' }, // New
+    { type: 'video', src: '/videos/Training Footage 2.mov' }, // New
     { type: 'image', src: 'https://images.unsplash.com/photo-1547347298-4074fc3086f0?auto=format&fit=crop&q=80&w=400&h=400&random=2' },
     { type: 'image', src: 'https://images.unsplash.com/photo-1547347298-4074fc3086f0?auto=format&fit=crop&q=80&w=400&h=400&random=3' },
     { type: 'image', src: 'https://images.unsplash.com/photo-1547347298-4074fc3086f0?auto=format&fit=crop&q=80&w=400&h=400&random=4' }

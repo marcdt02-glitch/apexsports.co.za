@@ -292,7 +292,7 @@ const Home: React.FC = () => {
                       <Briefcase className="w-5 h-5 text-white" />
                       <h4 className="font-bold text-white text-sm uppercase">Professional Experience</h4>
                     </div>
-                    <ul className="text-sm space-y-2 text-gray-400 grid grid-cols-1 md:grid-cols-2 gap-2">
+                    <ul className="text-sm text-gray-400 grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3">
                       <li>• <strong className="text-gray-300">SA Indoor Hockey Team</strong> (GK Trainer)</li>
                       <li>• <strong className="text-gray-300">Maties High Performance</strong> (GK Trainer)</li>
                       <li>• <strong className="text-gray-300">Western Province Schools HP</strong> (Trainer)</li>
