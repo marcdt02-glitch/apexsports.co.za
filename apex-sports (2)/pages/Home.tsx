@@ -294,6 +294,7 @@ const Home: React.FC = () => {
                     </div>
                     <ul className="text-sm space-y-2 text-gray-400 grid grid-cols-1 md:grid-cols-2 gap-2">
                       <li>• <strong className="text-gray-300">SA Indoor Hockey Team</strong> (GK Trainer)</li>
+                      <li>• <strong className="text-gray-300">Maties High Performance</strong> (GK Trainer)</li>
                       <li>• <strong className="text-gray-300">Western Province Schools HP</strong> (Trainer)</li>
                       <li>• <strong className="text-gray-300">Boland Schools HP</strong> (Trainer & Selector)</li>
                       <li>• <strong className="text-gray-300">Paul Roos & Bloemhof</strong> (Coach)</li>

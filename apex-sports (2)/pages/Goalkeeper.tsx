@@ -1,8 +1,21 @@
-import React from 'react';
-import { Video, Shield, Zap, Award, BookOpen, TrendingUp, PlayCircle, UploadCloud, MonitorPlay, Image as ImageIcon } from 'lucide-react';
+import React, { useState } from 'react';
+import { Video, Shield, Zap, Award, BookOpen, TrendingUp, PlayCircle, UploadCloud, MonitorPlay, Image as ImageIcon, ChevronLeft, ChevronRight } from 'lucide-react';
 import PricingCard from '../components/PricingCard';
 
 const Goalkeeper: React.FC = () => {
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  const galleryMedia = [
+    { type: 'video', src: '/videos/Training Footage 1.mov' }, // Existing
+    { type: 'video', src: '/videos/Training Footage 2.mp4' }, // New
+    { type: 'image', src: 'https://images.unsplash.com/photo-1547347298-4074fc3086f0?auto=format&fit=crop&q=80&w=400&h=400&random=2' },
+    { type: 'image', src: 'https://images.unsplash.com/photo-1547347298-4074fc3086f0?auto=format&fit=crop&q=80&w=400&h=400&random=3' },
+    { type: 'image', src: 'https://images.unsplash.com/photo-1547347298-4074fc3086f0?auto=format&fit=crop&q=80&w=400&h=400&random=4' }
+  ];
+
+  const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % galleryMedia.length);
+  const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + galleryMedia.length) % galleryMedia.length);
+
   const packages = [
     {
       title: "5-Session Pack",
@@ -110,29 +123,47 @@ const Goalkeeper: React.FC = () => {
               <ImageIcon className="w-6 h-6" />
               Training Gallery
             </h2>
-            <div className="grid grid-cols-2 gap-4">
-              {/* Video Item */}
-              <div className="aspect-square bg-neutral-800 rounded-xl border border-neutral-700 flex flex-col items-center justify-center group overflow-hidden relative">
+            <div className="relative aspect-square bg-neutral-800 rounded-xl border border-neutral-700 overflow-hidden group">
+              {/* Active Slide */}
+              {galleryMedia[currentSlide].type === 'video' ? (
                 <video
-                  src="/videos/Training Footage 1.mov"
+                  src={galleryMedia[currentSlide].src}
                   className="w-full h-full object-cover"
                   controls
                   playsInline
                   muted
                 />
-              </div>
+              ) : (
+                <img
+                  src={galleryMedia[currentSlide].src}
+                  alt="Training Moment"
+                  className="w-full h-full object-cover"
+                />
+              )}
 
-              {/* Image Items */}
-              {[2, 3, 4].map((item) => (
-                <div key={item} className="aspect-square bg-neutral-800 rounded-xl border border-neutral-700 flex flex-col items-center justify-center group overflow-hidden relative">
-                  <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-all z-10"></div>
-                  <img
-                    src={`https://images.unsplash.com/photo-1547347298-4074fc3086f0?auto=format&fit=crop&q=80&w=400&h=400&random=${item}`}
-                    alt="Training Moment Placeholder"
-                    className="w-full h-full object-cover absolute inset-0 group-hover:scale-105 transition-transform duration-500"
+              {/* Controls */}
+              <button
+                onClick={prevSlide}
+                className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-white/20 p-2 rounded-full text-white opacity-0 group-hover:opacity-100 transition-all z-10"
+              >
+                <ChevronLeft className="w-6 h-6" />
+              </button>
+              <button
+                onClick={nextSlide}
+                className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-white/20 p-2 rounded-full text-white opacity-0 group-hover:opacity-100 transition-all z-10"
+              >
+                <ChevronRight className="w-6 h-6" />
+              </button>
+
+              {/* Indicators */}
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+                {galleryMedia.map((_, idx) => (
+                  <div
+                    key={idx}
+                    className={`w-2 h-2 rounded-full transition-all ${idx === currentSlide ? 'bg-white w-4' : 'bg-white/50'}`}
                   />
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -199,7 +230,7 @@ const Goalkeeper: React.FC = () => {
               {/* Fake Video Player UI */}
               <div className="relative rounded-xl overflow-hidden shadow-2xl border border-neutral-700 bg-neutral-900 aspect-video group">
                 <video
-                  src="/videos/Training Footage 1.mov"
+                  src="/videos/Coach Now Video.mp4"
                   className="w-full h-full object-cover"
                   controls
                   playsInline
