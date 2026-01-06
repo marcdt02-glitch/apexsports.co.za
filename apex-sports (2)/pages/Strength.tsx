@@ -28,7 +28,7 @@ const Strength: React.FC = () => {
         { label: "Buy Once-off", link: "https://paystack.shop/pay/12weekgeneralprogram-onceoff", priceLabel: "R1,050", primary: false }
       ],
       features: [
-        "6-Week Training Template",
+        "12-Week Training Cycle (3 Blocks)",
         "MoveHealth App Access",
         "Video Demonstrations",
         "General Conditioning Focus",
@@ -44,6 +44,7 @@ const Strength: React.FC = () => {
         { label: "Buy Once-off", link: "https://paystack.shop/pay/12weekspecifcprogram-onceoff", priceLabel: "R1,500", primary: false }
       ],
       features: [
+        "12-Week Training Cycle (3 Blocks)",
         "Tailored to Testing Data",
         "MoveHealth App Access",
         "Specific Adaptation Focus",
