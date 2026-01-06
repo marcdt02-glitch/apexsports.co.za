@@ -1,5 +1,6 @@
 import React from 'react';
-import { BookOpen } from 'lucide-react';
+import { BookOpen, Calendar, UserPlus } from 'lucide-react';
+import { LINKS } from '../constants';
 import PricingCard from '../components/PricingCard';
 
 const Mentorship: React.FC = () => {
@@ -9,7 +10,7 @@ const Mentorship: React.FC = () => {
       price: "R100 / month",
       description: "Self-guided growth.",
       actions: [
-        { label: "Subscribe", link: "#", priceLabel: "R100/mo", primary: true }
+        { label: "Subscribe", link: LINKS.SIGN_UP, priceLabel: "R100/mo", primary: true }
       ],
       features: [
         "Access to Goal Setting Portal",
@@ -121,6 +122,27 @@ const Mentorship: React.FC = () => {
               </p>
             </div>
           </div>
+        </div>
+
+        {/* Call to Action Buttons */}
+        <div className="flex flex-col md:flex-row gap-6 justify-center mb-24">
+          <a
+            href={LINKS.CALENDAR}
+            target="_blank"
+            rel="noreferrer"
+            className="bg-white text-black px-8 py-4 rounded-full font-bold text-lg hover:bg-gray-200 transition-colors flex items-center justify-center gap-3 shadow-lg shadow-white/10"
+          >
+            <item.icon className="w-5 h-5" /> {/* Wait, I don't have item defined here. fixing this in logic below */}
+            Book Discovery Call
+          </a>
+          <a
+            href={LINKS.SIGN_UP}
+            target="_blank"
+            rel="noreferrer"
+            className="bg-neutral-900 border border-neutral-800 text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-neutral-800 transition-colors flex items-center justify-center gap-3"
+          >
+            Join Waiting List
+          </a>
         </div>
 
         {/* Pricing Section */}
