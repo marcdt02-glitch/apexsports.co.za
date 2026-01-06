@@ -7,7 +7,22 @@ import PricingCard from '../components/PricingCard';
 const Mentorship: React.FC = () => {
   const packages = [
     {
-      title: "Mentorship Package",
+      title: "Goal-Setting Access",
+      price: "R100 / month",
+      description: "Self-guided growth.",
+      actions: [
+        { label: "Subscribe", link: "#", priceLabel: "R100/mo", primary: true }
+      ],
+      features: [
+        "Access to Goal Setting Portal",
+        "Quarterly Review",
+        "Progress Tracking",
+        "Self-Reflection Tools",
+        "Basic Support"
+      ]
+    },
+    {
+      title: "Full Mentorship",
       price: "R500 / month",
       description: <><strong>Monthly:</strong> R500 | <strong>Annual:</strong> R5,000 (Save R1,000).</>,
       actions: [
@@ -20,15 +35,16 @@ const Mentorship: React.FC = () => {
         "Film Analysis & Review",
         "Career Guidance",
         "Psychological Skills Assessment"
-      ]
+      ],
+      isHighlighted: true
     },
     {
       title: "Apex Membership",
-      price: "R2,000 / month",
-      description: <><strong>Monthly:</strong> R2,000 | <strong>Annual:</strong> R21,000 (Save R3,000).</>,
+      price: "R2,500 / month",
+      description: <><strong>Monthly:</strong> R2,500 | <strong>Annual:</strong> R27,000 (Save R3,000).</>,
       actions: [
-        { label: "Subscribe", link: "https://paystack.shop/pay/ApexMembership-Monthly", priceLabel: "R2,000/mo", primary: true },
-        { label: "Pay Annual", link: "https://paystack.shop/pay/apexmembership-once-off", priceLabel: "R21,000/yr", primary: false }
+        { label: "Subscribe", link: "https://paystack.shop/pay/ApexMembership-Monthly", priceLabel: "R2,500/mo", primary: true },
+        { label: "Pay Annual", link: "https://paystack.shop/pay/apexmembership-once-off", priceLabel: "R27,000/yr", primary: false }
       ],
       features: [
         "Mentorship Program",
@@ -36,8 +52,7 @@ const Mentorship: React.FC = () => {
         "25 Coaching Sessions",
         "4 Testing Sessions",
         "Training Load Monitoring"
-      ],
-      isHighlighted: true
+      ]
     }
   ];
 

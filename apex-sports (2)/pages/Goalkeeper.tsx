@@ -33,12 +33,28 @@ const Goalkeeper: React.FC = () => {
       ]
     },
     {
-      title: "25-Session Pack",
-      price: "R833 / month",
-      description: "Pay Monthly (R833/mo) or Buy Upfront (R9,000).",
+      title: "10-Session Pack",
+      price: "R4,000",
+      description: <><strong>Upfront:</strong> R4,000 | <strong>Split:</strong> R2,250 x 2 months (Total R4,500).</>,
       actions: [
-        { label: "Sub Weekly", link: "https://paystack.shop/pay/25HourCoachingPack-Monthly", priceLabel: "R833/mo", primary: true },
-        { label: "Buy Upfront", link: "https://paystack.shop/pay/25hourcoachingpack-onceoff", priceLabel: "R9,000", primary: false }
+        { label: "Buy Upfront", link: "#", priceLabel: "R4,000", primary: true }, // Placeholder link
+        { label: "Split Payment", link: "#", priceLabel: "R2,250/m", primary: false } // Placeholder link
+      ],
+      features: [
+        "10 Hours of Technical Training",
+        "Detailed Video Breakdown",
+        "Match Performance Review",
+        "Training Load Monitoring",
+        "Priority Scheduling"
+      ]
+    },
+    {
+      title: "25-Session Pack",
+      price: "R9,000",
+      description: <><strong>Upfront:</strong> R9,000 | <strong>Monthly:</strong> R833 (Total R10,000).</>,
+      actions: [
+        { label: "Buy Upfront", link: "https://paystack.shop/pay/25hourcoachingpack-onceoff", priceLabel: "R9,000", primary: true },
+        { label: "Sub Weekly", link: "https://paystack.shop/pay/25HourCoachingPack-Monthly", priceLabel: "R833/mo", primary: false }
       ],
       features: [
         "25 Hours of Technical Training",
@@ -50,11 +66,11 @@ const Goalkeeper: React.FC = () => {
     },
     {
       title: "Apex Membership",
-      price: "R2,000 / month",
-      description: <><strong>Monthly:</strong> R2,000 | <strong>Annual:</strong> R21,000 (Save R3,000).</>,
+      price: "R2,500 / month",
+      description: <><strong>Monthly:</strong> R2,500 | <strong>Annual:</strong> R27,000 (Save R3,000).</>,
       actions: [
-        { label: "Subscribe", link: "https://paystack.shop/pay/ApexMembership-Monthly", priceLabel: "R2,000/mo", primary: true },
-        { label: "Pay Annual", link: "https://paystack.shop/pay/apexmembership-once-off", priceLabel: "R21,000/yr", primary: false }
+        { label: "Subscribe", link: "https://paystack.shop/pay/ApexMembership-Monthly", priceLabel: "R2,500/mo", primary: true },
+        { label: "Pay Annual", link: "https://paystack.shop/pay/apexmembership-once-off", priceLabel: "R27,000/yr", primary: false }
       ],
       features: [
         "25 Coaching Sessions",

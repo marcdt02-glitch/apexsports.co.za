@@ -84,8 +84,8 @@ const Services: React.FC = () => {
                                     <div>
                                         <span className="text-2xl font-black text-white">Upfront Payment</span>
                                         <div className="flex items-center gap-2 mt-1">
-                                            <span className="text-gray-500 line-through text-sm font-bold">R33,600</span>
-                                            <span className="text-green-400 text-sm font-bold animate-pulse">Save R6,600</span>
+                                            <span className="text-gray-500 line-through text-sm font-bold">R30,000</span>
+                                            <span className="text-green-400 text-sm font-bold animate-pulse">Save R3,000</span>
                                         </div>
                                     </div>
                                     <div className="text-right">
@@ -141,10 +141,10 @@ const Services: React.FC = () => {
                                 </h3>
                                 <div className="grid grid-cols-2 gap-4">
                                     <a href="https://paystack.shop/pay/12weekgeneralprogram-onceoff" target="_blank" rel="noreferrer" className="bg-black hover:bg-neutral-800 text-center py-3 rounded-lg text-sm text-gray-300 transition-colors border border-neutral-700">
-                                        Once-off: <strong className="text-white block text-lg">R1,050</strong>
+                                        Once-off: <strong className="text-white block text-lg">R1,500</strong>
                                     </a>
                                     <a href="https://paystack.shop/pay/12WeekGeneralProgram-Monthly" target="_blank" rel="noreferrer" className="bg-black hover:bg-neutral-800 text-center py-3 rounded-lg text-sm text-gray-300 transition-colors border border-neutral-700">
-                                        Monthly: <strong className="text-white block text-lg">R350</strong>
+                                        Monthly: <strong className="text-white block text-lg">R500</strong>
                                     </a>
                                 </div>
                             </div>
@@ -156,10 +156,10 @@ const Services: React.FC = () => {
                                 </h3>
                                 <div className="grid grid-cols-2 gap-4">
                                     <a href="https://paystack.shop/pay/12weekspecifcprogram-onceoff" target="_blank" rel="noreferrer" className="bg-black hover:bg-neutral-800 text-center py-3 rounded-lg text-sm text-gray-300 transition-colors border border-neutral-700">
-                                        Once-off: <strong className="text-white block text-lg">R1,500</strong>
+                                        Annual: <strong className="text-white block text-lg">R15,000</strong>
                                     </a>
                                     <a href="https://paystack.shop/pay/12WeekSpecifcProgram-Monthly" target="_blank" rel="noreferrer" className="bg-black hover:bg-neutral-800 text-center py-3 rounded-lg text-sm text-gray-300 transition-colors border border-neutral-700">
-                                        Monthly: <strong className="text-white block text-lg">R500</strong>
+                                        Monthly: <strong className="text-white block text-lg">R1,500</strong>
                                     </a>
                                 </div>
                             </div>
@@ -268,9 +268,9 @@ const Services: React.FC = () => {
                                 <div className="flex items-end justify-between mb-4">
                                     <div>
                                         <p className="text-gray-500 line-through text-xs font-bold">Standard: R10,000</p>
-                                        <p className="text-2xl font-black text-white">R8,500</p>
+                                        <p className="text-2xl font-black text-white">R9,000</p>
                                     </div>
-                                    <span className="text-xs bg-white text-black font-bold px-2 py-1 rounded">Save R1,500</span>
+                                    <span className="text-xs bg-white text-black font-bold px-2 py-1 rounded">Save R1,000</span>
                                 </div>
 
                                 <a href="https://paystack.shop/pay/25hourcoachingpack-onceoff" target="_blank" rel="noreferrer" className="block w-full bg-white hover:bg-gray-200 text-black text-center py-3 rounded-lg font-bold transition-colors mb-2">
@@ -284,6 +284,30 @@ const Services: React.FC = () => {
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            {/* SECTION 4: TEAM PACKAGES (New) */}
+            <div className="py-24 px-4 bg-neutral-900 border-t border-neutral-800">
+                <div className="max-w-4xl mx-auto text-center">
+                    <span className="inline-block bg-white text-black text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest mb-6">Coming Soon</span>
+                    <h2 className="text-4xl md:text-5xl font-black text-white uppercase italic tracking-wide mb-8">
+                        Team Packages
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                        <div className="bg-black p-8 rounded-2xl border border-neutral-800">
+                            <h3 className="text-xl font-bold text-white mb-2">Tier 1</h3>
+                            <p className="text-gray-400">Psychological and Physical Monitoring Package</p>
+                        </div>
+                        <div className="bg-black p-8 rounded-2xl border border-neutral-800">
+                            <h3 className="text-xl font-bold text-white mb-2">Tier 2</h3>
+                            <p className="text-gray-400">Elite Team Package</p>
+                        </div>
+                    </div>
+                    <a href="mailto:performance@apexsports.co.za?subject=Team Package Inquiry" className="inline-flex items-center gap-2 bg-white text-black font-bold py-3 px-8 rounded-full hover:bg-gray-200 transition-colors">
+                        <Users className="w-5 h-5" />
+                        Inquire Now
+                    </a>
                 </div>
             </div>
 

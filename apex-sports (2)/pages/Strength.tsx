@@ -20,15 +20,15 @@ const Strength: React.FC = () => {
       ]
     },
     {
-      title: "General Templates",
-      price: "R350 / month",
-      description: "Pay Monthly (3 Months) or R1,050 Once-off.",
+      title: "General S&C",
+      price: "R500 / month",
+      description: "3-Month Commitment. Or R1,500 Once-off.",
       actions: [
-        { label: "Subscribe", link: "https://paystack.shop/pay/12WeekGeneralProgram-Monthly", priceLabel: "R350/mo", primary: true },
-        { label: "Buy Once-off", link: "https://paystack.shop/pay/12weekgeneralprogram-onceoff", priceLabel: "R1,050", primary: false }
+        { label: "Subscribe", link: "https://paystack.shop/pay/12WeekGeneralProgram-Monthly", priceLabel: "R500/mo", primary: true },
+        { label: "Buy Once-off", link: "https://paystack.shop/pay/12weekgeneralprogram-onceoff", priceLabel: "R1,500", primary: false }
       ],
       features: [
-        "12-Week Training Cycle (3 Blocks)",
+        "12-Week Training Cycle",
         "MoveHealth App Access",
         "Video Demonstrations",
         "General Conditioning Focus",
@@ -36,29 +36,28 @@ const Strength: React.FC = () => {
       ]
     },
     {
-      title: "Specific Program Design",
-      price: "R500 / month",
-      description: "Pay Monthly (3 Months) or R1,500 Once-off.",
+      title: "Specific S&C",
+      price: "R1,500 / month",
+      description: "12-Month Commitment. Or R15,000 Once-off.",
       actions: [
-        { label: "Subscribe", link: "https://paystack.shop/pay/12WeekSpecifcProgram-Monthly", priceLabel: "R500/mo", primary: true },
-        { label: "Buy Once-off", link: "https://paystack.shop/pay/12weekspecifcprogram-onceoff", priceLabel: "R1,500", primary: false }
+        { label: "Subscribe", link: "https://paystack.shop/pay/12WeekSpecifcProgram-Monthly", priceLabel: "R1,500/mo", primary: true },
+        { label: "Buy Annual", link: "https://paystack.shop/pay/12weekspecifcprogram-onceoff", priceLabel: "R15,000", primary: false }
       ],
       features: [
-        "12-Week Training Cycle (3 Blocks)",
+        "Annual Periodization Plan",
         "Tailored to Testing Data",
         "MoveHealth App Access",
         "Specific Adaptation Focus",
-        "Detailed Video Demonstrations",
         "Advanced Load Management"
       ]
     },
     {
       title: "Apex Membership",
-      price: "R2,000 / month",
-      description: <><strong>Monthly:</strong> R2,000 | <strong>Annual:</strong> R21,000 (Save R3,000).</>,
+      price: "R2,500 / month",
+      description: <><strong>Monthly:</strong> R2,500 | <strong>Annual:</strong> R27,000 (Save R3,000).</>,
       actions: [
-        { label: "Subscribe", link: "https://paystack.shop/pay/ApexMembership-Monthly", priceLabel: "R2,000/mo", primary: true },
-        { label: "Pay Annual", link: "https://paystack.shop/pay/apexmembership-once-off", priceLabel: "R21,000/yr", primary: false }
+        { label: "Subscribe", link: "https://paystack.shop/pay/ApexMembership-Monthly", priceLabel: "R2,500/mo", primary: true },
+        { label: "Pay Annual", link: "https://paystack.shop/pay/apexmembership-once-off", priceLabel: "R27,000/yr", primary: false }
       ],
       features: [
         "25 Coaching Sessions",
