@@ -45,7 +45,8 @@ const Mentorship: React.FC = () => {
     "Locke, E. A., & Latham, G. P. (2002). Building a practically useful theory of goal setting and task motivation. American Psychologist, 57(9), 705.",
     "Cumming, J., & Williams, S. E. (2012). The role of imagery in performance. The Oxford Handbook of Sport and Performance Psychology, 213-232.",
     "Yerkes, R. M., & Dodson, J. D. (1908). The relation of strength of stimulus to rapidity of habit-formation. Journal of Comparative Neurology and Psychology, 18(5), 459-482.",
-    "Weinberg, R. S., & Gould, D. (2019). Foundations of Sport and Exercise Psychology. Human Kinetics."
+    "Weinberg, R. S., & Gould, D. (2019). Foundations of Sport and Exercise Psychology. Human Kinetics.",
+    "Vealey, R. S. (2007). Mental skills training in sport. In G. Tennebaum & R. C. Eklund (Eds.), Handbook of sport psychology (pp. 287-309). Wiley."
   ];
 
   return (
@@ -102,20 +103,20 @@ const Mentorship: React.FC = () => {
           <div className="bg-neutral-900 p-8 rounded-xl border-l-4 border-white hover:bg-neutral-800 transition-colors">
             <div className="flex items-center gap-4 mb-4">
               <Target className="w-8 h-8 text-white" />
-              <h3 className="text-xl font-bold text-white">Goal Architecture</h3>
+              <h3 className="text-xl font-bold text-white">Goal Setting</h3>
             </div>
             <p className="text-gray-400 leading-relaxed">
-              We implement a hierarchical goal-setting framework rooted in Goal Setting Theory (Locke & Latham). By distinctively categorizing subordinate <strong>Process Goals</strong> from superordinate <strong>Outcome Goals</strong>, we optimize task-relevant cognitive strategies and enhance self-efficacy, ensuring sustained intrinsic motivation throughout the macrocycle.
+              We help you build a clear roadmap to success. By focusing on <strong>Process Goals</strong> (daily habits) rather than just <strong>Outcome Goals</strong> (winnning), we keep you focused on what you can control right now. This approach builds confidence and ensures consistent improvement week after week.
             </p>
           </div>
 
           <div className="bg-neutral-900 p-8 rounded-xl border-l-4 border-white hover:bg-neutral-800 transition-colors">
             <div className="flex items-center gap-4 mb-4">
               <Brain className="w-8 h-8 text-white" />
-              <h3 className="text-xl font-bold text-white">Psychological Assessment</h3>
+              <h3 className="text-xl font-bold text-white">Psychological Skills</h3>
             </div>
             <p className="text-gray-400">
-              We conduct comprehensive psychological skills assessments to identify mental strengths. We focus on <strong>Visualization</strong> and <strong>Concentration</strong> to build resilience.
+              Just like physical skills, mental skills can be trained. We work on <strong>Visualization</strong>, <strong>Self-Talk</strong>, and <strong>Concentration</strong> strategies to help you handle pressure. Our comprehensive assessment identifies your mental profile, allowing us to tailor tools that build resilience and mental toughness.
             </p>
           </div>
 
@@ -144,7 +145,7 @@ const Mentorship: React.FC = () => {
             <div>
               <h3 className="text-xl font-bold text-white mb-2">Goal Setting Theory</h3>
               <p className="text-gray-400 leading-relaxed">
-                We utilize Locke and Latham's Goal Setting Theory to drive motivation. By setting specific, challenging, yet attainable goals, we tap into intrinsic motivation. Distinguishing between <strong>Outcome Goals</strong> (the championship) and <strong>Process Goals</strong> (daily habits) prevents overwhelm and maintains focus on the immediate task, optimizing dopamine release and sustained effort.
+                Research shows that setting specific, challenging goals drives motivation. However, focusing too much on the finish line can be overwhelming. We utilize Locke and Latham's framework to shift your focus to the <strong>Process</strong>—the small, immediate steps you take every day. This creates a feedback loop of success, keeping you motivated and on track.
               </p>
             </div>
 
