@@ -92,6 +92,7 @@ const getReadinessColor = (recent: number, max: number) => {
 };
 
 import Loading from '../../components/Loading';
+import GoalSetting from '../../components/GoalSetting';
 
 // ... (Keep existing top level imports if possible, or just ignore this comment and user the view to know what to keep)
 // Actually I need to be careful not to delete the OTHER imports.
@@ -720,20 +721,9 @@ const AthleteDashboard: React.FC = () => {
                                     </div>
                                 </div>
 
-                                {/* Goals */}
-                                <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl">
-                                    <h3 className="text-xl font-bold flex items-center gap-3 mb-6">
-                                        <span className="w-1 h-6 bg-blue-500 rounded-full"></span>
-                                        Your Goals
-                                    </h3>
-                                    <div className="space-y-4">
-                                        <div className="p-4 bg-black/50 rounded-xl border dashed border-neutral-700 text-center">
-                                            <p className="text-sm text-gray-400 mb-3">No active goals currently set.</p>
-                                            <button className="text-xs bg-white text-black font-bold px-3 py-2 rounded uppercase tracking-wider">
-                                                + Set New Goal
-                                            </button>
-                                        </div>
-                                    </div>
+                                {/* Goals (Replaced with v18.4 Component) */}
+                                <div className="md:col-span-2">
+                                    <GoalSetting athleteName={athlete.name} />
                                 </div>
                             </div>
                         </div>
