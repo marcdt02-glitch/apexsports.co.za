@@ -31,7 +31,7 @@ const Mentorship: React.FC = () => {
         { label: "Pay Annual", link: "https://paystack.shop/pay/apexmembership-once-off", priceLabel: "R21,000/yr", primary: false }
       ],
       features: [
-        "4 Mentorship Packages",
+        "Mentorship Program",
         "Full S&C Program Design",
         "25 Coaching Sessions",
         "4 Testing Sessions",
