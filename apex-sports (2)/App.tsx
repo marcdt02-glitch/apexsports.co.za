@@ -22,7 +22,7 @@ import ErrorBoundary from './components/ErrorBoundary';
 
 // Wrapper to handle scroll to top on route change
 const ScrollToTop = () => {
-  const { pathname } = React.useMemo(() => new URL(window.location.href), [window.location.href]);
+  const { pathname } = useLocation();
 
   React.useEffect(() => {
     window.scrollTo(0, 0);
@@ -32,9 +32,13 @@ const ScrollToTop = () => {
 }
 
 const InnerLayout: React.FC = () => {
+  const location = useLocation();
+  // Hide Navbar/Footer only on Dashboard routes (e.g. /portal/123, /portal/team), show on Login (/portal)
+  const isDashboard = /^\/portal\/.+/.test(location.pathname);
+
   return (
     <div className="flex flex-col min-h-screen bg-black text-white font-sans antialiased selection:bg-white selection:text-black">
-      <Navbar />
+      {!isDashboard && <Navbar />}
       <main className="flex-grow">
         <Routes>
           <Route path="/" element={<Home />} />
@@ -55,7 +59,7 @@ const InnerLayout: React.FC = () => {
           <Route path="/admin-upload" element={<AdminUpload />} />
         </Routes>
       </main>
-      <Footer />
+      {!isDashboard && <Footer />}
     </div>
   );
 };
