@@ -188,67 +188,7 @@ const AthleteDashboard: React.FC = () => {
         <SafetyGuard athlete={athlete}>
             <div className="min-h-screen bg-black text-white pb-20 font-sans">
 
-                {/* Fixed Header (Pushed down by Global Navbar h-[70px]) */}
-                <div className="fixed top-[70px] left-0 right-0 z-40 bg-black/90 backdrop-blur-md border-b border-neutral-800">
-                    <div className="flex items-center justify-between px-6 py-4 max-w-7xl mx-auto w-full pl-4 lg:pl-72"> {/* Added lg:pl-72 to clear sidebar if needed, actually sidebar is absolute. Let's keep it simple first. */}
-                        <div className="flex items-center gap-4">
-                            {/* NEW: Menu Trigger */}
-                            <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 -ml-2 text-gray-400 hover:text-white lg:hidden">
-                                <Menu className="w-6 h-6" />
-                            </button>
-
-                            {/* Dashboard Breadcrumb */}
-                            <div className="hidden lg:flex items-center gap-2">
-                                <span className="text-gray-500 font-mono text-xs uppercase tracking-widest">Portal</span>
-                                <ChevronRight className="w-3 h-3 text-gray-700" />
-                                <span className="text-white font-bold text-xs uppercase tracking-widest">{activeView}</span>
-                            </div>
-                        </div>
-
-                        {/* Desktop: Sidebar actually renders as a sidebar, so we don't need top links here unless requested. Keeping existing stats. */}
-
-                        <div className="flex items-center gap-8">
-                            {/* v8.0 Neural Readiness Stats (Desktop) */}
-                            {showAdvancedMetrics && (
-                                <div className="hidden md:flex items-center gap-8 mr-8 border-r border-neutral-800 pr-8">
-                                    <div className="text-right">
-                                        <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Neural Readiness</p>
-                                        <p className={`text-2xl font-black ${athlete.readinessScore < 65 ? 'text-red-500' : 'text-green-500'}`}>
-                                            {athlete.readinessScore || '-'}%
-                                        </p>
-                                    </div>
-                                    <div className="text-right">
-                                        <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Groin T-Max</p>
-                                        <p className={`text-2xl font-black ${athlete.groinTimeToMax > 1.5 ? 'text-yellow-500' : 'text-white'}`}>
-                                            {athlete.groinTimeToMax || '-'}s
-                                        </p>
-                                    </div>
-
-                                    {/* v16.1 Clinical Link Status */}
-                                    {athlete.valdProfileId && (
-                                        <div className="flex flex-col items-end">
-                                            <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">Ecosystem</p>
-                                            <div className="bg-green-900/20 border border-green-800 px-2 py-1 rounded flex items-center gap-1">
-                                                <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
-                                                <span className="text-[10px] font-bold text-green-500 uppercase">Clinical Link Active</span>
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                            )}
-
-                            <div className="flex items-center gap-4">
-                                <div className="hidden md:block text-right">
-                                    <h1 className="text-lg font-bold text-white leading-none">{athlete.name}</h1>
-                                    <p className="text-xs text-gray-500 font-mono">{athlete.package} Tier</p>
-                                </div>
-                                <div className="w-10 h-10 bg-neutral-800 rounded-full flex items-center justify-center border border-neutral-700">
-                                    <User className="w-5 h-5 text-gray-400" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                {/* Fixed Header Removed */}
 
                 {/* SIDEBAR NAVIGATION */}
                 {/* Overlay for Mobile */}
