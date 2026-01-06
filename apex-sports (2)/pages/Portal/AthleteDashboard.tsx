@@ -102,7 +102,7 @@ import GoalSetting from '../../components/GoalSetting';
 const AthleteDashboard: React.FC = () => {
     const { athleteId } = useParams<{ athleteId: string }>();
     const { getAthlete } = useData();
-    const [activeView, setActiveView] = useState<'dashboard' | 'goals' | 'library' | 'reports' | 'wellness'>('dashboard');
+    const [activeView, setActiveView] = useState<'dashboard' | 'goals' | 'library' | 'reports' | 'wellness' | 'mentorship' | 'coaching'>('dashboard');
     const [clinicalTab, setClinicalTab] = useState<'lower' | 'upper' | 'symmetry'>('lower');
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const dashboardRef = useRef<HTMLDivElement>(null);
@@ -261,6 +261,15 @@ const AthleteDashboard: React.FC = () => {
                         >
                             <LayoutDashboard className="w-5 h-5" />
                             Dashboard
+                        </button>
+
+                        {/* COACHING LAYER (v18.5) */}
+                        <button
+                            onClick={() => { setActiveView('coaching'); setSidebarOpen(false); }}
+                            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeView === 'coaching' ? 'bg-white text-black font-bold' : 'text-gray-400 hover:bg-neutral-800 hover:text-white'}`}
+                        >
+                            <MonitorPlay className="w-5 h-5" />
+                            Coaching
                         </button>
 
                         {/* MENTORSHIP & GOALS (Internal View) */}

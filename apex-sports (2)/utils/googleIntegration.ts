@@ -231,6 +231,13 @@ const mapGoogleRowToAthlete = (row: any): AthleteData => {
         valdProfileId: row['VALD ID'] || row['Profile ID'] || row.valdProfileId || '',
         moveHealth: {
             lastExercises: [] // Google Sheet doesn't have live feed, defaulting to empty until enriched
+        },
+
+        // v18.5 Coaching Links
+        coaching: {
+            practiceFolder: row['Practice Folder'] || row['Practice Footage'] || '',
+            gameFolder: row['Game Folder'] || row['Game Footage'] || '',
+            trainingFolder: row['Training Folder'] || row['Training Footage'] || '',
         }
     };
 };

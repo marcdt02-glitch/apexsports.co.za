@@ -98,6 +98,13 @@ export interface AthleteData {
         sleep: number;
     }>;
 
+    // v18.5 Coaching Links
+    coaching?: {
+        practiceFolder: string;
+        gameFolder: string;
+        trainingFolder: string;
+    };
+
     // v38.0 Direct Score Mapping (Backend Calculated)
     performanceScore?: number;
     screeningScore?: number;
