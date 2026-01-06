@@ -227,7 +227,7 @@ const Strength: React.FC = () => {
               </div>
               <h2 className="text-2xl font-bold text-white mb-4 group-hover:text-gray-200 transition-colors">Vald Performance Assessment</h2>
               <p className="text-gray-400 mb-6">
-                We use the Vald Dynamometer and ForceFrame as our primary assessment tools. This technology allows us to measure critical performance metrics beyond simple "strength."
+                We use the Vald Dynamometer as our primary assessment tool. This technology allows us to measure critical performance metrics beyond simple "strength."
               </p>
               <ul className="space-y-4 text-gray-400 text-sm">
                 <li className="flex items-start gap-3">
