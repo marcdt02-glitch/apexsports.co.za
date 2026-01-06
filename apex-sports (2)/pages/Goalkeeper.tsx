@@ -116,7 +116,7 @@ const Goalkeeper: React.FC = () => {
               Benefit from years of university-level experience, including two years working with the <strong className="text-white">South African Men's National Indoor Team</strong> as a goalkeeper coach and trainer. We bring international standards to your personal development.
             </p>
             <p className="text-gray-300 leading-relaxed">
-              Marc has also trained National Senior and Junior Athletes at his time as a goalkeeper coach at Stellenbosch University and at his roles at Paul Roos Gimnasium, Boland HP Schools and at various other schools and events across the Western Cape.
+              Marc’s professional background is anchored by his tenure at Stellenbosch University, where he trained Senior National Goalkeepers. His extensive experience in developing Junior National athletes and PSI All Stars stems from high-performance roles at Paul Roos Gimnasium, alongside various elite programs and sporting events across the Western Cape.
             </p>
           </div>
 
