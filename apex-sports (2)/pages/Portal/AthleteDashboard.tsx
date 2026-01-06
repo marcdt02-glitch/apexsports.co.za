@@ -254,7 +254,7 @@ const AthleteDashboard: React.FC = () => {
                 {/* Overlay for Mobile */}
                 {sidebarOpen && <div className="fixed inset-0 bg-black/80 z-40 lg:hidden" onClick={() => setSidebarOpen(false)} />}
 
-                <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-[#0a0a0a] border-r border-neutral-800 transform transition-transform duration-300 lg:translate-x-0 pt-[160px] pb-10 flex flex-col ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+                <div className={`fixed inset-y-0 left-0 z-40 w-64 bg-[#0a0a0a] border-r border-neutral-800 transform transition-transform duration-300 lg:translate-x-0 pt-8 pb-10 flex flex-col top-24 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
                     <div className="px-6 space-y-2">
                         <button
                             onClick={() => { setActiveView('dashboard'); setSidebarOpen(false); }}
@@ -331,7 +331,62 @@ const AthleteDashboard: React.FC = () => {
                 </div>
 
                 {/* Content Area */}
-                <div ref={dashboardRef} className="pt-56 px-4 max-w-7xl mx-auto space-y-12 lg:pl-72">
+                <div ref={dashboardRef} className="pt-32 px-4 max-w-7xl mx-auto space-y-8 lg:pl-72">
+
+                    {/* Floating Control Bar (The "Shorter Rectangle") */}
+                    <div className="bg-neutral-900/50 border border-neutral-800 p-4 rounded-2xl flex flex-col lg:flex-row items-center justify-between gap-6 backdrop-blur-sm">
+                        <div className="flex items-center gap-4 w-full lg:w-auto">
+                            <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 -ml-2 text-gray-400 hover:text-white lg:hidden">
+                                <Menu className="w-6 h-6" />
+                            </button>
+                            <div className="flex items-center gap-2">
+                                <span className="text-gray-500 font-mono text-xs uppercase tracking-widest">Portal</span>
+                                <ChevronRight className="w-3 h-3 text-gray-700" />
+                                <span className="text-white font-bold text-xs uppercase tracking-widest">{activeView}</span>
+                            </div>
+                        </div>
+
+                        <div className="flex items-center gap-8 w-full lg:w-auto justify-between lg:justify-end">
+                            {/* v8.0 Neural Readiness Stats (Desktop) */}
+                            {showAdvancedMetrics && (
+                                <div className="hidden md:flex items-center gap-8 mr-8 border-r border-neutral-800 pr-8">
+                                    <div className="text-right">
+                                        <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Neural Readiness</p>
+                                        <p className={`text-2xl font-black ${athlete.readinessScore < 65 ? 'text-red-500' : 'text-green-500'}`}>
+                                            {athlete.readinessScore || '-'}%
+                                        </p>
+                                    </div>
+                                    <div className="text-right">
+                                        <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Groin T-Max</p>
+                                        <p className={`text-2xl font-black ${athlete.groinTimeToMax > 1.5 ? 'text-yellow-500' : 'text-white'}`}>
+                                            {athlete.groinTimeToMax || '-'}s
+                                        </p>
+                                    </div>
+
+                                    {/* v16.1 Clinical Link Status */}
+                                    {athlete.valdProfileId && (
+                                        <div className="flex flex-col items-end">
+                                            <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">Ecosystem</p>
+                                            <div className="bg-green-900/20 border border-green-800 px-2 py-1 rounded flex items-center gap-1">
+                                                <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
+                                                <span className="text-[10px] font-bold text-green-500 uppercase">Active</span>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+
+                            <div className="flex items-center gap-4">
+                                <div className="hidden md:block text-right">
+                                    <h1 className="text-lg font-bold text-white leading-none">{athlete.name}</h1>
+                                    <p className="text-xs text-gray-500 font-mono">{athlete.package} Tier</p>
+                                </div>
+                                <div className="w-10 h-10 bg-neutral-800 rounded-full flex items-center justify-center border border-neutral-700">
+                                    <User className="w-5 h-5 text-gray-400" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     {/* v16.1 Onboarding: Coach Trigger for Missing VALD ID */}
                     {(!athlete.valdProfileId && (pkg.includes('testing') || pkg.includes('elite'))) && (
