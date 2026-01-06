@@ -21,7 +21,7 @@ const Navbar: React.FC = () => {
 
   return (
     <>
-      <nav className="sticky top-0 w-full z-50 bg-black/80 backdrop-blur-xl border-b border-white/5 h-[70px] flex items-center transition-all duration-300">
+      <nav className="sticky top-0 w-full z-[100] bg-black/80 backdrop-blur-xl border-b border-white/5 h-[70px] flex items-center transition-all duration-300">
         <div className="w-full max-w-[1440px] mx-auto px-6 lg:px-12 flex items-center justify-between">
 
           {/* 1. Left Zone: APEX Sports Logo */}

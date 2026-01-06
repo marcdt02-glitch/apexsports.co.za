@@ -188,20 +188,21 @@ const AthleteDashboard: React.FC = () => {
         <SafetyGuard athlete={athlete}>
             <div className="min-h-screen bg-black text-white pb-20 font-sans">
 
-                {/* Fixed Header (Pushed down by Global Navbar h-24) */}
-                <div className="fixed top-24 left-0 right-0 z-40 bg-black/90 backdrop-blur-md border-b border-neutral-800">
-                    <div className="flex items-center justify-between px-6 py-4 max-w-7xl mx-auto w-full">
+                {/* Fixed Header (Pushed down by Global Navbar h-[70px]) */}
+                <div className="fixed top-[70px] left-0 right-0 z-40 bg-black/90 backdrop-blur-md border-b border-neutral-800">
+                    <div className="flex items-center justify-between px-6 py-4 max-w-7xl mx-auto w-full pl-4 lg:pl-72"> {/* Added lg:pl-72 to clear sidebar if needed, actually sidebar is absolute. Let's keep it simple first. */}
                         <div className="flex items-center gap-4">
                             {/* NEW: Menu Trigger */}
                             <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 -ml-2 text-gray-400 hover:text-white lg:hidden">
                                 <Menu className="w-6 h-6" />
                             </button>
 
-                            <Link to="/" className="flex items-center gap-2 group">
-                                <div className="bg-white text-black font-black text-xl px-2 py-1 transform -skew-x-12 group-hover:bg-gray-200 transition-colors">
-                                    APEX
-                                </div>
-                            </Link>
+                            {/* Dashboard Breadcrumb */}
+                            <div className="hidden lg:flex items-center gap-2">
+                                <span className="text-gray-500 font-mono text-xs uppercase tracking-widest">Portal</span>
+                                <ChevronRight className="w-3 h-3 text-gray-700" />
+                                <span className="text-white font-bold text-xs uppercase tracking-widest">{activeView}</span>
+                            </div>
                         </div>
 
                         {/* Desktop: Sidebar actually renders as a sidebar, so we don't need top links here unless requested. Keeping existing stats. */}
@@ -253,7 +254,7 @@ const AthleteDashboard: React.FC = () => {
                 {/* Overlay for Mobile */}
                 {sidebarOpen && <div className="fixed inset-0 bg-black/80 z-40 lg:hidden" onClick={() => setSidebarOpen(false)} />}
 
-                <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-neutral-900 border-r border-neutral-800 transform transition-transform duration-300 lg:translate-x-0 pt-48 pb-10 flex flex-col mt-24 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+                <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-[#0a0a0a] border-r border-neutral-800 transform transition-transform duration-300 lg:translate-x-0 pt-[160px] pb-10 flex flex-col ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
                     <div className="px-6 space-y-2">
                         <button
                             onClick={() => { setActiveView('dashboard'); setSidebarOpen(false); }}
