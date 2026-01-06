@@ -10,17 +10,36 @@ const Home: React.FC = () => {
     "/images/Marc du Toit 2.jpg"
   ];
 
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [currentFounderIndex, setCurrentFounderIndex] = useState(0);
+  const [currentTestimonialIndex, setCurrentTestimonialIndex] = useState(0);
+
+  const testimonials = [
+    {
+      name: "Daniella Marinus-Richards",
+      role: "Parent",
+      image: "/images/kiran-action.jpg",
+      text: "Marc has not only been a coach but a mentor for Kiran this past year, on and off the field. He has helped Kiran achieve so much on the field physically, and off the field emotionally. He is a coach that goes the extra mile for his players and always take the time to give individual attention, feedback and ‘homework’. Working with Marc has taken Kiran’s game to the next level, as he focuses on the long term aspects and perfecting what has already been taught. Goalkeeping is not just about standing in a box, making sure the ball doesn’t pass you. It’s a mental game, with technicalities involved and Marc strives to help his keepers achieve their very best! He really is THAT crazy coach on a Sunday morning who you’ve booked an hour with, that turns into 2 hours. Because he’s passionate, and loves the game as much as your kid does!"
+    },
+    {
+      name: "Professional Athlete",
+      role: "Hockey Player",
+      image: "https://images.unsplash.com/photo-1547347298-4074fc3086f0?auto=format&fit=crop&q=80",
+      text: "Working with Apex Sports completely changed my approach to training. The data-driven insights allowed me to break through plateaus I'd been stuck at for years."
+    }
+  ];
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentImageIndex((prev) => (prev + 1) % founderImages.length);
+      setCurrentFounderIndex((prev) => (prev + 1) % founderImages.length);
     }, 5000); // Rotate every 5 seconds
     return () => clearInterval(interval);
   }, []);
 
-  const nextImage = () => setCurrentImageIndex((prev) => (prev + 1) % founderImages.length);
-  const prevImage = () => setCurrentImageIndex((prev) => (prev - 1 + founderImages.length) % founderImages.length);
+  const nextFounderImage = () => setCurrentFounderIndex((prev) => (prev + 1) % founderImages.length);
+  const prevFounderImage = () => setCurrentFounderIndex((prev) => (prev - 1 + founderImages.length) % founderImages.length);
+
+  const nextTestimonial = () => setCurrentTestimonialIndex((prev) => (prev + 1) % testimonials.length);
+  const prevTestimonial = () => setCurrentTestimonialIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
 
   return (
     <div className="min-h-screen bg-black">
@@ -221,20 +240,20 @@ const Home: React.FC = () => {
               <div className="absolute top-0 -left-4 w-full h-full border-2 border-white rounded-2xl transform -translate-x-4 -translate-y-4"></div>
               <div className="relative z-10 w-full aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl bg-neutral-900 group">
                 <img
-                  src={founderImages[currentImageIndex]}
+                  src={founderImages[currentFounderIndex]}
                   alt="Marc du Toit"
                   className="w-full h-full object-cover transition-opacity duration-700 ease-in-out"
                 />
 
                 {/* Carousel Controls */}
                 <button
-                  onClick={prevImage}
+                  onClick={prevFounderImage}
                   className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-white/20 p-2 rounded-full text-white opacity-0 group-hover:opacity-100 transition-all"
                 >
                   <ChevronLeft className="w-6 h-6" />
                 </button>
                 <button
-                  onClick={nextImage}
+                  onClick={nextFounderImage}
                   className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-white/20 p-2 rounded-full text-white opacity-0 group-hover:opacity-100 transition-all"
                 >
                   <ChevronRight className="w-6 h-6" />
@@ -245,7 +264,7 @@ const Home: React.FC = () => {
                   {founderImages.map((_, idx) => (
                     <div
                       key={idx}
-                      className={`w-2 h-2 rounded-full transition-all ${idx === currentImageIndex ? 'bg-white w-4' : 'bg-white/50'}`}
+                      className={`w-2 h-2 rounded-full transition-all ${idx === currentFounderIndex ? 'bg-white w-4' : 'bg-white/50'}`}
                     />
                   ))}
                 </div>
@@ -311,24 +330,50 @@ const Home: React.FC = () => {
       <section className="py-20 px-4 bg-neutral-900 border-t border-gray-800">
         <div className="max-w-7xl mx-auto text-center">
           <h2 className="text-3xl font-bold text-white mb-16">Testimonials</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="bg-black p-8 rounded-2xl relative border border-neutral-800 hover:border-gray-600 transition-colors">
-                <Quote className="absolute top-6 left-6 text-white/10 w-10 h-10" />
-                <p className="text-gray-300 italic mb-8 relative z-10 leading-relaxed">
-                  "Working with Apex Sports completely changed my approach to training. The data-driven insights allowed me to break through plateaus I'd been stuck at for years."
+          <div className="relative max-w-4xl mx-auto">
+            <div className="bg-black p-8 md:p-12 rounded-3xl border border-neutral-800 relative min-h-[400px] flex flex-col justify-center">
+              <Quote className="absolute top-8 left-8 text-white/10 w-16 h-16" />
+
+              <div className="relative z-10">
+                <p className="text-gray-300 italic text-lg md:text-xl leading-relaxed mb-10 text-center">
+                  "{testimonials[currentTestimonialIndex].text}"
                 </p>
-                <div className="flex items-center justify-center gap-4">
-                  <div className="w-10 h-10 bg-gray-700 rounded-full overflow-hidden">
-                    <img src={`https://i.pravatar.cc/150?u=${i}`} alt="Avatar" className="w-full h-full object-cover" />
+
+                <div className="flex flex-col items-center justify-center gap-4">
+                  <div className="w-16 h-16 bg-gray-700 rounded-full overflow-hidden border-2 border-white/20">
+                    <img src={testimonials[currentTestimonialIndex].image} alt="Avatar" className="w-full h-full object-cover" />
                   </div>
-                  <div className="text-left">
-                    <h4 className="text-white font-bold text-sm">Professional Athlete</h4>
-                    <span className="text-xs text-gray-500">Hockey Player</span>
+                  <div className="text-center">
+                    <h4 className="text-white font-bold text-lg">{testimonials[currentTestimonialIndex].name}</h4>
+                    <span className="text-sm text-gray-500">{testimonials[currentTestimonialIndex].role}</span>
                   </div>
                 </div>
               </div>
-            ))}
+
+              {/* Controls */}
+              <button
+                onClick={prevTestimonial}
+                className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 p-3 rounded-full text-white transition-all"
+              >
+                <ChevronLeft className="w-6 h-6" />
+              </button>
+              <button
+                onClick={nextTestimonial}
+                className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 p-3 rounded-full text-white transition-all"
+              >
+                <ChevronRight className="w-6 h-6" />
+              </button>
+
+              {/* Indicators */}
+              <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
+                {testimonials.map((_, idx) => (
+                  <div
+                    key={idx}
+                    className={`w-2 h-2 rounded-full transition-all ${idx === currentTestimonialIndex ? 'bg-white w-4' : 'bg-white/30'}`}
+                  />
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
