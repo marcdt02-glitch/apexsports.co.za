@@ -409,16 +409,17 @@ const AthleteDashboard: React.FC = () => {
                             )}
 
                             {/* KPI Dials */}
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 bg-neutral-900/40 p-8 rounded-3xl border border-neutral-800">
-                                <CircleProgress percentage={analysis.scores?.performance ?? 0} color="#3b82f6" label="Performance" icon={TrendingUp} />
+                            <div className="grid grid-cols-2 md:grid-cols-3 gap-8 bg-neutral-900/40 p-8 rounded-3xl border border-neutral-800">
+                                <div className="col-span-2 md:col-span-1">
+                                    <CircleProgress percentage={analysis.scores?.performance ?? 0} color="#3b82f6" label="Performance" icon={TrendingUp} />
+                                </div>
                                 {showAdvancedMetrics ? (
                                     <>
                                         <CircleProgress percentage={analysis.scores?.screening ?? 0} color="#a855f7" label="MQS" icon={Shield} />
-                                        <CircleProgress percentage={athlete.scoreAdduction ?? 0} color="#ef4444" label="Strength" icon={Activity} />
                                         <CircleProgress percentage={analysis.scores?.powerIndex ?? 0} color="#f59e0b" label="Power Index" icon={Zap} />
                                     </>
                                 ) : (
-                                    <div className="col-span-3 flex items-center justify-center opacity-30 border-l border-neutral-800 bg-neutral-900/50 rounded-r-xl">
+                                    <div className="col-span-2 md:col-span-2 flex items-center justify-center opacity-30 border-l border-neutral-800 bg-neutral-900/50 rounded-r-xl">
                                         <Lock className="w-5 h-5 mr-3 text-gray-500" />
                                         <p className="text-sm font-mono text-gray-500">DYNAMO & POWER LOCKED</p>
                                     </div>
@@ -525,8 +526,7 @@ const AthleteDashboard: React.FC = () => {
                                             {showAdvancedMetrics && (
                                                 <>
                                                     <MetricCard label="IMTP Peak" value={`${athlete.imtpPeakForce} N`} />
-                                                    <MetricCard label="RFD 200ms" value={`${athlete.imtpRfd200} N/s`} />
-                                                    <MetricCard label="Asymmetry" value={`${athlete.peakForceAsymmetry}%`} />
+                                                    <MetricCard label="IMTP RFD" value={`${athlete.imtpRfd200} N/s`} />
                                                 </>
                                             )}
                                         </div>
@@ -564,8 +564,10 @@ const AthleteDashboard: React.FC = () => {
                                                 )}
                                                 {clinicalTab === 'upper' && (
                                                     <>
-                                                        <MetricCard label="Shoulder ROM (L)" value={`${athlete.shoulderRomLeft}°`} />
-                                                        <MetricCard label="Shoulder ROM (R)" value={`${athlete.shoulderRomRight}°`} />
+                                                        <MetricCard label="Shoulder IR (L)" value={`${athlete.shoulderInternalRotationLeft} N`} />
+                                                        <MetricCard label="Shoulder IR (R)" value={`${athlete.shoulderInternalRotationRight} N`} />
+                                                        <MetricCard label="Shoulder ER (L)" value={`${athlete.shoulderRomLeft} N`} />
+                                                        <MetricCard label="Shoulder ER (R)" value={`${athlete.shoulderRomRight} N`} />
                                                         <MetricCard label="Neck Ext" value={`${athlete.neckExtension} N`} />
                                                     </>
                                                 )}
@@ -588,9 +590,6 @@ const AthleteDashboard: React.FC = () => {
                                         <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-4">Priority Focus</h3>
                                         <h2 className="text-3xl font-black mb-4 leading-tight">{recommendation.focusArea}</h2>
                                         <p className="text-gray-600 leading-relaxed mb-6">{recommendation.description}</p>
-                                        <button className="w-full bg-black text-white font-bold py-4 rounded-xl hover:bg-neutral-800 transition-transform hover:scale-[1.02]">
-                                            View Protocol
-                                        </button>
                                     </div>
 
                                     {/* v16.1 MoveHealth Live Feed */}
