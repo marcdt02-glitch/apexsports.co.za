@@ -296,17 +296,23 @@ const Services: React.FC = () => {
                     </h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
                         <div className="bg-black p-8 rounded-2xl border border-neutral-800">
-                            <h3 className="text-xl font-bold text-white mb-2">Tier 1</h3>
-                            <p className="text-gray-400">Psychological and Physical Monitoring Package</p>
+                            <h3 className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-2">Tier 1</h3>
+                            <h4 className="text-xl font-bold text-white mb-4">Performance & Wellness Monitoring Package</h4>
+                            <p className="text-gray-400 text-sm leading-relaxed">
+                                Data-driven physical readiness and psychological wellness tracking to optimize team load management.
+                            </p>
                         </div>
                         <div className="bg-black p-8 rounded-2xl border border-neutral-800">
-                            <h3 className="text-xl font-bold text-white mb-2">Tier 2</h3>
-                            <p className="text-gray-400">Elite Team Package</p>
+                            <h3 className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-2">Tier 2</h3>
+                            <h4 className="text-xl font-bold text-white mb-4">Elite Team Performance Package</h4>
+                            <p className="text-gray-400 text-sm leading-relaxed">
+                                Comprehensive S&C integration, advanced mental skills training (PST), and high-performance laboratory testing.
+                            </p>
                         </div>
                     </div>
-                    <a href="mailto:performance@apexsports.co.za?subject=Team Package Inquiry" className="inline-flex items-center gap-2 bg-white text-black font-bold py-3 px-8 rounded-full hover:bg-gray-200 transition-colors">
+                    <a href="mailto:performance@apexsports.co.za?subject=Team Package Inquiry" className="inline-flex items-center gap-2 bg-white text-black font-bold py-3 px-8 rounded-full hover:bg-gray-200 transition-colors shadow-lg shadow-white/10">
                         <Users className="w-5 h-5" />
-                        Inquire Now
+                        Inquire for Team Rates
                     </a>
                 </div>
             </div>

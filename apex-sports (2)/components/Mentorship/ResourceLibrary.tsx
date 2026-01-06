@@ -3,10 +3,10 @@ import { PlayCircle, FileText, Download, ExternalLink } from 'lucide-react';
 
 const RESOURCES = {
     videos: [
-        { id: 1, title: 'Wim Hof Breathing Method', category: 'Recovery', url: 'https://www.youtube.com/embed/tybOi4hjZFQ', duration: '11:00' },
-        { id: 2, title: 'Pre-Game Visualization', category: 'Focus', url: 'https://www.youtube.com/embed/0U--Z1B9z8A', duration: '5:00' }, // Placeholder
-        { id: 3, title: 'Box Breathing for Anxiety', category: 'Composure', url: 'https://www.youtube.com/embed/FJJazKtH_9I', duration: '4:00' },
-        { id: 4, title: 'Positive Self-Talk Guide', category: 'Confidence', url: 'https://www.youtube.com/embed/P_6vDLq64gE', duration: '8:00' },
+        { id: 1, title: 'Wim Hof Breathing Method', category: 'Recovery', url: 'https://www.youtube.com/embed/tybOi4hjZFQ', duration: '11:00', attribution: 'Source: Wim Hof Method (YouTube)' },
+        { id: 2, title: 'Pre-Game Visualization', category: 'Focus', url: 'https://www.youtube.com/embed/0U--Z1B9z8A', duration: '5:00', attribution: 'Source: YouTube' },
+        { id: 3, title: 'Box Breathing for Anxiety', category: 'Composure', url: 'https://www.youtube.com/embed/FJJazKtH_9I', duration: '4:00', attribution: 'Source: YouTube' },
+        { id: 4, title: 'Positive Self-Talk Guide', category: 'Confidence', url: 'https://www.youtube.com/embed/P_6vDLq64gE', duration: '8:00', attribution: 'Source: YouTube' },
     ],
     handbooks: [
         { id: 1, title: 'The Champion\'s Mindset', type: 'PDF', size: '2.4 MB' },
@@ -46,7 +46,12 @@ const ResourceLibrary: React.FC = () => {
                                     <span className="text-xs font-bold text-gray-500 bg-neutral-800 px-2 py-1 rounded">{video.category}</span>
                                     <span className="text-xs font-mono text-gray-600">{video.duration}</span>
                                 </div>
-                                <h3 className="text-white font-bold leading-tight group-hover:text-red-500 transition-colors">{video.title}</h3>
+                                <h3 className="text-white font-bold leading-tight group-hover:text-red-500 transition-colors mb-2">{video.title}</h3>
+                                {video.attribution && (
+                                    <p className="text-[10px] text-gray-500 italic border-t border-neutral-800 pt-2 mt-2">
+                                        {video.attribution}
+                                    </p>
+                                )}
                             </div>
                         </div>
                     ))}
