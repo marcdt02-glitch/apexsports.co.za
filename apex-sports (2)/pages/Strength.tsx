@@ -121,7 +121,7 @@ const Strength: React.FC = () => {
               <div className="h-64 bg-neutral-800 relative overflow-hidden">
                 {/* Placeholder for Vald Hub UI */}
                 <img
-                  src="/images/Vald hub new.png"
+                  src="/images/vald-hub-new.png"
                   alt="Vald Hub Dashboard"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
@@ -145,7 +145,7 @@ const Strength: React.FC = () => {
               <div className="h-64 bg-neutral-800 relative overflow-hidden">
                 {/* Placeholder for MoveHealth App UI */}
                 <img
-                  src="/images/Move Health app.png"
+                  src="/images/move-health-new.png"
                   alt="MoveHealth App Interface"
                   className="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-500"
                 />
