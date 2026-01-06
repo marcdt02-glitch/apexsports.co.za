@@ -112,8 +112,11 @@ const Goalkeeper: React.FC = () => {
               </div>
               <h2 className="text-2xl font-bold text-white">Elite Coaching Experience</h2>
             </div>
-            <p className="text-gray-300 leading-relaxed">
+            <p className="text-gray-300 leading-relaxed mb-4">
               Benefit from years of university-level experience, including two years working with the <strong className="text-white">South African Men's National Indoor Team</strong> as a goalkeeper coach and trainer. We bring international standards to your personal development.
+            </p>
+            <p className="text-gray-300 leading-relaxed">
+              Marc has also trained National Senior and Junior Athletes at his time as a goalkeeper coach at Stellenbosch University and at his roles at Paul Roos Gimnasium, Boland HP Schools and at various other schools and events across the Western Cape.
             </p>
           </div>
 
