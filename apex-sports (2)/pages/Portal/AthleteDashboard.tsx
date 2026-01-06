@@ -93,6 +93,7 @@ const getReadinessColor = (recent: number, max: number) => {
 
 import Loading from '../../components/Loading';
 import GoalSetting from '../../components/GoalSetting';
+import PortalMentorship from '../../components/Portal/Mentorship/PortalMentorship';
 
 // ... (Keep existing top level imports if possible, or just ignore this comment and user the view to know what to keep)
 // Actually I need to be careful not to delete the OTHER imports.
@@ -697,40 +698,10 @@ const AthleteDashboard: React.FC = () => {
                     )}
 
                     {/* VIEW: MENTORSHIP & GOALS */}
+                    {/* VIEW: MENTORSHIP & GOALS */}
                     {activeView === 'mentorship' && (
-                        <div className="space-y-8 animate-fade-in">
-                            <h2 className="text-3xl font-black text-white">Mentorship & Goals</h2>
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                {/* Psychological / Handbooks */}
-                                <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl">
-                                    <h3 className="text-xl font-bold flex items-center gap-3 mb-6">
-                                        <span className="w-1 h-6 bg-yellow-500 rounded-full"></span>
-                                        Psychological Frameworks
-                                    </h3>
-                                    <div className="space-y-4">
-                                        <div className="p-4 bg-neutral-900 rounded-xl border border-neutral-800 hover:border-white transition-colors cursor-pointer flex items-center justify-between">
-                                            <div className="flex items-center gap-3">
-                                                <BookOpen className="w-5 h-5 text-yellow-500" />
-                                                <span>Goal Setting Handbook.pdf</span>
-                                            </div>
-                                            <ExternalLink className="w-4 h-4 text-gray-500" />
-                                        </div>
-                                        <div className="p-4 bg-neutral-900 rounded-xl border border-neutral-800 hover:border-white transition-colors cursor-pointer flex items-center justify-between">
-                                            <div className="flex items-center gap-3">
-                                                <BookOpen className="w-5 h-5 text-yellow-500" />
-                                                <span>Mental Toughness 101.pdf</span>
-                                            </div>
-                                            <ExternalLink className="w-4 h-4 text-gray-500" />
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Goals (Replaced with v18.4 Component) */}
-                                <div className="md:col-span-2">
-                                    <GoalSetting athleteName={athlete.name} />
-                                </div>
-                            </div>
+                        <div className="animate-fade-in">
+                            <PortalMentorship athleteName={athlete.name} />
                         </div>
                     )}
 
