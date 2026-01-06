@@ -29,21 +29,15 @@ const Footer: React.FC = () => {
                 <li><a href="#/goalkeeper" className="hover:text-white transition-colors">Coaching</a></li>
                 <li><a href="#/services" className="hover:text-white transition-colors">Service Hub</a></li>
               </ul>
-              <div className="mt-4 pt-4 border-t border-gray-800 w-full">
-                <a href="#/portal" className="block w-full bg-white text-black font-bold py-2 px-4 rounded text-center hover:bg-gray-200 transition-colors text-sm">
-                  Athlete Login
-                </a>
-              </div>
             </div>
+          </div>
 
-            <div className="flex flex-col items-center">
-              <h3 className="text-lg font-semibold mb-4 text-white">Legal</h3>
-              <ul className="space-y-2 text-gray-400">
-                <li><a href="/#/contact" className="hover:text-white transition-colors">Contact Us</a></li>
-                <li><a href="/#/booking-policy" className="hover:text-white transition-colors">Booking Policy</a></li>
-                <li><a href="/#/privacy-policy" className="hover:text-white transition-colors">Privacy Policy (POPIA)</a></li>
-              </ul>
-            </div>
+          {/* Athlete Login (Centered) */}
+          <div className="w-full flex justify-center my-4">
+            <a href="#/portal" className="bg-white text-black font-bold py-3 px-12 rounded-full shadow-[0_0_15px_rgba(255,255,255,0.1)] hover:shadow-[0_0_25px_rgba(255,255,255,0.3)] hover:scale-105 transition-all uppercase tracking-widest flex items-center gap-2">
+              <span className="w-2 h-2 bg-black rounded-full animate-pulse"></span>
+              Athlete Login
+            </a>
           </div>
 
           {/* Contact Info */}
