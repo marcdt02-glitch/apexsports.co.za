@@ -62,7 +62,7 @@ const Strength: React.FC = () => {
       ],
       features: [
         "25 Coaching Sessions",
-        "4 Mentorship Packages",
+        "Mentorship Program",
         "4 Testing Sessions",
         "Full Year Program Design",
         "Priority Support"
