@@ -21,10 +21,10 @@ const Home: React.FC = () => {
       text: "Marc has not only been a coach but a mentor for Kiran this past year, on and off the field. He has helped Kiran achieve so much on the field physically, and off the field emotionally. He is a coach that goes the extra mile for his players and always take the time to give individual attention, feedback and ‘homework’. Working with Marc has taken Kiran’s game to the next level, as he focuses on the long term aspects and perfecting what has already been taught. Goalkeeping is not just about standing in a box, making sure the ball doesn’t pass you. It’s a mental game, with technicalities involved and Marc strives to help his keepers achieve their very best! He really is THAT crazy coach on a Sunday morning who you’ve booked an hour with, that turns into 2 hours. Because he’s passionate, and loves the game as much as your kid does!"
     },
     {
-      name: "Professional Athlete",
-      role: "Hockey Player",
-      image: "https://images.unsplash.com/photo-1547347298-4074fc3086f0?auto=format&fit=crop&q=80",
-      text: "Working with Apex Sports completely changed my approach to training. The data-driven insights allowed me to break through plateaus I'd been stuck at for years."
+      name: "Jana-Mari Botha",
+      role: "SA Ladies Outdoor Goalkeeper",
+      image: "https://images.unsplash.com/photo-1628891507722-09439baa0205?auto=format&fit=crop&q=80",
+      text: "Working with Marc du Toit was a great experience. His attention to detail and critical feedback stood out immediately, and within one session I saw clear improvements in areas I wanted to work on. He gave valuable insight into playing to my strengths and what to focus on going forward. Marc is extremely passionate about coaching, pushes you to be better, and makes the session both productive and enjoyable. I would highly recommend him to any goalkeeper wanting to train with purpose and precision."
     }
   ];
 
