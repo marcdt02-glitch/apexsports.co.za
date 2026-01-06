@@ -59,7 +59,7 @@ const InnerLayout: React.FC = () => {
           <Route path="/admin-upload" element={<AdminUpload />} />
         </Routes>
       </main>
-      {!isDashboard && <Footer />}
+      <Footer />
     </div>
   );
 };
