@@ -12,7 +12,7 @@ import {
 import {
     AlertTriangle, CheckCircle, UploadCloud, AlertCircle, Zap,
     LayoutDashboard, Target, BookOpen, FileText, Menu, X, Save, ExternalLink,
-    Activity, Shield, Battery, TrendingUp, ChevronRight, Lock, User, LogOut, MonitorPlay, Home, CheckSquare, BarChart2
+    Activity, Shield, Battery, TrendingUp, ChevronRight, Lock, User, LogOut, MonitorPlay, Home, CheckSquare, BarChart2, Sliders, Layers
 } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
@@ -103,7 +103,7 @@ import PortalMentorship from '../../components/Portal/Mentorship/PortalMentorshi
 const AthleteDashboard: React.FC = () => {
     const { athleteId } = useParams<{ athleteId: string }>();
     const { getAthlete } = useData();
-    const [activeView, setActiveView] = useState<'home' | 'dashboard' | 'goals' | 'library' | 'reports' | 'wellness' | 'mentorship' | 'coaching'>('home');
+    const [activeView, setActiveView] = useState<'home' | 'dashboard' | 'goals' | 'library' | 'reports' | 'wellness' | 'mentorship' | 'coaching' | 'pillars'>('home');
     const [clinicalTab, setClinicalTab] = useState<'lower' | 'upper' | 'symmetry'>('lower');
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const dashboardRef = useRef<HTMLDivElement>(null);
@@ -184,6 +184,165 @@ const AthleteDashboard: React.FC = () => {
 
     // Hero Stat Triggers
     const showHeroStat = showAdvancedMetrics; // Only show for Advanced tiers (Clinical)
+
+    // PILLARS STATE
+    const [pillarRatings, setPillarRatings] = useState({
+        technical: 65,
+        lifestyle: 70
+    });
+
+    const renderPillars = () => {
+        // Auto-Pull Data
+        const scorePhysical = athlete.readinessScore || 75; // Fallback
+        const scoreRecovery = athlete.soreness ? (10 - athlete.soreness) * 10 : 80;
+        const scoreMental = athlete.motivation ? athlete.motivation * 10 : 70;
+
+        // Combined Data for Radar
+        const pillarData = [
+            { subject: 'Physical Engine', A: scorePhysical, fullMark: 100 },
+            { subject: 'Mental Resilience', A: scoreMental, fullMark: 100 },
+            { subject: 'Technical Skill', A: pillarRatings.technical, fullMark: 100 },
+            { subject: 'Recovery', A: scoreRecovery, fullMark: 100 },
+            { subject: 'Lifestyle Habits', A: pillarRatings.lifestyle, fullMark: 100 },
+        ];
+
+        return (
+            <div className="space-y-12 animate-fade-in pb-20">
+                {/* Header */}
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                    <div>
+                        <h2 className="text-3xl font-black uppercase tracking-tight text-white">The APEX Pillars</h2>
+                        <p className="text-gray-400">Holistic Performance Profile</p>
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                    {/* LEFT: Radar & Controls */}
+                    <div className="space-y-8">
+                        {/* Radar Chart */}
+                        <div className="bg-neutral-900/50 backdrop-blur-md border border-neutral-800 p-8 rounded-3xl relative overflow-hidden">
+                            <div className="absolute top-0 right-0 p-4 opacity-10">
+                                <Target className="w-32 h-32 text-white" />
+                            </div>
+                            <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2 relative z-10">
+                                <Activity className="w-5 h-5 text-purple-500" />
+                                Stability Gauge
+                            </h3>
+
+                            <div className="h-[300px] w-full relative z-10">
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <RadarChart cx="50%" cy="50%" outerRadius="70%" data={pillarData}>
+                                        <PolarGrid stroke="#333" />
+                                        <PolarAngleAxis dataKey="subject" tick={{ fill: '#9ca3af', fontSize: 11, fontWeight: 600 }} />
+                                        <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
+                                        <Radar
+                                            name="Score"
+                                            dataKey="A"
+                                            stroke="#8b5cf6"
+                                            strokeWidth={3}
+                                            fill="#8b5cf6"
+                                            fillOpacity={0.4}
+                                        />
+                                        <RechartsTooltip
+                                            contentStyle={{ backgroundColor: '#000', border: '1px solid #333', borderRadius: '8px' }}
+                                            itemStyle={{ color: '#fff' }}
+                                        />
+                                    </RadarChart>
+                                </ResponsiveContainer>
+                            </div>
+                        </div>
+
+                        {/* Manual Sliders */}
+                        <div className="bg-neutral-900/50 border border-neutral-800 p-8 rounded-3xl space-y-8">
+                            <div>
+                                <div className="flex justify-between items-center mb-4">
+                                    <label className="text-sm font-bold uppercase tracking-widest text-gray-400">Technical Skill</label>
+                                    <span className="text-2xl font-black text-white">{pillarRatings.technical}%</span>
+                                </div>
+                                <input
+                                    type="range"
+                                    min="0" max="100"
+                                    value={pillarRatings.technical}
+                                    onChange={(e) => setPillarRatings({ ...pillarRatings, technical: parseInt(e.target.value) })}
+                                    className="w-full h-2 bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-purple-500"
+                                />
+                                <div className="flex justify-between text-xs text-gray-600 mt-2">
+                                    <span>Developing</span>
+                                    <span>Elite</span>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div className="flex justify-between items-center mb-4">
+                                    <label className="text-sm font-bold uppercase tracking-widest text-gray-400">Lifestyle Habits</label>
+                                    <span className="text-2xl font-black text-white">{pillarRatings.lifestyle}%</span>
+                                </div>
+                                <input
+                                    type="range"
+                                    min="0" max="100"
+                                    value={pillarRatings.lifestyle}
+                                    onChange={(e) => setPillarRatings({ ...pillarRatings, lifestyle: parseInt(e.target.value) })}
+                                    className="w-full h-2 bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-blue-500"
+                                />
+                                <div className="flex justify-between text-xs text-gray-600 mt-2">
+                                    <span>Inconsistent</span>
+                                    <span>Disciplined</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* RIGHT: Philosophy & Text */}
+                    <div className="space-y-8">
+                        {/* Floor & Ceiling Theory */}
+                        <div className="bg-gradient-to-br from-neutral-900 to-black border border-neutral-800 p-8 rounded-3xl relative overflow-hidden">
+                            <div className="absolute top-0 right-0 w-32 h-32 bg-purple-600/10 rounded-full blur-3xl -mr-10 -mt-10"></div>
+
+                            <h3 className="text-2xl font-black text-white mb-6 flex items-center gap-3">
+                                <Layers className="w-8 h-8 text-white" />
+                                The Floor & Ceiling Theory
+                            </h3>
+
+                            <div className="space-y-6 text-gray-300 leading-relaxed">
+                                <p>
+                                    Most athletes focus only on their <strong className="text-white">Ceiling</strong>—their absolute best performance on a perfect day.
+                                    At APEX, we focus on raising your <strong className="text-white">Floor</strong>.
+                                </p>
+                                <p>
+                                    Your "Floor" is how you perform on your worst day. When your pillars (Sleep, Nutrition, Mindset) are stable,
+                                    your "bad days" still result in high-level performance. This is the definition of consistency.
+                                </p>
+                                <div className="p-4 bg-white/5 rounded-xl border border-white/10 mt-4">
+                                    <h4 className="text-sm font-bold text-purple-400 uppercase mb-2">Stability = Sustainability</h4>
+                                    <p className="text-sm">
+                                        An unbalanced Radar Chart (e.g., High Physical, Low Mental) is unstable.
+                                        Under pressure/stress, the structure collapses (injury/burnout). Balance your pillars to build an unbreakable foundation.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Blockquote */}
+                        <div className="relative p-8 rounded-3xl bg-neutral-900 border border-neutral-800">
+                            <div className="absolute top-6 left-6 text-6xl text-neutral-800 font-serif leading-none">"</div>
+                            <blockquote className="relative z-10 text-lg font-medium text-gray-300 italic pl-6 border-l-4 border-purple-500">
+                                The discipline, data-tracking, and resilience you build here aren't just for the pitch.
+                                These are high-performance life skills. Whether you end up in a boardroom or a stadium,
+                                the ability to manage your 'pillars' is what creates a sustainable, elite career.
+                            </blockquote>
+                            <div className="mt-6 flex items-center gap-4 pl-6">
+                                <div className="w-10 h-10 bg-gray-800 rounded-full"></div>
+                                <div>
+                                    <p className="text-white font-bold text-sm">Marc Du Toit</p>
+                                    <p className="text-xs text-gray-500 uppercase tracking-wider">APEX Performance Director</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    };
 
     const renderHome = () => (
         <div className="space-y-8 animate-fade-in">
@@ -295,6 +454,15 @@ const AthleteDashboard: React.FC = () => {
                         >
                             <MonitorPlay className="w-5 h-5" />
                             Coaching
+                        </button>
+
+                        {/* PERFORMANCE PILLARS (New) */}
+                        <button
+                            onClick={() => { setActiveView('pillars'); setSidebarOpen(false); }}
+                            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeView === 'pillars' ? 'bg-white text-black font-bold' : 'text-gray-400 hover:bg-neutral-800 hover:text-white'}`}
+                        >
+                            <Layers className="w-5 h-5" />
+                            APEX Pillars
                         </button>
 
                         {/* MENTORSHIP & GOALS (Internal View) */}
@@ -436,6 +604,9 @@ const AthleteDashboard: React.FC = () => {
                     {/* VIEW: DASHBOARD */}
                     {/* VIEW: HOME */}
                     {activeView === 'home' && renderHome()}
+
+                    {/* VIEW: PILLARS */}
+                    {activeView === 'pillars' && renderPillars()}
 
                     {/* VIEW: DASHBOARD (Physical Results) */}
                     {activeView === 'dashboard' && (
