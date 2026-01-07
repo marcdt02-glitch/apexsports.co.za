@@ -554,6 +554,15 @@ const AthleteDashboard: React.FC = () => {
                             APEX Pillars
                         </button>
 
+                        {/* VIDEO LAB (v20.0) */}
+                        <button
+                            onClick={() => { setActiveView('videolab'); setSidebarOpen(false); }}
+                            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeView === 'videolab' ? 'bg-white text-black font-bold' : 'text-gray-400 hover:bg-neutral-800 hover:text-white'}`}
+                        >
+                            <Video className="w-5 h-5" />
+                            Video Lab
+                        </button>
+
                         {/* MENTORSHIP & GOALS (Internal View) */}
                         {(() => {
                             const isUnlocked = isFullAccess; // v17.4: Now linked to master full access (Apex/Elite/Testing)
@@ -1094,6 +1103,13 @@ const AthleteDashboard: React.FC = () => {
                     {activeView === 'mentorship' && (
                         <div className="animate-fade-in">
                             <PortalMentorship athleteName={athlete.name} tier={athlete.package} />
+                        </div>
+                    )}
+
+                    {/* VIEW: VIDEOLAB */}
+                    {activeView === 'videolab' && (
+                        <div className="animate-fade-in text-white">
+                            <VideoLab />
                         </div>
                     )}
 
