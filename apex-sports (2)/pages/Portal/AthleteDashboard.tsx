@@ -18,6 +18,7 @@ import { VideoLab } from '../../components/VideoLab/VideoLab';
 import { ApexAgent } from '../../components/ApexAI/ApexAgent';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { generateTechnicalReport, generateDevelopmentReport, generateExecutiveReport } from '../../services/ReportService';
 
 // --- UI Components ---
 
@@ -546,160 +547,10 @@ const AthleteDashboard: React.FC = () => {
             </div>
         </div>
     );
-    // PDF Generation
-    const generateReportPDF = (type: 'summary' | 'detailed') => {
-        const doc = new jsPDF();
-        const pageWidth = doc.internal.pageSize.getWidth();
-        const margin = 20;
-        let yPos = 20;
-
-        // Branding
-        doc.setFillColor(0, 0, 0); // Black header
-        doc.rect(0, 0, pageWidth, 40, 'F');
-        doc.setTextColor(255, 255, 255);
-        doc.setFontSize(24);
-        doc.setFont("helvetica", "bold");
-        doc.text("APEX SPORTS", margin, 20);
-
-        doc.setFontSize(10);
-        doc.setFont("helvetica", "normal");
-        doc.text("HIGH PERFORMANCE REPORT", margin, 32);
-
-        // Header Info
-        doc.setTextColor(255, 255, 255);
-        doc.text(`${new Date().toLocaleDateString()}`, pageWidth - margin - 30, 20);
-        doc.text(athlete.name.toUpperCase(), pageWidth - margin - 30, 32);
-
-        yPos = 50;
-        doc.setTextColor(0, 0, 0);
-
-        if (type === 'summary') {
-            doc.setFontSize(18);
-            doc.setFont("helvetica", "bold");
-            doc.text("PERFORMANCE SUMMARY", margin, yPos);
-            yPos += 10;
-
-            doc.setFontSize(12);
-            doc.setFont("helvetica", "normal");
-            doc.text("This report provides a simplified overview of the athlete's physical status,", margin, yPos);
-            yPos += 7;
-            doc.text("highlighting key strengths and areas for development.", margin, yPos);
-            yPos += 15;
-
-            // STATUS
-            doc.setFillColor(245, 245, 245);
-            doc.rect(margin, yPos, pageWidth - (margin * 2), 25, 'F');
-            doc.setFontSize(14);
-            doc.setFont("helvetica", "bold");
-            doc.text("CURRENT PRIORITY:", margin + 5, yPos + 10);
-
-            doc.setFontSize(12);
-            doc.setTextColor(59, 130, 246); // Blue
-            doc.text(recommendation.focusArea, margin + 55, yPos + 10);
-
-            doc.setFontSize(10);
-            doc.setTextColor(60, 60, 60);
-            doc.setFont("helvetica", "normal");
-            doc.text(recommendation.description.substring(0, 90) + "...", margin + 5, yPos + 20);
-
-            yPos += 35;
-
-            // STRENGTHS
-            doc.setFontSize(14);
-            doc.setTextColor(0, 0, 0);
-            doc.setFont("helvetica", "bold");
-            doc.text("KEY STRENGTHS", margin, yPos);
-            yPos += 10;
-            doc.setFontSize(11);
-            doc.setFont("helvetica", "normal");
-            // Mock logic for strengths - in real app, sort metrics
-            doc.text("• Movement Quality: " + (analysis.scores.screening > 80 ? "Excellent" : "Good Base"), margin, yPos); yPos += 8;
-            doc.text("• Neural Readiness: " + (athlete.readinessScore > 80 ? "High" : "Stable"), margin, yPos); yPos += 8;
-            if (athlete.scoreAdduction > 80) { doc.text("• Groin Strength (Adduction)", margin, yPos); yPos += 8; }
-            if (athlete.scoreQuad > 80) { doc.text("• Knee Stability (Quad Strength)", margin, yPos); yPos += 8; }
-
-            yPos += 10;
-
-            // FOCUS AREAS
-            doc.setFontSize(14);
-            doc.setFont("helvetica", "bold");
-            doc.text("AREAS FOR IMPROVEMENT", margin, yPos);
-            yPos += 10;
-            doc.setFontSize(11);
-            doc.setFont("helvetica", "normal");
-
-            if (analysis.flags.isShoulderImbalance) {
-                doc.setTextColor(220, 38, 38); // Red
-                doc.text("• Shoulder Balance (Left vs Right imbalance detected)", margin, yPos);
-                doc.setTextColor(0, 0, 0);
-                yPos += 8;
-            }
-            if (athlete.groinTimeToMax > 1.5) {
-                doc.setTextColor(220, 38, 38);
-                doc.text("• Explosive Speed (Groin reaction time is slow)", margin, yPos);
-                doc.setTextColor(0, 0, 0);
-                yPos += 8;
-            }
-            doc.text("• " + recommendation.focusArea + " Consistency", margin, yPos); yPos += 8;
-
-            yPos += 15;
-            doc.setFontSize(10);
-            doc.text("Note: Consistent training in these areas will reduce injury risk and improve performance.", margin, yPos);
-
-        } else {
-            // DETAILED REPORT
-            doc.setFontSize(18);
-            doc.setFont("helvetica", "bold");
-            doc.text("SPORTS SCIENCE DATA", margin, yPos);
-            yPos += 10;
-
-            doc.setFontSize(10);
-            doc.setFont("helvetica", "normal");
-
-            const addMetricRow = (label: string, value: string | number, unit: string = "") => {
-                doc.text(label, margin, yPos);
-                doc.text(`${value}${unit}`, pageWidth - margin - 40, yPos);
-                doc.setDrawColor(200, 200, 200);
-                doc.line(margin, yPos + 2, pageWidth - margin, yPos + 2);
-                yPos += 10;
-            };
-
-            doc.setFont("helvetica", "bold");
-            doc.text("NEURAL & WELLNESS", margin, yPos); yPos += 10;
-            doc.setFont("helvetica", "normal");
-            addMetricRow("Readiness Score", athlete.readinessScore, "%");
-            addMetricRow("Groin Time to Max", athlete.groinTimeToMax, "s");
-            addMetricRow("ACWR (Workload)", athlete.acwr ? athlete.acwr.toFixed(2) : "-", "");
-
-            yPos += 5;
-            doc.setFont("helvetica", "bold");
-            doc.text("FORCE OUTPUTS", margin, yPos); yPos += 10;
-            doc.setFont("helvetica", "normal");
-            addMetricRow("IMTP Peak Force", athlete.imtpPeakForce, " N");
-            addMetricRow("IMTP RFD (Explosiveness)", athlete.imtpRfd200, " N/s");
-            addMetricRow("Hamstring Strength (L/R)", `${athlete.hamstringQuadLeft} / ${athlete.hamstringQuadRight}`, "");
-
-            yPos += 5;
-            doc.setFont("helvetica", "bold");
-            doc.text("DYNAMO SCREENING", margin, yPos); yPos += 10;
-            doc.setFont("helvetica", "normal");
-            addMetricRow("Shoulder Internal Rotation (L)", athlete.shoulderInternalRotationLeft, " N");
-            addMetricRow("Shoulder External Rotation (L)", athlete.shoulderRomLeft, " N"); // variable name might differ, using romLeft as proxy per previous code
-            addMetricRow("Adduction Strength (L)", athlete.adductionStrengthLeft, " N");
-
-            yPos += 5;
-            doc.setFont("helvetica", "italic");
-            doc.setFontSize(9);
-            doc.text("* Detailed symmetry analysis available in the online portal.", margin, yPos);
-        }
-
-        // Footer
-        doc.setFontSize(8);
-        doc.setTextColor(150, 150, 150);
-        doc.text("Generated by APEX Sports AI | www.apexsports.co.za", margin, pageWidth * 1.3); // A4 roughly
-
-        doc.save(`APEX_Report_${athlete.name}_${type.toUpperCase()}.pdf`);
-    };
+    // PDF Handlers
+    const handleDownloadTechnical = () => generateTechnicalReport(athlete, analysis);
+    const handleDownloadDevelopment = () => generateDevelopmentReport(athlete, analysis);
+    const handleDownloadExecutive = () => generateExecutiveReport(athlete, analysis);
 
     return (
         <SafetyGuard athlete={athlete}>
@@ -917,21 +768,37 @@ const AthleteDashboard: React.FC = () => {
                                             <Info className="w-5 h-5 text-blue-500" />
                                             How to Navigate Your Physical Results
                                         </h3>
-                                        <div className="flex items-center gap-3">
-                                            <button
-                                                onClick={() => generateReportPDF('summary')}
-                                                className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-lg flex items-center gap-2 transition-colors"
-                                            >
-                                                <FileText className="w-4 h-4" />
-                                                Parent Summary PDF
-                                            </button>
-                                            <button
-                                                onClick={() => generateReportPDF('detailed')}
-                                                className="px-4 py-2 bg-neutral-800 hover:bg-neutral-700 text-gray-300 text-xs font-bold rounded-lg flex items-center gap-2 transition-colors border border-neutral-700"
-                                            >
-                                                <Activity className="w-4 h-4" />
-                                                Full Science PDF
-                                            </button>
+                                        <div className="flex flex-wrap items-center gap-2">
+                                            {(showWellness || showPhysicalSimple) && (
+                                                <button
+                                                    onClick={handleDownloadDevelopment}
+                                                    className="px-3 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-lg flex items-center gap-2 transition-colors"
+                                                    title="For Parents: Simplified progress & consistency check."
+                                                >
+                                                    <FileText className="w-4 h-4" />
+                                                    Parent DB
+                                                </button>
+                                            )}
+                                            {showPhysicalAdvanced && (
+                                                <>
+                                                    <button
+                                                        onClick={handleDownloadTechnical}
+                                                        className="px-3 py-2 bg-neutral-800 hover:bg-neutral-700 text-gray-300 text-xs font-bold rounded-lg flex items-center gap-2 transition-colors border border-neutral-700"
+                                                        title="For Coaches: Biomechanics & Data Ratios."
+                                                    >
+                                                        <Activity className="w-4 h-4" />
+                                                        Tech Lab
+                                                    </button>
+                                                    <button
+                                                        onClick={handleDownloadExecutive}
+                                                        className="px-3 py-2 bg-neutral-800 hover:bg-neutral-700 text-yellow-500 text-xs font-bold rounded-lg flex items-center gap-2 transition-colors border border-neutral-700"
+                                                        title="For Management: Quarterly Strategy & ROI."
+                                                    >
+                                                        <LayoutDashboard className="w-4 h-4" />
+                                                        Exec. Q
+                                                    </button>
+                                                </>
+                                            )}
                                         </div>
                                     </div>
                                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm text-gray-400">
