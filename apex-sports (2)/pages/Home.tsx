@@ -25,6 +25,12 @@ const Home: React.FC = () => {
       role: "SA Ladies Outdoor Goalkeeper",
       image: "https://images.unsplash.com/photo-1628891507722-09439baa0205?auto=format&fit=crop&q=80",
       text: "Working with Marc du Toit was a great experience. His attention to detail and critical feedback stood out immediately, and within one session I saw clear improvements in areas I wanted to work on. He gave valuable insight into playing to my strengths and what to focus on going forward. Marc is extremely passionate about coaching, pushes you to be better, and makes the session both productive and enjoyable. I would highly recommend him to any goalkeeper wanting to train with purpose and precision."
+    },
+    {
+      name: "Jacques Le Roux",
+      role: "National GK Coach & Founder of JLR Hockey",
+      image: "/images/jacques-le-roux.jpg",
+      text: "Having worked alongside Marc for quite some time, I can confidently say that his passion for helping athletes excel, combined with his attention to detail and sport-specific conditioning expertise, make him a phenomenal coach. I have no doubt that any athlete who crosses paths with Apex Sports will see meaningful improvement in their performance."
     }
   ];
 
