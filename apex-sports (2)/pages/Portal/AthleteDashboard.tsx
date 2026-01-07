@@ -504,6 +504,7 @@ const AthleteDashboard: React.FC = () => {
                 </button>
             </div>
         </div>
+    );
     // PDF Generation
     const generateReportPDF = (type: 'summary' | 'detailed') => {
         const doc = new jsPDF();
