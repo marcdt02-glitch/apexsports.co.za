@@ -84,8 +84,8 @@ const Services: React.FC = () => {
                                     <div>
                                         <span className="text-2xl font-black text-white">Upfront Payment</span>
                                         <div className="flex items-center gap-2 mt-1">
-                                            <span className="text-gray-500 line-through text-sm font-bold">R30,000</span>
-                                            <span className="text-green-400 text-sm font-bold animate-pulse">Save R3,000</span>
+                                            <span className="text-gray-500 line-through text-sm font-bold">R29,000</span>
+                                            <span className="text-green-400 text-sm font-bold animate-pulse">Save R2,000</span>
                                         </div>
                                     </div>
                                     <div className="text-right">
@@ -106,21 +106,21 @@ const Services: React.FC = () => {
                                     </div>
                                     <div className="flex justify-between text-gray-400">
                                         <span>25 Hours Technical</span>
-                                        <span className="line-through">R13,600</span>
+                                        <span className="line-through">R9,000</span>
                                     </div>
                                     <div className="border-t border-gray-700 pt-1 flex justify-between font-bold text-white mt-1">
                                         <span>Total Value</span>
-                                        <span>R33,600</span>
+                                        <span>R29,000</span>
                                     </div>
                                 </div>
 
                                 {/* Savings Bar Visual */}
                                 <div className="w-full bg-neutral-900 h-2 rounded-full overflow-hidden flex mb-2">
-                                    <div className="bg-white w-[80%] h-full"></div>
-                                    <div className="bg-green-500 w-[20%] h-full"></div>
+                                    <div className="bg-white w-[93%] h-full"></div>
+                                    <div className="bg-green-500 w-[7%] h-full"></div>
                                 </div>
                                 <div className="text-center text-[10px] text-green-500 font-bold uppercase tracking-wider">
-                                    Instant R6,600 Savings Applied
+                                    Instant R2,000 Savings Applied
                                 </div>
                             </a>
                         </div>
@@ -207,82 +207,120 @@ const Services: React.FC = () => {
                 </div>
             </div>
 
-            {/* SECTION 3: MENTORSHIP & COACHING (Black) */}
-            <div className="py-24 px-4 bg-black">
+            {/* SECTION 3: TECHNICAL COACHING (Black) */}
+            <div className="py-24 px-4 bg-black border-b border-neutral-900">
                 <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                     <div className="space-y-8">
                         <div className="w-16 h-16 bg-neutral-800 rounded-2xl flex items-center justify-center">
-                            <Brain className="w-8 h-8 text-white" />
+                            <Star className="w-8 h-8 text-white" />
                         </div>
                         <div>
                             <h2 className="text-4xl md:text-5xl font-black text-white uppercase italic tracking-wide mb-2">
-                                Mentorship & Coaching
+                                Technical Coaching
                             </h2>
-                            <span className="inline-block bg-neutral-800 text-gray-400 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest border border-neutral-700">Technical Expertise</span>
+                            <span className="inline-block bg-neutral-800 text-gray-400 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest border border-neutral-700">Elite Skill Acquisition</span>
                         </div>
                         <p className="text-gray-400 text-lg leading-relaxed">
-                            Professional guidance and technical refinement for goalkeepers and field athletes. This is about the details—game intelligence, psychological resilience, and specific skill acquisition.
+                            Professional guidance and technical refinement for goalkeepers and field athletes. This is about the details—game intelligence, tactical understanding, and specific skill execution.
                         </p>
                         <ul className="space-y-4 text-gray-300">
                             <li className="flex items-start gap-4">
-                                <Star className="w-6 h-6 text-yellow-500 flex-shrink-0" />
-                                <span><strong className="text-white">Yearly Mentorship:</strong> Long-term development pathway.</span>
+                                <Check className="w-6 h-6 text-yellow-500 flex-shrink-0" />
+                                <span><strong className="text-white">1-on-1 Sessions:</strong> Personalized attention on the pitch.</span>
                             </li>
                             <li className="flex items-start gap-4">
-                                <Star className="w-6 h-6 text-yellow-500 flex-shrink-0" />
-                                <span><strong className="text-white">Technical Packs:</strong> 5 or 25-hour bundles for pitch sessions.</span>
+                                <Check className="w-6 h-6 text-yellow-500 flex-shrink-0" />
+                                <span><strong className="text-white">Video Analysis:</strong> Technical breakdown of your mechanics.</span>
                             </li>
                         </ul>
                     </div>
 
-                    <div className="bg-neutral-900/50 p-8 rounded-3xl border border-neutral-800 space-y-6">
-                        {/* Mentorship */}
-                        <div className="border-b border-gray-800 pb-6 mb-2">
-                            <h3 className="text-white font-bold mb-4 text-xl">The Mentorship</h3>
-                            <div className="grid grid-cols-2 gap-4">
-                                <a href="https://paystack.shop/pay/mentorship-Onceoff" target="_blank" rel="noreferrer" className="w-full bg-white text-black font-bold py-3 px-4 rounded-lg hover:bg-gray-200 transition-colors text-center">
+                    <div className="bg-neutral-900/50 p-8 rounded-3xl border border-neutral-800 space-y-4">
+                        <div className="flex items-center justify-between bg-black p-4 rounded-xl border border-neutral-800">
+                            <span className="text-white font-bold">5-Hour Coaching Pack</span>
+                            <a href="https://paystack.shop/pay/5hourcoachingpack" target="_blank" rel="noreferrer" className="text-white underline text-sm hover:text-gray-300">
+                                Buy for R2,500
+                            </a>
+                        </div>
+
+                        {/* 10 HOUR PACK (NEW) */}
+                        <div className="flex items-center justify-between bg-black p-4 rounded-xl border border-neutral-800">
+                            <span className="text-white font-bold">10-Hour Coaching Pack</span>
+                            <a href="https://paystack.shop/pay/10hourcoachingpack" target="_blank" rel="noreferrer" className="text-white underline text-sm hover:text-gray-300">
+                                Buy for R4,500
+                            </a>
+                        </div>
+
+                        {/* 25-Hour Pack with Savings Logic */}
+                        <div className="bg-neutral-800 p-6 rounded-xl border border-neutral-700 relative overflow-hidden">
+                            <div className="absolute top-0 right-0 bg-yellow-500 text-black text-[10px] font-black px-3 py-1 rounded-bl-lg animate-pulse">
+                                BEST VALUE
+                            </div>
+                            <h3 className="text-white font-bold mb-2">25-Hour Elite Pack</h3>
+                            <p className="text-gray-400 text-xs mb-4">Serious technical development for committed athletes.</p>
+
+                            <div className="flex items-end justify-between mb-4">
+                                <div>
+                                    <p className="text-gray-500 line-through text-xs font-bold">Standard: R12,500</p>
+                                    <p className="text-2xl font-black text-white">R9,000</p>
+                                </div>
+                                <span className="text-xs bg-white text-black font-bold px-2 py-1 rounded">Save R3,500</span>
+                            </div>
+
+                            <a href="https://paystack.shop/pay/25hourcoachingpack-onceoff" target="_blank" rel="noreferrer" className="block w-full bg-white hover:bg-gray-200 text-black text-center py-3 rounded-lg font-bold transition-colors mb-2">
+                                Claim This Offer
+                            </a>
+                            <div className="text-center">
+                                <a href="https://paystack.shop/pay/25HourCoachingPack-Monthly" target="_blank" rel="noreferrer" className="text-xs text-gray-400 hover:text-white underline">
+                                    Or pay R833/mo
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* SECTION 4: MENTORSHIP (Charcoal) */}
+            <div className="py-24 px-4 bg-[#0a0a0a]">
+                <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center lg:flex-row-reverse">
+                    <div className="order-2 lg:order-1 bg-black/50 p-8 rounded-3xl border border-neutral-800 space-y-6">
+                        <div className="bg-neutral-900 p-8 rounded-xl border border-neutral-800 text-center">
+                            <h3 className="text-white font-bold mb-2 text-xl">The Mentorship</h3>
+                            <p className="text-gray-400 text-sm mb-6">Full access to our psychological curriculum, weekly seminars, and resource library.</p>
+                            <div className="space-y-4">
+                                <a href="https://paystack.shop/pay/mentorship-Onceoff" target="_blank" rel="noreferrer" className="block w-full bg-white text-black font-bold py-4 rounded-lg hover:bg-gray-200 transition-colors">
                                     Once-off: R5,000
                                 </a>
-                                <a href="https://paystack.shop/pay/Mentorship-Monthly" target="_blank" rel="noreferrer" className="w-full bg-neutral-800 text-white font-bold py-3 px-4 rounded-lg hover:bg-neutral-700 transition-colors text-center border border-neutral-600">
+                                <a href="https://paystack.shop/pay/Mentorship-Monthly" target="_blank" rel="noreferrer" className="block w-full bg-black text-white font-bold py-4 rounded-lg hover:bg-neutral-800 transition-colors border border-neutral-700">
                                     Monthly: R500
                                 </a>
                             </div>
                         </div>
+                    </div>
 
-                        {/* Packs */}
-                        <div className="space-y-4">
-                            <div className="flex items-center justify-between bg-black p-4 rounded-xl border border-neutral-800">
-                                <span className="text-white font-bold">5-Hour Coaching Pack</span>
-                                <a href="https://paystack.shop/pay/5hourcoachingpack" target="_blank" rel="noreferrer" className="text-white underline text-sm hover:text-gray-300">
-                                    Buy for R2,500
-                                </a>
-                            </div>
-                            {/* 25-Hour Pack with Savings Logic */}
-                            <div className="bg-neutral-800 p-6 rounded-xl border border-neutral-700 relative overflow-hidden">
-                                <div className="absolute top-0 right-0 bg-yellow-500 text-black text-[10px] font-black px-3 py-1 rounded-bl-lg animate-pulse">
-                                    LIMITED FLASH SALE
-                                </div>
-                                <h3 className="text-white font-bold mb-2">25-Hour Elite Pack</h3>
-                                <p className="text-gray-400 text-xs mb-4">Serious technical development for committed athletes.</p>
-
-                                <div className="flex items-end justify-between mb-4">
-                                    <div>
-                                        <p className="text-gray-500 line-through text-xs font-bold">Standard: R10,000</p>
-                                        <p className="text-2xl font-black text-white">R9,000</p>
-                                    </div>
-                                    <span className="text-xs bg-white text-black font-bold px-2 py-1 rounded">Save R1,000</span>
-                                </div>
-
-                                <a href="https://paystack.shop/pay/25hourcoachingpack-onceoff" target="_blank" rel="noreferrer" className="block w-full bg-white hover:bg-gray-200 text-black text-center py-3 rounded-lg font-bold transition-colors mb-2">
-                                    Claim This Offer
-                                </a>
-                                <div className="text-center">
-                                    <a href="https://paystack.shop/pay/25HourCoachingPack-Monthly" target="_blank" rel="noreferrer" className="text-xs text-gray-400 hover:text-white underline">
-                                        Or pay R833/mo (No Saving)
-                                    </a>
-                                </div>
-                            </div>
+                    <div className="order-1 lg:order-2 space-y-8">
+                        <div className="w-16 h-16 bg-neutral-900 rounded-2xl flex items-center justify-center border border-neutral-800">
+                            <Brain className="w-8 h-8 text-white" />
                         </div>
+                        <div>
+                            <h2 className="text-4xl md:text-5xl font-black text-white uppercase italic tracking-wide mb-2">
+                                The Mentorship
+                            </h2>
+                            <span className="inline-block bg-neutral-800 text-gray-400 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest border border-neutral-700">Psychological Edge</span>
+                        </div>
+                        <p className="text-gray-400 text-lg leading-relaxed">
+                            "The CEO of You." This is our flagship curriculum designed to build antifragile athletes. We develop the person behind the player through structured modules on leadership, resilience, and emotional control.
+                        </p>
+                        <ul className="space-y-4 text-gray-300">
+                            <li className="flex items-start gap-4">
+                                <Check className="w-6 h-6 text-blue-500 flex-shrink-0" />
+                                <span><strong className="text-white">Goal Setting:</strong> Strategic planning for your career.</span>
+                            </li>
+                            <li className="flex items-start gap-4">
+                                <Check className="w-6 h-6 text-blue-500 flex-shrink-0" />
+                                <span><strong className="text-white">Mental Skills:</strong> Visualization, breathwork, and focus.</span>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
