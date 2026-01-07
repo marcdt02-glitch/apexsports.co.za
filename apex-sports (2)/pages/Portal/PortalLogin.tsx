@@ -28,8 +28,10 @@ const PortalLogin: React.FC = () => {
             }
 
             // v18.0: Routing Guard
-            // Redirect Admin directly to Team Dashboard
-            if (result.email === 'admin@apexsports.co.za') {
+            // Redirect Admin OR Team Tier directly to Team Dashboard
+            const isTeamUser = result.productTier === 'Team' || result.package === 'Team' || result.productTier === 'team';
+
+            if (result.email === 'admin@apexsports.co.za' || isTeamUser) {
                 navigate('/portal/team');
             } else {
                 navigate(`/portal/${result.id}`);
