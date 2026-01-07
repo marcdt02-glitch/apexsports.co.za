@@ -22,7 +22,12 @@ const DEFAULT_PRACTICE: RoutineBlock[] = [
     { id: '3', time: '19:00', activity: 'Recovery', notes: 'Protein Shake + Stretch' },
 ];
 
-const RoutineEditor: React.FC = () => {
+interface RoutineEditorProps {
+    athleteName: string;
+    tier: string;
+}
+
+const RoutineEditor: React.FC<RoutineEditorProps> = ({ athleteName, tier }) => {
     const [activeTab, setActiveTab] = useState<'game' | 'practice'>('game');
     const [gameRoutine, setGameRoutine] = useState<RoutineBlock[]>([]);
     const [practiceRoutine, setPracticeRoutine] = useState<RoutineBlock[]>([]);
@@ -229,9 +234,9 @@ const RoutineEditor: React.FC = () => {
             {/* Floating Action Bar */}
             <div className="fixed bottom-8 right-8 flex flex-col gap-4">
                 <button
-                    onClick={handleDownloadPDF}
+                    onClick={() => handleDownloadPDF('light')}
                     className="bg-white text-black p-4 rounded-full shadow-lg hover:bg-gray-200 hover:scale-110 transition-transform"
-                    title="Download PDF Checklist"
+                    title="Download PDF"
                 >
                     <Download className="w-6 h-6" />
                 </button>

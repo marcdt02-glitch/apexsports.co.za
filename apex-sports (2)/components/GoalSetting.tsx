@@ -62,7 +62,12 @@ const CustomTooltip = ({ title, items }: { title: string, items: string[] }) => 
     </div>
 );
 
-const GoalSetting: React.FC<{ athleteName: string }> = ({ athleteName }) => {
+interface GoalSettingProps {
+    athleteName: string;
+    tier: string;
+}
+
+const GoalSetting: React.FC<GoalSettingProps> = ({ athleteName, tier }) => {
     const [activeTab, setActiveTab] = useState<Tab>('seasonOutcome');
     const [goals, setGoals] = useState<GoalsData>({
         seasonOutcome: { psychological: '', technical: '', tactical: '', physical: '' },
@@ -523,13 +528,22 @@ const GoalSetting: React.FC<{ athleteName: string }> = ({ athleteName }) => {
                         </div>
 
                         <div className="p-6 border-t border-neutral-800 bg-[#0f0f0f]">
-                            <button
-                                onClick={generatePDF}
-                                className="w-full bg-white text-black font-black py-4 hover:bg-gray-200 transition-colors uppercase tracking-widest flex items-center justify-center gap-2 text-sm"
-                            >
-                                <Download className="w-4 h-4" />
-                                Generate HQ PDF
-                            </button>
+                            <div className="flex gap-4">
+                                <button
+                                    onClick={() => generatePDF('dark')}
+                                    className="flex-1 bg-neutral-800 text-white py-4 rounded-lg font-bold hover:bg-neutral-700 transition-colors uppercase tracking-widest text-xs flex items-center justify-center gap-2"
+                                >
+                                    <div className="w-2 h-2 bg-black border border-white rounded-full"></div>
+                                    Dark PDF
+                                </button>
+                                <button
+                                    onClick={() => generatePDF('light')}
+                                    className="flex-1 bg-white text-black py-4 rounded-lg font-bold hover:bg-gray-200 transition-colors uppercase tracking-widest text-xs flex items-center justify-center gap-2 border border-gray-200"
+                                >
+                                    <div className="w-2 h-2 bg-white border border-black rounded-full"></div>
+                                    Print PDF
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
