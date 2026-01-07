@@ -118,29 +118,78 @@ const GoalSetting: React.FC<{ athleteName: string }> = ({ athleteName }) => {
             format: 'a4'
         });
 
+        // Load Logo
+        const logoUrl = '/images/logo.png';
+        const logoImg = new Image();
+        logoImg.src = logoUrl;
+        await new Promise((resolve) => { logoImg.onload = resolve; logoImg.onerror = resolve; });
+
+        // Header
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        pdf.setFillColor(0, 0, 0);
+        pdf.rect(0, 0, pdfWidth, 60, 'F'); // Header Bar
+
+        // Branding
+        try {
+            pdf.addImage(logoImg, 'PNG', 20, 10, 40, 40);
+        } catch (e) { }
+
+        pdf.setTextColor(255, 255, 255);
+        pdf.setFont('helvetica', 'bold');
+        pdf.setFontSize(24);
+        pdf.text("Performance Blueprint", 70, 30);
+
+        pdf.setFontSize(12);
+        pdf.setFont('helvetica', 'normal');
+        pdf.text(`Athlete: ${athleteName} | Tier: ${tier}`, 70, 45);
+
         const sections = Array.from(printRef.current.children) as HTMLElement[];
         let pageAdded = false;
+        let yOffset = 70; // Start below header
 
         for (const section of sections) {
             const sectionId = section.getAttribute('data-tab-id') as Tab;
             if (!sectionId || !exportSelection.includes(sectionId)) continue;
-            if (pageAdded) pdf.addPage();
+
+            // For subsequent pages, add new page and re-draw header? 
+            // Or just put header on first page? User implies branding on PDF. 
+            // Usually header on every page is nice, but `pdf.addPage` makes a blank page. 
+            // Let's keep a simple header on first page, or minimal header on others.
+            // For simplicity, let's just make it one continuous scrolling PDF or separate pages.
+            // Original code: `if (pageAdded) pdf.addPage();`
+
+            if (pageAdded) {
+                pdf.addPage();
+                yOffset = 20; // Reset offset for new page
+                // Optional: Draw minimal header on new pages
+                pdf.setFillColor(0, 0, 0);
+                pdf.rect(0, 0, pdfWidth, 20, 'F');
+                pdf.setTextColor(255, 255, 255);
+                pdf.setFontSize(10);
+                pdf.text(`APEX Performance | ${athleteName}`, 10, 14);
+                yOffset = 40;
+            }
 
             const canvas = await html2canvas(section, {
                 scale: 2,
-                backgroundColor: '#0a0a0a', // Print on Black
+                backgroundColor: '#0a0a0a',
                 logging: false
             });
 
             const imgData = canvas.toDataURL('image/png');
-            const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = pdf.internal.pageSize.getHeight();
             // Scale to fit width
             const imgProps = pdf.getImageProperties(imgData);
             const ratio = imgProps.width / imgProps.height;
             const linkHeight = pdfWidth / ratio;
 
-            pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, linkHeight);
+            if (linkHeight > (pdf.internal.pageSize.getHeight() - yOffset)) {
+                // If too tall, maybe just scale it? Or let it span?
+                // jsPDF simple addImage:
+                pdf.addImage(imgData, 'PNG', 0, yOffset, pdfWidth, linkHeight);
+            } else {
+                pdf.addImage(imgData, 'PNG', 0, yOffset, pdfWidth, linkHeight);
+            }
+
             pageAdded = true;
         }
 
@@ -351,8 +400,8 @@ const GoalSetting: React.FC<{ athleteName: string }> = ({ athleteName }) => {
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id)}
                             className={`flex-1 flex items-center justify-center gap-2 py-3 text-xs font-bold uppercase tracking-widest transition-all duration-300 relative overflow-hidden group ${activeTab === tab.id
-                                    ? 'bg-white text-black shadow-lg'
-                                    : 'text-gray-500 hover:text-white'
+                                ? 'bg-white text-black shadow-lg'
+                                : 'text-gray-500 hover:text-white'
                                 }`}
                         >
                             <tab.icon className={`w-3 h-3 ${activeTab === tab.id ? 'text-black' : 'text-gray-600 group-hover:text-gray-400'}`} />
@@ -377,8 +426,8 @@ const GoalSetting: React.FC<{ athleteName: string }> = ({ athleteName }) => {
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id)}
                         className={`flex-1 flex flex-col items-center justify-center gap-1 py-2 transition-all ${activeTab === tab.id
-                                ? 'text-white'
-                                : 'text-gray-600'
+                            ? 'text-white'
+                            : 'text-gray-600'
                             }`}
                     >
                         <div className={`p-1.5 rounded-lg ${activeTab === tab.id ? 'bg-neutral-800' : 'bg-transparent'}`}>

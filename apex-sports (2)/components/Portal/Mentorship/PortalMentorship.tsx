@@ -7,9 +7,10 @@ import GoalSetting from '../../GoalSetting';
 
 interface PortalMentorshipProps {
     athleteName: string;
+    tier: string;
 }
 
-const PortalMentorship: React.FC<PortalMentorshipProps> = ({ athleteName }) => {
+const PortalMentorship: React.FC<PortalMentorshipProps> = ({ athleteName, tier }) => {
     const [activeTab, setActiveTab] = useState<'overview' | 'goals' | 'assessment' | 'routines' | 'library'>('overview');
 
     const tabs = [
@@ -88,24 +89,22 @@ const PortalMentorship: React.FC<PortalMentorshipProps> = ({ athleteName }) => {
                     </div>
                 )}
 
-                {/* TAB: GOALS */}
                 {activeTab === 'goals' && (
                     <div className="animate-fade-in">
-                        <GoalSetting athleteName={athleteName} />
+                        <GoalSetting athleteName={athleteName} tier={tier} />
                     </div>
                 )}
 
-                {/* TAB: ASSESSMENT */}
                 {activeTab === 'assessment' && (
                     <div className="animate-fade-in">
-                        <SpatQuestionnaire />
+                        <SpatQuestionnaire athleteName={athleteName} tier={tier} />
                     </div>
                 )}
 
                 {/* TAB: ROUTINES */}
                 {activeTab === 'routines' && (
                     <div className="animate-fade-in">
-                        <RoutineEditor />
+                        <RoutineEditor athleteName={athleteName} tier={tier} />
                     </div>
                 )}
 

@@ -291,7 +291,7 @@ const Services: React.FC = () => {
                             </div>
                             <h3 className="text-white font-bold mb-2 text-xl">Goal Setting Access</h3>
                             <p className="text-gray-400 text-sm mb-4">
-                                Includes <strong>Psychological Skills Assessment</strong> and quarterly goal reviews.
+                                Includes <strong>Psychological Skills Assessment</strong>.
                             </p>
                             <a href="https://paystack.shop/pay/GoalSettingAccess-Monthly" target="_blank" rel="noreferrer" className="block w-full bg-black text-white font-bold py-3 rounded-lg hover:bg-neutral-800 transition-colors border border-neutral-700">
                                 Subscribe: R150/pm
