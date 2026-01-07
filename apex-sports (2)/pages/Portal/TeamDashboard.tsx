@@ -5,11 +5,11 @@ import {
     Brain, Moon, Target, Sparkles, Smile, Download, FileText, Layout
 } from 'lucide-react';
 import {
-import {
-        Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis,
-        ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip,
-        BarChart, Bar, Cell, Legend, CartesianGrid
-    } from 'recharts';
+
+    Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis,
+    ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip,
+    BarChart, Bar, Cell, Legend, CartesianGrid
+} from 'recharts';
 import { useData } from '../../context/DataContext';
 import { AthleteData } from '../../utils/dataEngine';
 
