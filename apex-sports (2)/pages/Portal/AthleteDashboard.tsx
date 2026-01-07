@@ -150,22 +150,62 @@ const AthleteDashboard: React.FC = () => {
     // v19.0 Access Logic (Safe Fallback)
     const tier = (athlete.productTier || '').trim().toLowerCase();
 
-    // Legacy Logic (if access object missing)
-    let isFullAccess = tier.includes('elite') || tier.includes('testing s&c') || tier.includes('apex membership') || athlete.email === 'admin@apexsports.co.za';
-    // Camp User Override (v38.0)
-    let isCampUser = tier.includes('camp') || tier.includes('basic');
-    let showMentorship = isFullAccess || tier.includes('mentorship');
-    let showReports = isFullAccess;
+    // Permissions Defaults
+    let showGoalSetting = false;
+    let showVideoLab = false;
+    let showWellness = false;
+    let showPhysicalSimple = false;
+    let showPhysicalAdvanced = false;
+    let showMentorship = false;
 
-    // New Logic (if access object present)
+    // Tier Detection
+    const isApex = tier.includes('apex') || tier.includes('elite') || athlete.email === 'admin@apexsports.co.za';
+    const isSpecific = tier.includes('specific');
+    const isTesting = tier.includes('testing') || tier.includes('dynamo');
+    const isGeneral = tier.includes('general');
+    const isGoalSetting = tier.includes('goal setting') || tier.includes('starter');
+
+    // Hierarchy Logic (Cascading Access)
+    if (isApex || isSpecific) {
+        // R1,500+ (Full Suite)
+        showGoalSetting = true;
+        showVideoLab = true;
+        showWellness = true;
+        showPhysicalSimple = true;
+        showPhysicalAdvanced = true;
+        showMentorship = true;
+    } else if (isTesting) {
+        // R1,000 (Testing Only - mostly)
+        showPhysicalSimple = true;
+        showPhysicalAdvanced = true;
+        // Assuming Testing also gets basic dash?
+        showWellness = true;
+    } else if (isGeneral) {
+        // R500 (General S&C)
+        showWellness = true;
+        showPhysicalSimple = true;
+    } else if (isGoalSetting) {
+        // R150 (Goal Setting)
+        showGoalSetting = true;
+        showVideoLab = true; // "Access to Goal-Setting Dashboard + Video Lab"
+    }
+
+    // Manual Override from Database (if present)
     if (athlete.access) {
-        isFullAccess = athlete.access.isFullAccess;
-        isCampUser = athlete.access.isCampUser ?? isCampUser; // Use backend flag if present
-        showMentorship = athlete.access.showMentorship;
-        showReports = athlete.access.showReports;
+        if (athlete.access.isFullAccess) {
+            showGoalSetting = true;
+            showVideoLab = true;
+            showWellness = true;
+            showPhysicalSimple = true;
+            showPhysicalAdvanced = true;
+            showMentorship = true;
+        }
+        // Could map specific flags if they existed in DB schema
     }
 
     // Toggle Restricted View
+    const isCampUser = tier.includes('camp'); // Legacy flag, keep for safe measure
+    const showReports = showPhysicalAdvanced; // Only advanced tiers get reports for now?
     const showAdvancedMetrics = isFullAccess && !isCampUser;
 
     // Charts

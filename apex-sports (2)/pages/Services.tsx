@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Check, Star, Zap, Shield, Trophy, Activity, ArrowRight, ExternalLink, ChevronRight, Users, Brain, Dumbbell } from 'lucide-react';
+import { ApplicationModal } from '../components/ApplicationModal';
 
 const Services: React.FC = () => {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalTier, setModalTier] = useState('');
+
     return (
         <div className="min-h-screen bg-black">
             {/* Hero Section */}
@@ -59,11 +63,9 @@ const Services: React.FC = () => {
                         </div>
 
                         <div className="space-y-4">
-                            {/* Monthly Option */}
-                            <a
-                                href="https://paystack.shop/pay/ApexMembership-Monthly"
-                                target="_blank"
-                                rel="noreferrer"
+                            {/* Monthly Option - VETTING PATH */}
+                            <button
+                                onClick={() => { setModalTier("Apex Membership (Monthly)"); setIsModalOpen(true); }}
                                 className="w-full flex items-center justify-between bg-white text-black font-black text-lg py-6 px-8 rounded-xl hover:bg-gray-200 transition-all hover:scale-[1.02] group shadow-xl shadow-white/5"
                             >
                                 <span>Monthly Subscription</span>
@@ -71,14 +73,12 @@ const Services: React.FC = () => {
                                     <span className="block text-2xl font-black">R2,500</span>
                                     <span className="text-xs text-gray-500 font-normal">Per Month</span>
                                 </div>
-                            </a>
+                            </button>
 
-                            {/* Annual Option (High Value Anchor) */}
-                            <a
-                                href="https://paystack.shop/pay/apexmembership-once-off"
-                                target="_blank"
-                                rel="noreferrer"
-                                className="w-full block bg-neutral-800 text-white p-6 rounded-xl hover:bg-neutral-700 transition-all hover:scale-[1.02] group border border-neutral-700 relative overflow-hidden"
+                            {/* Annual Option (High Value Anchor) - VETTING PATH */}
+                            <button
+                                onClick={() => { setModalTier("Apex Membership (Annual)"); setIsModalOpen(true); }}
+                                className="w-full block bg-neutral-800 text-white p-6 rounded-xl hover:bg-neutral-700 transition-all hover:scale-[1.02] group border border-neutral-700 relative overflow-hidden text-left"
                             >
                                 <div className="flex justify-between items-start mb-4">
                                     <div>
@@ -119,10 +119,11 @@ const Services: React.FC = () => {
                                     <div className="bg-white w-[93%] h-full"></div>
                                     <div className="bg-green-500 w-[7%] h-full"></div>
                                 </div>
-                                <div className="text-center text-[10px] text-green-500 font-bold uppercase tracking-wider">
-                                    Instant R2,000 Savings Applied
+                                <div className="flex justify-between items-center mt-2">
+                                    <span className="text-[10px] text-green-500 font-bold uppercase tracking-wider">Instant R2,000 Savings Applied</span>
+                                    <span className="text-white font-bold bg-white/20 px-3 py-1 rounded text-xs uppercase">Apply Now</span>
                                 </div>
-                            </a>
+                            </button>
                         </div>
                         <p className="text-center text-gray-500 text-xs mt-4">Includes priority support, full kit package, and 24/7 access.</p>
                     </div>
@@ -149,29 +150,32 @@ const Services: React.FC = () => {
                                 </div>
                             </div>
 
-                            {/* Option B */}
+                            {/* Option B - VETTING PATH */}
                             <div className="bg-neutral-900 p-6 rounded-xl border border-neutral-800">
                                 <h3 className="text-white font-bold mb-4 flex items-center gap-2 text-lg">
                                     <Shield className="text-blue-500" /> 12-Week Specific Program
                                 </h3>
                                 <div className="grid grid-cols-2 gap-4">
-                                    <a href="https://paystack.shop/pay/12weekspecifcprogram-onceoff" target="_blank" rel="noreferrer" className="bg-black hover:bg-neutral-800 text-center py-3 rounded-lg text-sm text-gray-300 transition-colors border border-neutral-700">
+                                    <button onClick={() => { setModalTier("12-Week Specific (Annual)"); setIsModalOpen(true); }} className="bg-black hover:bg-neutral-800 text-center py-3 rounded-lg text-sm text-gray-300 transition-colors border border-neutral-700">
                                         Annual: <strong className="text-white block text-lg">R15,000</strong>
-                                    </a>
-                                    <a href="https://paystack.shop/pay/12WeekSpecifcProgram-Monthly" target="_blank" rel="noreferrer" className="bg-black hover:bg-neutral-800 text-center py-3 rounded-lg text-sm text-gray-300 transition-colors border border-neutral-700">
+                                    </button>
+                                    <button onClick={() => { setModalTier("12-Week Specific (Monthly)"); setIsModalOpen(true); }} className="bg-black hover:bg-neutral-800 text-center py-3 rounded-lg text-sm text-gray-300 transition-colors border border-neutral-700">
                                         Monthly: <strong className="text-white block text-lg">R1,500</strong>
-                                    </a>
+                                    </button>
                                 </div>
                             </div>
 
-                            {/* Option C */}
+                            {/* Option C - VETTING PATH (TESTING) */}
                             <div className="bg-neutral-900 p-6 rounded-xl border border-neutral-800">
                                 <h3 className="text-white font-bold mb-4 flex items-center gap-2 text-lg">
                                     <Activity className="text-red-500" /> VALD Performance Testing
                                 </h3>
-                                <a href="https://paystack.shop/pay/testingdynamo" target="_blank" rel="noreferrer" className="block w-full bg-white hover:bg-gray-200 text-black text-center py-3 rounded-lg font-bold transition-colors">
+                                <button onClick={() => { setModalTier("VALD Performance Testing"); setIsModalOpen(true); }} className="block w-full bg-white hover:bg-gray-200 text-black text-center py-3 rounded-lg font-bold transition-colors">
                                     Book Dynamo Protocol: R1,000
-                                </a>
+                                </button>
+                                <p className="text-center text-xs text-gray-500 mt-3 font-medium">
+                                    Subject to availability—Application required.
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -238,17 +242,17 @@ const Services: React.FC = () => {
                     <div className="bg-neutral-900/50 p-8 rounded-3xl border border-neutral-800 space-y-4">
                         <div className="flex items-center justify-between bg-black p-4 rounded-xl border border-neutral-800">
                             <span className="text-white font-bold">5-Hour Coaching Pack</span>
-                            <a href="https://paystack.shop/pay/5hourcoachingpack" target="_blank" rel="noreferrer" className="text-white underline text-sm hover:text-gray-300">
-                                Buy for R2,500
-                            </a>
+                            <button onClick={() => { setModalTier("5-Hour Coaching Pack"); setIsModalOpen(true); }} className="text-white underline text-sm hover:text-gray-300">
+                                Apply for R2,500
+                            </button>
                         </div>
 
                         {/* 10 HOUR PACK (NEW) */}
                         <div className="flex items-center justify-between bg-black p-4 rounded-xl border border-neutral-800">
                             <span className="text-white font-bold">10-Hour Coaching Pack</span>
-                            <a href="https://paystack.shop/pay/10hourcoachingpack" target="_blank" rel="noreferrer" className="text-white underline text-sm hover:text-gray-300">
-                                Buy for R4,500
-                            </a>
+                            <button onClick={() => { setModalTier("10-Hour Coaching Pack"); setIsModalOpen(true); }} className="text-white underline text-sm hover:text-gray-300">
+                                Apply for R4,500
+                            </button>
                         </div>
 
                         {/* 25-Hour Pack with Savings Logic */}
@@ -267,13 +271,13 @@ const Services: React.FC = () => {
                                 <span className="text-xs bg-white text-black font-bold px-2 py-1 rounded">Save R3,500</span>
                             </div>
 
-                            <a href="https://paystack.shop/pay/25hourcoachingpack-onceoff" target="_blank" rel="noreferrer" className="block w-full bg-white hover:bg-gray-200 text-black text-center py-3 rounded-lg font-bold transition-colors mb-2">
-                                Claim This Offer
-                            </a>
+                            <button onClick={() => { setModalTier("25-Hour Elite Pack (Once-off)"); setIsModalOpen(true); }} className="block w-full bg-white hover:bg-gray-200 text-black text-center py-3 rounded-lg font-bold transition-colors mb-2">
+                                Apply for Offer
+                            </button>
                             <div className="text-center">
-                                <a href="https://paystack.shop/pay/25HourCoachingPack-Monthly" target="_blank" rel="noreferrer" className="text-xs text-gray-400 hover:text-white underline">
-                                    Or pay R833/mo
-                                </a>
+                                <button onClick={() => { setModalTier("25-Hour Elite Pack (Monthly)"); setIsModalOpen(true); }} className="text-xs text-gray-400 hover:text-white underline">
+                                    Or apply for R833/mo
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -378,6 +382,13 @@ const Services: React.FC = () => {
                 </a>
             </div>
         </div>
+            {/* Modal */ }
+    <ApplicationModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        tierName={modalTier}
+    />
+        </div >
     );
 };
 
