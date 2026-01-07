@@ -429,14 +429,16 @@ const AthleteDashboard: React.FC = () => {
             {/* Header / Instructional Video */}
             <div className="bg-neutral-900 border border-neutral-800 rounded-3xl overflow-hidden">
                 <div className="aspect-video w-full bg-black relative flex items-center justify-center group">
-                    {/* Placeholder Video Embed - Replace 'dQw4w9WgXcQ' with actual ID */}
-                    <iframe
-                        className="w-full h-full"
-                        src="https://www.youtube.com/embed/dQw4w9WgXcQ?modestbranding=1&rel=0"
-                        title="Welcome to APEX"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowFullScreen
-                    ></iframe>
+                    {/* Placeholder Video */}
+                    <video
+                        className="w-full h-full object-cover opacity-80"
+                        src="/videos/Training Footage 1.mov"
+                        controls
+                        muted
+                        autoPlay
+                        loop
+                        playsInline
+                    />
                 </div>
                 <div className="p-6">
                     <h2 className="text-2xl font-black text-white mb-2">Welcome to Your Portal</h2>
@@ -701,6 +703,37 @@ const AthleteDashboard: React.FC = () => {
                     {/* VIEW: DASHBOARD (Physical Results) */}
                     {activeView === 'dashboard' && (
                         <div className="space-y-12 animate-fade-in">
+
+                            {/* v20.0: Navigation & Interpretation Guide */}
+                            <div className="bg-neutral-900 border border-neutral-800 p-6 rounded-2xl">
+                                <div className="flex items-center justify-between mb-4">
+                                    <h3 className="text-white font-bold flex items-center gap-2">
+                                        <Info className="w-5 h-5 text-blue-500" />
+                                        How to Navigate Your Physical Results
+                                    </h3>
+                                    <Link
+                                        to="#"
+                                        onClick={() => setActiveView('reports')}
+                                        className="text-xs font-bold text-blue-400 hover:text-white flex items-center gap-1"
+                                    >
+                                        View Full PDF Reports <ChevronRight className="w-3 h-3" />
+                                    </Link>
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm text-gray-400">
+                                    <div className="bg-black/20 p-4 rounded-xl">
+                                        <strong className="block text-white mb-1">1. The Radar</strong>
+                                        Shows your balance. A full chart means you are well-rounded. Dips indicate areas to focus on (e.g., Hamstring strength).
+                                    </div>
+                                    <div className="bg-black/20 p-4 rounded-xl">
+                                        <strong className="block text-white mb-1">2. Metrics</strong>
+                                        Your raw numbers. Compare "Left vs. Right" to see symmetry. 100% Symmetry is the goal.
+                                    </div>
+                                    <div className="bg-black/20 p-4 rounded-xl">
+                                        <strong className="block text-white mb-1">3. Reports</strong>
+                                        Need a printed copy? Go to the <strong>Reports</strong> tab to download your standardized Season Report.
+                                    </div>
+                                </div>
+                            </div>
 
                             {/* Upsell for General Tier */}
                             {!showAdvancedMetrics && (
