@@ -12,7 +12,7 @@ import {
 import {
     AlertTriangle, CheckCircle, UploadCloud, AlertCircle, Zap,
     LayoutDashboard, Target, BookOpen, FileText, Menu, X, Save, ExternalLink,
-    Activity, Shield, Battery, TrendingUp, ChevronRight, Lock, User, LogOut, MonitorPlay
+    Activity, Shield, Battery, TrendingUp, ChevronRight, Lock, User, LogOut, MonitorPlay, Home, CheckSquare, BarChart2
 } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
@@ -103,7 +103,7 @@ import PortalMentorship from '../../components/Portal/Mentorship/PortalMentorshi
 const AthleteDashboard: React.FC = () => {
     const { athleteId } = useParams<{ athleteId: string }>();
     const { getAthlete } = useData();
-    const [activeView, setActiveView] = useState<'dashboard' | 'goals' | 'library' | 'reports' | 'wellness' | 'mentorship' | 'coaching'>('dashboard');
+    const [activeView, setActiveView] = useState<'home' | 'dashboard' | 'goals' | 'library' | 'reports' | 'wellness' | 'mentorship' | 'coaching'>('home');
     const [clinicalTab, setClinicalTab] = useState<'lower' | 'upper' | 'symmetry'>('lower');
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const dashboardRef = useRef<HTMLDivElement>(null);
@@ -185,6 +185,79 @@ const AthleteDashboard: React.FC = () => {
     // Hero Stat Triggers
     const showHeroStat = showAdvancedMetrics; // Only show for Advanced tiers (Clinical)
 
+    const renderHome = () => (
+        <div className="space-y-8 animate-fade-in">
+            {/* Header / Instructional Video */}
+            <div className="bg-neutral-900 border border-neutral-800 rounded-3xl overflow-hidden">
+                <div className="aspect-video w-full bg-black relative flex items-center justify-center group">
+                    {/* Placeholder Video Embed - Replace 'dQw4w9WgXcQ' with actual ID */}
+                    <iframe
+                        className="w-full h-full"
+                        src="https://www.youtube.com/embed/dQw4w9WgXcQ?modestbranding=1&rel=0"
+                        title="Welcome to APEX"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                    ></iframe>
+                </div>
+                <div className="p-6">
+                    <h2 className="text-2xl font-black text-white mb-2">Welcome to Your Portal</h2>
+                    <p className="text-gray-400">Watch this short guide to understand how to maximize your APEX Performance journey.</p>
+                </div>
+            </div>
+
+            {/* APEX Guide */}
+            <div className="bg-neutral-900/50 border border-neutral-800 p-8 rounded-3xl">
+                <div className="flex items-center gap-3 mb-6">
+                    <BookOpen className="w-6 h-6 text-purple-500" />
+                    <h3 className="text-xl font-bold text-white">APEX Athlete Guide</h3>
+                </div>
+                <ul className="space-y-4">
+                    <li className="flex items-start gap-4 p-4 bg-black/20 rounded-xl border border-neutral-800/50">
+                        <CheckCircle className="w-6 h-6 text-blue-500 flex-shrink-0 mt-0.5" />
+                        <div>
+                            <strong className="block text-white mb-1">Morning Wellness Check-in</strong>
+                            <span className="text-gray-400 text-sm">Complete your scale ratings (1-10) every morning before 08:00 to track fatigue and readiness.</span>
+                        </div>
+                    </li>
+                    <li className="flex items-start gap-4 p-4 bg-black/20 rounded-xl border border-neutral-800/50">
+                        <Activity className="w-6 h-6 text-green-500 flex-shrink-0 mt-0.5" />
+                        <div>
+                            <strong className="block text-white mb-1">Review Physical Results</strong>
+                            <span className="text-gray-400 text-sm">Check your "Physical Results" tab after every testing session to see your progress.</span>
+                        </div>
+                    </li>
+                    <li className="flex items-start gap-4 p-4 bg-black/20 rounded-xl border border-neutral-800/50">
+                        <AlertTriangle className="w-6 h-6 text-yellow-500 flex-shrink-0 mt-0.5" />
+                        <div>
+                            <strong className="block text-white mb-1">Monitor Red Flags</strong>
+                            <span className="text-gray-400 text-sm">Pay attention to any alerts or "Growth Areas" highlighted in your reports.</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            {/* Quick Actions */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <button
+                    onClick={() => setActiveView('wellness')}
+                    className="p-8 bg-gradient-to-br from-blue-900/40 to-blue-900/10 border border-blue-500/30 rounded-3xl text-left hover:border-blue-500 transition-all group"
+                >
+                    <Activity className="w-10 h-10 text-blue-400 mb-4 group-hover:scale-110 transition-transform" />
+                    <h3 className="text-2xl font-black text-white mb-2">Daily Check-in</h3>
+                    <p className="text-blue-200/60 font-medium">Log your physical & mental state &rarr;</p>
+                </button>
+                <button
+                    onClick={() => setActiveView('dashboard')}
+                    className="p-8 bg-gradient-to-br from-green-900/40 to-green-900/10 border border-green-500/30 rounded-3xl text-left hover:border-green-500 transition-all group"
+                >
+                    <BarChart2 className="w-10 h-10 text-green-400 mb-4 group-hover:scale-110 transition-transform" />
+                    <h3 className="text-2xl font-black text-white mb-2">View My Progress</h3>
+                    <p className="text-green-200/60 font-medium">Analyze your latest physical results &rarr;</p>
+                </button>
+            </div>
+        </div>
+    );
+
     return (
         <SafetyGuard athlete={athlete}>
             <div className="min-h-screen bg-black text-white pb-20 font-sans">
@@ -197,12 +270,22 @@ const AthleteDashboard: React.FC = () => {
 
                 <div className={`fixed inset-y-0 left-0 z-40 w-64 bg-[#0a0a0a] border-r border-neutral-800 transform transition-transform duration-300 lg:translate-x-0 pt-8 pb-10 flex flex-col top-24 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
                     <div className="px-6 space-y-2">
+                        {/* HOME (New Landing) */}
+                        <button
+                            onClick={() => { setActiveView('home'); setSidebarOpen(false); }}
+                            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeView === 'home' ? 'bg-white text-black font-bold' : 'text-gray-400 hover:bg-neutral-800 hover:text-white'}`}
+                        >
+                            <Home className="w-5 h-5" />
+                            Home
+                        </button>
+
+                        {/* PHYSICAL RESULTS (Renamed Dashboard) */}
                         <button
                             onClick={() => { setActiveView('dashboard'); setSidebarOpen(false); }}
                             className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeView === 'dashboard' ? 'bg-white text-black font-bold' : 'text-gray-400 hover:bg-neutral-800 hover:text-white'}`}
                         >
-                            <LayoutDashboard className="w-5 h-5" />
-                            Dashboard
+                            <BarChart2 className="w-5 h-5" />
+                            Physical Results
                         </button>
 
                         {/* COACHING LAYER (v18.5) */}
@@ -283,7 +366,9 @@ const AthleteDashboard: React.FC = () => {
                             <div className="flex items-center gap-2">
                                 <span className="text-gray-500 font-mono text-xs uppercase tracking-widest">Portal</span>
                                 <ChevronRight className="w-3 h-3 text-gray-700" />
-                                <span className="text-white font-bold text-xs uppercase tracking-widest">{activeView}</span>
+                                <span className="text-white font-bold text-xs uppercase tracking-widest">
+                                    {activeView === 'dashboard' ? 'Physical Results' : activeView}
+                                </span>
                             </div>
                         </div>
 
@@ -349,6 +434,10 @@ const AthleteDashboard: React.FC = () => {
                     )}
 
                     {/* VIEW: DASHBOARD */}
+                    {/* VIEW: HOME */}
+                    {activeView === 'home' && renderHome()}
+
+                    {/* VIEW: DASHBOARD (Physical Results) */}
                     {activeView === 'dashboard' && (
                         <div className="space-y-12 animate-fade-in">
 
@@ -701,7 +790,7 @@ const AthleteDashboard: React.FC = () => {
                     {/* VIEW: MENTORSHIP & GOALS */}
                     {activeView === 'mentorship' && (
                         <div className="animate-fade-in">
-                            <PortalMentorship athleteName={athlete.name} />
+                            <PortalMentorship athleteName={athlete.name} tier={athlete.package} />
                         </div>
                     )}
 
