@@ -132,7 +132,7 @@ const Mentorship: React.FC = () => {
             rel="noreferrer"
             className="bg-white text-black px-8 py-4 rounded-full font-bold text-lg hover:bg-gray-200 transition-colors flex items-center justify-center gap-3 shadow-lg shadow-white/10"
           >
-            <item.icon className="w-5 h-5" /> {/* Wait, I don't have item defined here. fixing this in logic below */}
+            <Calendar className="w-5 h-5" />
             Book Discovery Call
           </a>
           <a
