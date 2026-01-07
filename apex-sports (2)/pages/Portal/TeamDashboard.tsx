@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
-    Users, Activity, AlertTriangle, Trophy, LayoutGrid,
     ChevronRight, Shield, Zap, TrendingUp, LogOut,
-    Brain, Moon, Target, Sparkles, Smile
+    Brain, Moon, Target, Sparkles, Smile, Download, FileText, Layout
 } from 'lucide-react';
 import {
-    Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis,
-    ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip
-} from 'recharts';
+import {
+        Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis,
+        ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip,
+        BarChart, Bar, Cell, Legend, CartesianGrid
+    } from 'recharts';
 import { useData } from '../../context/DataContext';
 import { AthleteData } from '../../utils/dataEngine';
 
@@ -19,6 +20,7 @@ interface TeamMetric extends AthleteData {
     isGoalkeeper: boolean;
     wristForce?: number;
     reactionTime?: number;
+    counterMovementJump: number; // cm
 
     // Psych Metrics (1-10)
     cognitiveLoad: number;
@@ -53,6 +55,7 @@ const generateMockTeam = (count: number): TeamMetric[] => {
         soreness: Math.floor(Math.random() * 10), // 0-10
         groinSqueeze: 200 + Math.floor(Math.random() * 300),
         imtpPeakForce: 2500 + Math.floor(Math.random() * 2500),
+        counterMovementJump: 30 + Math.floor(Math.random() * 25), // 30-55cm
 
         // History (7 days)
         sorenessHistory: Array.from({ length: 7 }, () => Math.floor(Math.random() * 5)),
@@ -90,7 +93,28 @@ const TeamDashboard: React.FC = () => {
     const { fetchAndAddAthlete } = useData(); // We might use this later for real data
     const [teamData, setTeamData] = useState<TeamMetric[]>([]);
     const [viewMode, setViewMode] = useState<'performance' | 'psych'>('performance');
+    const [dashboardMode, setDashboardMode] = useState<'pro' | 'executive'>('pro');
+    const [insights, setInsights] = useState({
+        headline: "Team Performance Update",
+        text: "The team's explosive power has increased by 12% since last month. Recovery is low this week; we recommend a lighter tactical session tomorrow."
+    });
     const [isGKMode, setIsGKMode] = useState(false);
+
+    // PDF Export
+    const reportRef = React.useRef<HTMLDivElement>(null);
+    const handleDownloadReport = async () => {
+        if (!reportRef.current) return;
+        const canvas = await html2canvas(reportRef.current, { scale: 2, backgroundColor: '#000000' });
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const width = pdf.internal.pageSize.getWidth();
+        const imgHeight = (canvas.height * width) / canvas.width;
+
+        pdf.setFillColor(0, 0, 0);
+        pdf.rect(0, 0, width, 297, 'F');
+        pdf.addImage(imgData, 'PNG', 0, 0, width, imgHeight);
+        pdf.save('APEX_Team_Executive_Summary.pdf');
+    };
     const [isLoading, setIsLoading] = useState(true);
 
     // Load Mock Data on Mount
@@ -263,6 +287,180 @@ const TeamDashboard: React.FC = () => {
             </div>
         </div>
     );
+
+    const renderExecutiveView = () => {
+        // Calculations
+        const teamAvgExplosive = Math.round(filteredData.reduce((acc, c) => acc + c.imtpPeakForce, 0) / (filteredData.length || 1));
+        const topExplosive = Math.max(...filteredData.map(c => c.imtpPeakForce));
+        const topExplosiveName = filteredData.find(c => c.imtpPeakForce === topExplosive)?.name;
+
+        const teamAvgJump = Math.round(filteredData.reduce((acc, c) => acc + c.counterMovementJump, 0) / (filteredData.length || 1));
+        const topJump = Math.max(...filteredData.map(c => c.counterMovementJump));
+        const topJumpName = filteredData.find(c => c.counterMovementJump === topJump)?.name;
+
+        const teamAvgAsym = filteredData.reduce((acc, c) => {
+            const diff = Math.abs(c.kneeExtensionLeft - c.kneeExtensionRight);
+            const max = Math.max(c.kneeExtensionLeft, c.kneeExtensionRight) || 1;
+            return acc + (diff / max);
+        }, 0) / (filteredData.length || 1);
+        const teamBalanceScore = Math.round((1 - teamAvgAsym) * 100);
+
+        const dataExplosive = [
+            { name: 'Team Avg', val: teamAvgExplosive, fill: '#525252' },
+            { name: 'Top Performer', val: topExplosive, fill: '#EAB308' }
+        ];
+
+        const dataJump = [
+            { name: 'Team Avg', val: teamAvgJump, fill: '#525252' },
+            { name: 'Top Performer', val: topJump, fill: '#EAB308' }
+        ];
+
+        // Traffic Lights
+        const getTrafficColor = (val: number, thresholdGood: number, thresholdBad: number, higherIsGood = true) => {
+            if (higherIsGood) {
+                if (val >= thresholdGood) return 'text-green-500';
+                if (val <= thresholdBad) return 'text-red-500';
+                return 'text-yellow-500';
+            } else {
+                if (val <= thresholdGood) return 'text-green-500';
+                if (val >= thresholdBad) return 'text-red-500';
+                return 'text-yellow-500';
+            }
+        };
+
+        return (
+            <div ref={reportRef} className="space-y-8 bg-black p-8 rounded-3xl border border-neutral-800">
+                {/* Header */}
+                <div className="flex justify-between items-start">
+                    <div>
+                        <h2 className="text-3xl font-black text-white">Executive Summary</h2>
+                        <p className="text-gray-400">Simplified Coach View & Insights</p>
+                    </div>
+                    <div className="bg-neutral-900 px-4 py-2 rounded-lg border border-neutral-800">
+                        <p className="text-xs text-gray-500 uppercase font-bold">Generated</p>
+                        <p className="text-white font-mono">{new Date().toLocaleDateString()}</p>
+                    </div>
+                </div>
+
+                {/* Insights Section */}
+                <div className="bg-neutral-900/50 p-6 rounded-2xl border border-neutral-800">
+                    <div className="flex items-center gap-2 mb-4">
+                        <Sparkles className="w-5 h-5 text-purple-500" />
+                        <h3 className="text-xl font-bold text-white">APEX Insights</h3>
+                    </div>
+                    <div className="space-y-4">
+                        <input
+                            value={insights.headline}
+                            onChange={(e) => setInsights({ ...insights, headline: e.target.value })}
+                            className="bg-transparent text-white font-bold text-lg w-full outline-none border-b border-neutral-800 pb-2 focus:border-purple-500 transition-colors"
+                            placeholder="Enter Headline..."
+                        />
+                        <textarea
+                            value={insights.text}
+                            onChange={(e) => setInsights({ ...insights, text: e.target.value })}
+                            className="bg-transparent text-gray-300 w-full h-24 outline-none resize-none placeholder-gray-600 text-lg leading-relaxed"
+                            placeholder="Type your key takeaways here..."
+                        />
+                    </div>
+                </div>
+
+                {/* Metrics Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    {/* Explosiveness */}
+                    <div className="bg-neutral-900/30 p-6 rounded-2xl border border-neutral-800">
+                        <div className="flex items-center justify-between mb-6">
+                            <h4 className="font-bold text-white">Explosiveness</h4>
+                            <Zap className={`w-5 h-5 ${getTrafficColor(teamAvgExplosive, 3000, 2000)}`} />
+                        </div>
+                        <div className="h-48">
+                            <ResponsiveContainer width="100%" height="100%">
+                                <BarChart data={dataExplosive}>
+                                    <CartesianGrid strokeDasharray="3 3" opacity={0.1} />
+                                    <XAxis dataKey="name" tick={{ fill: '#666', fontSize: 10 }} axisLine={false} tickLine={false} />
+                                    <YAxis hide />
+                                    <Tooltip contentStyle={{ backgroundColor: '#000', border: '1px solid #333' }} />
+                                    <Bar dataKey="val" radius={[4, 4, 0, 0]}>
+                                        {dataExplosive.map((entry, index) => (
+                                            <Cell key={`cell-${index}`} fill={entry.fill} />
+                                        ))}
+                                    </Bar>
+                                </BarChart>
+                            </ResponsiveContainer>
+                        </div>
+                        <div className="mt-4 text-center">
+                            <p className="text-xs text-gray-500 uppercase">Top Performer</p>
+                            <p className="text-white font-bold">{topExplosiveName}</p>
+                            <p className="text-yellow-500 font-mono text-xs">{topExplosive} N</p>
+                        </div>
+                    </div>
+
+                    {/* Vertical Spring */}
+                    <div className="bg-neutral-900/30 p-6 rounded-2xl border border-neutral-800">
+                        <div className="flex items-center justify-between mb-6">
+                            <h4 className="font-bold text-white">Vertical Spring</h4>
+                            <TrendingUp className={`w-5 h-5 ${getTrafficColor(teamAvgJump, 40, 30)}`} />
+                        </div>
+                        <div className="h-48">
+                            <ResponsiveContainer width="100%" height="100%">
+                                <BarChart data={dataJump}>
+                                    <CartesianGrid strokeDasharray="3 3" opacity={0.1} />
+                                    <XAxis dataKey="name" tick={{ fill: '#666', fontSize: 10 }} axisLine={false} tickLine={false} />
+                                    <YAxis hide />
+                                    <Tooltip contentStyle={{ backgroundColor: '#000', border: '1px solid #333' }} />
+                                    <Bar dataKey="val" radius={[4, 4, 0, 0]}>
+                                        {dataJump.map((entry, index) => (
+                                            <Cell key={`cell-${index}`} fill={entry.fill} />
+                                        ))}
+                                    </Bar>
+                                </BarChart>
+                            </ResponsiveContainer>
+                        </div>
+                        <div className="mt-4 text-center">
+                            <p className="text-xs text-gray-500 uppercase">Top Performer</p>
+                            <p className="text-white font-bold">{topJumpName}</p>
+                            <p className="text-yellow-500 font-mono text-xs">{topJump} cm</p>
+                        </div>
+                    </div>
+
+                    {/* Balance */}
+                    <div className="bg-neutral-900/30 p-6 rounded-2xl border border-neutral-800 flex flex-col justify-between">
+                        <div className="flex items-center justify-between mb-6">
+                            <h4 className="font-bold text-white">Balance & Risk</h4>
+                            <Shield className={`w-5 h-5 ${getTrafficColor(teamBalanceScore, 90, 80)}`} />
+                        </div>
+
+                        <div className="flex-grow flex flex-col justify-center items-center">
+                            <div className="relative w-32 h-32 flex items-center justify-center">
+                                <svg className="w-full h-full transform -rotate-90">
+                                    <circle cx="64" cy="64" r="56" stroke="#333" strokeWidth="12" fill="transparent" />
+                                    <circle
+                                        cx="64" cy="64" r="56"
+                                        stroke={teamBalanceScore > 90 ? '#22c55e' : teamBalanceScore > 80 ? '#eab308' : '#ef4444'}
+                                        strokeWidth="12"
+                                        fill="transparent"
+                                        strokeDasharray={351}
+                                        strokeDashoffset={351 - (351 * teamBalanceScore) / 100}
+                                        className="transition-all duration-1000"
+                                    />
+                                </svg>
+                                <div className="absolute text-center">
+                                    <span className="text-3xl font-black text-white">{teamBalanceScore}</span>
+                                    <span className="block text-[10px] text-gray-500">SCORE</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="mt-6 text-center">
+                            <p className="text-gray-400 text-sm">
+                                Team Average Symmetry: <strong className="text-white">{(100 - teamBalanceScore).toFixed(1)}%</strong>
+                            </p>
+                            <p className="text-xs text-gray-600 mt-1">Lower asymmetry is better.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    };
 
     const renderPsychView = () => (
         <div className="space-y-8">
@@ -443,45 +641,91 @@ const TeamDashboard: React.FC = () => {
                 <div className="flex flex-col gap-8 max-w-7xl mx-auto">
 
                     {/* Header Controls */}
-                    <div className="flex items-center justify-between">
+                    <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-6">
                         <div>
-                            <h2 className="text-3xl font-black uppercase tracking-tight">Team Performance</h2>
-                            <p className="text-neutral-400">Live monitoring of {filteredData.length} athletes</p>
+                            <h2 className="text-3xl font-black uppercase tracking-tight">
+                                {dashboardMode === 'executive' ? 'Executive Summary' : 'Team Performance'}
+                            </h2>
+                            <p className="text-neutral-400">
+                                {dashboardMode === 'executive'
+                                    ? "Simplified High-Level Report for Stakeholders"
+                                    : `Live monitoring of ${filteredData.length} athletes`}
+                            </p>
                         </div>
 
-                        <div className="flex items-center gap-4">
-                            {/* View Toggle */}
-                            <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-1 flex items-center">
+                        <div className="flex flex-wrap items-center gap-4">
+                            {/* Dashboard Mode Toggle (Pro vs Executive) */}
+                            <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-1 flex items-center shadow-sm">
                                 <button
-                                    onClick={() => setViewMode('performance')}
-                                    className={`px-4 py-2 rounded-md text-sm font-bold transition-all flex items-center gap-2 ${viewMode === 'performance' ? 'bg-white text-black' : 'text-neutral-400 hover:text-white'}`}
+                                    onClick={() => setDashboardMode('pro')}
+                                    className={`px-4 py-2 rounded-md text-sm font-bold transition-all flex items-center gap-2 ${dashboardMode === 'pro'
+                                        ? 'bg-white text-black shadow-md'
+                                        : 'text-neutral-400 hover:text-white'}`}
                                 >
-                                    <Zap className="w-4 h-4" />
-                                    Performance
+                                    <Layout className="w-4 h-4" />
+                                    Pro View
                                 </button>
                                 <button
-                                    onClick={() => setViewMode('psych')}
-                                    className={`px-4 py-2 rounded-md text-sm font-bold transition-all flex items-center gap-2 ${viewMode === 'psych' ? 'bg-purple-600 text-white shadow-lg shadow-purple-900/20' : 'text-neutral-400 hover:text-white'}`}
+                                    onClick={() => setDashboardMode('executive')}
+                                    className={`px-4 py-2 rounded-md text-sm font-bold transition-all flex items-center gap-2 ${dashboardMode === 'executive'
+                                        ? 'bg-white text-black shadow-md'
+                                        : 'text-neutral-400 hover:text-white'}`}
                                 >
-                                    <Brain className="w-4 h-4" />
-                                    Psych & Wellness
+                                    <FileText className="w-4 h-4" />
+                                    Coach View
                                 </button>
                             </div>
 
-                            <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-1 flex items-center">
+                            {/* Pro Controls */}
+                            {dashboardMode === 'pro' && (
+                                <>
+                                    <div className="h-8 w-px bg-neutral-800 hidden md:block"></div>
+
+                                    {/* View Toggle */}
+                                    <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-1 flex items-center">
+                                        <button
+                                            onClick={() => setViewMode('performance')}
+                                            className={`px-4 py-2 rounded-md text-sm font-bold transition-all flex items-center gap-2 ${viewMode === 'performance' ? 'bg-white text-black' : 'text-neutral-400 hover:text-white'}`}
+                                        >
+                                            <Zap className="w-4 h-4" />
+                                            Performance
+                                        </button>
+                                        <button
+                                            onClick={() => setViewMode('psych')}
+                                            className={`px-4 py-2 rounded-md text-sm font-bold transition-all flex items-center gap-2 ${viewMode === 'psych' ? 'bg-purple-600 text-white shadow-lg shadow-purple-900/20' : 'text-neutral-400 hover:text-white'}`}
+                                        >
+                                            <Brain className="w-4 h-4" />
+                                            Psych & Wellness
+                                        </button>
+                                    </div>
+
+                                    <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-1 flex items-center">
+                                        <button
+                                            onClick={() => setIsGKMode(false)}
+                                            className={`px-4 py-2 rounded-md text-sm font-bold transition-all ${!isGKMode ? 'bg-white text-black' : 'text-neutral-400 hover:text-white'}`}
+                                        >
+                                            Full Squad
+                                        </button>
+                                        <button
+                                            onClick={() => setIsGKMode(true)}
+                                            className={`px-4 py-2 rounded-md text-sm font-bold transition-all ${isGKMode ? 'bg-blue-600 text-white' : 'text-neutral-400 hover:text-white'}`}
+                                        >
+                                            Goalkeepers
+                                        </button>
+                                    </div>
+                                </>
+                            )}
+
+                            {/* Executive Controls */}
+                            {dashboardMode === 'executive' && (
                                 <button
-                                    onClick={() => setIsGKMode(false)}
-                                    className={`px-4 py-2 rounded-md text-sm font-bold transition-all ${!isGKMode ? 'bg-white text-black' : 'text-neutral-400 hover:text-white'}`}
+                                    onClick={handleDownloadReport}
+                                    className="bg-green-600 text-white px-6 py-2.5 rounded-lg font-bold hover:bg-green-700 transition-colors flex items-center gap-2 ml-2 shadow-lg shadow-green-900/20"
                                 >
-                                    Full Squad
+                                    <Download className="w-4 h-4" />
+                                    Download Summary
                                 </button>
-                                <button
-                                    onClick={() => setIsGKMode(true)}
-                                    className={`px-4 py-2 rounded-md text-sm font-bold transition-all ${isGKMode ? 'bg-blue-600 text-white' : 'text-neutral-400 hover:text-white'}`}
-                                >
-                                    Goalkeepers
-                                </button>
-                            </div>
+                            )}
                         </div>
                     </div>
 
@@ -491,7 +735,9 @@ const TeamDashboard: React.FC = () => {
                         </div>
                     ) : (
                         <>
-                            {viewMode === 'performance' ? renderPerformanceView() : renderPsychView()}
+                            {dashboardMode === 'executive'
+                                ? renderExecutiveView()
+                                : viewMode === 'performance' ? renderPerformanceView() : renderPsychView()}
                         </>
                     )}
                 </div>
