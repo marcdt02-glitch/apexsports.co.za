@@ -284,6 +284,21 @@ const Services: React.FC = () => {
             <div className="py-24 px-4 bg-[#0a0a0a]">
                 <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center lg:flex-row-reverse">
                     <div className="order-2 lg:order-1 bg-black/50 p-8 rounded-3xl border border-neutral-800 space-y-6">
+                        {/* Goal Setting Access (New) */}
+                        <div className="bg-neutral-900 p-8 rounded-xl border border-neutral-800 text-center relative overflow-hidden">
+                            <div className="absolute top-0 right-0 bg-neutral-800 text-gray-400 text-[10px] font-bold px-3 py-1 rounded-bl-lg">
+                                STARTER
+                            </div>
+                            <h3 className="text-white font-bold mb-2 text-xl">Goal Setting Access</h3>
+                            <p className="text-gray-400 text-sm mb-4">
+                                Includes <strong>Psychological Skills Assessment</strong> and quarterly goal reviews.
+                            </p>
+                            <a href="https://paystack.shop/pay/GoalSettingAccess-Monthly" target="_blank" rel="noreferrer" className="block w-full bg-black text-white font-bold py-3 rounded-lg hover:bg-neutral-800 transition-colors border border-neutral-700">
+                                Subscribe: R150/pm
+                            </a>
+                        </div>
+
+                        {/* Full Mentorship */}
                         <div className="bg-neutral-900 p-8 rounded-xl border border-neutral-800 text-center">
                             <h3 className="text-white font-bold mb-2 text-xl">The Mentorship</h3>
                             <p className="text-gray-400 text-sm mb-6">Full access to our psychological curriculum, weekly seminars, and resource library.</p>

@@ -38,7 +38,7 @@ const InnerLayout: React.FC = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-black text-white font-sans antialiased selection:bg-white selection:text-black">
-      <Navbar />
+      {!isDashboard && <Navbar />}
       <main className="flex-grow">
         <Routes>
           <Route path="/" element={<Home />} />
@@ -59,7 +59,7 @@ const InnerLayout: React.FC = () => {
           <Route path="/admin-upload" element={<AdminUpload />} />
         </Routes>
       </main>
-      <Footer />
+      {!isDashboard && <Footer />}
     </div>
   );
 };
