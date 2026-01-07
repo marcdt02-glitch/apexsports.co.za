@@ -188,145 +188,128 @@ const SpatQuestionnaire: React.FC<SpatProps> = ({ athleteName, tier }) => {
 
         pdf.save(`${athleteName}_SPAT_${mode}.pdf`);
     };
-    pdf.setFontSize(16);
-    pdf.text("Performance Summary", 20, yPos);
-    yPos += 10;
 
-    pdf.setFontSize(10);
-    Object.entries(scores).forEach(([key, score]) => {
-        const catName = CATEGORIES[key as Category];
-        let status = "Moderate";
-        if (score > 36) status = "Strength 💪";
-        if (score < 20) status = "Growth Area ⚠️";
+    if (showResults) {
+        return (
+            <div className="space-y-8 animate-in fade-in zoom-in duration-500">
+                <div ref={chartRef} className="bg-black p-8 rounded-3xl border border-neutral-800 text-center">
+                    <h2 className="text-3xl font-black text-white mb-2">Mental Performance Profile</h2>
+                    <p className="text-gray-400 mb-8">Based on the BIG-5 Sport Psych Assessment Tool</p>
 
-        pdf.text(`${catName}: ${score}/48 - ${status}`, 20, yPos);
-        yPos += 7;
-    });
+                    <div className="h-[400px] w-full max-w-2xl mx-auto">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
+                                <PolarGrid stroke="#333" />
+                                <PolarAngleAxis dataKey="subject" tick={{ fill: 'white', fontSize: 12, fontWeight: 'bold' }} />
+                                <PolarRadiusAxis angle={30} domain={[0, 48]} tick={false} axisLine={false} />
+                                <Radar
+                                    name="Athlete"
+                                    dataKey="A"
+                                    stroke="#ef4444"
+                                    strokeWidth={3}
+                                    fill="#ef4444"
+                                    fillOpacity={0.4}
+                                />
+                            </RadarChart>
+                        </ResponsiveContainer>
+                    </div>
 
-    pdf.save('apex-spat-report.pdf');
-};
-
-if (showResults) {
-    return (
-        <div className="space-y-8 animate-in fade-in zoom-in duration-500">
-            <div ref={chartRef} className="bg-black p-8 rounded-3xl border border-neutral-800 text-center">
-                <h2 className="text-3xl font-black text-white mb-2">Mental Performance Profile</h2>
-                <p className="text-gray-400 mb-8">Based on the BIG-5 Sport Psych Assessment Tool</p>
-
-                <div className="h-[400px] w-full max-w-2xl mx-auto">
-                    <ResponsiveContainer width="100%" height="100%">
-                        <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
-                            <PolarGrid stroke="#333" />
-                            <PolarAngleAxis dataKey="subject" tick={{ fill: 'white', fontSize: 12, fontWeight: 'bold' }} />
-                            <PolarRadiusAxis angle={30} domain={[0, 48]} tick={false} axisLine={false} />
-                            <Radar
-                                name="Athlete"
-                                dataKey="A"
-                                stroke="#ef4444"
-                                strokeWidth={3}
-                                fill="#ef4444"
-                                fillOpacity={0.4}
-                            />
-                        </RadarChart>
-                    </ResponsiveContainer>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mt-8">
+                        {Object.entries(scores).map(([key, score]) => (
+                            <div key={key} className={`p-4 rounded-xl border ${score > 36 ? 'bg-green-900/20 border-green-800' : score < 20 ? 'bg-red-900/20 border-red-800' : 'bg-neutral-900 border-neutral-800'}`}>
+                                <div className="text-xs text-gray-500 uppercase tracking-widest mb-1">{CATEGORIES[key as Category]}</div>
+                                <div className={`text-2xl font-black ${score > 36 ? 'text-green-500' : score < 20 ? 'text-red-500' : 'text-white'}`}>
+                                    {score}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mt-8">
-                    {Object.entries(scores).map(([key, score]) => (
-                        <div key={key} className={`p-4 rounded-xl border ${score > 36 ? 'bg-green-900/20 border-green-800' : score < 20 ? 'bg-red-900/20 border-red-800' : 'bg-neutral-900 border-neutral-800'}`}>
-                            <div className="text-xs text-gray-500 uppercase tracking-widest mb-1">{CATEGORIES[key as Category]}</div>
-                            <div className={`text-2xl font-black ${score > 36 ? 'text-green-500' : score < 20 ? 'text-red-500' : 'text-white'}`}>
-                                {score}
-                            </div>
-                        </div>
-                    ))}
+                <div className="flex justify-center gap-4">
+                    <button onClick={() => { setAnswers({}); setShowResults(false); }} className="flex items-center gap-2 bg-neutral-800 text-white px-6 py-3 rounded-full font-bold hover:bg-neutral-700 transition-colors">
+                        <RefreshCw className="w-4 h-4" />
+                        Retake Assessment
+                    </button>
+                    <div className="flex gap-2">
+                        <button onClick={() => handleDownloadPDF('dark')} className="flex items-center gap-2 bg-neutral-800 text-white px-4 py-3 rounded-full font-bold hover:bg-neutral-700 transition-colors text-xs">
+                            <Download className="w-4 h-4" /> Dark
+                        </button>
+                        <button onClick={() => handleDownloadPDF('light')} className="flex items-center gap-2 bg-white text-black px-4 py-3 rounded-full font-bold hover:bg-gray-200 transition-colors text-xs border border-gray-300">
+                            <Download className="w-4 h-4" /> Print
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="max-w-4xl mx-auto">
+            <div className="mb-8">
+                <h2 className="text-2xl font-bold text-white mb-2">SPAT Assessment</h2>
+                <p className="text-gray-400 text-sm">Read each statement and indicate how it applies to you in important competitions.</p>
+
+                {/* Progress Bar */}
+                <div className="mt-6 h-2 bg-neutral-800 rounded-full overflow-hidden">
+                    <div className="h-full bg-red-600 transition-all duration-300" style={{ width: `${progress}%` }}></div>
+                </div>
+                <div className="flex justify-between mt-2 text-xs text-gray-500 font-mono">
+                    <span>{completedCount} / 40 Completed</span>
+                    <span>{Math.round(progress)}%</span>
                 </div>
             </div>
 
-            <div className="flex justify-center gap-4">
-                <button onClick={() => { setAnswers({}); setShowResults(false); }} className="flex items-center gap-2 bg-neutral-800 text-white px-6 py-3 rounded-full font-bold hover:bg-neutral-700 transition-colors">
-                    <RefreshCw className="w-4 h-4" />
-                    Retake Assessment
+            <div className="space-y-6">
+                {QUESTIONS.map((q) => (
+                    <div key={q.id} className="bg-neutral-900/50 border border-neutral-800 p-6 rounded-2xl group hover:border-neutral-700 transition-colors">
+                        <div className="flex flex-col md:flex-row gap-4 justify-between items-start md:items-center mb-6">
+                            <div>
+                                <span className="text-xs text-gray-500 font-bold mb-1 block">Q{q.id}</span>
+                                <p className="text-white font-medium text-lg">{q.textEn}</p>
+                                <p className="text-gray-500 text-sm italic mt-1">{q.textAf}</p>
+                            </div>
+                            {answers[q.id] !== undefined && <CheckCircle className="w-6 h-6 text-green-500 flex-shrink-0" />}
+                        </div>
+
+                        {/* Likert Scale */}
+                        <div className="flex flex-wrap gap-2 justify-between">
+                            {[0, 1, 2, 3, 4, 5, 6].map((val) => (
+                                <button
+                                    key={val}
+                                    onClick={() => handleAnswer(q.id, val)}
+                                    className={`flex-1 min-w-[40px] h-10 rounded-lg font-bold text-sm transition-all ${answers[q.id] === val
+                                        ? 'bg-white text-black scale-105 shadow-lg'
+                                        : 'bg-neutral-800 text-gray-400 hover:bg-neutral-700 hover:text-white'
+                                        }`}
+                                >
+                                    {val}
+                                </button>
+                            ))}
+                        </div>
+                        <div className="flex justify-between mt-2 text-[10px] text-gray-600 uppercase tracking-wider font-bold">
+                            <span>Strongly Disagree</span>
+                            <span>Strongly Agree</span>
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            <div className="mt-12 flex justify-end">
+                <button
+                    onClick={() => setShowResults(true)}
+                    disabled={completedCount < 40}
+                    className={`flex items-center gap-2 px-8 py-4 rounded-full font-bold text-lg transition-all ${completedCount === 40
+                        ? 'bg-red-600 text-white hover:bg-red-700 hover:scale-105 shadow-xl shadow-red-900/20'
+                        : 'bg-neutral-800 text-gray-500 cursor-not-allowed'
+                        }`}
+                >
+                    {completedCount < 40 ? `Answer All Questions (${40 - completedCount} left)` : 'View Analysis'}
+                    {completedCount === 40 && <ChevronRight className="w-5 h-5" />}
                 </button>
-                <div className="flex gap-2">
-                    <button onClick={() => handleDownloadPDF('dark')} className="flex items-center gap-2 bg-neutral-800 text-white px-4 py-3 rounded-full font-bold hover:bg-neutral-700 transition-colors text-xs">
-                        <Download className="w-4 h-4" /> Dark
-                    </button>
-                    <button onClick={() => handleDownloadPDF('light')} className="flex items-center gap-2 bg-white text-black px-4 py-3 rounded-full font-bold hover:bg-gray-200 transition-colors text-xs border border-gray-300">
-                        <Download className="w-4 h-4" /> Print
-                    </button>
-                </div>
             </div>
         </div>
     );
-}
-
-return (
-    <div className="max-w-4xl mx-auto">
-        <div className="mb-8">
-            <h2 className="text-2xl font-bold text-white mb-2">SPAT Assessment</h2>
-            <p className="text-gray-400 text-sm">Read each statement and indicate how it applies to you in important competitions.</p>
-
-            {/* Progress Bar */}
-            <div className="mt-6 h-2 bg-neutral-800 rounded-full overflow-hidden">
-                <div className="h-full bg-red-600 transition-all duration-300" style={{ width: `${progress}%` }}></div>
-            </div>
-            <div className="flex justify-between mt-2 text-xs text-gray-500 font-mono">
-                <span>{completedCount} / 40 Completed</span>
-                <span>{Math.round(progress)}%</span>
-            </div>
-        </div>
-
-        <div className="space-y-6">
-            {QUESTIONS.map((q) => (
-                <div key={q.id} className="bg-neutral-900/50 border border-neutral-800 p-6 rounded-2xl group hover:border-neutral-700 transition-colors">
-                    <div className="flex flex-col md:flex-row gap-4 justify-between items-start md:items-center mb-6">
-                        <div>
-                            <span className="text-xs text-gray-500 font-bold mb-1 block">Q{q.id}</span>
-                            <p className="text-white font-medium text-lg">{q.textEn}</p>
-                            <p className="text-gray-500 text-sm italic mt-1">{q.textAf}</p>
-                        </div>
-                        {answers[q.id] !== undefined && <CheckCircle className="w-6 h-6 text-green-500 flex-shrink-0" />}
-                    </div>
-
-                    {/* Likert Scale */}
-                    <div className="flex flex-wrap gap-2 justify-between">
-                        {[0, 1, 2, 3, 4, 5, 6].map((val) => (
-                            <button
-                                key={val}
-                                onClick={() => handleAnswer(q.id, val)}
-                                className={`flex-1 min-w-[40px] h-10 rounded-lg font-bold text-sm transition-all ${answers[q.id] === val
-                                    ? 'bg-white text-black scale-105 shadow-lg'
-                                    : 'bg-neutral-800 text-gray-400 hover:bg-neutral-700 hover:text-white'
-                                    }`}
-                            >
-                                {val}
-                            </button>
-                        ))}
-                    </div>
-                    <div className="flex justify-between mt-2 text-[10px] text-gray-600 uppercase tracking-wider font-bold">
-                        <span>Strongly Disagree</span>
-                        <span>Strongly Agree</span>
-                    </div>
-                </div>
-            ))}
-        </div>
-
-        <div className="mt-12 flex justify-end">
-            <button
-                onClick={() => setShowResults(true)}
-                disabled={completedCount < 40}
-                className={`flex items-center gap-2 px-8 py-4 rounded-full font-bold text-lg transition-all ${completedCount === 40
-                    ? 'bg-red-600 text-white hover:bg-red-700 hover:scale-105 shadow-xl shadow-red-900/20'
-                    : 'bg-neutral-800 text-gray-500 cursor-not-allowed'
-                    }`}
-            >
-                {completedCount < 40 ? `Answer All Questions (${40 - completedCount} left)` : 'View Analysis'}
-                {completedCount === 40 && <ChevronRight className="w-5 h-5" />}
-            </button>
-        </div>
-    </div>
-);
 };
 
 export default SpatQuestionnaire;
