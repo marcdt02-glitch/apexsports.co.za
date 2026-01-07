@@ -15,6 +15,7 @@ import {
     Activity, Shield, Battery, TrendingUp, ChevronRight, Lock, User, LogOut, MonitorPlay, Home, CheckSquare, BarChart2, Sliders, Layers, Info, Video
 } from 'lucide-react';
 import { VideoLab } from '../../components/VideoLab/VideoLab';
+import { ApexAgent } from '../../components/ApexAI/ApexAgent';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 
