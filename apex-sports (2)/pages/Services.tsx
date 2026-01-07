@@ -299,14 +299,14 @@ const Services: React.FC = () => {
                             <h3 className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-2">Tier 1</h3>
                             <h4 className="text-xl font-bold text-white mb-4">Performance & Wellness Monitoring Package</h4>
                             <p className="text-gray-400 text-sm leading-relaxed">
-                                Data-driven physical readiness and psychological wellness tracking to optimize team load management.
+                                <strong className="text-white">Focus:</strong> Data-driven physical readiness and psychological wellness tracking to optimize team load management.
                             </p>
                         </div>
                         <div className="bg-black p-8 rounded-2xl border border-neutral-800">
                             <h3 className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-2">Tier 2</h3>
                             <h4 className="text-xl font-bold text-white mb-4">Elite Team Performance Package</h4>
                             <p className="text-gray-400 text-sm leading-relaxed">
-                                Comprehensive S&C integration, advanced mental skills training (PST), and high-performance laboratory testing.
+                                <strong className="text-white">Focus:</strong> Comprehensive S&C integration, advanced mental skills training (PST), and high-performance laboratory testing.
                             </p>
                         </div>
                     </div>
