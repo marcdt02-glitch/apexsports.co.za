@@ -15,6 +15,14 @@ interface Drawing {
     color: string;
 }
 
+const getAngle = (p1: { x: number, y: number }, p2: { x: number, y: number }, p3: { x: number, y: number }) => {
+    // Calculate angle at p2
+    const p12 = Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
+    const p23 = Math.sqrt(Math.pow(p2.x - p3.x, 2) + Math.pow(p2.y - p3.y, 2));
+    const p13 = Math.sqrt(Math.pow(p1.x - p3.x, 2) + Math.pow(p1.y - p3.y, 2));
+    return Math.acos((p12 * p12 + p23 * p23 - p13 * p13) / (2 * p12 * p23)) * 180 / Math.PI;
+}
+
 export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, compareUrl, onSave }) => {
     const videoRef1 = useRef<HTMLVideoElement>(null);
     const videoRef2 = useRef<HTMLVideoElement>(null);
@@ -107,11 +115,13 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
             // Logic for angle: Click 1 (Vertex), Drag to 2 (Leg 1), Click to lock?
             // Simplified: Drag creates a line, then... maybe Angle needs 3 clicks.
             // Let's stick to Line/Circle for simplified MVP
-            if (newPoints.length === 1) newPoints.push(pt);
-            else newPoints[1] = pt;
+            // Angle: Click 1, 2, 3.
+            if (newPoints.length < 3) newPoints.push(pt);
+            else newPoints[2] = pt; // update last point
         }
         setCurrentDrawing({ ...currentDrawing, points: newPoints });
-        renderCanvas(); // Re-render with preview
+        // Request animation frame for safer render loop could be better, but direct call is okay for MVP
+        renderCanvas();
     };
 
     const handleMouseUp = (e: MouseEvent) => {
@@ -147,10 +157,24 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
                 ctx.arc(d.points[0].x, d.points[0].y, r, 0, 2 * Math.PI);
                 ctx.stroke();
             } else if (d.type === 'angle' && d.points.length > 1) {
-                // Simplified Angle visualization (just lines for now)
                 ctx.moveTo(d.points[0].x, d.points[0].y);
                 ctx.lineTo(d.points[1].x, d.points[1].y);
+                if (d.points.length > 2) {
+                    ctx.lineTo(d.points[2].x, d.points[2].y);
+                    // Draw Angle Arc
+                    // Simplified visualization
+                }
                 ctx.stroke();
+
+                // Show Angle Text
+                if (d.points.length === 3) {
+                    const angle = getAngle(d.points[0], d.points[1], d.points[2]);
+                    if (!isNaN(angle)) {
+                        ctx.fillStyle = '#fff';
+                        ctx.font = 'bold 16px sans-serif';
+                        ctx.fillText(`${angle.toFixed(1)}°`, d.points[1].x + 10, d.points[1].y);
+                    }
+                }
             }
         });
     };
@@ -236,6 +260,25 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
                     </div>
                 </div>
             </div>
+
+            {/* Scientific Insight Tooltip (Contextual) */}
+            {tool !== 'none' && (
+                <div className="absolute top-4 left-4 right-4 z-30 animate-fade-in-down pointer-events-none">
+                    <div className="bg-blue-900/90 border border-blue-500/50 backdrop-blur-md p-3 rounded-xl inline-flex items-center gap-3 shadow-xl">
+                        <div className="p-2 bg-blue-500 rounded-lg">
+                            <MousePointer2 className="w-4 h-4 text-white" />
+                        </div>
+                        <div>
+                            <p className="text-[10px] font-bold text-blue-300 uppercase tracking-wider">Scientific Insight</p>
+                            <p className="text-white text-xs font-medium">
+                                {tool === 'line' && "Force Vectors: Are they pushing forward (Acceleration) or up (Vertical)?"}
+                                {tool === 'circle' && "Joint Stacking: Highlight the Center of Mass or stacked joints."}
+                                {tool === 'angle' && "Knee Valgus: Measure the angle of the knee during landing."}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Tools Toolbar */}
             <div className="flex items-center justify-between bg-neutral-900 border border-neutral-800 p-4 rounded-2xl">

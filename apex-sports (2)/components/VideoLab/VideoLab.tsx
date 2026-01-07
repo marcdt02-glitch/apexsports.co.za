@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { UploadCloud, Video, FolderOpen, PlayCircle, Grid } from 'lucide-react';
+import { UploadCloud, Video, FolderOpen, PlayCircle, Grid, Info, X, CheckCircle, AlertTriangle } from 'lucide-react';
 import { useGoogleDrivePicker, DriveFile } from './useGoogleDrivePicker';
 import { VideoAnalysisPlayer } from './VideoAnalysisPlayer';
 
@@ -7,7 +7,54 @@ export const VideoLab: React.FC = () => {
     // STATE
     const [currentVideo, setCurrentVideo] = useState<DriveFile | null>(null);
     const [compareVideo, setCompareVideo] = useState<DriveFile | null>(null);
+    const [showBioInfo, setShowBioInfo] = useState(false);
     const { openPicker } = useGoogleDrivePicker();
+
+    const BiomechOverlay = () => (
+        <div className="fixed inset-0 z-50 flex justify-end">
+            <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setShowBioInfo(false)}></div>
+            <div className="relative z-10 w-full max-w-md bg-[#111] border-l border-neutral-800 h-full p-8 overflow-y-auto animate-fade-in-right shadow-2xl">
+                <button onClick={() => setShowBioInfo(false)} className="absolute top-6 right-6 p-2 bg-neutral-800 rounded-full text-gray-400 hover:text-white hover:bg-neutral-700">
+                    <X className="w-5 h-5" />
+                </button>
+
+                <div className="flex items-center gap-3 mb-8">
+                    <div className="p-3 bg-blue-900/20 border border-blue-500/30 rounded-xl">
+                        <Video className="w-6 h-6 text-blue-400" />
+                    </div>
+                    <div>
+                        <h2 className="text-xl font-bold text-white">Technical Analysis</h2>
+                        <p className="text-xs text-blue-400 font-bold uppercase tracking-wider">The Science of Movement</p>
+                    </div>
+                </div>
+
+                <div className="space-y-6">
+                    <div className="bg-neutral-900 border border-neutral-800 p-6 rounded-2xl">
+                        <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-2 border-b border-neutral-800 pb-2">Joint Stacking</h3>
+                        <p className="text-gray-400 text-sm">
+                            Efficiency requires alignment. In a squat or landing, we look for the "Stack" (Hips over Knees over Ankles). Deviation creates "Energy Leaks."
+                        </p>
+                    </div>
+
+                    <div className="bg-neutral-900 border border-neutral-800 p-6 rounded-2xl">
+                        <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-2 border-b border-neutral-800 pb-2">Force Vectors</h3>
+                        <p className="text-gray-400 text-sm">
+                            The direction you push determines where you go. Use the Line Tool.
+                            <br />- <strong>Vertical Line:</strong> Height (Jump)
+                            <br />- <strong>Forward Angle:</strong> Acceleration (Sprint)
+                        </p>
+                    </div>
+
+                    <div className="bg-neutral-900 border border-neutral-800 p-6 rounded-2xl">
+                        <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-2 border-b border-neutral-800 pb-2">Center of Mass (CoM)</h3>
+                        <p className="text-gray-400 text-sm">
+                            Your balance point. If your CoM shifts outside your base of support, you are unstable. Keep it tight to preserve power.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 
     // Placeholder Configuration - User must enter these
     const GOOGLE_API_KEY = 'YOUR_API_KEY_HERE';
