@@ -12,8 +12,9 @@ import {
 import {
     AlertTriangle, CheckCircle, UploadCloud, AlertCircle, Zap,
     LayoutDashboard, Target, BookOpen, FileText, Menu, X, Save, ExternalLink,
-    Activity, Shield, Battery, TrendingUp, ChevronRight, Lock, User, LogOut, MonitorPlay, Home, CheckSquare, BarChart2, Sliders, Layers, Info
+    Activity, Shield, Battery, TrendingUp, ChevronRight, Lock, User, LogOut, MonitorPlay, Home, CheckSquare, BarChart2, Sliders, Layers, Info, Video
 } from 'lucide-react';
+import { VideoLab } from '../../components/VideoLab/VideoLab';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 
@@ -103,7 +104,7 @@ import PortalMentorship from '../../components/Portal/Mentorship/PortalMentorshi
 const AthleteDashboard: React.FC = () => {
     const { athleteId } = useParams<{ athleteId: string }>();
     const { getAthlete } = useData();
-    const [activeView, setActiveView] = useState<'home' | 'dashboard' | 'goals' | 'library' | 'reports' | 'wellness' | 'mentorship' | 'coaching' | 'pillars'>('home');
+    const [activeView, setActiveView] = useState<'home' | 'dashboard' | 'goals' | 'library' | 'reports' | 'wellness' | 'mentorship' | 'coaching' | 'pillars' | 'videolab'>('home');
     const [clinicalTab, setClinicalTab] = useState<'lower' | 'upper' | 'symmetry'>('lower');
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const dashboardRef = useRef<HTMLDivElement>(null);
