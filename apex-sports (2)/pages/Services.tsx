@@ -381,13 +381,12 @@ const Services: React.FC = () => {
                     Chat with Marc <ArrowRight className="w-5 h-5" />
                 </a>
             </div>
-        </div>
-            {/* Modal */ }
-    <ApplicationModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        tierName={modalTier}
-    />
+            {/* Modal */}
+            <ApplicationModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                tierName={modalTier}
+            />
         </div >
     );
 };

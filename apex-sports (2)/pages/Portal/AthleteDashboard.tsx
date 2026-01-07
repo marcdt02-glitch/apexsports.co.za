@@ -206,6 +206,7 @@ const AthleteDashboard: React.FC = () => {
     // Toggle Restricted View
     const isCampUser = tier.includes('camp'); // Legacy flag, keep for safe measure
     const showReports = showPhysicalAdvanced; // Only advanced tiers get reports for now?
+    const isFullAccess = isApex || isSpecific; // Restore variable for compatibility
     const showAdvancedMetrics = isFullAccess && !isCampUser;
 
     // Charts
