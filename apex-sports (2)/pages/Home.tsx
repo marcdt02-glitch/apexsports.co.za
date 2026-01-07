@@ -23,7 +23,7 @@ const Home: React.FC = () => {
     {
       name: "Jana-Mari Botha",
       role: "SA Ladies Outdoor Goalkeeper",
-      image: "https://images.unsplash.com/photo-1628891507722-09439baa0205?auto=format&fit=crop&q=80",
+      image: "/images/jana-mari-botha.jpg",
       text: "Working with Marc du Toit was a great experience. His attention to detail and critical feedback stood out immediately, and within one session I saw clear improvements in areas I wanted to work on. He gave valuable insight into playing to my strengths and what to focus on going forward. Marc is extremely passionate about coaching, pushes you to be better, and makes the session both productive and enjoyable. I would highly recommend him to any goalkeeper wanting to train with purpose and precision."
     },
     {
