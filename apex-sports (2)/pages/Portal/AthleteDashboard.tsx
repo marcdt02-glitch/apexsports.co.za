@@ -661,780 +661,781 @@ const AthleteDashboard: React.FC = () => {
     };
 
     return (
-        <div className="space-y-8 animate-fade-in">
+        <SafetyGuard athlete={athlete}>
+            <div className="space-y-8 animate-fade-in">
 
-            <div className="min-h-screen bg-black text-white pb-20 font-sans">
+                <div className="min-h-screen bg-black text-white pb-20 font-sans">
 
-                {/* Fixed Header Removed */}
+                    {/* Fixed Header Removed */}
 
-                {/* SIDEBAR NAVIGATION */}
-                {/* Overlay for Mobile */}
-                {sidebarOpen && <div className="fixed inset-0 bg-black/80 z-40 lg:hidden" onClick={() => setSidebarOpen(false)} />}
+                    {/* SIDEBAR NAVIGATION */}
+                    {/* Overlay for Mobile */}
+                    {sidebarOpen && <div className="fixed inset-0 bg-black/80 z-40 lg:hidden" onClick={() => setSidebarOpen(false)} />}
 
-                <div className={`fixed inset-y-0 left-0 z-40 w-64 bg-[#0a0a0a] border-r border-neutral-800 transform transition-transform duration-300 lg:translate-x-0 pt-8 pb-10 flex flex-col top-24 overflow-y-auto ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-                    <div className="px-6 space-y-2">
-                        {/* HOME (New Landing) */}
-                        <button
-                            onClick={() => { setActiveView('home'); setSidebarOpen(false); }}
-                            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeView === 'home' ? 'bg-white text-black font-bold' : 'text-gray-400 hover:bg-neutral-800 hover:text-white'}`}
-                        >
-                            <Home className="w-5 h-5" />
-                            Home
-                        </button>
-
-                        {/* PHYSICAL RESULTS (Renamed Dashboard) */}
-                        <button
-                            onClick={() => { setActiveView('dashboard'); setSidebarOpen(false); }}
-                            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeView === 'dashboard' ? 'bg-white text-black font-bold' : 'text-gray-400 hover:bg-neutral-800 hover:text-white'}`}
-                        >
-                            <BarChart2 className="w-5 h-5" />
-                            Physical Results
-                        </button>
-
-                        {/* COACHING LAYER (v18.5) */}
-                        <button
-                            onClick={() => { setActiveView('coaching'); setSidebarOpen(false); }}
-                            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeView === 'coaching' ? 'bg-white text-black font-bold' : 'text-gray-400 hover:bg-neutral-800 hover:text-white'}`}
-                        >
-                            <MonitorPlay className="w-5 h-5" />
-                            Coaching
-                        </button>
-
-                        {/* PERFORMANCE PILLARS (New) */}
-                        <button
-                            onClick={() => { setActiveView('pillars'); setSidebarOpen(false); }}
-                            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeView === 'pillars' ? 'bg-white text-black font-bold' : 'text-gray-400 hover:bg-neutral-800 hover:text-white'}`}
-                        >
-                            <Layers className="w-5 h-5" />
-                            APEX Pillars
-                        </button>
-
-                        {/* VIDEO LAB (v20.0) */}
-                        <button
-                            onClick={() => { setActiveView('videolab'); setSidebarOpen(false); }}
-                            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeView === 'videolab' ? 'bg-white text-black font-bold' : 'text-gray-400 hover:bg-neutral-800 hover:text-white'}`}
-                        >
-                            <Video className="w-5 h-5" />
-                            Video Lab
-                        </button>
-
-                        {/* MENTORSHIP & GOALS (Internal View) */}
-                        {(() => {
-                            const isUnlocked = isFullAccess; // v17.4: Now linked to master full access (Apex/Elite/Testing)
-                            return (
-                                <button
-                                    onClick={() => {
-                                        if (!isUnlocked) {
-                                            alert("Mentorship Access Required. Please upgrade your package.");
-                                        } else {
-                                            setActiveView('mentorship');
-                                            setSidebarOpen(false);
-                                        }
-                                    }}
-                                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeView === 'mentorship' ? 'bg-white text-black font-bold' : isUnlocked ? 'text-gray-400 hover:text-white hover:bg-neutral-800' : 'text-gray-600 cursor-not-allowed opacity-50'}`}
-                                >
-                                    <BookOpen className="w-5 h-5" />
-                                    <span>Mentorship</span>
-                                    {!isUnlocked && <Lock className="w-4 h-4 ml-auto" />}
-                                </button>
-                            );
-                        })()}
-
-
-
-                        {/* REPORTS */}
-                        {(() => {
-                            const isUnlocked = isFullAccess; // v17.4: Now linked to master full access
-                            return (
-                                <button
-                                    onClick={() => { if (isUnlocked) { setActiveView('reports'); setSidebarOpen(false); } }}
-                                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeView === 'reports' ? 'bg-white text-black font-bold' : isUnlocked ? 'text-gray-400 hover:text-white hover:bg-neutral-800' : 'text-gray-600 cursor-not-allowed opacity-50'}`}
-                                >
-                                    <FileText className="w-5 h-5" />
-                                    <span>Reports</span>
-                                    {!isUnlocked && <Lock className="w-4 h-4 ml-auto" />}
-                                </button>
-                            );
-                        })()}
-
-                        {/* WELLNESS (v11.5) */}
-                        <button
-                            onClick={() => { setActiveView('wellness'); setSidebarOpen(false); }}
-                            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeView === 'wellness' ? 'bg-white text-black font-bold' : 'text-gray-400 hover:text-white hover:bg-neutral-800'}`}
-                        >
-                            <Activity className="w-5 h-5" />
-                            <span>Wellness & CNS</span>
-                        </button>
-                    </div>
-
-                    <div className="mt-auto px-6">
-                        <Link to="/" className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-500 hover:bg-neutral-800 transition-all">
-                            <LogOut className="w-5 h-5" />
-                            Logout
-                        </Link>
-                    </div>
-                </div>
-
-                {/* Content Area */}
-                <div ref={dashboardRef} className="pt-32 px-4 max-w-7xl mx-auto space-y-8 lg:pl-72">
-
-                    {/* Floating Control Bar (The "Shorter Rectangle") */}
-                    <div className="bg-neutral-900/50 border border-neutral-800 p-4 rounded-2xl flex flex-col lg:flex-row items-center justify-between gap-6 backdrop-blur-sm">
-                        <div className="flex items-center gap-4 w-full lg:w-auto">
-                            <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 -ml-2 text-gray-400 hover:text-white lg:hidden">
-                                <Menu className="w-6 h-6" />
+                    <div className={`fixed inset-y-0 left-0 z-40 w-64 bg-[#0a0a0a] border-r border-neutral-800 transform transition-transform duration-300 lg:translate-x-0 pt-8 pb-10 flex flex-col top-24 overflow-y-auto ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+                        <div className="px-6 space-y-2">
+                            {/* HOME (New Landing) */}
+                            <button
+                                onClick={() => { setActiveView('home'); setSidebarOpen(false); }}
+                                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeView === 'home' ? 'bg-white text-black font-bold' : 'text-gray-400 hover:bg-neutral-800 hover:text-white'}`}
+                            >
+                                <Home className="w-5 h-5" />
+                                Home
                             </button>
-                            <div className="flex items-center gap-2">
-                                <span className="text-gray-500 font-mono text-xs uppercase tracking-widest">Portal</span>
-                                <ChevronRight className="w-3 h-3 text-gray-700" />
-                                <span className="text-white font-bold text-xs uppercase tracking-widest">
-                                    {activeView === 'dashboard' ? 'Physical Results' : activeView}
-                                </span>
-                            </div>
-                        </div>
 
-                        <div className="flex items-center gap-8 w-full lg:w-auto justify-between lg:justify-end">
-                            {/* v8.0 Neural Readiness Stats (Desktop) */}
-                            {showAdvancedMetrics && (
-                                <div className="hidden md:flex items-center gap-8 mr-8 border-r border-neutral-800 pr-8">
-                                    <div className="text-right">
-                                        <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Neural Readiness</p>
-                                        <p className={`text-2xl font-black ${athlete.readinessScore < 65 ? 'text-red-500' : 'text-green-500'}`}>
-                                            {athlete.readinessScore || '-'}%
-                                        </p>
-                                    </div>
-                                    <div className="text-right">
-                                        <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Groin T-Max</p>
-                                        <p className={`text-2xl font-black ${athlete.groinTimeToMax > 1.5 ? 'text-yellow-500' : 'text-white'}`}>
-                                            {athlete.groinTimeToMax || '-'}s
-                                        </p>
-                                    </div>
-
-                                    {/* v16.1 Clinical Link Status */}
-                                    {athlete.valdProfileId && (
-                                        <div className="flex flex-col items-end">
-                                            <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">Ecosystem</p>
-                                            <div className="bg-green-900/20 border border-green-800 px-2 py-1 rounded flex items-center gap-1">
-                                                <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
-                                                <span className="text-[10px] font-bold text-green-500 uppercase">Active</span>
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                            )}
-
-                            <div className="flex items-center gap-4">
-                                <div className="hidden md:block text-right">
-                                    <h1 className="text-lg font-bold text-white leading-none">{athlete.name}</h1>
-                                    <p className="text-xs text-gray-500 font-mono">{athlete.package} Tier</p>
-                                </div>
-                                <div className="w-10 h-10 bg-neutral-800 rounded-full flex items-center justify-center border border-neutral-700">
-                                    <User className="w-5 h-5 text-gray-400" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* v16.1 Onboarding: Coach Trigger for Missing VALD ID */}
-                    {(!athlete.valdProfileId && (pkg.includes('testing') || pkg.includes('elite'))) && (
-                        <div className="bg-gradient-to-r from-neutral-900 to-neutral-800 border border-neutral-700 p-6 rounded-2xl flex items-center justify-between mb-8 animate-fade-in">
-                            <div className="flex items-center gap-4">
-                                <div className="p-3 bg-neutral-700 rounded-full">
-                                    <User className="w-6 h-6 text-gray-300" />
-                                </div>
-                                <div>
-                                    <h3 className="text-white font-bold">Clinical Profile Missing</h3>
-                                    <p className="text-gray-400 text-xs">This athlete is active but missing a VALD Profile ID.</p>
-                                </div>
-                            </div>
-                            <button className="bg-white text-black font-bold py-2 px-6 rounded-lg text-sm hover:bg-gray-200 transition-colors flex items-center gap-2">
-                                <UploadCloud className="w-4 h-4" />
-                                Generate VALD Profile
+                            {/* PHYSICAL RESULTS (Renamed Dashboard) */}
+                            <button
+                                onClick={() => { setActiveView('dashboard'); setSidebarOpen(false); }}
+                                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeView === 'dashboard' ? 'bg-white text-black font-bold' : 'text-gray-400 hover:bg-neutral-800 hover:text-white'}`}
+                            >
+                                <BarChart2 className="w-5 h-5" />
+                                Physical Results
                             </button>
-                        </div>
-                    )}
 
-                    {/* VIEW: DASHBOARD */}
-                    {/* VIEW: HOME */}
-                    {activeView === 'home' && renderHome()}
+                            {/* COACHING LAYER (v18.5) */}
+                            <button
+                                onClick={() => { setActiveView('coaching'); setSidebarOpen(false); }}
+                                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeView === 'coaching' ? 'bg-white text-black font-bold' : 'text-gray-400 hover:bg-neutral-800 hover:text-white'}`}
+                            >
+                                <MonitorPlay className="w-5 h-5" />
+                                Coaching
+                            </button>
 
-                    {/* SCIENCE OVERLAY */}
-                    {showScience && <ScienceOverlay type={showScience} onClose={() => setShowScience(null)} />}
+                            {/* PERFORMANCE PILLARS (New) */}
+                            <button
+                                onClick={() => { setActiveView('pillars'); setSidebarOpen(false); }}
+                                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeView === 'pillars' ? 'bg-white text-black font-bold' : 'text-gray-400 hover:bg-neutral-800 hover:text-white'}`}
+                            >
+                                <Layers className="w-5 h-5" />
+                                APEX Pillars
+                            </button>
 
-                    {/* VIEW: PILLARS */}
-                    {activeView === 'pillars' && renderPillars()}
+                            {/* VIDEO LAB (v20.0) */}
+                            <button
+                                onClick={() => { setActiveView('videolab'); setSidebarOpen(false); }}
+                                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeView === 'videolab' ? 'bg-white text-black font-bold' : 'text-gray-400 hover:bg-neutral-800 hover:text-white'}`}
+                            >
+                                <Video className="w-5 h-5" />
+                                Video Lab
+                            </button>
 
-                    {/* VIEW: DASHBOARD (Physical Results) */}
-                    {activeView === 'dashboard' && (
-                        <div className="space-y-12 animate-fade-in">
-
-                            {/* v20.0: Navigation & Interpretation Guide */}
-                            <div className="bg-neutral-900 border border-neutral-800 p-6 rounded-2xl">
-                                <div className="flex flex-col md:flex-row items-center justify-between mb-4 gap-4">
-                                    <h3 className="text-white font-bold flex items-center gap-2">
-                                        <Info className="w-5 h-5 text-blue-500" />
-                                        How to Navigate Your Physical Results
-                                    </h3>
-                                    <div className="flex items-center gap-3">
-                                        <button
-                                            onClick={() => generateReportPDF('summary')}
-                                            className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-lg flex items-center gap-2 transition-colors"
-                                        >
-                                            <FileText className="w-4 h-4" />
-                                            Parent Summary PDF
-                                        </button>
-                                        <button
-                                            onClick={() => generateReportPDF('detailed')}
-                                            className="px-4 py-2 bg-neutral-800 hover:bg-neutral-700 text-gray-300 text-xs font-bold rounded-lg flex items-center gap-2 transition-colors border border-neutral-700"
-                                        >
-                                            <Activity className="w-4 h-4" />
-                                            Full Science PDF
-                                        </button>
-                                    </div>
-                                </div>
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm text-gray-400">
-                                    <div className="bg-black/20 p-4 rounded-xl">
-                                        <strong className="block text-white mb-1">1. The Radar</strong>
-                                        Shows your balance. A full chart means you are well-rounded. Dips indicate areas to focus on (e.g., Hamstring strength).
-                                    </div>
-                                    <div className="bg-black/20 p-4 rounded-xl">
-                                        <strong className="block text-white mb-1">2. Metrics</strong>
-                                        Your raw numbers. Compare "Left vs. Right" to see symmetry. 100% Symmetry is the goal.
-                                    </div>
-                                    <div className="bg-black/20 p-4 rounded-xl">
-                                        <strong className="block text-white mb-1">3. Reports</strong>
-                                        Download the <strong>Parent Summary</strong> for a simple explanation, or the <strong>Full Science</strong> report for all the data.
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Upsell for General Tier */}
-                            {!showAdvancedMetrics && (
-                                <div className="bg-gradient-to-r from-blue-900/40 to-purple-900/40 border border-blue-800/50 p-6 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4">
-                                    <div className="flex items-center gap-4">
-                                        <div className="p-3 bg-blue-500/20 rounded-full">
-                                            <Shield className="w-6 h-6 text-blue-400" />
-                                        </div>
-                                        <div>
-                                            <h3 className="text-white font-bold">Unlock Clinical Readiness Monitoring</h3>
-                                            <p className="text-blue-200 text-xs">Get professional insights to know exactly when to train and when to rest.</p>
-                                        </div>
-                                    </div>
-                                    <button className="bg-white text-black font-bold py-2 px-6 rounded-lg text-sm hover:bg-gray-200 transition-colors whitespace-nowrap">
-                                        Upgrade to Testing + Program Design
-                                    </button>
-                                </div>
-                            )}
-
-                            {/* v9.5 Last Updated (Master's Efficiency) */}
-                            <div className="flex justify-end -mt-6 mb-2">
-                                <span className="text-[10px] text-gray-500 font-mono border border-neutral-800 px-3 py-1 rounded-full flex items-center gap-2">
-                                    <Activity className="w-3 h-3" />
-                                    Last Updated: {athlete.lastUpdated || 'Unknown'}
-                                </span>
-                            </div>
-
-                            {/* v9.5 Neural Readiness (HERO STAT for Clinical Tiers) */}
-                            {/* Trigger Alert if Groin Time > 1.5s */}
-                            {showHeroStat && (
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fade-in-down">
-                                    <div className={`p-6 rounded-3xl flex items-center gap-6 ${athlete.readinessScore < 65 ? 'bg-red-950/40 border border-red-900/50' : 'bg-green-950/40 border border-green-900/50'}`}>
-                                        <div className={`p-4 rounded-full ${athlete.readinessScore < 65 ? 'bg-red-900/20' : 'bg-green-900/20'}`}>
-                                            <Battery className={`w-8 h-8 ${athlete.readinessScore < 65 ? 'text-red-500' : 'text-green-500'}`} />
-                                        </div>
-                                        <div>
-                                            <h3 className={`font-bold text-sm uppercase tracking-wider mb-1 ${athlete.readinessScore < 65 ? 'text-red-500' : 'text-green-500'}`}>
-                                                {athlete.readinessScore < 65 ? 'Recovery Required' : 'Neural State: Prime'}
-                                            </h3>
-                                            <p className="text-white font-black text-3xl">{athlete.readinessScore}%</p>
-                                            <p className="text-gray-400 text-xs mt-1">
-                                                {athlete.readinessScore < 65 ? 'Reduce intensity. Your CNS is fatigued.' : 'System ready for high load.'}
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    {/* Groin T-Max Alert */}
-                                    <div className={`p-6 rounded-3xl flex items-center gap-6 ${athlete.groinTimeToMax > 1.5 ? 'bg-yellow-950/40 border border-yellow-900/50' : 'bg-neutral-900/40 border border-neutral-800'}`}>
-                                        <div className={`p-4 rounded-full ${athlete.groinTimeToMax > 1.5 ? 'bg-yellow-900/20' : 'bg-neutral-800'}`}>
-                                            <Activity className={`w-8 h-8 ${athlete.groinTimeToMax > 1.5 ? 'text-yellow-500' : 'text-gray-400'}`} />
-                                        </div>
-                                        <div>
-                                            <h3 className={`font-bold text-sm uppercase tracking-wider mb-1 ${athlete.groinTimeToMax > 1.5 ? 'text-yellow-500' : 'text-gray-400'}`}>
-                                                {athlete.groinTimeToMax > 1.5 ? 'Fatigue Alert' : 'Reaction Speed'}
-                                            </h3>
-                                            <p className="text-white font-black text-3xl">{athlete.groinTimeToMax}s</p>
-                                            <p className="text-gray-400 text-xs mt-1">
-                                                {athlete.groinTimeToMax > 1.5 ? 'Groin response is slow (>1.5s).' : 'Groin Time to Max Force'}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* KPI Dials */}
-                            <div className="grid grid-cols-2 md:grid-cols-3 gap-8 bg-neutral-900/40 p-8 rounded-3xl border border-neutral-800">
-                                <div className="col-span-2 md:col-span-1">
-                                    <CircleProgress percentage={analysis.scores?.performance ?? 0} color="#3b82f6" label="Performance" icon={TrendingUp} />
-                                </div>
-                                {showAdvancedMetrics ? (
-                                    <>
-                                        <CircleProgress percentage={analysis.scores?.screening ?? 0} color="#a855f7" label="MQS" icon={Shield} />
-                                        <CircleProgress percentage={analysis.scores?.powerIndex ?? 0} color="#f59e0b" label="Power Index" icon={Zap} />
-                                    </>
-                                ) : (
-                                    <div className="col-span-2 md:col-span-2 flex items-center justify-center opacity-30 border-l border-neutral-800 bg-neutral-900/50 rounded-r-xl">
-                                        <Lock className="w-5 h-5 mr-3 text-gray-500" />
-                                        <p className="text-sm font-mono text-gray-500">DYNAMO & POWER LOCKED</p>
-                                    </div>
-                                )}
-                            </div>
-
-                            {/* v17.0 Dynamic Alerts */}
-                            {(analysis.flags.isShoulderImbalance || analysis.flags.isLimbAsymmetry) && showAdvancedMetrics && (
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fade-in">
-                                    {analysis.flags.isShoulderImbalance && (
-                                        <div className="bg-orange-950/40 border border-orange-900/50 p-4 rounded-xl flex items-center gap-3">
-                                            <AlertTriangle className="w-6 h-6 text-orange-500" />
-                                            <div>
-                                                <h4 className="text-orange-400 font-bold text-sm">Shoulder Imbalance</h4>
-                                                <p className="text-orange-200/60 text-xs">ER Strength {'<'} 80% of IR. Stability work recommended.</p>
-                                            </div>
-                                        </div>
-                                    )}
-                                    {analysis.flags.isLimbAsymmetry && (
-                                        <div className="bg-amber-950/40 border border-amber-900/50 p-4 rounded-xl flex items-center gap-3">
-                                            <AlertCircle className="w-6 h-6 text-amber-500" />
-                                            <div>
-                                                <h4 className="text-amber-400 font-bold text-sm">Limb Symmetry Alert</h4>
-                                                <p className="text-amber-200/60 text-xs">{'>'}15% Asymmetry detected in Lower Body Key Lifts.</p>
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                            )}
-
-                            {/* Main Grid: Charts & Performance */}
-                            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-
-                                {/* Left Column: Performance Profile (Radar) */}
-                                <div className="lg:col-span-2 space-y-8">
-
-                                    {/* Radar Charts Grid */}
-                                    {showAdvancedMetrics && (
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                            {/* Standard Screening Profile */}
-                                            <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl relative">
-                                                <div className="flex items-center justify-between mb-8">
-                                                    <h2 className="text-lg font-bold flex items-center gap-3">
-                                                        <span className="w-1 h-6 bg-purple-600 rounded-full"></span>
-                                                        Dynamo Screening
-                                                    </h2>
-                                                </div>
-                                                <div className="h-[250px] w-full">
-                                                    <ResponsiveContainer width="100%" height="100%">
-                                                        <RadarChart cx="50%" cy="50%" outerRadius="75%" data={radarData}>
-                                                            <PolarGrid stroke="#333" />
-                                                            <PolarAngleAxis dataKey="subject" tick={{ fill: '#666', fontSize: 10 }} />
-                                                            <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
-                                                            <Radar name="Athlete" dataKey="A" stroke="#a855f7" strokeWidth={3} fill="#a855f7" fillOpacity={0.3} />
-                                                        </RadarChart>
-                                                    </ResponsiveContainer>
-                                                </div>
-                                            </div>
-
-                                            {/* v17.0 Limb Symmetry Radar */}
-                                            <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl relative">
-                                                <div className="flex items-center justify-between mb-8">
-                                                    <h2 className="text-lg font-bold flex items-center gap-3">
-                                                        <span className="w-1 h-6 bg-blue-500 rounded-full"></span>
-                                                        Limb Symmetry
-                                                    </h2>
-                                                </div>
-                                                <div className="h-[250px] w-full">
-                                                    <ResponsiveContainer width="100%" height="100%">
-                                                        <RadarChart cx="50%" cy="50%" outerRadius="75%" data={[
-                                                            { subject: 'Knee Ext', A: athlete.kneeExtensionLeft, B: athlete.kneeExtensionRight, fullMark: 1000 },
-                                                            { subject: 'Hip Abd', A: athlete.hipAbductionLeft, B: athlete.hipAbductionRight, fullMark: 600 },
-                                                            { subject: 'Hip Add', A: athlete.adductionStrengthLeft, B: athlete.adductionStrengthRight, fullMark: 600 },
-                                                            { subject: 'Shoulder IR', A: athlete.shoulderInternalRotationLeft, B: athlete.shoulderInternalRotationRight, fullMark: 300 },
-                                                            { subject: 'Shoulder ER', A: athlete.shoulderRomLeft, B: athlete.shoulderRomRight, fullMark: 300 },
-                                                        ]}>
-                                                            <PolarGrid stroke="#333" />
-                                                            <PolarAngleAxis dataKey="subject" tick={{ fill: '#666', fontSize: 10 }} />
-                                                            <PolarRadiusAxis angle={30} tick={false} axisLine={false} />
-                                                            <Radar name="Left" dataKey="A" stroke="#3b82f6" strokeWidth={2} fill="#3b82f6" fillOpacity={0.3} />
-                                                            <Radar name="Right" dataKey="B" stroke="#22c55e" strokeWidth={2} fill="#22c55e" fillOpacity={0.3} />
-                                                            <RechartsTooltip
-                                                                contentStyle={{ backgroundColor: '#171717', border: '1px solid #333' }}
-                                                                itemStyle={{ color: '#fff' }}
-                                                            />
-                                                            <Legend />
-                                                        </RadarChart>
-                                                    </ResponsiveContainer>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    {/* v8.0 Performance Metrics Vault */}
-                                    <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl">
-                                        <div className="flex items-center justify-between mb-6">
-                                            <h2 className="text-xl font-bold flex items-center gap-3">
-                                                <span className="w-1 h-6 bg-blue-600 rounded-full"></span>
-                                                {showAdvancedMetrics ? 'Performance Metrics' : 'Field Test Results'}
-                                            </h2>
-                                            <button
-                                                onClick={() => setShowScience('physical')}
-                                                className="flex items-center gap-2 px-3 py-1.5 bg-neutral-900 border border-neutral-800 rounded-full text-[10px] font-bold text-gray-400 hover:text-white hover:border-gray-500 transition-all"
-                                            >
-                                                <Info className="w-3 h-3" />
-                                                The Science
-                                            </button>
-                                        </div>
-                                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                                            <MetricCard label="Agility T" value={`${athlete.agilityTime || '-'} s`} />
-                                            <MetricCard label="Jump Dist." value={`${athlete.broadJump || '-'} cm`} />
-
-                                            {showAdvancedMetrics && (
-                                                <>
-                                                    <MetricCard label="IMTP Peak" value={`${athlete.imtpPeakForce} N`} />
-                                                    <MetricCard label="IMTP RFD" value={`${athlete.imtpRfd200} N/s`} />
-                                                </>
-                                            )}
-                                        </div>
-                                    </div>
-
-                                    {/* v8.0 Dynamo Detail Vault (Tabbed - Advanced Only) */}
-                                    {showAdvancedMetrics && (
-                                        <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl">
-                                            <div className="flex items-center justify-between mb-8">
-                                                <h2 className="text-xl font-bold flex items-center gap-3">
-                                                    <span className="w-1 h-6 bg-green-500 rounded-full"></span>
-                                                    Dynamo Detail
-                                                </h2>
-                                                <div className="flex bg-black rounded-lg p-1 border border-neutral-800 h-fit">
-                                                    {['lower', 'upper', 'symmetry', 'table'].map((tab) => (
-                                                        <button
-                                                            key={tab}
-                                                            onClick={() => setClinicalTab(tab as any)}
-                                                            className={`px-4 py-1 text-xs font-bold uppercase rounded-md transition-all ${clinicalTab === tab ? 'bg-white text-black' : 'text-gray-500 hover:text-white'}`}
-                                                        >
-                                                            {tab}
-                                                        </button>
-                                                    ))}
-                                                </div>
-                                            </div>
-
-                                            <div className="grid grid-cols-2 md:grid-cols-3 gap-6 animate-fade-in">
-                                                {clinicalTab === 'lower' && (
-                                                    <>
-                                                        <MetricCard label="H:Q Ratio (L)" value={athlete.hamstringQuadLeft} />
-                                                        <MetricCard label="H:Q Ratio (R)" value={athlete.hamstringQuadRight} />
-                                                        <MetricCard label="Ankle ROM (L)" value={`${athlete.ankleRomLeft}°`} />
-                                                        <MetricCard label="Ankle ROM (R)" value={`${athlete.ankleRomRight}°`} />
-                                                    </>
-                                                )}
-                                                {clinicalTab === 'upper' && (
-                                                    <>
-                                                        <MetricCard label="Shoulder IR (L)" value={`${athlete.shoulderInternalRotationLeft} N`} />
-                                                        <MetricCard label="Shoulder IR (R)" value={`${athlete.shoulderInternalRotationRight} N`} />
-                                                        <MetricCard label="Shoulder ER (L)" value={`${athlete.shoulderRomLeft} N`} />
-                                                        <MetricCard label="Shoulder ER (R)" value={`${athlete.shoulderRomRight} N`} />
-                                                        <MetricCard label="Neck Ext" value={`${athlete.neckExtension} N`} />
-                                                    </>
-                                                )}
-                                                {clinicalTab === 'symmetry' && (
-                                                    <>
-                                                        <MetricCard label="PF Asymmetry" value={`${athlete.peakForceAsymmetry}%`} />
-                                                        <MetricCard label="Adduction Bal" value="-" />
-                                                    </>
-                                                )}
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-
-                                {/* Right Column: Recommendations & Workload (v15.1) */}
-                                <div className="space-y-8">
-
-                                    {/* Recommendations */}
-                                    <div className="bg-white text-black p-8 rounded-3xl">
-                                        <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-4">Priority Focus</h3>
-                                        <h2 className="text-3xl font-black mb-4 leading-tight">{recommendation.focusArea}</h2>
-                                        <p className="text-gray-600 leading-relaxed mb-6">{recommendation.description}</p>
-                                    </div>
-
-                                    {/* v16.1 MoveHealth Live Feed */}
-                                    <div className="bg-neutral-900/40 border border-neutral-800 p-6 rounded-3xl">
-                                        <div className="flex items-center justify-between mb-4">
-                                            <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500 flex items-center gap-2">
-                                                <Activity className="w-4 h-4 text-purple-500" />
-                                                Recent Training
-                                            </h3>
-                                            <span className="text-[10px] text-gray-600 bg-neutral-900 border border-neutral-800 px-2 py-1 rounded">MoveHealth</span>
-                                        </div>
-
-                                        {/* RPE Integrity Alert */}
-                                        {flags.isRpeDiscrepancy && (
-                                            <div className="mb-4 bg-red-900/20 border border-red-900/50 p-3 rounded-lg flex items-start gap-3">
-                                                <AlertTriangle className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
-                                                <div>
-                                                    <p className="text-xs font-bold text-red-500 uppercase">Data Discrepancy</p>
-                                                    <p className="text-[10px] text-gray-300 leading-tight mt-1">
-                                                        Session RPE ({athlete.sRPE}) differs significantly from Exercise RPE. Check compliance.
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        )}
-
-                                        <div className="space-y-3">
-                                            {athlete.moveHealth?.lastExercises?.length > 0 ? (
-                                                athlete.moveHealth.lastExercises.slice(0, 3).map((ex, i) => (
-                                                    <div key={i} className="bg-neutral-900 border border-neutral-800 p-3 rounded-xl flex justify-between items-center group hover:border-neutral-700 transition-colors">
-                                                        <div>
-                                                            <p className="font-bold text-sm text-white group-hover:text-blue-400 transition-colors">{ex.name}</p>
-                                                            <p className="text-[10px] text-gray-500 font-mono">
-                                                                {ex.sets} x {ex.reps} @ {ex.weight}kg
-                                                            </p>
-                                                        </div>
-                                                        <div className="text-right">
-                                                            <div className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${ex.rpe >= 8 ? 'bg-red-900/30 text-red-500' : 'bg-green-900/30 text-green-500'}`}>
-                                                                RPE {ex.rpe}
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                ))
-                                            ) : (
-                                                <div className="text-center py-6">
-                                                    <Activity className="w-8 h-8 text-neutral-800 mx-auto mb-2" />
-                                                    <p className="text-xs text-gray-600">No recent activity logged.</p>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
-
-                                    {/* v15.1 Workload Management */}
-                                    <div className="bg-neutral-900/40 border border-neutral-800 p-6 rounded-3xl">
-                                        <div className="flex items-center justify-between mb-6">
-                                            <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500">Workload (7-Day)</h3>
-                                            <div className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${acwrHighRisk ? 'bg-red-900/30 text-red-500 border border-red-900' : 'bg-green-900/30 text-green-500 border border-green-900'}`}>
-                                                {acwrHighRisk ? 'Injury Red Zone' : 'Optimal Zone'}
-                                            </div>
-                                        </div>
-
-                                        {/* Chart */}
-                                        <div className="h-32 w-full mb-6">
-                                            <ResponsiveContainer width="100%" height="100%">
-                                                <AreaChart data={recentSessions}>
-                                                    <defs>
-                                                        <linearGradient id="colorLoad" x1="0" y1="0" x2="0" y2="1">
-                                                            <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
-                                                            <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
-                                                        </linearGradient>
-                                                    </defs>
-                                                    <XAxis dataKey="date" hide />
-                                                    <RechartsTooltip
-                                                        contentStyle={{ backgroundColor: '#111', borderColor: '#333', borderRadius: '8px', fontSize: '12px' }}
-                                                        itemStyle={{ color: '#fff' }}
-                                                        labelStyle={{ display: 'none' }}
-                                                    />
-                                                    <Area type="monotone" dataKey="load" stroke="#3b82f6" fillOpacity={1} fill="url(#colorLoad)" />
-                                                </AreaChart>
-                                            </ResponsiveContainer>
-                                        </div>
-
-                                        <div className="flex items-center justify-between border-t border-white/5 pt-4">
-                                            <div>
-                                                <p className="text-[10px] text-gray-500 font-bold uppercase">Daily Load</p>
-                                                <p className="text-2xl font-black text-white">{athlete.dailyLoad || 0}</p>
-                                            </div>
-                                            <div className="text-right">
-                                                <p className="text-[10px] text-gray-500 font-bold uppercase">ACWR</p>
-                                                <p className={`text-2xl font-black ${acwrHighRisk ? 'text-red-500' : 'text-green-500'}`}>
-                                                    {acwrValue.toFixed(2)}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    )}
-
-                    {/* VIEW: MENTORSHIP & GOALS */}
-                    {/* VIEW: MENTORSHIP & GOALS */}
-                    {activeView === 'mentorship' && (
-                        <div className="animate-fade-in">
-                            <PortalMentorship athleteName={athlete.name} tier={athlete.package} />
-                        </div>
-                    )}
-
-                    {/* VIEW: VIDEOLAB */}
-                    {activeView === 'videolab' && (
-                        <div className="animate-fade-in text-white">
-                            <VideoLab />
-                        </div>
-                    )}
-
-                    {/* VIEW: REPORTS */}
-                    {activeView === 'reports' && (
-                        <div className="space-y-8 animate-fade-in">
-                            <h2 className="text-3xl font-black text-white">Performance Reports</h2>
-                            <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl">
-                                <p className="text-gray-500">No quarterly reports available yet.</p>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* VIEW: WELLNESS (v11.5) */}
-                    {activeView === 'wellness' && (
-                        <div className="space-y-8 animate-fade-in">
-                            {/* Header & CTA */}
-                            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-                                <div>
-                                    <h2 className="text-3xl font-black text-white">Wellness & CNS Status</h2>
-                                    <p className="text-gray-400 mt-2">Track your recovery trends and neural readiness.</p>
-                                </div>
-                                <a
-                                    href="https://docs.google.com/forms/d/e/1FAIpQLSebjaiFLu2pJS56XPidWAZI74xWQXra4SzbUB22UI9LSyRGbA/viewform?usp=header"
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="bg-blue-600 text-white font-bold py-3 px-6 rounded-xl hover:bg-blue-500 transition-colors flex items-center gap-2"
-                                >
-                                    <Activity className="w-5 h-5" />
-                                    Submit Daily Wellness & Load
-                                </a>
-                            </div>
-
-                            {/* CNS Readiness (Jump Gap) */}
+                            {/* MENTORSHIP & GOALS (Internal View) */}
                             {(() => {
-                                const current = athlete.broadJump || 0;
-                                const baseline = athlete.baselineJump || current; // Fallback to current if no baseline
-                                const gap = baseline - current;
-                                const gapPercent = (gap / baseline) * 100;
-                                const isNeuralFatigue = gapPercent > 10;
-
+                                const isUnlocked = isFullAccess; // v17.4: Now linked to master full access (Apex/Elite/Testing)
                                 return (
-                                    <div className={`p-8 rounded-3xl border ${isNeuralFatigue ? 'bg-red-950/20 border-red-900/50' : 'bg-green-950/20 border-green-900/50'}`}>
-                                        <div className="flex items-center gap-4 mb-6">
-                                            <div className={`p-3 rounded-full ${isNeuralFatigue ? 'bg-red-900/20 text-red-500' : 'bg-green-900/20 text-green-500'}`}>
-                                                <Battery className="w-8 h-8" />
-                                            </div>
-                                            <div>
-                                                <h3 className={`font-bold uppercase tracking-wider ${isNeuralFatigue ? 'text-red-500' : 'text-green-500'}`}>
-                                                    CNS Readiness Status
-                                                </h3>
-                                                {isNeuralFatigue && (
-                                                    <span className="inline-block mt-1 px-2 py-0.5 bg-red-900/50 text-red-200 text-xs font-bold rounded uppercase">
-                                                        Neural Recovery Needed
-                                                    </span>
-                                                )}
-                                            </div>
-                                        </div>
-
-                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-                                            <div>
-                                                <p className="text-gray-500 text-xs uppercase font-bold mb-1">Current Broad Jump</p>
-                                                <p className="text-4xl font-black text-white">{current} cm</p>
-                                            </div>
-                                            <div className="md:border-x border-white/10">
-                                                <p className="text-gray-500 text-xs uppercase font-bold mb-1">Baseline</p>
-                                                <p className="text-4xl font-black text-gray-400">{baseline} cm</p>
-                                            </div>
-                                            <div>
-                                                <p className="text-gray-500 text-xs uppercase font-bold mb-1">Deficit</p>
-                                                <p className={`text-4xl font-black ${isNeuralFatigue ? 'text-red-500' : 'text-green-500'}`}>
-                                                    {gap > 0 ? `-${Math.round(gapPercent)}%` : '0%'}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <button
+                                        onClick={() => {
+                                            if (!isUnlocked) {
+                                                alert("Mentorship Access Required. Please upgrade your package.");
+                                            } else {
+                                                setActiveView('mentorship');
+                                                setSidebarOpen(false);
+                                            }
+                                        }}
+                                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeView === 'mentorship' ? 'bg-white text-black font-bold' : isUnlocked ? 'text-gray-400 hover:text-white hover:bg-neutral-800' : 'text-gray-600 cursor-not-allowed opacity-50'}`}
+                                    >
+                                        <BookOpen className="w-5 h-5" />
+                                        <span>Mentorship</span>
+                                        {!isUnlocked && <Lock className="w-4 h-4 ml-auto" />}
+                                    </button>
                                 );
                             })()}
 
-                            {/* WORKLOAD & WELLNESS GRID */}
-                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                                {/* Load & ACWR */}
-                                <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl">
-                                    <div className="flex items-center justify-between mb-8">
-                                        <h3 className="font-bold text-xl flex items-center gap-2">
-                                            <TrendingUp className="w-5 h-5 text-blue-500" />
-                                            Training Load
-                                        </h3>
-                                        {athlete.s2Duration > 0 && (
-                                            <span className="px-3 py-1 bg-purple-900/30 text-purple-400 text-xs font-bold rounded-full uppercase border border-purple-900/50">
-                                                Double Session
-                                            </span>
+
+
+                            {/* REPORTS */}
+                            {(() => {
+                                const isUnlocked = isFullAccess; // v17.4: Now linked to master full access
+                                return (
+                                    <button
+                                        onClick={() => { if (isUnlocked) { setActiveView('reports'); setSidebarOpen(false); } }}
+                                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeView === 'reports' ? 'bg-white text-black font-bold' : isUnlocked ? 'text-gray-400 hover:text-white hover:bg-neutral-800' : 'text-gray-600 cursor-not-allowed opacity-50'}`}
+                                    >
+                                        <FileText className="w-5 h-5" />
+                                        <span>Reports</span>
+                                        {!isUnlocked && <Lock className="w-4 h-4 ml-auto" />}
+                                    </button>
+                                );
+                            })()}
+
+                            {/* WELLNESS (v11.5) */}
+                            <button
+                                onClick={() => { setActiveView('wellness'); setSidebarOpen(false); }}
+                                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeView === 'wellness' ? 'bg-white text-black font-bold' : 'text-gray-400 hover:text-white hover:bg-neutral-800'}`}
+                            >
+                                <Activity className="w-5 h-5" />
+                                <span>Wellness & CNS</span>
+                            </button>
+                        </div>
+
+                        <div className="mt-auto px-6">
+                            <Link to="/" className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-500 hover:bg-neutral-800 transition-all">
+                                <LogOut className="w-5 h-5" />
+                                Logout
+                            </Link>
+                        </div>
+                    </div>
+
+                    {/* Content Area */}
+                    <div ref={dashboardRef} className="pt-32 px-4 max-w-7xl mx-auto space-y-8 lg:pl-72">
+
+                        {/* Floating Control Bar (The "Shorter Rectangle") */}
+                        <div className="bg-neutral-900/50 border border-neutral-800 p-4 rounded-2xl flex flex-col lg:flex-row items-center justify-between gap-6 backdrop-blur-sm">
+                            <div className="flex items-center gap-4 w-full lg:w-auto">
+                                <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 -ml-2 text-gray-400 hover:text-white lg:hidden">
+                                    <Menu className="w-6 h-6" />
+                                </button>
+                                <div className="flex items-center gap-2">
+                                    <span className="text-gray-500 font-mono text-xs uppercase tracking-widest">Portal</span>
+                                    <ChevronRight className="w-3 h-3 text-gray-700" />
+                                    <span className="text-white font-bold text-xs uppercase tracking-widest">
+                                        {activeView === 'dashboard' ? 'Physical Results' : activeView}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div className="flex items-center gap-8 w-full lg:w-auto justify-between lg:justify-end">
+                                {/* v8.0 Neural Readiness Stats (Desktop) */}
+                                {showAdvancedMetrics && (
+                                    <div className="hidden md:flex items-center gap-8 mr-8 border-r border-neutral-800 pr-8">
+                                        <div className="text-right">
+                                            <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Neural Readiness</p>
+                                            <p className={`text-2xl font-black ${athlete.readinessScore < 65 ? 'text-red-500' : 'text-green-500'}`}>
+                                                {athlete.readinessScore || '-'}%
+                                            </p>
+                                        </div>
+                                        <div className="text-right">
+                                            <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Groin T-Max</p>
+                                            <p className={`text-2xl font-black ${athlete.groinTimeToMax > 1.5 ? 'text-yellow-500' : 'text-white'}`}>
+                                                {athlete.groinTimeToMax || '-'}s
+                                            </p>
+                                        </div>
+
+                                        {/* v16.1 Clinical Link Status */}
+                                        {athlete.valdProfileId && (
+                                            <div className="flex flex-col items-end">
+                                                <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">Ecosystem</p>
+                                                <div className="bg-green-900/20 border border-green-800 px-2 py-1 rounded flex items-center gap-1">
+                                                    <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
+                                                    <span className="text-[10px] font-bold text-green-500 uppercase">Active</span>
+                                                </div>
+                                            </div>
                                         )}
                                     </div>
-                                    <div className="grid grid-cols-2 gap-8">
-                                        <div>
-                                            <p className="text-gray-500 text-xs uppercase font-bold mb-1">Daily Load (AU)</p>
-                                            <p className="text-5xl font-black text-white">{athlete.dailyLoad || '-'}</p>
-                                        </div>
-                                        <div>
-                                            <p className="text-gray-500 text-xs uppercase font-bold mb-1">ACWR</p>
-                                            <div className={`text-5xl font-black ${athlete.acwr > 1.5 || athlete.acwr < 0.8 ? 'text-red-500' : 'text-green-500'}`}>
-                                                {athlete.acwr ? athlete.acwr.toFixed(2) : '-'}
-                                            </div>
-                                            <p className="text-xs text-gray-600 mt-2">Target: 0.8 - 1.3</p>
-                                        </div>
-                                    </div>
-                                </div>
+                                )}
 
-                                {/* Subjective Wellness Charts (1-5 Scale) */}
-                                <div className="grid grid-cols-3 gap-4">
-                                    {[
-                                        { label: 'Sleep', val: athlete.sleep, color: '#3b82f6' },
-                                        { label: 'Stress', val: athlete.stress, color: '#a855f7' },
-                                        { label: 'Soreness', val: athlete.soreness, color: '#f59e0b' }
-                                    ].map((item) => (
-                                        <div key={item.label} className="bg-neutral-900/40 border border-neutral-800 p-4 rounded-2xl flex flex-col items-center justify-center">
-                                            <h4 className="text-gray-400 font-bold uppercase text-[10px] mb-3">{item.label}</h4>
-                                            <div className="relative w-24 h-24 flex items-center justify-center">
-                                                <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                                                    <circle cx="50" cy="50" r="45" fill="none" stroke="#222" strokeWidth="8" />
-                                                    <circle
-                                                        cx="50" cy="50" r="45" fill="none" stroke={item.color} strokeWidth="8"
-                                                        strokeDasharray={`${(item.val || 3) * 20 * 2.82} 282`} // 1-5 Scale: val * 20 = percentage
-                                                        strokeLinecap="round"
-                                                    />
-                                                </svg>
-                                                <span className="absolute text-2xl font-black text-white">{item.val || '-'}</span>
-                                            </div>
-                                            <p className="text-gray-600 text-[10px] mt-2">/ 5</p>
-                                        </div>
-                                    ))}
+                                <div className="flex items-center gap-4">
+                                    <div className="hidden md:block text-right">
+                                        <h1 className="text-lg font-bold text-white leading-none">{athlete.name}</h1>
+                                        <p className="text-xs text-gray-500 font-mono">{athlete.package} Tier</p>
+                                    </div>
+                                    <div className="w-10 h-10 bg-neutral-800 rounded-full flex items-center justify-center border border-neutral-700">
+                                        <User className="w-5 h-5 text-gray-400" />
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    )}
 
-                    {/* Debug Footer */}
-                    <div className="py-8 text-center border-t border-neutral-900 mt-12">
-                        <button
-                            onClick={() => setShowDebug(!showDebug)}
-                            className="text-[10px] text-neutral-800 hover:text-neutral-500 font-mono transition-colors uppercase tracking-widest"
-                        >
-                            {showDebug ? 'Hide System Data' : 'System Status: Online'}
-                        </button>
-
-                        {showDebug && (
-                            <div className="mt-4 mx-auto max-w-4xl p-4 bg-neutral-900 rounded-xl border border-neutral-800 text-left overflow-x-auto">
-                                <h4 className="text-xs font-bold text-green-500 mb-2 font-mono">RAW DATA INSPECTOR</h4>
-                                <p className="text-[10px] text-gray-500 mb-4">
-                                    If data is missing here, it is not being read from the Sheet correctly. Check column names.
-                                </p>
-                                <pre className="text-[10px] text-gray-400 font-mono whitespace-pre-wrap">
-                                    {JSON.stringify(athlete, null, 2)}
-                                </pre>
+                        {/* v16.1 Onboarding: Coach Trigger for Missing VALD ID */}
+                        {(!athlete.valdProfileId && (pkg.includes('testing') || pkg.includes('elite'))) && (
+                            <div className="bg-gradient-to-r from-neutral-900 to-neutral-800 border border-neutral-700 p-6 rounded-2xl flex items-center justify-between mb-8 animate-fade-in">
+                                <div className="flex items-center gap-4">
+                                    <div className="p-3 bg-neutral-700 rounded-full">
+                                        <User className="w-6 h-6 text-gray-300" />
+                                    </div>
+                                    <div>
+                                        <h3 className="text-white font-bold">Clinical Profile Missing</h3>
+                                        <p className="text-gray-400 text-xs">This athlete is active but missing a VALD Profile ID.</p>
+                                    </div>
+                                </div>
+                                <button className="bg-white text-black font-bold py-2 px-6 rounded-lg text-sm hover:bg-gray-200 transition-colors flex items-center gap-2">
+                                    <UploadCloud className="w-4 h-4" />
+                                    Generate VALD Profile
+                                </button>
                             </div>
                         )}
-                    </div>
 
+                        {/* VIEW: DASHBOARD */}
+                        {/* VIEW: HOME */}
+                        {activeView === 'home' && renderHome()}
+
+                        {/* SCIENCE OVERLAY */}
+                        {showScience && <ScienceOverlay type={showScience} onClose={() => setShowScience(null)} />}
+
+                        {/* VIEW: PILLARS */}
+                        {activeView === 'pillars' && renderPillars()}
+
+                        {/* VIEW: DASHBOARD (Physical Results) */}
+                        {activeView === 'dashboard' && (
+                            <div className="space-y-12 animate-fade-in">
+
+                                {/* v20.0: Navigation & Interpretation Guide */}
+                                <div className="bg-neutral-900 border border-neutral-800 p-6 rounded-2xl">
+                                    <div className="flex flex-col md:flex-row items-center justify-between mb-4 gap-4">
+                                        <h3 className="text-white font-bold flex items-center gap-2">
+                                            <Info className="w-5 h-5 text-blue-500" />
+                                            How to Navigate Your Physical Results
+                                        </h3>
+                                        <div className="flex items-center gap-3">
+                                            <button
+                                                onClick={() => generateReportPDF('summary')}
+                                                className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-lg flex items-center gap-2 transition-colors"
+                                            >
+                                                <FileText className="w-4 h-4" />
+                                                Parent Summary PDF
+                                            </button>
+                                            <button
+                                                onClick={() => generateReportPDF('detailed')}
+                                                className="px-4 py-2 bg-neutral-800 hover:bg-neutral-700 text-gray-300 text-xs font-bold rounded-lg flex items-center gap-2 transition-colors border border-neutral-700"
+                                            >
+                                                <Activity className="w-4 h-4" />
+                                                Full Science PDF
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm text-gray-400">
+                                        <div className="bg-black/20 p-4 rounded-xl">
+                                            <strong className="block text-white mb-1">1. The Radar</strong>
+                                            Shows your balance. A full chart means you are well-rounded. Dips indicate areas to focus on (e.g., Hamstring strength).
+                                        </div>
+                                        <div className="bg-black/20 p-4 rounded-xl">
+                                            <strong className="block text-white mb-1">2. Metrics</strong>
+                                            Your raw numbers. Compare "Left vs. Right" to see symmetry. 100% Symmetry is the goal.
+                                        </div>
+                                        <div className="bg-black/20 p-4 rounded-xl">
+                                            <strong className="block text-white mb-1">3. Reports</strong>
+                                            Download the <strong>Parent Summary</strong> for a simple explanation, or the <strong>Full Science</strong> report for all the data.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Upsell for General Tier */}
+                                {!showAdvancedMetrics && (
+                                    <div className="bg-gradient-to-r from-blue-900/40 to-purple-900/40 border border-blue-800/50 p-6 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4">
+                                        <div className="flex items-center gap-4">
+                                            <div className="p-3 bg-blue-500/20 rounded-full">
+                                                <Shield className="w-6 h-6 text-blue-400" />
+                                            </div>
+                                            <div>
+                                                <h3 className="text-white font-bold">Unlock Clinical Readiness Monitoring</h3>
+                                                <p className="text-blue-200 text-xs">Get professional insights to know exactly when to train and when to rest.</p>
+                                            </div>
+                                        </div>
+                                        <button className="bg-white text-black font-bold py-2 px-6 rounded-lg text-sm hover:bg-gray-200 transition-colors whitespace-nowrap">
+                                            Upgrade to Testing + Program Design
+                                        </button>
+                                    </div>
+                                )}
+
+                                {/* v9.5 Last Updated (Master's Efficiency) */}
+                                <div className="flex justify-end -mt-6 mb-2">
+                                    <span className="text-[10px] text-gray-500 font-mono border border-neutral-800 px-3 py-1 rounded-full flex items-center gap-2">
+                                        <Activity className="w-3 h-3" />
+                                        Last Updated: {athlete.lastUpdated || 'Unknown'}
+                                    </span>
+                                </div>
+
+                                {/* v9.5 Neural Readiness (HERO STAT for Clinical Tiers) */}
+                                {/* Trigger Alert if Groin Time > 1.5s */}
+                                {showHeroStat && (
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fade-in-down">
+                                        <div className={`p-6 rounded-3xl flex items-center gap-6 ${athlete.readinessScore < 65 ? 'bg-red-950/40 border border-red-900/50' : 'bg-green-950/40 border border-green-900/50'}`}>
+                                            <div className={`p-4 rounded-full ${athlete.readinessScore < 65 ? 'bg-red-900/20' : 'bg-green-900/20'}`}>
+                                                <Battery className={`w-8 h-8 ${athlete.readinessScore < 65 ? 'text-red-500' : 'text-green-500'}`} />
+                                            </div>
+                                            <div>
+                                                <h3 className={`font-bold text-sm uppercase tracking-wider mb-1 ${athlete.readinessScore < 65 ? 'text-red-500' : 'text-green-500'}`}>
+                                                    {athlete.readinessScore < 65 ? 'Recovery Required' : 'Neural State: Prime'}
+                                                </h3>
+                                                <p className="text-white font-black text-3xl">{athlete.readinessScore}%</p>
+                                                <p className="text-gray-400 text-xs mt-1">
+                                                    {athlete.readinessScore < 65 ? 'Reduce intensity. Your CNS is fatigued.' : 'System ready for high load.'}
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        {/* Groin T-Max Alert */}
+                                        <div className={`p-6 rounded-3xl flex items-center gap-6 ${athlete.groinTimeToMax > 1.5 ? 'bg-yellow-950/40 border border-yellow-900/50' : 'bg-neutral-900/40 border border-neutral-800'}`}>
+                                            <div className={`p-4 rounded-full ${athlete.groinTimeToMax > 1.5 ? 'bg-yellow-900/20' : 'bg-neutral-800'}`}>
+                                                <Activity className={`w-8 h-8 ${athlete.groinTimeToMax > 1.5 ? 'text-yellow-500' : 'text-gray-400'}`} />
+                                            </div>
+                                            <div>
+                                                <h3 className={`font-bold text-sm uppercase tracking-wider mb-1 ${athlete.groinTimeToMax > 1.5 ? 'text-yellow-500' : 'text-gray-400'}`}>
+                                                    {athlete.groinTimeToMax > 1.5 ? 'Fatigue Alert' : 'Reaction Speed'}
+                                                </h3>
+                                                <p className="text-white font-black text-3xl">{athlete.groinTimeToMax}s</p>
+                                                <p className="text-gray-400 text-xs mt-1">
+                                                    {athlete.groinTimeToMax > 1.5 ? 'Groin response is slow (>1.5s).' : 'Groin Time to Max Force'}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* KPI Dials */}
+                                <div className="grid grid-cols-2 md:grid-cols-3 gap-8 bg-neutral-900/40 p-8 rounded-3xl border border-neutral-800">
+                                    <div className="col-span-2 md:col-span-1">
+                                        <CircleProgress percentage={analysis.scores?.performance ?? 0} color="#3b82f6" label="Performance" icon={TrendingUp} />
+                                    </div>
+                                    {showAdvancedMetrics ? (
+                                        <>
+                                            <CircleProgress percentage={analysis.scores?.screening ?? 0} color="#a855f7" label="MQS" icon={Shield} />
+                                            <CircleProgress percentage={analysis.scores?.powerIndex ?? 0} color="#f59e0b" label="Power Index" icon={Zap} />
+                                        </>
+                                    ) : (
+                                        <div className="col-span-2 md:col-span-2 flex items-center justify-center opacity-30 border-l border-neutral-800 bg-neutral-900/50 rounded-r-xl">
+                                            <Lock className="w-5 h-5 mr-3 text-gray-500" />
+                                            <p className="text-sm font-mono text-gray-500">DYNAMO & POWER LOCKED</p>
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* v17.0 Dynamic Alerts */}
+                                {(analysis.flags.isShoulderImbalance || analysis.flags.isLimbAsymmetry) && showAdvancedMetrics && (
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fade-in">
+                                        {analysis.flags.isShoulderImbalance && (
+                                            <div className="bg-orange-950/40 border border-orange-900/50 p-4 rounded-xl flex items-center gap-3">
+                                                <AlertTriangle className="w-6 h-6 text-orange-500" />
+                                                <div>
+                                                    <h4 className="text-orange-400 font-bold text-sm">Shoulder Imbalance</h4>
+                                                    <p className="text-orange-200/60 text-xs">ER Strength {'<'} 80% of IR. Stability work recommended.</p>
+                                                </div>
+                                            </div>
+                                        )}
+                                        {analysis.flags.isLimbAsymmetry && (
+                                            <div className="bg-amber-950/40 border border-amber-900/50 p-4 rounded-xl flex items-center gap-3">
+                                                <AlertCircle className="w-6 h-6 text-amber-500" />
+                                                <div>
+                                                    <h4 className="text-amber-400 font-bold text-sm">Limb Symmetry Alert</h4>
+                                                    <p className="text-amber-200/60 text-xs">{'>'}15% Asymmetry detected in Lower Body Key Lifts.</p>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+
+                                {/* Main Grid: Charts & Performance */}
+                                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+                                    {/* Left Column: Performance Profile (Radar) */}
+                                    <div className="lg:col-span-2 space-y-8">
+
+                                        {/* Radar Charts Grid */}
+                                        {showAdvancedMetrics && (
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                                {/* Standard Screening Profile */}
+                                                <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl relative">
+                                                    <div className="flex items-center justify-between mb-8">
+                                                        <h2 className="text-lg font-bold flex items-center gap-3">
+                                                            <span className="w-1 h-6 bg-purple-600 rounded-full"></span>
+                                                            Dynamo Screening
+                                                        </h2>
+                                                    </div>
+                                                    <div className="h-[250px] w-full">
+                                                        <ResponsiveContainer width="100%" height="100%">
+                                                            <RadarChart cx="50%" cy="50%" outerRadius="75%" data={radarData}>
+                                                                <PolarGrid stroke="#333" />
+                                                                <PolarAngleAxis dataKey="subject" tick={{ fill: '#666', fontSize: 10 }} />
+                                                                <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
+                                                                <Radar name="Athlete" dataKey="A" stroke="#a855f7" strokeWidth={3} fill="#a855f7" fillOpacity={0.3} />
+                                                            </RadarChart>
+                                                        </ResponsiveContainer>
+                                                    </div>
+                                                </div>
+
+                                                {/* v17.0 Limb Symmetry Radar */}
+                                                <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl relative">
+                                                    <div className="flex items-center justify-between mb-8">
+                                                        <h2 className="text-lg font-bold flex items-center gap-3">
+                                                            <span className="w-1 h-6 bg-blue-500 rounded-full"></span>
+                                                            Limb Symmetry
+                                                        </h2>
+                                                    </div>
+                                                    <div className="h-[250px] w-full">
+                                                        <ResponsiveContainer width="100%" height="100%">
+                                                            <RadarChart cx="50%" cy="50%" outerRadius="75%" data={[
+                                                                { subject: 'Knee Ext', A: athlete.kneeExtensionLeft, B: athlete.kneeExtensionRight, fullMark: 1000 },
+                                                                { subject: 'Hip Abd', A: athlete.hipAbductionLeft, B: athlete.hipAbductionRight, fullMark: 600 },
+                                                                { subject: 'Hip Add', A: athlete.adductionStrengthLeft, B: athlete.adductionStrengthRight, fullMark: 600 },
+                                                                { subject: 'Shoulder IR', A: athlete.shoulderInternalRotationLeft, B: athlete.shoulderInternalRotationRight, fullMark: 300 },
+                                                                { subject: 'Shoulder ER', A: athlete.shoulderRomLeft, B: athlete.shoulderRomRight, fullMark: 300 },
+                                                            ]}>
+                                                                <PolarGrid stroke="#333" />
+                                                                <PolarAngleAxis dataKey="subject" tick={{ fill: '#666', fontSize: 10 }} />
+                                                                <PolarRadiusAxis angle={30} tick={false} axisLine={false} />
+                                                                <Radar name="Left" dataKey="A" stroke="#3b82f6" strokeWidth={2} fill="#3b82f6" fillOpacity={0.3} />
+                                                                <Radar name="Right" dataKey="B" stroke="#22c55e" strokeWidth={2} fill="#22c55e" fillOpacity={0.3} />
+                                                                <RechartsTooltip
+                                                                    contentStyle={{ backgroundColor: '#171717', border: '1px solid #333' }}
+                                                                    itemStyle={{ color: '#fff' }}
+                                                                />
+                                                                <Legend />
+                                                            </RadarChart>
+                                                        </ResponsiveContainer>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {/* v8.0 Performance Metrics Vault */}
+                                        <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl">
+                                            <div className="flex items-center justify-between mb-6">
+                                                <h2 className="text-xl font-bold flex items-center gap-3">
+                                                    <span className="w-1 h-6 bg-blue-600 rounded-full"></span>
+                                                    {showAdvancedMetrics ? 'Performance Metrics' : 'Field Test Results'}
+                                                </h2>
+                                                <button
+                                                    onClick={() => setShowScience('physical')}
+                                                    className="flex items-center gap-2 px-3 py-1.5 bg-neutral-900 border border-neutral-800 rounded-full text-[10px] font-bold text-gray-400 hover:text-white hover:border-gray-500 transition-all"
+                                                >
+                                                    <Info className="w-3 h-3" />
+                                                    The Science
+                                                </button>
+                                            </div>
+                                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                                <MetricCard label="Agility T" value={`${athlete.agilityTime || '-'} s`} />
+                                                <MetricCard label="Jump Dist." value={`${athlete.broadJump || '-'} cm`} />
+
+                                                {showAdvancedMetrics && (
+                                                    <>
+                                                        <MetricCard label="IMTP Peak" value={`${athlete.imtpPeakForce} N`} />
+                                                        <MetricCard label="IMTP RFD" value={`${athlete.imtpRfd200} N/s`} />
+                                                    </>
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        {/* v8.0 Dynamo Detail Vault (Tabbed - Advanced Only) */}
+                                        {showAdvancedMetrics && (
+                                            <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl">
+                                                <div className="flex items-center justify-between mb-8">
+                                                    <h2 className="text-xl font-bold flex items-center gap-3">
+                                                        <span className="w-1 h-6 bg-green-500 rounded-full"></span>
+                                                        Dynamo Detail
+                                                    </h2>
+                                                    <div className="flex bg-black rounded-lg p-1 border border-neutral-800 h-fit">
+                                                        {['lower', 'upper', 'symmetry', 'table'].map((tab) => (
+                                                            <button
+                                                                key={tab}
+                                                                onClick={() => setClinicalTab(tab as any)}
+                                                                className={`px-4 py-1 text-xs font-bold uppercase rounded-md transition-all ${clinicalTab === tab ? 'bg-white text-black' : 'text-gray-500 hover:text-white'}`}
+                                                            >
+                                                                {tab}
+                                                            </button>
+                                                        ))}
+                                                    </div>
+                                                </div>
+
+                                                <div className="grid grid-cols-2 md:grid-cols-3 gap-6 animate-fade-in">
+                                                    {clinicalTab === 'lower' && (
+                                                        <>
+                                                            <MetricCard label="H:Q Ratio (L)" value={athlete.hamstringQuadLeft} />
+                                                            <MetricCard label="H:Q Ratio (R)" value={athlete.hamstringQuadRight} />
+                                                            <MetricCard label="Ankle ROM (L)" value={`${athlete.ankleRomLeft}°`} />
+                                                            <MetricCard label="Ankle ROM (R)" value={`${athlete.ankleRomRight}°`} />
+                                                        </>
+                                                    )}
+                                                    {clinicalTab === 'upper' && (
+                                                        <>
+                                                            <MetricCard label="Shoulder IR (L)" value={`${athlete.shoulderInternalRotationLeft} N`} />
+                                                            <MetricCard label="Shoulder IR (R)" value={`${athlete.shoulderInternalRotationRight} N`} />
+                                                            <MetricCard label="Shoulder ER (L)" value={`${athlete.shoulderRomLeft} N`} />
+                                                            <MetricCard label="Shoulder ER (R)" value={`${athlete.shoulderRomRight} N`} />
+                                                            <MetricCard label="Neck Ext" value={`${athlete.neckExtension} N`} />
+                                                        </>
+                                                    )}
+                                                    {clinicalTab === 'symmetry' && (
+                                                        <>
+                                                            <MetricCard label="PF Asymmetry" value={`${athlete.peakForceAsymmetry}%`} />
+                                                            <MetricCard label="Adduction Bal" value="-" />
+                                                        </>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Right Column: Recommendations & Workload (v15.1) */}
+                                    <div className="space-y-8">
+
+                                        {/* Recommendations */}
+                                        <div className="bg-white text-black p-8 rounded-3xl">
+                                            <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-4">Priority Focus</h3>
+                                            <h2 className="text-3xl font-black mb-4 leading-tight">{recommendation.focusArea}</h2>
+                                            <p className="text-gray-600 leading-relaxed mb-6">{recommendation.description}</p>
+                                        </div>
+
+                                        {/* v16.1 MoveHealth Live Feed */}
+                                        <div className="bg-neutral-900/40 border border-neutral-800 p-6 rounded-3xl">
+                                            <div className="flex items-center justify-between mb-4">
+                                                <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500 flex items-center gap-2">
+                                                    <Activity className="w-4 h-4 text-purple-500" />
+                                                    Recent Training
+                                                </h3>
+                                                <span className="text-[10px] text-gray-600 bg-neutral-900 border border-neutral-800 px-2 py-1 rounded">MoveHealth</span>
+                                            </div>
+
+                                            {/* RPE Integrity Alert */}
+                                            {flags.isRpeDiscrepancy && (
+                                                <div className="mb-4 bg-red-900/20 border border-red-900/50 p-3 rounded-lg flex items-start gap-3">
+                                                    <AlertTriangle className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
+                                                    <div>
+                                                        <p className="text-xs font-bold text-red-500 uppercase">Data Discrepancy</p>
+                                                        <p className="text-[10px] text-gray-300 leading-tight mt-1">
+                                                            Session RPE ({athlete.sRPE}) differs significantly from Exercise RPE. Check compliance.
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            )}
+
+                                            <div className="space-y-3">
+                                                {athlete.moveHealth?.lastExercises?.length > 0 ? (
+                                                    athlete.moveHealth.lastExercises.slice(0, 3).map((ex, i) => (
+                                                        <div key={i} className="bg-neutral-900 border border-neutral-800 p-3 rounded-xl flex justify-between items-center group hover:border-neutral-700 transition-colors">
+                                                            <div>
+                                                                <p className="font-bold text-sm text-white group-hover:text-blue-400 transition-colors">{ex.name}</p>
+                                                                <p className="text-[10px] text-gray-500 font-mono">
+                                                                    {ex.sets} x {ex.reps} @ {ex.weight}kg
+                                                                </p>
+                                                            </div>
+                                                            <div className="text-right">
+                                                                <div className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${ex.rpe >= 8 ? 'bg-red-900/30 text-red-500' : 'bg-green-900/30 text-green-500'}`}>
+                                                                    RPE {ex.rpe}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    ))
+                                                ) : (
+                                                    <div className="text-center py-6">
+                                                        <Activity className="w-8 h-8 text-neutral-800 mx-auto mb-2" />
+                                                        <p className="text-xs text-gray-600">No recent activity logged.</p>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        {/* v15.1 Workload Management */}
+                                        <div className="bg-neutral-900/40 border border-neutral-800 p-6 rounded-3xl">
+                                            <div className="flex items-center justify-between mb-6">
+                                                <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500">Workload (7-Day)</h3>
+                                                <div className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${acwrHighRisk ? 'bg-red-900/30 text-red-500 border border-red-900' : 'bg-green-900/30 text-green-500 border border-green-900'}`}>
+                                                    {acwrHighRisk ? 'Injury Red Zone' : 'Optimal Zone'}
+                                                </div>
+                                            </div>
+
+                                            {/* Chart */}
+                                            <div className="h-32 w-full mb-6">
+                                                <ResponsiveContainer width="100%" height="100%">
+                                                    <AreaChart data={recentSessions}>
+                                                        <defs>
+                                                            <linearGradient id="colorLoad" x1="0" y1="0" x2="0" y2="1">
+                                                                <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
+                                                                <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                                                            </linearGradient>
+                                                        </defs>
+                                                        <XAxis dataKey="date" hide />
+                                                        <RechartsTooltip
+                                                            contentStyle={{ backgroundColor: '#111', borderColor: '#333', borderRadius: '8px', fontSize: '12px' }}
+                                                            itemStyle={{ color: '#fff' }}
+                                                            labelStyle={{ display: 'none' }}
+                                                        />
+                                                        <Area type="monotone" dataKey="load" stroke="#3b82f6" fillOpacity={1} fill="url(#colorLoad)" />
+                                                    </AreaChart>
+                                                </ResponsiveContainer>
+                                            </div>
+
+                                            <div className="flex items-center justify-between border-t border-white/5 pt-4">
+                                                <div>
+                                                    <p className="text-[10px] text-gray-500 font-bold uppercase">Daily Load</p>
+                                                    <p className="text-2xl font-black text-white">{athlete.dailyLoad || 0}</p>
+                                                </div>
+                                                <div className="text-right">
+                                                    <p className="text-[10px] text-gray-500 font-bold uppercase">ACWR</p>
+                                                    <p className={`text-2xl font-black ${acwrHighRisk ? 'text-red-500' : 'text-green-500'}`}>
+                                                        {acwrValue.toFixed(2)}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        )}
+
+                        {/* VIEW: MENTORSHIP & GOALS */}
+                        {/* VIEW: MENTORSHIP & GOALS */}
+                        {activeView === 'mentorship' && (
+                            <div className="animate-fade-in">
+                                <PortalMentorship athleteName={athlete.name} tier={athlete.package} />
+                            </div>
+                        )}
+
+                        {/* VIEW: VIDEOLAB */}
+                        {activeView === 'videolab' && (
+                            <div className="animate-fade-in text-white">
+                                <VideoLab />
+                            </div>
+                        )}
+
+                        {/* VIEW: REPORTS */}
+                        {activeView === 'reports' && (
+                            <div className="space-y-8 animate-fade-in">
+                                <h2 className="text-3xl font-black text-white">Performance Reports</h2>
+                                <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl">
+                                    <p className="text-gray-500">No quarterly reports available yet.</p>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* VIEW: WELLNESS (v11.5) */}
+                        {activeView === 'wellness' && (
+                            <div className="space-y-8 animate-fade-in">
+                                {/* Header & CTA */}
+                                <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                                    <div>
+                                        <h2 className="text-3xl font-black text-white">Wellness & CNS Status</h2>
+                                        <p className="text-gray-400 mt-2">Track your recovery trends and neural readiness.</p>
+                                    </div>
+                                    <a
+                                        href="https://docs.google.com/forms/d/e/1FAIpQLSebjaiFLu2pJS56XPidWAZI74xWQXra4SzbUB22UI9LSyRGbA/viewform?usp=header"
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="bg-blue-600 text-white font-bold py-3 px-6 rounded-xl hover:bg-blue-500 transition-colors flex items-center gap-2"
+                                    >
+                                        <Activity className="w-5 h-5" />
+                                        Submit Daily Wellness & Load
+                                    </a>
+                                </div>
+
+                                {/* CNS Readiness (Jump Gap) */}
+                                {(() => {
+                                    const current = athlete.broadJump || 0;
+                                    const baseline = athlete.baselineJump || current; // Fallback to current if no baseline
+                                    const gap = baseline - current;
+                                    const gapPercent = (gap / baseline) * 100;
+                                    const isNeuralFatigue = gapPercent > 10;
+
+                                    return (
+                                        <div className={`p-8 rounded-3xl border ${isNeuralFatigue ? 'bg-red-950/20 border-red-900/50' : 'bg-green-950/20 border-green-900/50'}`}>
+                                            <div className="flex items-center gap-4 mb-6">
+                                                <div className={`p-3 rounded-full ${isNeuralFatigue ? 'bg-red-900/20 text-red-500' : 'bg-green-900/20 text-green-500'}`}>
+                                                    <Battery className="w-8 h-8" />
+                                                </div>
+                                                <div>
+                                                    <h3 className={`font-bold uppercase tracking-wider ${isNeuralFatigue ? 'text-red-500' : 'text-green-500'}`}>
+                                                        CNS Readiness Status
+                                                    </h3>
+                                                    {isNeuralFatigue && (
+                                                        <span className="inline-block mt-1 px-2 py-0.5 bg-red-900/50 text-red-200 text-xs font-bold rounded uppercase">
+                                                            Neural Recovery Needed
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            </div>
+
+                                            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                                                <div>
+                                                    <p className="text-gray-500 text-xs uppercase font-bold mb-1">Current Broad Jump</p>
+                                                    <p className="text-4xl font-black text-white">{current} cm</p>
+                                                </div>
+                                                <div className="md:border-x border-white/10">
+                                                    <p className="text-gray-500 text-xs uppercase font-bold mb-1">Baseline</p>
+                                                    <p className="text-4xl font-black text-gray-400">{baseline} cm</p>
+                                                </div>
+                                                <div>
+                                                    <p className="text-gray-500 text-xs uppercase font-bold mb-1">Deficit</p>
+                                                    <p className={`text-4xl font-black ${isNeuralFatigue ? 'text-red-500' : 'text-green-500'}`}>
+                                                        {gap > 0 ? `-${Math.round(gapPercent)}%` : '0%'}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                })()}
+
+                                {/* WORKLOAD & WELLNESS GRID */}
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                    {/* Load & ACWR */}
+                                    <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl">
+                                        <div className="flex items-center justify-between mb-8">
+                                            <h3 className="font-bold text-xl flex items-center gap-2">
+                                                <TrendingUp className="w-5 h-5 text-blue-500" />
+                                                Training Load
+                                            </h3>
+                                            {athlete.s2Duration > 0 && (
+                                                <span className="px-3 py-1 bg-purple-900/30 text-purple-400 text-xs font-bold rounded-full uppercase border border-purple-900/50">
+                                                    Double Session
+                                                </span>
+                                            )}
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-8">
+                                            <div>
+                                                <p className="text-gray-500 text-xs uppercase font-bold mb-1">Daily Load (AU)</p>
+                                                <p className="text-5xl font-black text-white">{athlete.dailyLoad || '-'}</p>
+                                            </div>
+                                            <div>
+                                                <p className="text-gray-500 text-xs uppercase font-bold mb-1">ACWR</p>
+                                                <div className={`text-5xl font-black ${athlete.acwr > 1.5 || athlete.acwr < 0.8 ? 'text-red-500' : 'text-green-500'}`}>
+                                                    {athlete.acwr ? athlete.acwr.toFixed(2) : '-'}
+                                                </div>
+                                                <p className="text-xs text-gray-600 mt-2">Target: 0.8 - 1.3</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Subjective Wellness Charts (1-5 Scale) */}
+                                    <div className="grid grid-cols-3 gap-4">
+                                        {[
+                                            { label: 'Sleep', val: athlete.sleep, color: '#3b82f6' },
+                                            { label: 'Stress', val: athlete.stress, color: '#a855f7' },
+                                            { label: 'Soreness', val: athlete.soreness, color: '#f59e0b' }
+                                        ].map((item) => (
+                                            <div key={item.label} className="bg-neutral-900/40 border border-neutral-800 p-4 rounded-2xl flex flex-col items-center justify-center">
+                                                <h4 className="text-gray-400 font-bold uppercase text-[10px] mb-3">{item.label}</h4>
+                                                <div className="relative w-24 h-24 flex items-center justify-center">
+                                                    <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                                                        <circle cx="50" cy="50" r="45" fill="none" stroke="#222" strokeWidth="8" />
+                                                        <circle
+                                                            cx="50" cy="50" r="45" fill="none" stroke={item.color} strokeWidth="8"
+                                                            strokeDasharray={`${(item.val || 3) * 20 * 2.82} 282`} // 1-5 Scale: val * 20 = percentage
+                                                            strokeLinecap="round"
+                                                        />
+                                                    </svg>
+                                                    <span className="absolute text-2xl font-black text-white">{item.val || '-'}</span>
+                                                </div>
+                                                <p className="text-gray-600 text-[10px] mt-2">/ 5</p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Debug Footer */}
+                        <div className="py-8 text-center border-t border-neutral-900 mt-12">
+                            <button
+                                onClick={() => setShowDebug(!showDebug)}
+                                className="text-[10px] text-neutral-800 hover:text-neutral-500 font-mono transition-colors uppercase tracking-widest"
+                            >
+                                {showDebug ? 'Hide System Data' : 'System Status: Online'}
+                            </button>
+
+                            {showDebug && (
+                                <div className="mt-4 mx-auto max-w-4xl p-4 bg-neutral-900 rounded-xl border border-neutral-800 text-left overflow-x-auto">
+                                    <h4 className="text-xs font-bold text-green-500 mb-2 font-mono">RAW DATA INSPECTOR</h4>
+                                    <p className="text-[10px] text-gray-500 mb-4">
+                                        If data is missing here, it is not being read from the Sheet correctly. Check column names.
+                                    </p>
+                                    <pre className="text-[10px] text-gray-400 font-mono whitespace-pre-wrap">
+                                        {JSON.stringify(athlete, null, 2)}
+                                    </pre>
+                                </div>
+                            )}
+                        </div>
+
+                    </div>
                 </div>
-            </div>
         </SafetyGuard >
     );
 };
