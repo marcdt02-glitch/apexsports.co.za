@@ -280,88 +280,87 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
                         </div>
 
                         <div className="flex items-center gap-2">
-                            <div className="flex items-center gap-2">
-                                {[0.125, 0.25, 0.5, 1.0].map(rate => (
-                                    <button
-                                        key={rate}
-                                        onClick={() => changeSpeed(rate)}
-                                        className={`px-2 py-1 rounded text-xs font-bold ${playbackRate === rate ? 'bg-blue-600 text-white' : 'bg-neutral-800 text-gray-400'}`}
-                                    >
-                                        {rate}x
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Scientific Insight Tooltip (Contextual) */}
-                {tool !== 'none' && (
-                    <div className="absolute top-4 left-4 right-4 z-30 animate-fade-in-down pointer-events-none">
-                        <div className="bg-blue-900/90 border border-blue-500/50 backdrop-blur-md p-3 rounded-xl inline-flex items-center gap-3 shadow-xl">
-                            <div className="p-2 bg-blue-500 rounded-lg">
-                                <MousePointer2 className="w-4 h-4 text-white" />
-                            </div>
-                            <div>
-                                <p className="text-[10px] font-bold text-blue-300 uppercase tracking-wider">Scientific Insight</p>
-                                <p className="text-white text-xs font-medium">
-                                    {tool === 'line' && "Force Vectors: Are they pushing forward (Acceleration) or up (Vertical)?"}
-                                    {tool === 'circle' && "Joint Stacking: Highlight the Center of Mass or stacked joints."}
-                                    {tool === 'angle' && "Knee Valgus: Measure the angle of the knee during landing."}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                )}
-
-                {/* Tools Toolbar */}
-                <div className="flex items-center justify-between bg-neutral-900 border border-neutral-800 p-4 rounded-2xl">
-                    <div className="flex items-center gap-2">
-                        <button title="Select / Move" onClick={() => setTool('none')} className={`p-3 rounded-xl transition-all ${tool === 'none' ? 'bg-white text-black' : 'text-gray-400 hover:bg-neutral-800'}`}>
-                            <MousePointer2 className="w-5 h-5" />
-                        </button>
-                        <div className="w-px h-8 bg-neutral-800 mx-2"></div>
-                        <button title="Draw Line" onClick={() => setTool('line')} className={`p-3 rounded-xl transition-all ${tool === 'line' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:bg-neutral-800'}`}>
-                            <Slash className="w-5 h-5" />
-                        </button>
-                        <button title="Draw Circle" onClick={() => setTool('circle')} className={`p-3 rounded-xl transition-all ${tool === 'circle' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:bg-neutral-800'}`}>
-                            <Circle className="w-5 h-5" />
-                        </button>
-                        <button title="Measure Angle" onClick={() => setTool('angle')} className={`p-3 rounded-xl transition-all ${tool === 'angle' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:bg-neutral-800'}`}>
-                            <Triangle className="w-5 h-5" />
-                        </button>
-
-                        <div className="w-px h-8 bg-neutral-800 mx-2"></div>
-                        <button onClick={() => setDrawings([])} className="p-3 rounded-xl text-red-500 hover:bg-red-900/20" title="Clear All">
-                            <RotateCcw className="w-5 h-5" />
-                        </button>
-                        {/* Snapshot Button */}
-                        <button onClick={handleSnapshot} className="p-3 rounded-xl text-purple-400 hover:bg-purple-900/20" title="Download Snapshot">
-                            <Download className="w-5 h-5" />
-                        </button>
-                    </div>
-
-                    <div className="flex items-center gap-4">
-                        {/* Color Picker */}
-                        <div className="flex gap-2 bg-neutral-800 p-1 rounded-lg">
-                            {['#ef4444', '#3b82f6', '#22c55e', '#eab308', '#ffffff'].map(c => (
+                            {[0.125, 0.25, 0.5, 1.0].map(rate => (
                                 <button
-                                    key={c}
-                                    onClick={() => setColor(c)}
-                                    className={`w-6 h-6 rounded-md ${color === c ? 'ring-2 ring-white scale-110' : 'opacity-70 hover:opacity-100'}`}
-                                    style={{ backgroundColor: c }}
-                                />
+                                    key={rate}
+                                    onClick={() => changeSpeed(rate)}
+                                    className={`px-2 py-1 rounded text-xs font-bold ${playbackRate === rate ? 'bg-blue-600 text-white' : 'bg-neutral-800 text-gray-400'}`}
+                                >
+                                    {rate}x
+                                </button>
                             ))}
                         </div>
-
-                        {onSave && (
-                            <button onClick={() => onSave({ drawings, time: currentTime })} className="flex items-center gap-2 bg-white text-black font-bold px-4 py-2 rounded-xl text-sm hover:bg-gray-200">
-                                <Save className="w-4 h-4" />
-                                Save Analysis
-                            </button>
-                        )}
                     </div>
                 </div>
             </div>
-            );
+
+            {/* Scientific Insight Tooltip (Contextual) */}
+            {tool !== 'none' && (
+                <div className="absolute top-4 left-4 right-4 z-30 animate-fade-in-down pointer-events-none">
+                    <div className="bg-blue-900/90 border border-blue-500/50 backdrop-blur-md p-3 rounded-xl inline-flex items-center gap-3 shadow-xl">
+                        <div className="p-2 bg-blue-500 rounded-lg">
+                            <MousePointer2 className="w-4 h-4 text-white" />
+                        </div>
+                        <div>
+                            <p className="text-[10px] font-bold text-blue-300 uppercase tracking-wider">Scientific Insight</p>
+                            <p className="text-white text-xs font-medium">
+                                {tool === 'line' && "Force Vectors: Are they pushing forward (Acceleration) or up (Vertical)?"}
+                                {tool === 'circle' && "Joint Stacking: Highlight the Center of Mass or stacked joints."}
+                                {tool === 'angle' && "Knee Valgus: Measure the angle of the knee during landing."}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Tools Toolbar */}
+            <div className="flex items-center justify-between bg-neutral-900 border border-neutral-800 p-4 rounded-2xl">
+                <div className="flex items-center gap-2">
+                    <button title="Select / Move" onClick={() => setTool('none')} className={`p-3 rounded-xl transition-all ${tool === 'none' ? 'bg-white text-black' : 'text-gray-400 hover:bg-neutral-800'}`}>
+                        <MousePointer2 className="w-5 h-5" />
+                    </button>
+                    <div className="w-px h-8 bg-neutral-800 mx-2"></div>
+                    <button title="Draw Line" onClick={() => setTool('line')} className={`p-3 rounded-xl transition-all ${tool === 'line' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:bg-neutral-800'}`}>
+                        <Slash className="w-5 h-5" />
+                    </button>
+                    <button title="Draw Circle" onClick={() => setTool('circle')} className={`p-3 rounded-xl transition-all ${tool === 'circle' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:bg-neutral-800'}`}>
+                        <Circle className="w-5 h-5" />
+                    </button>
+                    <button title="Measure Angle" onClick={() => setTool('angle')} className={`p-3 rounded-xl transition-all ${tool === 'angle' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:bg-neutral-800'}`}>
+                        <Triangle className="w-5 h-5" />
+                    </button>
+
+                    <div className="w-px h-8 bg-neutral-800 mx-2"></div>
+                    <button onClick={() => setDrawings([])} className="p-3 rounded-xl text-red-500 hover:bg-red-900/20" title="Clear All">
+                        <RotateCcw className="w-5 h-5" />
+                    </button>
+                    {/* Snapshot Button */}
+                    <button onClick={handleSnapshot} className="p-3 rounded-xl text-purple-400 hover:bg-purple-900/20" title="Download Snapshot">
+                        <Download className="w-5 h-5" />
+                    </button>
+                </div>
+
+                <div className="flex items-center gap-4">
+                    {/* Color Picker */}
+                    <div className="flex gap-2 bg-neutral-800 p-1 rounded-lg">
+                        {['#ef4444', '#3b82f6', '#22c55e', '#eab308', '#ffffff'].map(c => (
+                            <button
+                                key={c}
+                                onClick={() => setColor(c)}
+                                className={`w-6 h-6 rounded-md ${color === c ? 'ring-2 ring-white scale-110' : 'opacity-70 hover:opacity-100'}`}
+                                style={{ backgroundColor: c }}
+                            />
+                        ))}
+                    </div>
+
+                    {onSave && (
+                        <button onClick={() => onSave({ drawings, time: currentTime })} className="flex items-center gap-2 bg-white text-black font-bold px-4 py-2 rounded-xl text-sm hover:bg-gray-200">
+                            <Save className="w-4 h-4" />
+                            Save Analysis
+                        </button>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
 };
