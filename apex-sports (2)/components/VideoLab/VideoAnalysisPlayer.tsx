@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect, MouseEvent } from 'react';
-import { Play, Pause, Square, Circle, PenTool, Type, Save, Slash, MousePointer2, RotateCcw, FastForward, Rewind, Triangle, Download, Film } from 'lucide-react';
+import { Play, Pause, Square, Circle, PenTool, Type, Save, Slash, MousePointer2, RotateCcw, FastForward, Rewind, Triangle, Download, Film, HelpCircle } from 'lucide-react';
 import html2canvas from 'html2canvas'; // Assuming available or I will use raw canvas API if not installed. 
 // Actually I don't know if html2canvas is installed. I'll use raw canvas API to merge layers.
 
@@ -44,6 +44,7 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
     const [color, setColor] = useState('#ef4444'); // Red default
     const [draggingPoint, setDraggingPoint] = useState<{ drawingIndex: number, pointIndex: number } | null>(null);
     const [isRecording, setIsRecording] = useState(false);
+    const [showHelp, setShowHelp] = useState(false);
 
     // SYNC CONTROLS
     const togglePlay = () => {
@@ -406,7 +407,21 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
                 />
 
                 {/* Video Controls Overlay (Bottom) */}
-                <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity z-30">
+                <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/95 to-transparent opacity-0 group-hover:opacity-100 transition-opacity z-30">
+
+                    {/* Scrubber */}
+                    <div className="w-full mb-2 flex items-center gap-2">
+                        <input
+                            type="range"
+                            min={0}
+                            max={duration || 100}
+                            step={0.05}
+                            value={currentTime}
+                            onChange={handleScrub}
+                            className="w-full h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-blue-500 hover:h-2 transition-all"
+                        />
+                    </div>
+
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
                             <button onClick={() => stepFrame(-5)} className="text-white hover:text-blue-400"><Rewind className="w-5 h-5" /></button>
