@@ -735,6 +735,12 @@ const AthleteDashboard: React.FC = () => {
                         </div>
                     </div>
 
+                    {/* BACKGROUND FX */}
+                    <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+                        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-blue-900/10 rounded-full blur-[120px] animate-pulse-slow"></div>
+                        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-purple-900/10 rounded-full blur-[100px] animate-pulse-slow delay-1000"></div>
+                    </div>
+
                     {/* Content Area */}
                     <div ref={dashboardRef} className="pt-32 px-4 md:px-8 max-w-[1920px] mx-auto space-y-8 lg:pl-72">
 
