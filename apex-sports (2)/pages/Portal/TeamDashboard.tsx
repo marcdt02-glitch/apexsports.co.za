@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
     ChevronRight, Shield, Zap, TrendingUp, LogOut,
-    Brain, Moon, Target, Sparkles, Smile, Download, FileText, Layout
+    Brain, Moon, Target, Sparkles, Smile, Download, FileText, Layout, LayoutGrid
 } from 'lucide-react';
 import {
 
