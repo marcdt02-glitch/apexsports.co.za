@@ -11,16 +11,7 @@ const Services: React.FC = () => {
             {/* Hero Section (Video Header) */}
             <div className="pt-32 pb-16 px-4 text-center border-b border-neutral-900 bg-black">
                 <div className="max-w-5xl mx-auto space-y-10">
-                    {/* Video Embed */}
-                    <div className="w-full aspect-video rounded-3xl overflow-hidden shadow-2xl shadow-blue-900/10 border border-neutral-800 relative bg-neutral-900">
-                        <iframe
-                            className="w-full h-full object-cover"
-                            src="https://www.youtube.com/embed/Q8YfGJwoTD8?modestbranding=1&rel=0"
-                            title="Apex Inspiration"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowFullScreen
-                        ></iframe>
-                    </div>
+
 
                     {/* Text Overlay */}
                     <div className="space-y-6">
@@ -238,7 +229,7 @@ const Services: React.FC = () => {
                             </li>
                             <li className="flex items-start gap-4">
                                 <ChevronRight className="w-6 h-6 text-blue-500 flex-shrink-0" />
-                                <span><strong className="text-white">Dynamo Testing:</strong> Force plates & dynamometry profiling.</span>
+                                <span><strong className="text-white">Dynamo Testing:</strong> Dynamometry profiling.</span>
                             </li>
                         </ul>
                     </div>
@@ -266,10 +257,7 @@ const Services: React.FC = () => {
                                 <Check className="w-6 h-6 text-yellow-500 flex-shrink-0" />
                                 <span><strong className="text-white">1-on-1 Sessions:</strong> Personalized attention on the pitch.</span>
                             </li>
-                            <li className="flex items-start gap-4">
-                                <Check className="w-6 h-6 text-yellow-500 flex-shrink-0" />
-                                <span><strong className="text-white">Video Analysis:</strong> Technical breakdown of your mechanics.</span>
-                            </li>
+
                         </ul>
                     </div>
 
@@ -329,7 +317,7 @@ const Services: React.FC = () => {
                             </div>
                             <h3 className="text-white font-bold mb-2 text-xl">Goal Setting Access</h3>
                             <p className="text-gray-400 text-sm mb-4">
-                                Includes <strong>Psychological Skills Assessment</strong>.
+                                Includes <strong>Psychological Skills Assessment</strong> & Basic Game Footage Review.
                             </p>
                             <a href="https://paystack.shop/pay/GoalSettingAccess-Monthly" target="_blank" rel="noreferrer" className="block w-full bg-black text-white font-bold py-3 rounded-lg hover:bg-neutral-800 transition-colors border border-neutral-700">
                                 Subscribe: R150/pm
