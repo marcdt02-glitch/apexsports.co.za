@@ -902,88 +902,93 @@ const AthleteDashboard: React.FC = () => {
                                     </div>
                                 )}
 
-                                {/* v9.5 Last Updated (Master's Efficiency) */}
-                                <div className="flex justify-end -mt-6 mb-2">
-                                    <span className="text-[10px] text-gray-500 font-mono border border-neutral-800 px-3 py-1 rounded-full flex items-center gap-2">
-                                        <Activity className="w-3 h-3" />
-                                        Last Updated: {athlete.lastUpdated || 'Unknown'}
-                                    </span>
-                                </div>
-
-                                {/* v9.5 Neural Readiness (HERO STAT for Clinical Tiers) */}
-                                {/* Trigger Alert if Groin Time > 1.5s */}
-                                {showHeroStat && (
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fade-in-down">
-                                        <div className={`p-6 rounded-3xl flex items-center gap-6 ${athlete.readinessScore < 65 ? 'bg-red-950/40 border border-red-900/50' : 'bg-green-950/40 border border-green-900/50'}`}>
-                                            <div className={`p-4 rounded-full ${athlete.readinessScore < 65 ? 'bg-red-900/20' : 'bg-green-900/20'}`}>
-                                                <Battery className={`w-8 h-8 ${athlete.readinessScore < 65 ? 'text-red-500' : 'text-green-500'}`} />
-                                            </div>
-                                            <div>
-                                                <h3 className={`font-bold text-sm uppercase tracking-wider mb-1 ${athlete.readinessScore < 65 ? 'text-red-500' : 'text-green-500'}`}>
-                                                    {athlete.readinessScore < 65 ? 'Recovery Required' : 'Neural State: Prime'}
-                                                </h3>
-                                                <p className="text-white font-black text-3xl">{athlete.readinessScore}%</p>
-                                                <p className="text-gray-400 text-xs mt-1">
-                                                    {athlete.readinessScore < 65 ? 'Reduce intensity. Your CNS is fatigued.' : 'System ready for high load.'}
-                                                </p>
-                                            </div>
+                                {/* Top Widgets - Advanced Only */}
+                                {physicalViewMode === 'advanced' && (
+                                    <div className="space-y-6 mb-8">
+                                        {/* v9.5 Last Updated (Master's Efficiency) */}
+                                        <div className="flex justify-end -mt-6 mb-2">
+                                            <span className="text-[10px] text-gray-500 font-mono border border-neutral-800 px-3 py-1 rounded-full flex items-center gap-2">
+                                                <Activity className="w-3 h-3" />
+                                                Last Updated: {athlete.lastUpdated || 'Unknown'}
+                                            </span>
                                         </div>
 
-                                        {/* Groin T-Max Alert */}
-                                        <div className={`p-6 rounded-3xl flex items-center gap-6 ${athlete.groinTimeToMax > 1.5 ? 'bg-yellow-950/40 border border-yellow-900/50' : 'bg-neutral-900/40 border border-neutral-800'}`}>
-                                            <div className={`p-4 rounded-full ${athlete.groinTimeToMax > 1.5 ? 'bg-yellow-900/20' : 'bg-neutral-800'}`}>
-                                                <Activity className={`w-8 h-8 ${athlete.groinTimeToMax > 1.5 ? 'text-yellow-500' : 'text-gray-400'}`} />
-                                            </div>
-                                            <div>
-                                                <h3 className={`font-bold text-sm uppercase tracking-wider mb-1 ${athlete.groinTimeToMax > 1.5 ? 'text-yellow-500' : 'text-gray-400'}`}>
-                                                    {athlete.groinTimeToMax > 1.5 ? 'Fatigue Alert' : 'Reaction Speed'}
-                                                </h3>
-                                                <p className="text-white font-black text-3xl">{athlete.groinTimeToMax}s</p>
-                                                <p className="text-gray-400 text-xs mt-1">
-                                                    {athlete.groinTimeToMax > 1.5 ? 'Groin response is slow (>1.5s).' : 'Groin Time to Max Force'}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
+                                        {/* v9.5 Neural Readiness (HERO STAT for Clinical Tiers) */}
+                                        {/* Trigger Alert if Groin Time > 1.5s */}
+                                        {showHeroStat && (
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fade-in-down">
+                                                <div className={`p-6 rounded-3xl flex items-center gap-6 ${athlete.readinessScore < 65 ? 'bg-red-950/40 border border-red-900/50' : 'bg-green-950/40 border border-green-900/50'}`}>
+                                                    <div className={`p-4 rounded-full ${athlete.readinessScore < 65 ? 'bg-red-900/20' : 'bg-green-900/20'}`}>
+                                                        <Battery className={`w-8 h-8 ${athlete.readinessScore < 65 ? 'text-red-500' : 'text-green-500'}`} />
+                                                    </div>
+                                                    <div>
+                                                        <h3 className={`font-bold text-sm uppercase tracking-wider mb-1 ${athlete.readinessScore < 65 ? 'text-red-500' : 'text-green-500'}`}>
+                                                            {athlete.readinessScore < 65 ? 'Recovery Required' : 'Neural State: Prime'}
+                                                        </h3>
+                                                        <p className="text-white font-black text-3xl">{athlete.readinessScore}%</p>
+                                                        <p className="text-gray-400 text-xs mt-1">
+                                                            {athlete.readinessScore < 65 ? 'Reduce intensity. Your CNS is fatigued.' : 'System ready for high load.'}
+                                                        </p>
+                                                    </div>
+                                                </div>
 
-                                {/* KPI Dials */}
-                                <div className="grid grid-cols-2 md:grid-cols-3 gap-8 bg-neutral-900/40 p-8 rounded-3xl border border-neutral-800">
-                                    <div className="col-span-2 md:col-span-1">
-                                        <CircleProgress percentage={analysis.scores?.performance ?? 0} color="#3b82f6" label="Performance" icon={TrendingUp} />
-                                    </div>
-                                    {showAdvancedMetrics ? (
-                                        <>
-                                            <CircleProgress percentage={analysis.scores?.screening ?? 0} color="#a855f7" label="MQS" icon={Shield} />
-                                            <CircleProgress percentage={analysis.scores?.powerIndex ?? 0} color="#f59e0b" label="Power Index" icon={Zap} />
-                                        </>
-                                    ) : (
-                                        <div className="col-span-2 md:col-span-2 flex items-center justify-center opacity-30 border-l border-neutral-800 bg-neutral-900/50 rounded-r-xl">
-                                            <Lock className="w-5 h-5 mr-3 text-gray-500" />
-                                            <p className="text-sm font-mono text-gray-500">DYNAMO & POWER LOCKED</p>
-                                        </div>
-                                    )}
-                                </div>
-
-                                {/* v17.0 Dynamic Alerts */}
-                                {(analysis.flags.isShoulderImbalance || analysis.flags.isLimbAsymmetry) && showAdvancedMetrics && (
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fade-in">
-                                        {analysis.flags.isShoulderImbalance && (
-                                            <div className="bg-orange-950/40 border border-orange-900/50 p-4 rounded-xl flex items-center gap-3">
-                                                <AlertTriangle className="w-6 h-6 text-orange-500" />
-                                                <div>
-                                                    <h4 className="text-orange-400 font-bold text-sm">Shoulder Imbalance</h4>
-                                                    <p className="text-orange-200/60 text-xs">ER Strength {'<'} 80% of IR. Stability work recommended.</p>
+                                                {/* Groin T-Max Alert */}
+                                                <div className={`p-6 rounded-3xl flex items-center gap-6 ${athlete.groinTimeToMax > 1.5 ? 'bg-yellow-950/40 border border-yellow-900/50' : 'bg-neutral-900/40 border border-neutral-800'}`}>
+                                                    <div className={`p-4 rounded-full ${athlete.groinTimeToMax > 1.5 ? 'bg-yellow-900/20' : 'bg-neutral-800'}`}>
+                                                        <Activity className={`w-8 h-8 ${athlete.groinTimeToMax > 1.5 ? 'text-yellow-500' : 'text-gray-400'}`} />
+                                                    </div>
+                                                    <div>
+                                                        <h3 className={`font-bold text-sm uppercase tracking-wider mb-1 ${athlete.groinTimeToMax > 1.5 ? 'text-yellow-500' : 'text-gray-400'}`}>
+                                                            {athlete.groinTimeToMax > 1.5 ? 'Fatigue Alert' : 'Reaction Speed'}
+                                                        </h3>
+                                                        <p className="text-white font-black text-3xl">{athlete.groinTimeToMax}s</p>
+                                                        <p className="text-gray-400 text-xs mt-1">
+                                                            {athlete.groinTimeToMax > 1.5 ? 'Groin response is slow (>1.5s).' : 'Groin Time to Max Force'}
+                                                        </p>
+                                                    </div>
                                                 </div>
                                             </div>
                                         )}
-                                        {analysis.flags.isLimbAsymmetry && (
-                                            <div className="bg-amber-950/40 border border-amber-900/50 p-4 rounded-xl flex items-center gap-3">
-                                                <AlertCircle className="w-6 h-6 text-amber-500" />
-                                                <div>
-                                                    <h4 className="text-amber-400 font-bold text-sm">Limb Symmetry Alert</h4>
-                                                    <p className="text-amber-200/60 text-xs">{'>'}15% Asymmetry detected in Lower Body Key Lifts.</p>
+
+                                        {/* KPI Dials */}
+                                        <div className="grid grid-cols-2 md:grid-cols-3 gap-8 bg-neutral-900/40 p-8 rounded-3xl border border-neutral-800">
+                                            <div className="col-span-2 md:col-span-1">
+                                                <CircleProgress percentage={analysis.scores?.performance ?? 0} color="#3b82f6" label="Performance" icon={TrendingUp} />
+                                            </div>
+                                            {showAdvancedMetrics ? (
+                                                <>
+                                                    <CircleProgress percentage={analysis.scores?.screening ?? 0} color="#a855f7" label="MQS" icon={Shield} />
+                                                    <CircleProgress percentage={analysis.scores?.powerIndex ?? 0} color="#f59e0b" label="Power Index" icon={Zap} />
+                                                </>
+                                            ) : (
+                                                <div className="col-span-2 md:col-span-2 flex items-center justify-center opacity-30 border-l border-neutral-800 bg-neutral-900/50 rounded-r-xl">
+                                                    <Lock className="w-5 h-5 mr-3 text-gray-500" />
+                                                    <p className="text-sm font-mono text-gray-500">DYNAMO & POWER LOCKED</p>
                                                 </div>
+                                            )}
+                                        </div>
+
+                                        {/* v17.0 Dynamic Alerts */}
+                                        {(analysis.flags.isShoulderImbalance || analysis.flags.isLimbAsymmetry) && showAdvancedMetrics && (
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fade-in">
+                                                {analysis.flags.isShoulderImbalance && (
+                                                    <div className="bg-orange-950/40 border border-orange-900/50 p-4 rounded-xl flex items-center gap-3">
+                                                        <AlertTriangle className="w-6 h-6 text-orange-500" />
+                                                        <div>
+                                                            <h4 className="text-orange-400 font-bold text-sm">Shoulder Imbalance</h4>
+                                                            <p className="text-orange-200/60 text-xs">ER Strength {'<'} 80% of IR. Stability work recommended.</p>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                                {analysis.flags.isLimbAsymmetry && (
+                                                    <div className="bg-amber-950/40 border border-amber-900/50 p-4 rounded-xl flex items-center gap-3">
+                                                        <AlertCircle className="w-6 h-6 text-amber-500" />
+                                                        <div>
+                                                            <h4 className="text-amber-400 font-bold text-sm">Limb Symmetry Alert</h4>
+                                                            <p className="text-amber-200/60 text-xs">{'>'}15% Asymmetry detected in Lower Body Key Lifts.</p>
+                                                        </div>
+                                                    </div>
+                                                )}
                                             </div>
                                         )}
                                     </div>
@@ -1046,7 +1051,7 @@ const AthleteDashboard: React.FC = () => {
                                                 </div>
 
                                                 {/* 3. BAR GRAPH + CONSISTENCY */}
-                                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                                <div className="grid grid-cols-1 gap-6">
                                                     <div className="md:col-span-2 bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl">
                                                         <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
                                                             <Activity className="w-5 h-5 text-blue-500" />
