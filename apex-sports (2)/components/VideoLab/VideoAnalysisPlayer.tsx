@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect, MouseEvent } from 'react';
-import { Play, Pause, Square, Circle, PenTool, Type, Save, Slash, MousePointer2, RotateCcw, FastForward, Rewind, Triangle, Download, Film, HelpCircle, Maximize, Zap } from 'lucide-react';
+import { Play, Pause, Square, Circle, PenTool, Type, Save, Slash, MousePointer2, RotateCcw, FastForward, Rewind, Triangle, Download, Film, HelpCircle, Maximize, Zap, Pen } from 'lucide-react';
 import html2canvas from 'html2canvas'; // Assuming available or I will use raw canvas API if not installed. 
 // Actually I don't know if html2canvas is installed. I'll use raw canvas API to merge layers.
 
@@ -10,7 +10,7 @@ interface AnalysisPlayerProps {
     onSave?: (data: any) => void;
 }
 
-type Tool = 'none' | 'line' | 'angle' | 'circle' | 'text';
+type Tool = 'none' | 'line' | 'angle' | 'circle' | 'text' | 'scribble';
 
 interface Drawing {
     type: Tool;
@@ -235,28 +235,25 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
         if (!currentDrawing) return;
 
         const newPoints = [...currentDrawing.points];
-        if (tool === 'line') {
+
+        if (tool === 'scribble') {
+            // Freehand: just add points
+            newPoints.push(pt);
+        } else if (tool === 'line') {
             if (newPoints.length === 1) newPoints.push(pt);
             else newPoints[1] = pt;
         } else if (tool === 'circle') {
             if (newPoints.length === 1) newPoints.push(pt);
             else newPoints[1] = pt;
         } else if (tool === 'angle') {
-            // Logic for angle: 3 points (A->B->C). Angle at B.
-            // Click 1 (A), Click 2 (B), Click 3 (C)
-            // Or Dragging? Current logic is "Drag creates line", but angles need 3 points.
-            // Improved Logic:
-            // 1. Click creates Pt 1.
-            // 2. Click creates Pt 2 (Line 1 formed).
-            // 3. Click creates Pt 3 (Line 2 formed).
-            // If dragging, we update the *last* point.
-            if (newPoints.length === 1) newPoints.push(pt);
-            else if (newPoints.length === 2) newPoints.push(pt);
-            else newPoints[newPoints.length - 1] = pt;
+            // Click 1 (Vertex) -> Drag/Click 2 (Arm 1) -> Drag/Click 3 (Arm 2)
+            // Existing logic: [Vertex, Arm1, Arm2]
+
+            if (newPoints.length === 1) newPoints.push(pt); // Add Arm 1 preview
+            else if (newPoints.length === 2) newPoints.push(pt); // Add Arm 2 preview
+            else newPoints[newPoints.length - 1] = pt; // Update latest point
         }
         setCurrentDrawing({ ...currentDrawing, points: newPoints });
-        // Use requestAnimationFrame for smoother drawing during drag?
-        // renderCanvas(); // We call it here for MVP simplicity
         requestAnimationFrame(() => renderCanvas());
     };
 
@@ -273,43 +270,26 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
         let isComplete = false;
 
         if (['line', 'circle'].includes(tool) && currentDrawing.points.length >= 2) isComplete = true;
+        if (tool === 'scribble') isComplete = true; // MouseUp ends scribble
 
         if (tool === 'angle') {
-            // Need 3 points. If we just released mouse, did we add a point?
-            // If points < 3, we stay in drawing mode?
-            // Re-clicking adds points to currentDrawing?
-            // Complex. For simplicity in 'Drag Mode', we assume click-drag-release = 2 points.
-            // For Angle, user creates 3 points. 
-            // I'll make angle auto-complete if 3rd point is placed.
-            // MouseUp adds the current point?
-            const pt = getPoint(e);
-            const pts = [...currentDrawing.points];
-            // If we are at 2 points, we need one more click?
-            // Let's assume click-click-click interaction for angle.
-            // But handleMouseMove updates the "live" point.
-            // So click 1 (down/up) -> point 1.
-            // Move -> point 2 preview.
-            // Click 2 (down/up) -> point 2 fixed.
-            // Move -> point 3 preview.
-            // Click 3 -> point 3 fixed -> Complete.
-
-            // To support this "Click" flow, handleMouseUp shouldn't clear currentDrawing immediately unless complete.
-
-            // However, existing code was "Drag to draw".
-            // I will implement "Drag to draw line 1, then click for point 3"?
-            // Or "Click-Click-Click".
-            // I'll support "Click-Click-Click" for Angle.
-            // If tool is angle:
-            if (pts.length === 3) isComplete = true;
+            // Wait for 3 points
+            if (currentDrawing.points.length >= 3) isComplete = true;
             else {
-                // Keep currentDrawing active. "Add Point" logic happens in MouseDown/Up?
-                // No, MouseUp just releases the "Drag" state.
-                // We need to add point on MouseDown?
-                // Let's stick to "Drag 2 points" for Line/Circle.
-                // For Angle, if < 3 points, don't clear.
+                // Clicking releases "drag" of current point, but we need to keep drawing to get next point.
+                // We need to artificially "add" the point so the user can move to next.
+                // Actually, handleMouseMove updates the *last* point.
+                // So on MouseUp, we want to "lock" that point and start a new one?
+                // No, handleMouseMove logic: 
+                // If len==1, push(pt). Line is P0-P1.
+                // If len==2, push(pt). Line is P0-P1-P2.
+                // So clicking (Down/Up) effectively locks the current position because the mouse stops moving there.
+                // But we need to ensure the *next* move starts a new point?
+                // My handleMouseMove logic handles "Push if length is X".
+                // So we just need to NOT clear currentDrawing.
             }
         } else {
-            isComplete = true; // Line/Circle
+            isComplete = true;
         }
 
         if (isComplete) {
@@ -357,20 +337,42 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
                 const r = Math.sqrt(Math.pow(d.points[1].x - d.points[0].x, 2) + Math.pow(d.points[1].y - d.points[0].y, 2));
                 ctx.arc(d.points[0].x, d.points[0].y, r, 0, 2 * Math.PI);
                 ctx.stroke();
+            } else if (d.type === 'scribble' && d.points.length > 1) {
+                ctx.moveTo(d.points[0].x, d.points[0].y);
+                d.points.forEach(p => ctx.lineTo(p.x, p.y));
+                ctx.stroke();
             } else if (d.type === 'angle' && d.points.length > 1) {
+                // P0 is Vertex. P1 is Arm 1. P2 is Arm 2.
+                // Draw Line P0 -> P1
                 ctx.moveTo(d.points[0].x, d.points[0].y);
                 ctx.lineTo(d.points[1].x, d.points[1].y);
-                if (d.points.length > 2) {
-                    ctx.lineTo(d.points[2].x, d.points[2].y);
-                }
                 ctx.stroke();
 
-                if (d.points.length === 3) {
-                    const angle = getAngle(d.points[0], d.points[1], d.points[2]);
+                // Draw Line P0 -> P2 if exists
+                if (d.points.length > 2) {
+                    ctx.beginPath();
+                    ctx.moveTo(d.points[0].x, d.points[0].y);
+                    ctx.lineTo(d.points[2].x, d.points[2].y);
+                    ctx.stroke();
+
+                    // Calculate Angle
+                    const angle = getAngle(d.points[1], d.points[0], d.points[2]); // Vertex is Center (P0)
                     if (!isNaN(angle)) {
+                        // Draw Arc
+                        ctx.beginPath();
+                        ctx.strokeStyle = '#fff';
+                        ctx.lineWidth = 1;
+                        ctx.arc(d.points[0].x, d.points[0].y, 20, 0, 2 * Math.PI); // Full circle or just arc?
+                        // Arc is better but math is hard for simple canvas. Full circle logic is confusing visually.
+                        // I'll stick to text.
+                        // ctx.stroke();
+
                         ctx.fillStyle = '#fff';
                         ctx.font = 'bold 16px sans-serif';
-                        ctx.fillText(`${angle.toFixed(1)}°`, d.points[1].x + 10, d.points[1].y);
+                        ctx.strokeStyle = '#000';
+                        ctx.lineWidth = 3;
+                        ctx.strokeText(`${angle.toFixed(1)}°`, d.points[0].x + 15, d.points[0].y - 15);
+                        ctx.fillText(`${angle.toFixed(1)}°`, d.points[0].x + 15, d.points[0].y - 15);
                     }
                 }
             }
@@ -521,6 +523,9 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
                     <button title="Draw Circle" onClick={() => setTool('circle')} className={`p-3 rounded-xl transition-all ${tool === 'circle' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:bg-neutral-800'}`}>
                         <Circle className="w-5 h-5" />
                     </button>
+                    <button title="Scribble" onClick={() => setTool('scribble')} className={`p-3 rounded-xl transition-all ${tool === 'scribble' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:bg-neutral-800'}`}>
+                        <Pen className="w-5 h-5" />
+                    </button>
                     <button title="Measure Angle" onClick={() => setTool('angle')} className={`p-3 rounded-xl transition-all ${tool === 'angle' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:bg-neutral-800'}`}>
                         <Triangle className="w-5 h-5" />
                     </button>
@@ -586,7 +591,8 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
                     <ul className="space-y-2 text-gray-400">
                         <li className="flex items-center gap-2"><Slash className="w-3 h-3 text-blue-500" /> <span>Draw Line (Force Vector)</span></li>
                         <li className="flex items-center gap-2"><Circle className="w-3 h-3 text-blue-500" /> <span>Circle (Joint/CoM)</span></li>
-                        <li className="flex items-center gap-2"><Triangle className="w-3 h-3 text-blue-500" /> <span>Measure Angle</span></li>
+                        <li className="flex items-center gap-2"><Triangle className="w-3 h-3 text-blue-500" /> <span>Angle (Click Vertex-End-End)</span></li>
+                        <li className="flex items-center gap-2"><Pen className="w-3 h-3 text-blue-500" /> <span>Freehand Scribble</span></li>
                         <li className="flex items-center gap-2"><Type className="w-3 h-3 text-blue-500" /> <span>Add Text Label</span></li>
                     </ul>
                 </div>
