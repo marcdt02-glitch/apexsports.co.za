@@ -994,24 +994,7 @@ const AthleteDashboard: React.FC = () => {
                                     </div>
                                 )}
 
-                                {/* Priority Focus - Full Width Top Integration */}
-                                <div className="bg-white text-black p-8 rounded-3xl mb-8 border border-neutral-200 shadow-xl shadow-white/5 animate-fade-in-up">
-                                    <div className="flex items-start justify-between">
-                                        <div>
-                                            <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 flex items-center gap-2">
-                                                <Target className="w-4 h-4 text-red-600" />
-                                                Priority Focus
-                                            </h3>
-                                            <h2 className="text-3xl font-black mb-2 leading-tight">{recommendation.focusArea}</h2>
-                                            <p className="text-gray-600 leading-relaxed max-w-3xl">{recommendation.description}</p>
-                                        </div>
-                                        <div className="hidden md:block">
-                                            <div className="p-4 bg-gray-100 rounded-2xl">
-                                                <Target className="w-8 h-8 text-black" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+
 
                                 {/* Main Grid: Charts & Performance */}
                                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -1109,8 +1092,16 @@ const AthleteDashboard: React.FC = () => {
                                                 {/* 4. INJURY RISKS & WARNINGS BLOCK */}
                                                 <div className="bg-red-500/5 border border-red-500/20 p-6 rounded-3xl">
                                                     <h3 className="text-red-400 font-bold mb-4 flex items-center gap-2">
-                                                        <AlertTriangle className="w-5 h-5" /> Risks & Warnings
+                                                        <AlertTriangle className="w-5 h-5" /> Risks, Warnings & Priorities
                                                     </h3>
+                                                    {/* Integrated Priority Focus */}
+                                                    <div className="bg-white/10 p-4 rounded-xl mb-4 border border-white/10">
+                                                        <h4 className="text-white text-sm font-bold mb-1 flex items-center gap-2">
+                                                            <Target className="w-4 h-4 text-red-500" />
+                                                            Priority: {recommendation.focusArea}
+                                                        </h4>
+                                                        <p className="text-gray-300 text-xs">{recommendation.description}</p>
+                                                    </div>
                                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                                         <div className="bg-red-500/10 p-4 rounded-xl">
                                                             <h4 className="text-white text-sm font-bold mb-1">Hamstring Load</h4>
@@ -1219,84 +1210,58 @@ const AthleteDashboard: React.FC = () => {
                                                 </div>
                                             </div>
                                         )}
-                                    </div>
 
-                                    {/* v8.0 Performance Metrics Vault */}
-                                    <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl">
-                                        <div className="flex items-center justify-between mb-6">
-                                            <h2 className="text-xl font-bold flex items-center gap-3">
-                                                <span className="w-1 h-6 bg-blue-600 rounded-full"></span>
-                                                {showAdvancedMetrics ? 'Performance Metrics' : 'Field Test Results'}
-                                            </h2>
-                                            <button
-                                                onClick={() => setShowScience('physical')}
-                                                className="flex items-center gap-2 px-3 py-1.5 bg-neutral-900 border border-neutral-800 rounded-full text-[10px] font-bold text-gray-400 hover:text-white hover:border-gray-500 transition-all"
-                                            >
-                                                <Info className="w-3 h-3" />
-                                                The Science
-                                            </button>
-                                        </div>
-                                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                                            <MetricCard label="Agility T" value={`${athlete.agilityTime || '-'} s`} />
-                                            <MetricCard label="Jump Dist." value={`${athlete.broadJump || '-'} cm`} />
+                                        {/* v8.0 Dynamo Detail Vault (Moved to Left Column for Width) */}
+                                        {showAdvancedMetrics && (
+                                            <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl">
+                                                <div className="flex items-center justify-between mb-8">
+                                                    <h2 className="text-xl font-bold flex items-center gap-3">
+                                                        <span className="w-1 h-6 bg-green-500 rounded-full"></span>
+                                                        Dynamo Detail
+                                                    </h2>
+                                                    <div className="flex bg-black rounded-lg p-1 border border-neutral-800 h-fit">
+                                                        {['lower', 'upper', 'symmetry', 'table'].map((tab) => (
+                                                            <button
+                                                                key={tab}
+                                                                onClick={() => setClinicalTab(tab as any)}
+                                                                className={`px-4 py-1 text-xs font-bold uppercase rounded-md transition-all ${clinicalTab === tab ? 'bg-white text-black' : 'text-gray-500 hover:text-white'}`}
+                                                            >
+                                                                {tab}
+                                                            </button>
+                                                        ))}
+                                                    </div>
+                                                </div>
 
-                                            {showAdvancedMetrics && (
-                                                <>
-                                                    <MetricCard label="IMTP Peak" value={`${athlete.imtpPeakForce} N`} />
-                                                    <MetricCard label="IMTP RFD" value={`${athlete.imtpRfd200} N/s`} />
-                                                </>
-                                            )}
-                                        </div>
-                                    </div>
-
-                                    {/* v8.0 Dynamo Detail Vault (Tabbed - Advanced Only) */}
-                                    {showAdvancedMetrics && (
-                                        <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl">
-                                            <div className="flex items-center justify-between mb-8">
-                                                <h2 className="text-xl font-bold flex items-center gap-3">
-                                                    <span className="w-1 h-6 bg-green-500 rounded-full"></span>
-                                                    Dynamo Detail
-                                                </h2>
-                                                <div className="flex bg-black rounded-lg p-1 border border-neutral-800 h-fit">
-                                                    {['lower', 'upper', 'symmetry', 'table'].map((tab) => (
-                                                        <button
-                                                            key={tab}
-                                                            onClick={() => setClinicalTab(tab as any)}
-                                                            className={`px-4 py-1 text-xs font-bold uppercase rounded-md transition-all ${clinicalTab === tab ? 'bg-white text-black' : 'text-gray-500 hover:text-white'}`}
-                                                        >
-                                                            {tab}
-                                                        </button>
-                                                    ))}
+                                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 animate-fade-in">
+                                                    {clinicalTab === 'lower' && (
+                                                        <>
+                                                            <MetricCard label="H:Q Ratio (L)" value={athlete.hamstringQuadLeft} />
+                                                            <MetricCard label="H:Q Ratio (R)" value={athlete.hamstringQuadRight} />
+                                                            <MetricCard label="Ankle ROM (L)" value={`${athlete.ankleRomLeft}°`} />
+                                                            <MetricCard label="Ankle ROM (R)" value={`${athlete.ankleRomRight}°`} />
+                                                        </>
+                                                    )}
+                                                    {clinicalTab === 'upper' && (
+                                                        <>
+                                                            <MetricCard label="Shoulder IR (L)" value={`${athlete.shoulderInternalRotationLeft} N`} />
+                                                            <MetricCard label="Shoulder IR (R)" value={`${athlete.shoulderInternalRotationRight} N`} />
+                                                            <MetricCard label="Shoulder ER (L)" value={`${athlete.shoulderRomLeft} N`} />
+                                                            <MetricCard label="Shoulder ER (R)" value={`${athlete.shoulderRomRight} N`} />
+                                                            <MetricCard label="Neck Ext" value={`${athlete.neckExtension} N`} />
+                                                        </>
+                                                    )}
+                                                    {clinicalTab === 'symmetry' && (
+                                                        <>
+                                                            <MetricCard label="PF Asymmetry" value={`${athlete.peakForceAsymmetry}%`} />
+                                                            <MetricCard label="Adduction Bal" value="-" />
+                                                        </>
+                                                    )}
                                                 </div>
                                             </div>
+                                        )}
+                                    </div>
 
-                                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 animate-fade-in">
-                                                {clinicalTab === 'lower' && (
-                                                    <>
-                                                        <MetricCard label="H:Q Ratio (L)" value={athlete.hamstringQuadLeft} />
-                                                        <MetricCard label="H:Q Ratio (R)" value={athlete.hamstringQuadRight} />
-                                                        <MetricCard label="Ankle ROM (L)" value={`${athlete.ankleRomLeft}°`} />
-                                                        <MetricCard label="Ankle ROM (R)" value={`${athlete.ankleRomRight}°`} />
-                                                    </>
-                                                )}
-                                                {clinicalTab === 'upper' && (
-                                                    <>
-                                                        <MetricCard label="Shoulder IR (L)" value={`${athlete.shoulderInternalRotationLeft} N`} />
-                                                        <MetricCard label="Shoulder IR (R)" value={`${athlete.shoulderInternalRotationRight} N`} />
-                                                        <MetricCard label="Shoulder ER (L)" value={`${athlete.shoulderRomLeft} N`} />
-                                                        <MetricCard label="Shoulder ER (R)" value={`${athlete.shoulderRomRight} N`} />
-                                                        <MetricCard label="Neck Ext" value={`${athlete.neckExtension} N`} />
-                                                    </>
-                                                )}
-                                                {clinicalTab === 'symmetry' && (
-                                                    <>
-                                                        <MetricCard label="PF Asymmetry" value={`${athlete.peakForceAsymmetry}%`} />
-                                                        <MetricCard label="Adduction Bal" value="-" />
-                                                    </>
-                                                )}
-                                            </div>
-                                        </div>
-                                    )}
+
                                 </div>
 
                                 {/* Right Column: Recommendations & Workload (v15.1) */}
@@ -1313,6 +1278,27 @@ const AthleteDashboard: React.FC = () => {
                                                 Recent Training
                                             </h3>
                                             <span className="text-[10px] text-gray-600 bg-neutral-900 border border-neutral-800 px-2 py-1 rounded">MoveHealth</span>
+                                        </div>
+
+                                        {/* v8.0 Performance Metrics Vault (Moved to Right Col for Vertical Stack) */}
+                                        <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl">
+                                            <div className="flex items-center justify-between mb-6">
+                                                <h2 className="text-xl font-bold flex items-center gap-3">
+                                                    <span className="w-1 h-6 bg-blue-600 rounded-full"></span>
+                                                    {showAdvancedMetrics ? 'Performance' : 'Field Tests'}
+                                                </h2>
+                                                <button onClick={() => setShowScience('physical')} className="text-gray-400 hover:text-white"><Info className="w-4 h-4" /></button>
+                                            </div>
+                                            <div className="grid grid-cols-1 gap-4">
+                                                <MetricCard label="Agility T" value={`${athlete.agilityTime || '-'} s`} />
+                                                <MetricCard label="Jump Dist." value={`${athlete.broadJump || '-'} cm`} />
+                                                {showAdvancedMetrics && (
+                                                    <>
+                                                        <MetricCard label="IMTP Peak" value={`${athlete.imtpPeakForce} N`} />
+                                                        <MetricCard label="IMTP RFD" value={`${athlete.imtpRfd200} N/s`} />
+                                                    </>
+                                                )}
+                                            </div>
                                         </div>
 
                                         {/* RPE Integrity Alert */}
