@@ -997,101 +997,121 @@ const AthleteDashboard: React.FC = () => {
 
                                         {/* VIEW: SIMPLIFIED */}
                                         {physicalViewMode === 'simple' && (
-                                            <div className="grid grid-cols-1 gap-6 animate-fade-in">
-                                                {/* Row 1: Engine Check & Takeaways */}
-                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                                    {/* Engine Check (Traffic Light) */}
-                                                    <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl space-y-6">
-                                                        <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                                                            <Activity className="w-5 h-5 text-blue-500" />
-                                                            The Engine Check
-                                                        </h3>
-                                                        <div className="space-y-6">
-                                                            {[
-                                                                { label: 'Explosiveness', score: athlete.scoreQuad || 70 },
-                                                                { label: 'Speed Endurance', score: athlete.scoreHamstring || 75 },
-                                                                { label: 'Strength Base', score: athlete.scoreAdduction || 85 }
-                                                            ].map((item) => {
-                                                                const colors = getTrafficColor(item.score);
-                                                                return (
-                                                                    <div key={item.label}>
-                                                                        <div className="flex justify-between text-xs text-gray-400 mb-2">
-                                                                            <span className="uppercase tracking-wider font-bold">{item.label}</span>
-                                                                            <span className={`font-mono font-bold ${colors.text}`}>{item.score}/100</span>
-                                                                        </div>
-                                                                        <div className="h-3 bg-neutral-800 rounded-full overflow-hidden">
-                                                                            <div className={`h-full ${colors.bg} rounded-full`} style={{ width: `${item.score}%` }}></div>
-                                                                        </div>
-                                                                    </div>
-                                                                );
-                                                            })}
-                                                        </div>
-                                                    </div>
+                                            <div className="flex flex-col gap-6 animate-fade-in">
 
-                                                    {/* Takeaways (Top 3 Priorities) */}
-                                                    <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl relative overflow-hidden">
-                                                        <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
+                                                {/* 1. KEY TAKEAWAYS (First) */}
+                                                <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl relative overflow-hidden">
+                                                    <div className="flex items-center justify-between mb-6">
+                                                        <h3 className="text-lg font-bold text-white flex items-center gap-2">
                                                             <Users className="w-5 h-5 text-yellow-500" />
                                                             Your 3 Key Takeaways
                                                         </h3>
-                                                        <div className="space-y-6">
-                                                            {[
-                                                                { label: 'Explosiveness', score: athlete.scoreQuad || 70, note: 'Increase plyometric volume.' },
-                                                                { label: 'Speed Endurance', score: athlete.scoreHamstring || 75, note: 'Add 1x specific conditioning session.' },
-                                                                { label: 'Strength Base', score: athlete.scoreAdduction || 85, note: 'Maintain current strength blocks.' }
-                                                            ]
-                                                                .sort((a, b) => a.score - b.score)
-                                                                .map((p, i) => (
-                                                                    <div key={i} className="flex items-start gap-4">
+                                                        <span className="text-xs font-mono text-gray-500 uppercase">Priority Actions</span>
+                                                    </div>
+
+                                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                                        {[
+                                                            { label: 'Explosiveness', score: athlete.scoreQuad || 70, note: 'Increase plyometric volume + Focus on landing mechanics.' },
+                                                            { label: 'Speed Endurance', score: athlete.scoreHamstring || 75, note: 'Add 1x specific conditioning session per week.' },
+                                                            { label: 'Strength Base', score: athlete.scoreAdduction || 85, note: 'Maintain current strength blocks. Good foundation.' }
+                                                        ]
+                                                            .sort((a, b) => a.score - b.score)
+                                                            .map((p, i) => (
+                                                                <div key={i} className="bg-black/20 p-4 rounded-2xl border border-white/5 flex flex-col gap-3">
+                                                                    <div className="flex items-center justify-between">
                                                                         <span className="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-neutral-800 rounded-lg text-white font-black text-sm border border-neutral-700">
                                                                             {i + 1}
                                                                         </span>
-                                                                        <div>
-                                                                            <h4 className="text-white font-bold text-sm">{p.label} Priority</h4>
-                                                                            <p className="text-gray-400 text-xs mt-1">
-                                                                                Score: <span className={getTrafficColor(p.score).text}>{p.score}</span> — {p.note}
-                                                                            </p>
-                                                                        </div>
+                                                                        <span className={`text-sm font-black ${getTrafficColor(p.score).text}`}>{p.score}/100</span>
                                                                     </div>
-                                                                ))}
-                                                        </div>
+                                                                    <div>
+                                                                        <h4 className="text-white font-bold text-sm mb-1">{p.label} Priority</h4>
+                                                                        <p className="text-gray-400 text-xs leading-relaxed">
+                                                                            {p.note}
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                            ))}
                                                     </div>
                                                 </div>
 
-                                                {/* Injury Shield Banner */}
-                                                <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
-                                                    <div className="absolute left-0 top-0 bottom-0 w-2 bg-green-500"></div>
-                                                    <div className="flex items-center gap-6">
-                                                        <div className="p-4 bg-green-500/10 rounded-full animate-pulse-slow">
-                                                            <Shield className="w-10 h-10 text-green-500" />
-                                                        </div>
-                                                        <div>
-                                                            <h3 className="text-xl font-bold text-white mb-1">Injury Status: PROTECTED</h3>
-                                                            <p className="text-gray-400 text-sm max-w-md">
-                                                                We are continuously monitoring knee and ankle stability. Current metrics indicate low injury risk.
-                                                            </p>
+                                                {/* 2. INJURY PREVENTION & EXPLANATION */}
+                                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                                    <div className="md:col-span-2 bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl flex flex-col justify-center relative overflow-hidden">
+                                                        <div className="absolute left-0 top-0 bottom-0 w-2 bg-green-500"></div>
+                                                        <div className="flex items-start gap-6">
+                                                            <div className="p-4 bg-green-500/10 rounded-full animate-pulse-slow shrink-0">
+                                                                <Shield className="w-8 h-8 md:w-10 md:h-10 text-green-500" />
+                                                            </div>
+                                                            <div>
+                                                                <h3 className="text-xl font-bold text-white mb-2">Injury Status: PROTECTED</h3>
+                                                                <p className="text-gray-400 text-sm leading-relaxed">
+                                                                    We are continuously monitoring knee and ankle stability. Your latest screening shows excellent structural integrity with no major asymmetries ({'<'}10%).
+                                                                </p>
+                                                                <div className="mt-4 flex items-center gap-4">
+                                                                    <div className="flex items-center gap-2 text-xs text-green-400 bg-green-950/30 px-3 py-1 rounded-lg border border-green-900/50">
+                                                                        <CheckCircle className="w-3 h-3" /> Knee Valgus Cleared
+                                                                    </div>
+                                                                    <div className="flex items-center gap-2 text-xs text-green-400 bg-green-950/30 px-3 py-1 rounded-lg border border-green-900/50">
+                                                                        <CheckCircle className="w-3 h-3" /> Ankle ROM Optimal
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
 
-                                                    {/* Consistency Badge (moved here) */}
-                                                    <div className="flex items-center gap-3 bg-black/40 px-4 py-2 rounded-xl border border-neutral-800">
-                                                        <div className="text-right">
-                                                            <p className="text-[10px] text-gray-500 uppercase font-bold">Consistency</p>
-                                                            <p className="text-xl font-black text-white">9.2</p>
+                                                    {/* Consistency Score Badge */}
+                                                    <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl flex flex-col justify-center text-center relative">
+                                                        <h4 className="text-gray-500 text-xs font-bold uppercase tracking-wider mb-2">Consistency Score</h4>
+                                                        <div className="text-5xl font-black text-white mb-2">9.2<span className="text-lg text-gray-500">/10</span></div>
+                                                        <div className="w-full bg-neutral-800 h-2 rounded-full overflow-hidden mb-4">
+                                                            <div className="bg-green-500 h-full rounded-full" style={{ width: '92%' }}></div>
                                                         </div>
-                                                        <div className="h-8 w-1 bg-green-500 rounded-full"></div>
+                                                        <p className="text-xs text-gray-400 italic">"Discipline is the bridge between goals and accomplishment."</p>
+                                                    </div>
+                                                </div>
+
+                                                {/* 3. THE ENGINE CHECK (Scores at Bottom) */}
+                                                <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl space-y-6">
+                                                    <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                                                        <Activity className="w-5 h-5 text-blue-500" />
+                                                        The Engine Check (Performance Scores)
+                                                    </h3>
+                                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                                        {[
+                                                            { label: 'Explosiveness', score: athlete.scoreQuad || 70, sub: 'Vertical Power' },
+                                                            { label: 'Speed Endurance', score: athlete.scoreHamstring || 75, sub: 'Repeat Sprint Ability' },
+                                                            { label: 'Strength Base', score: athlete.scoreAdduction || 85, sub: 'Force Production' }
+                                                        ].map((item) => {
+                                                            const colors = getTrafficColor(item.score);
+                                                            return (
+                                                                <div key={item.label} className="space-y-3">
+                                                                    <div className="flex justify-between items-end">
+                                                                        <div>
+                                                                            <p className="text-sm font-bold text-gray-300 uppercase tracking-wider">{item.label}</p>
+                                                                            <p className="text-xs text-gray-500">{item.sub}</p>
+                                                                        </div>
+                                                                        <span className={`text-2xl font-black ${colors.text}`}>{item.score}</span>
+                                                                    </div>
+                                                                    <div className="h-4 bg-neutral-800 rounded-full overflow-hidden border border-white/5">
+                                                                        <div className={`h-full ${colors.bg} rounded-full transition-all duration-1000`} style={{ width: `${item.score}%` }}></div>
+                                                                    </div>
+                                                                </div>
+                                                            );
+                                                        })}
                                                     </div>
 
-                                                    <div className="hidden md:block">
+                                                    <div className="pt-4 flex justify-end">
                                                         <button
                                                             onClick={handleDownloadDevelopment}
-                                                            className="px-6 py-3 bg-white text-black font-bold rounded-xl hover:bg-gray-200 transition-colors flex items-center gap-2"
+                                                            className="px-6 py-3 bg-white text-black font-bold rounded-xl hover:bg-gray-200 transition-colors flex items-center gap-2 shadow-lg shadow-white/5"
                                                         >
                                                             <FileText className="w-4 h-4" />
-                                                            Download Report
+                                                            Download Full Report
                                                         </button>
                                                     </div>
                                                 </div>
+
                                             </div>
                                         )}
 

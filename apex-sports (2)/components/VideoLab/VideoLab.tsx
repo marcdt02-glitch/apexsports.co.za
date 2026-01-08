@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
-import { UploadCloud, Video, FolderOpen, PlayCircle, Grid, Info, X, CheckCircle, AlertTriangle, ArrowRight, UserCheck } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { UploadCloud, Video, FolderOpen, PlayCircle, Grid, Info, X, CheckCircle, AlertTriangle, ArrowRight, UserCheck, Upload } from 'lucide-react';
 import { useGoogleDrivePicker, DriveFile } from './useGoogleDrivePicker';
 import { VideoAnalysisPlayer } from './VideoAnalysisPlayer';
 
 // Mock Pro Library
 const PRO_BENCHMARKS = [
-    { id: 'pro-1', name: 'Elite Sprint Start (0-10m)', url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4' }, // Placeholder
-    { id: 'pro-2', name: 'CMJ Landing Mechanics', url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4' },
-    { id: 'pro-3', name: 'Perfect Deadlift Hinge', url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4' },
-    { id: 'pro-4', name: 'Agility Change of Direction', url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4' }
+    { id: 'pro-1', name: 'Usain Bolt: Max Velocity Mechanics', url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4' },
+    { id: 'pro-2', name: 'Field Hockey GK: Split Save', url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4' },
+    { id: 'pro-3', name: 'Olympic Clean & Jerk (Side View)', url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4' },
+    { id: 'pro-4', name: 'Tennis Serve: Kinetic Chain', url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4' },
+    { id: 'pro-5', name: 'ACL Rehab: Landing Error Scoring', url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4' }
 ];
 
 export const VideoLab: React.FC = () => {
@@ -18,6 +19,9 @@ export const VideoLab: React.FC = () => {
     const [showBioInfo, setShowBioInfo] = useState(false);
     const [showProSidebar, setShowProSidebar] = useState(false);
     const { openPicker } = useGoogleDrivePicker();
+
+    // Refs
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     // Placeholder Configuration - User must enter these
     const GOOGLE_API_KEY = 'YOUR_API_KEY_HERE';
@@ -30,6 +34,16 @@ export const VideoLab: React.FC = () => {
             else setCurrentVideo(file);
         });
     };
+
+    const handleLocalUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            const url = URL.createObjectURL(file);
+            const videoFile: DriveFile = { id: 'local', name: file.name, url, mimeType: file.type };
+            setCurrentVideo(videoFile);
+        }
+    };
+
 
     const loadProBenchmark = (item: typeof PRO_BENCHMARKS[0]) => {
         const file: DriveFile = {
