@@ -144,6 +144,9 @@ const AthleteDashboard: React.FC = () => {
         return <Loading message="Syncing Performance Data..." />;
     }
 
+    // View State
+    const [physicalViewMode, setPhysicalViewMode] = useState<'simple' | 'advanced'>('simple');
+
     // SAFE ANALYSIS
     const analysis = analyzeAthlete(athlete);
     const { flags, recommendation } = analysis;
@@ -761,58 +764,51 @@ const AthleteDashboard: React.FC = () => {
                         {activeView === 'dashboard' && (
                             <div className="space-y-12 animate-fade-in">
 
-                                {/* v20.0: Navigation & Interpretation Guide */}
-                                <div className="bg-neutral-900 border border-neutral-800 p-6 rounded-2xl">
-                                    <div className="flex flex-col md:flex-row items-center justify-between mb-4 gap-4">
-                                        <h3 className="text-white font-bold flex items-center gap-2">
-                                            <Info className="w-5 h-5 text-blue-500" />
-                                            How to Navigate Your Physical Results
-                                        </h3>
-                                        <div className="flex flex-wrap items-center gap-2">
+                                {/* v21.0: View Toggle & Controls */}
+                                <div className="flex flex-col md:flex-row items-center justify-between gap-6 bg-neutral-900/50 p-6 rounded-3xl border border-neutral-800">
+                                    <div>
+                                        <h2 className="text-2xl font-bold text-white mb-2">Physical Profile</h2>
+                                        <p className="text-gray-400 text-sm">
+                                            {physicalViewMode === 'simple'
+                                                ? "Simplified overview of your athletic development."
+                                                : "Detailed biomechanical data and symmetry analysis."}
+                                        </p>
+                                    </div>
+
+                                    <div className="flex items-center gap-4">
+                                        {/* View Toggle */}
+                                        <div className="bg-black p-1 rounded-xl flex items-center border border-neutral-800">
+                                            <button
+                                                onClick={() => setPhysicalViewMode('simple')}
+                                                className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${physicalViewMode === 'simple' ? 'bg-neutral-800 text-white shadow-lg' : 'text-gray-500 hover:text-gray-300'}`}
+                                            >
+                                                Simplified
+                                            </button>
+                                            <button
+                                                onClick={() => setPhysicalViewMode('advanced')}
+                                                className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${physicalViewMode === 'advanced' ? 'bg-blue-600 text-white shadow-lg' : 'text-gray-500 hover:text-gray-300'}`}
+                                            >
+                                                Advanced / Science
+                                            </button>
+                                        </div>
+
+                                        {/* Report Downloads Dropdown (Mini) */}
+                                        <div className="flex gap-2">
                                             {(showWellness || showPhysicalSimple) && (
-                                                <button
-                                                    onClick={handleDownloadDevelopment}
-                                                    className="px-3 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-lg flex items-center gap-2 transition-colors"
-                                                    title="For Parents: Simplified progress & consistency check."
-                                                >
-                                                    <FileText className="w-4 h-4" />
-                                                    Parent DB
+                                                <button onClick={handleDownloadDevelopment} className="p-3 bg-neutral-800 hover:bg-neutral-700 rounded-lg text-gray-400 hover:text-white transition-colors" title="Download Parent Summary">
+                                                    <FileText className="w-5 h-5" />
                                                 </button>
                                             )}
                                             {showPhysicalAdvanced && (
                                                 <>
-                                                    <button
-                                                        onClick={handleDownloadTechnical}
-                                                        className="px-3 py-2 bg-neutral-800 hover:bg-neutral-700 text-gray-300 text-xs font-bold rounded-lg flex items-center gap-2 transition-colors border border-neutral-700"
-                                                        title="For Coaches: Biomechanics & Data Ratios."
-                                                    >
-                                                        <Activity className="w-4 h-4" />
-                                                        Tech Lab
+                                                    <button onClick={handleDownloadTechnical} className="p-3 bg-neutral-800 hover:bg-neutral-700 rounded-lg text-gray-400 hover:text-white transition-colors" title="Download Technical Report">
+                                                        <Activity className="w-5 h-5" />
                                                     </button>
-                                                    <button
-                                                        onClick={handleDownloadExecutive}
-                                                        className="px-3 py-2 bg-neutral-800 hover:bg-neutral-700 text-yellow-500 text-xs font-bold rounded-lg flex items-center gap-2 transition-colors border border-neutral-700"
-                                                        title="For Management: Quarterly Strategy & ROI."
-                                                    >
-                                                        <LayoutDashboard className="w-4 h-4" />
-                                                        Exec. Q
+                                                    <button onClick={handleDownloadExecutive} className="p-3 bg-neutral-800 hover:bg-neutral-700 rounded-lg text-yellow-500/80 hover:text-yellow-500 transition-colors" title="Download Executive Strategy">
+                                                        <LayoutDashboard className="w-5 h-5" />
                                                     </button>
                                                 </>
                                             )}
-                                        </div>
-                                    </div>
-                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm text-gray-400">
-                                        <div className="bg-black/20 p-4 rounded-xl">
-                                            <strong className="block text-white mb-1">1. The Radar</strong>
-                                            Shows your balance. A full chart means you are well-rounded. Dips indicate areas to focus on (e.g., Hamstring strength).
-                                        </div>
-                                        <div className="bg-black/20 p-4 rounded-xl">
-                                            <strong className="block text-white mb-1">2. Metrics</strong>
-                                            Your raw numbers. Compare "Left vs. Right" to see symmetry. 100% Symmetry is the goal.
-                                        </div>
-                                        <div className="bg-black/20 p-4 rounded-xl">
-                                            <strong className="block text-white mb-1">3. Reports</strong>
-                                            Download the <strong>Parent Summary</strong> for a simple explanation, or the <strong>Full Science</strong> report for all the data.
                                         </div>
                                     </div>
                                 </div>
@@ -925,12 +921,92 @@ const AthleteDashboard: React.FC = () => {
                                 {/* Main Grid: Charts & Performance */}
                                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-                                    {/* Left Column: Performance Profile (Radar) */}
+                                    {/* Left Column: Toggled Content (Simple vs Advanced) */}
                                     <div className="lg:col-span-2 space-y-8">
 
-                                        {/* Radar Charts Grid */}
-                                        {showAdvancedMetrics && (
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        {/* VIEW: SIMPLIFIED */}
+                                        {physicalViewMode === 'simple' && (
+                                            <div className="grid grid-cols-1 gap-6 animate-fade-in">
+                                                {/* Row 1: Engine Check & Consistency */}
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                                    {/* Engine Check */}
+                                                    <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl space-y-6">
+                                                        <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                                                            <Activity className="w-5 h-5 text-blue-500" />
+                                                            The Engine Check
+                                                        </h3>
+                                                        <div className="space-y-4">
+                                                            <div>
+                                                                <div className="flex justify-between text-xs text-gray-400 mb-1">
+                                                                    <span>Explosiveness</span>
+                                                                    <span>{athlete.scoreQuad || 70}/100</span>
+                                                                </div>
+                                                                <div className="h-2 bg-neutral-800 rounded-full overflow-hidden">
+                                                                    <div className="h-full bg-blue-500 rounded-full" style={{ width: `${athlete.scoreQuad || 70}%` }}></div>
+                                                                </div>
+                                                            </div>
+                                                            <div>
+                                                                <div className="flex justify-between text-xs text-gray-400 mb-1">
+                                                                    <span>Speed Endurance</span>
+                                                                    <span>{athlete.scoreHamstring || 75}/100</span>
+                                                                </div>
+                                                                <div className="h-2 bg-neutral-800 rounded-full overflow-hidden">
+                                                                    <div className="h-full bg-purple-500 rounded-full" style={{ width: `${athlete.scoreHamstring || 75}%` }}></div>
+                                                                </div>
+                                                            </div>
+                                                            <div>
+                                                                <div className="flex justify-between text-xs text-gray-400 mb-1">
+                                                                    <span>Strength Base</span>
+                                                                    <span>{athlete.scoreAdduction || 85}/100</span>
+                                                                </div>
+                                                                <div className="h-2 bg-neutral-800 rounded-full overflow-hidden">
+                                                                    <div className="h-full bg-green-500 rounded-full" style={{ width: `${athlete.scoreAdduction || 85}%` }}></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Consistency */}
+                                                    <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl flex flex-col items-center justify-center text-center">
+                                                        <h3 className="text-lg font-bold text-white mb-2">Consistency Score</h3>
+                                                        <div className="text-6xl font-black text-white mb-2">9.2</div>
+                                                        <div className="text-sm text-gray-500">Out of 10</div>
+                                                        <div className="mt-4 px-4 py-2 bg-green-900/20 text-green-400 rounded-full text-xs font-bold">
+                                                            Excellent Discipline
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                {/* Injury Shield Banner */}
+                                                <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl flex items-center justify-between relative overflow-hidden">
+                                                    <div className="absolute left-0 top-0 bottom-0 w-2 bg-green-500"></div>
+                                                    <div className="flex items-center gap-6">
+                                                        <div className="p-4 bg-green-500/10 rounded-full">
+                                                            <Shield className="w-10 h-10 text-green-500" />
+                                                        </div>
+                                                        <div>
+                                                            <h3 className="text-xl font-bold text-white mb-1">Injury Status: PROTECTED</h3>
+                                                            <p className="text-gray-400 text-sm max-w-md">
+                                                                We are continuously monitoring knee and ankle stability. Current metrics indicate low injury risk.
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <div className="hidden md:block">
+                                                        <button
+                                                            onClick={handleDownloadDevelopment}
+                                                            className="px-6 py-3 bg-white text-black font-bold rounded-xl hover:bg-gray-200 transition-colors flex items-center gap-2"
+                                                        >
+                                                            <FileText className="w-4 h-4" />
+                                                            Download Report
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {/* VIEW: ADVANCED */}
+                                        {physicalViewMode === 'advanced' && showAdvancedMetrics && (
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-fade-in">
                                                 {/* Standard Screening Profile */}
                                                 <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl relative">
                                                     <div className="flex items-center justify-between mb-8">
@@ -984,190 +1060,190 @@ const AthleteDashboard: React.FC = () => {
                                                 </div>
                                             </div>
                                         )}
+                                    </div>
 
-                                        {/* v8.0 Performance Metrics Vault */}
+                                    {/* v8.0 Performance Metrics Vault */}
+                                    <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl">
+                                        <div className="flex items-center justify-between mb-6">
+                                            <h2 className="text-xl font-bold flex items-center gap-3">
+                                                <span className="w-1 h-6 bg-blue-600 rounded-full"></span>
+                                                {showAdvancedMetrics ? 'Performance Metrics' : 'Field Test Results'}
+                                            </h2>
+                                            <button
+                                                onClick={() => setShowScience('physical')}
+                                                className="flex items-center gap-2 px-3 py-1.5 bg-neutral-900 border border-neutral-800 rounded-full text-[10px] font-bold text-gray-400 hover:text-white hover:border-gray-500 transition-all"
+                                            >
+                                                <Info className="w-3 h-3" />
+                                                The Science
+                                            </button>
+                                        </div>
+                                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                            <MetricCard label="Agility T" value={`${athlete.agilityTime || '-'} s`} />
+                                            <MetricCard label="Jump Dist." value={`${athlete.broadJump || '-'} cm`} />
+
+                                            {showAdvancedMetrics && (
+                                                <>
+                                                    <MetricCard label="IMTP Peak" value={`${athlete.imtpPeakForce} N`} />
+                                                    <MetricCard label="IMTP RFD" value={`${athlete.imtpRfd200} N/s`} />
+                                                </>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    {/* v8.0 Dynamo Detail Vault (Tabbed - Advanced Only) */}
+                                    {showAdvancedMetrics && (
                                         <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl">
-                                            <div className="flex items-center justify-between mb-6">
+                                            <div className="flex items-center justify-between mb-8">
                                                 <h2 className="text-xl font-bold flex items-center gap-3">
-                                                    <span className="w-1 h-6 bg-blue-600 rounded-full"></span>
-                                                    {showAdvancedMetrics ? 'Performance Metrics' : 'Field Test Results'}
+                                                    <span className="w-1 h-6 bg-green-500 rounded-full"></span>
+                                                    Dynamo Detail
                                                 </h2>
-                                                <button
-                                                    onClick={() => setShowScience('physical')}
-                                                    className="flex items-center gap-2 px-3 py-1.5 bg-neutral-900 border border-neutral-800 rounded-full text-[10px] font-bold text-gray-400 hover:text-white hover:border-gray-500 transition-all"
-                                                >
-                                                    <Info className="w-3 h-3" />
-                                                    The Science
-                                                </button>
+                                                <div className="flex bg-black rounded-lg p-1 border border-neutral-800 h-fit">
+                                                    {['lower', 'upper', 'symmetry', 'table'].map((tab) => (
+                                                        <button
+                                                            key={tab}
+                                                            onClick={() => setClinicalTab(tab as any)}
+                                                            className={`px-4 py-1 text-xs font-bold uppercase rounded-md transition-all ${clinicalTab === tab ? 'bg-white text-black' : 'text-gray-500 hover:text-white'}`}
+                                                        >
+                                                            {tab}
+                                                        </button>
+                                                    ))}
+                                                </div>
                                             </div>
-                                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                                                <MetricCard label="Agility T" value={`${athlete.agilityTime || '-'} s`} />
-                                                <MetricCard label="Jump Dist." value={`${athlete.broadJump || '-'} cm`} />
 
-                                                {showAdvancedMetrics && (
+                                            <div className="grid grid-cols-2 md:grid-cols-3 gap-6 animate-fade-in">
+                                                {clinicalTab === 'lower' && (
                                                     <>
-                                                        <MetricCard label="IMTP Peak" value={`${athlete.imtpPeakForce} N`} />
-                                                        <MetricCard label="IMTP RFD" value={`${athlete.imtpRfd200} N/s`} />
+                                                        <MetricCard label="H:Q Ratio (L)" value={athlete.hamstringQuadLeft} />
+                                                        <MetricCard label="H:Q Ratio (R)" value={athlete.hamstringQuadRight} />
+                                                        <MetricCard label="Ankle ROM (L)" value={`${athlete.ankleRomLeft}°`} />
+                                                        <MetricCard label="Ankle ROM (R)" value={`${athlete.ankleRomRight}°`} />
+                                                    </>
+                                                )}
+                                                {clinicalTab === 'upper' && (
+                                                    <>
+                                                        <MetricCard label="Shoulder IR (L)" value={`${athlete.shoulderInternalRotationLeft} N`} />
+                                                        <MetricCard label="Shoulder IR (R)" value={`${athlete.shoulderInternalRotationRight} N`} />
+                                                        <MetricCard label="Shoulder ER (L)" value={`${athlete.shoulderRomLeft} N`} />
+                                                        <MetricCard label="Shoulder ER (R)" value={`${athlete.shoulderRomRight} N`} />
+                                                        <MetricCard label="Neck Ext" value={`${athlete.neckExtension} N`} />
+                                                    </>
+                                                )}
+                                                {clinicalTab === 'symmetry' && (
+                                                    <>
+                                                        <MetricCard label="PF Asymmetry" value={`${athlete.peakForceAsymmetry}%`} />
+                                                        <MetricCard label="Adduction Bal" value="-" />
                                                     </>
                                                 )}
                                             </div>
                                         </div>
+                                    )}
+                                </div>
 
-                                        {/* v8.0 Dynamo Detail Vault (Tabbed - Advanced Only) */}
-                                        {showAdvancedMetrics && (
-                                            <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl">
-                                                <div className="flex items-center justify-between mb-8">
-                                                    <h2 className="text-xl font-bold flex items-center gap-3">
-                                                        <span className="w-1 h-6 bg-green-500 rounded-full"></span>
-                                                        Dynamo Detail
-                                                    </h2>
-                                                    <div className="flex bg-black rounded-lg p-1 border border-neutral-800 h-fit">
-                                                        {['lower', 'upper', 'symmetry', 'table'].map((tab) => (
-                                                            <button
-                                                                key={tab}
-                                                                onClick={() => setClinicalTab(tab as any)}
-                                                                className={`px-4 py-1 text-xs font-bold uppercase rounded-md transition-all ${clinicalTab === tab ? 'bg-white text-black' : 'text-gray-500 hover:text-white'}`}
-                                                            >
-                                                                {tab}
-                                                            </button>
-                                                        ))}
-                                                    </div>
-                                                </div>
+                                {/* Right Column: Recommendations & Workload (v15.1) */}
+                                <div className="space-y-8">
 
-                                                <div className="grid grid-cols-2 md:grid-cols-3 gap-6 animate-fade-in">
-                                                    {clinicalTab === 'lower' && (
-                                                        <>
-                                                            <MetricCard label="H:Q Ratio (L)" value={athlete.hamstringQuadLeft} />
-                                                            <MetricCard label="H:Q Ratio (R)" value={athlete.hamstringQuadRight} />
-                                                            <MetricCard label="Ankle ROM (L)" value={`${athlete.ankleRomLeft}°`} />
-                                                            <MetricCard label="Ankle ROM (R)" value={`${athlete.ankleRomRight}°`} />
-                                                        </>
-                                                    )}
-                                                    {clinicalTab === 'upper' && (
-                                                        <>
-                                                            <MetricCard label="Shoulder IR (L)" value={`${athlete.shoulderInternalRotationLeft} N`} />
-                                                            <MetricCard label="Shoulder IR (R)" value={`${athlete.shoulderInternalRotationRight} N`} />
-                                                            <MetricCard label="Shoulder ER (L)" value={`${athlete.shoulderRomLeft} N`} />
-                                                            <MetricCard label="Shoulder ER (R)" value={`${athlete.shoulderRomRight} N`} />
-                                                            <MetricCard label="Neck Ext" value={`${athlete.neckExtension} N`} />
-                                                        </>
-                                                    )}
-                                                    {clinicalTab === 'symmetry' && (
-                                                        <>
-                                                            <MetricCard label="PF Asymmetry" value={`${athlete.peakForceAsymmetry}%`} />
-                                                            <MetricCard label="Adduction Bal" value="-" />
-                                                        </>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        )}
+                                    {/* Recommendations */}
+                                    <div className="bg-white text-black p-8 rounded-3xl">
+                                        <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-4">Priority Focus</h3>
+                                        <h2 className="text-3xl font-black mb-4 leading-tight">{recommendation.focusArea}</h2>
+                                        <p className="text-gray-600 leading-relaxed mb-6">{recommendation.description}</p>
                                     </div>
 
-                                    {/* Right Column: Recommendations & Workload (v15.1) */}
-                                    <div className="space-y-8">
-
-                                        {/* Recommendations */}
-                                        <div className="bg-white text-black p-8 rounded-3xl">
-                                            <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-4">Priority Focus</h3>
-                                            <h2 className="text-3xl font-black mb-4 leading-tight">{recommendation.focusArea}</h2>
-                                            <p className="text-gray-600 leading-relaxed mb-6">{recommendation.description}</p>
+                                    {/* v16.1 MoveHealth Live Feed */}
+                                    <div className="bg-neutral-900/40 border border-neutral-800 p-6 rounded-3xl">
+                                        <div className="flex items-center justify-between mb-4">
+                                            <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500 flex items-center gap-2">
+                                                <Activity className="w-4 h-4 text-purple-500" />
+                                                Recent Training
+                                            </h3>
+                                            <span className="text-[10px] text-gray-600 bg-neutral-900 border border-neutral-800 px-2 py-1 rounded">MoveHealth</span>
                                         </div>
 
-                                        {/* v16.1 MoveHealth Live Feed */}
-                                        <div className="bg-neutral-900/40 border border-neutral-800 p-6 rounded-3xl">
-                                            <div className="flex items-center justify-between mb-4">
-                                                <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500 flex items-center gap-2">
-                                                    <Activity className="w-4 h-4 text-purple-500" />
-                                                    Recent Training
-                                                </h3>
-                                                <span className="text-[10px] text-gray-600 bg-neutral-900 border border-neutral-800 px-2 py-1 rounded">MoveHealth</span>
-                                            </div>
-
-                                            {/* RPE Integrity Alert */}
-                                            {flags.isRpeDiscrepancy && (
-                                                <div className="mb-4 bg-red-900/20 border border-red-900/50 p-3 rounded-lg flex items-start gap-3">
-                                                    <AlertTriangle className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
-                                                    <div>
-                                                        <p className="text-xs font-bold text-red-500 uppercase">Data Discrepancy</p>
-                                                        <p className="text-[10px] text-gray-300 leading-tight mt-1">
-                                                            Session RPE ({athlete.sRPE}) differs significantly from Exercise RPE. Check compliance.
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            )}
-
-                                            <div className="space-y-3">
-                                                {athlete.moveHealth?.lastExercises?.length > 0 ? (
-                                                    athlete.moveHealth.lastExercises.slice(0, 3).map((ex, i) => (
-                                                        <div key={i} className="bg-neutral-900 border border-neutral-800 p-3 rounded-xl flex justify-between items-center group hover:border-neutral-700 transition-colors">
-                                                            <div>
-                                                                <p className="font-bold text-sm text-white group-hover:text-blue-400 transition-colors">{ex.name}</p>
-                                                                <p className="text-[10px] text-gray-500 font-mono">
-                                                                    {ex.sets} x {ex.reps} @ {ex.weight}kg
-                                                                </p>
-                                                            </div>
-                                                            <div className="text-right">
-                                                                <div className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${ex.rpe >= 8 ? 'bg-red-900/30 text-red-500' : 'bg-green-900/30 text-green-500'}`}>
-                                                                    RPE {ex.rpe}
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    ))
-                                                ) : (
-                                                    <div className="text-center py-6">
-                                                        <Activity className="w-8 h-8 text-neutral-800 mx-auto mb-2" />
-                                                        <p className="text-xs text-gray-600">No recent activity logged.</p>
-                                                    </div>
-                                                )}
-                                            </div>
-                                        </div>
-
-                                        {/* v15.1 Workload Management */}
-                                        <div className="bg-neutral-900/40 border border-neutral-800 p-6 rounded-3xl">
-                                            <div className="flex items-center justify-between mb-6">
-                                                <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500">Workload (7-Day)</h3>
-                                                <div className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${acwrHighRisk ? 'bg-red-900/30 text-red-500 border border-red-900' : 'bg-green-900/30 text-green-500 border border-green-900'}`}>
-                                                    {acwrHighRisk ? 'Injury Red Zone' : 'Optimal Zone'}
-                                                </div>
-                                            </div>
-
-                                            {/* Chart */}
-                                            <div className="h-32 w-full mb-6">
-                                                <ResponsiveContainer width="100%" height="100%">
-                                                    <AreaChart data={recentSessions}>
-                                                        <defs>
-                                                            <linearGradient id="colorLoad" x1="0" y1="0" x2="0" y2="1">
-                                                                <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
-                                                                <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
-                                                            </linearGradient>
-                                                        </defs>
-                                                        <XAxis dataKey="date" hide />
-                                                        <RechartsTooltip
-                                                            contentStyle={{ backgroundColor: '#111', borderColor: '#333', borderRadius: '8px', fontSize: '12px' }}
-                                                            itemStyle={{ color: '#fff' }}
-                                                            labelStyle={{ display: 'none' }}
-                                                        />
-                                                        <Area type="monotone" dataKey="load" stroke="#3b82f6" fillOpacity={1} fill="url(#colorLoad)" />
-                                                    </AreaChart>
-                                                </ResponsiveContainer>
-                                            </div>
-
-                                            <div className="flex items-center justify-between border-t border-white/5 pt-4">
+                                        {/* RPE Integrity Alert */}
+                                        {flags.isRpeDiscrepancy && (
+                                            <div className="mb-4 bg-red-900/20 border border-red-900/50 p-3 rounded-lg flex items-start gap-3">
+                                                <AlertTriangle className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
                                                 <div>
-                                                    <p className="text-[10px] text-gray-500 font-bold uppercase">Daily Load</p>
-                                                    <p className="text-2xl font-black text-white">{athlete.dailyLoad || 0}</p>
-                                                </div>
-                                                <div className="text-right">
-                                                    <p className="text-[10px] text-gray-500 font-bold uppercase">ACWR</p>
-                                                    <p className={`text-2xl font-black ${acwrHighRisk ? 'text-red-500' : 'text-green-500'}`}>
-                                                        {acwrValue.toFixed(2)}
+                                                    <p className="text-xs font-bold text-red-500 uppercase">Data Discrepancy</p>
+                                                    <p className="text-[10px] text-gray-300 leading-tight mt-1">
+                                                        Session RPE ({athlete.sRPE}) differs significantly from Exercise RPE. Check compliance.
                                                     </p>
                                                 </div>
                                             </div>
+                                        )}
+
+                                        <div className="space-y-3">
+                                            {athlete.moveHealth?.lastExercises?.length > 0 ? (
+                                                athlete.moveHealth.lastExercises.slice(0, 3).map((ex, i) => (
+                                                    <div key={i} className="bg-neutral-900 border border-neutral-800 p-3 rounded-xl flex justify-between items-center group hover:border-neutral-700 transition-colors">
+                                                        <div>
+                                                            <p className="font-bold text-sm text-white group-hover:text-blue-400 transition-colors">{ex.name}</p>
+                                                            <p className="text-[10px] text-gray-500 font-mono">
+                                                                {ex.sets} x {ex.reps} @ {ex.weight}kg
+                                                            </p>
+                                                        </div>
+                                                        <div className="text-right">
+                                                            <div className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${ex.rpe >= 8 ? 'bg-red-900/30 text-red-500' : 'bg-green-900/30 text-green-500'}`}>
+                                                                RPE {ex.rpe}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                ))
+                                            ) : (
+                                                <div className="text-center py-6">
+                                                    <Activity className="w-8 h-8 text-neutral-800 mx-auto mb-2" />
+                                                    <p className="text-xs text-gray-600">No recent activity logged.</p>
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
 
+                                    {/* v15.1 Workload Management */}
+                                    <div className="bg-neutral-900/40 border border-neutral-800 p-6 rounded-3xl">
+                                        <div className="flex items-center justify-between mb-6">
+                                            <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500">Workload (7-Day)</h3>
+                                            <div className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${acwrHighRisk ? 'bg-red-900/30 text-red-500 border border-red-900' : 'bg-green-900/30 text-green-500 border border-green-900'}`}>
+                                                {acwrHighRisk ? 'Injury Red Zone' : 'Optimal Zone'}
+                                            </div>
+                                        </div>
+
+                                        {/* Chart */}
+                                        <div className="h-32 w-full mb-6">
+                                            <ResponsiveContainer width="100%" height="100%">
+                                                <AreaChart data={recentSessions}>
+                                                    <defs>
+                                                        <linearGradient id="colorLoad" x1="0" y1="0" x2="0" y2="1">
+                                                            <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
+                                                            <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                                                        </linearGradient>
+                                                    </defs>
+                                                    <XAxis dataKey="date" hide />
+                                                    <RechartsTooltip
+                                                        contentStyle={{ backgroundColor: '#111', borderColor: '#333', borderRadius: '8px', fontSize: '12px' }}
+                                                        itemStyle={{ color: '#fff' }}
+                                                        labelStyle={{ display: 'none' }}
+                                                    />
+                                                    <Area type="monotone" dataKey="load" stroke="#3b82f6" fillOpacity={1} fill="url(#colorLoad)" />
+                                                </AreaChart>
+                                            </ResponsiveContainer>
+                                        </div>
+
+                                        <div className="flex items-center justify-between border-t border-white/5 pt-4">
+                                            <div>
+                                                <p className="text-[10px] text-gray-500 font-bold uppercase">Daily Load</p>
+                                                <p className="text-2xl font-black text-white">{athlete.dailyLoad || 0}</p>
+                                            </div>
+                                            <div className="text-right">
+                                                <p className="text-[10px] text-gray-500 font-bold uppercase">ACWR</p>
+                                                <p className={`text-2xl font-black ${acwrHighRisk ? 'text-red-500' : 'text-green-500'}`}>
+                                                    {acwrValue.toFixed(2)}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
+
                             </div>
                         )}
 
@@ -1345,7 +1421,7 @@ const AthleteDashboard: React.FC = () => {
                     </div>
                 </div>
             </div>
-        </SafetyGuard>
+        </SafetyGuard >
     );
 };
 

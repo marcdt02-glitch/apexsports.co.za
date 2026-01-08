@@ -8,15 +8,49 @@ const Services: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-black">
-            {/* Hero Section */}
-            <div className="pt-32 pb-20 px-4 text-center border-b border-neutral-900">
-                <div className="max-w-4xl mx-auto">
-                    <h1 className="text-5xl md:text-7xl font-black text-white tracking-tighter uppercase mb-6">
-                        The Service <span className="text-red-600">Hub</span>
-                    </h1>
-                    <p className="text-gray-400 text-xl md:text-2xl max-w-2xl mx-auto leading-relaxed">
-                        Select your pathway to elite performance. Direct access to our premium mentorship, programming, and coaching tiers.
-                    </p>
+            {/* Hero Section (Video Header) */}
+            <div className="pt-32 pb-16 px-4 text-center border-b border-neutral-900 bg-black">
+                <div className="max-w-5xl mx-auto space-y-10">
+                    {/* Video Embed */}
+                    <div className="w-full aspect-video rounded-3xl overflow-hidden shadow-2xl shadow-blue-900/10 border border-neutral-800 relative bg-neutral-900">
+                        <iframe
+                            className="w-full h-full object-cover"
+                            src="https://www.youtube.com/embed/Q8YfGJwoTD8?modestbranding=1&rel=0"
+                            title="Apex Inspiration"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                        ></iframe>
+                    </div>
+
+                    {/* Text Overlay */}
+                    <div className="space-y-6">
+                        <h1 className="text-4xl md:text-6xl font-black text-white tracking-tighter uppercase leading-tight">
+                            THE JOURNEY TO ELITE <span className="text-red-600">STARTS HERE.</span>
+                        </h1>
+                        <p className="text-gray-400 text-lg md:text-xl font-medium max-w-2xl mx-auto">
+                            Raising the floor. Smashing the ceiling. Welcome to the APEX Lab.
+                        </p>
+                        <p className="text-[10px] text-neutral-600 uppercase tracking-widest font-bold">
+                            Inspiration: Deion Sanders on the Discipline of Dreams
+                        </p>
+                    </div>
+
+                    {/* CTA Buttons */}
+                    <div className="flex flex-col md:flex-row items-center justify-center gap-4">
+                        <a
+                            href="#general-training"
+                            className="w-full md:w-auto bg-white text-black font-black py-4 px-10 rounded-full hover:bg-gray-200 transition-all hover:scale-105 shadow-lg shadow-white/10"
+                        >
+                            Start Signup (General)
+                        </a>
+                        <button
+                            onClick={() => { setModalTier("Apex Membership"); setIsModalOpen(true); }}
+                            className="w-full md:w-auto bg-transparent border border-neutral-700 text-white font-bold py-4 px-10 rounded-full hover:bg-neutral-800 transition-all hover:scale-105 flex items-center justify-center gap-2"
+                        >
+                            <Trophy className="w-5 h-5 text-yellow-500" />
+                            Apply for Elite
+                        </button>
+                    </div>
                 </div>
             </div>
 
