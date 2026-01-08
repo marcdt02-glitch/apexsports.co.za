@@ -11,8 +11,6 @@ const Services: React.FC = () => {
             {/* Hero Section (Video Header) */}
             <div className="pt-32 pb-16 px-4 text-center border-b border-neutral-900 bg-black">
                 <div className="max-w-5xl mx-auto space-y-10">
-
-
                     {/* Text Overlay */}
                     <div className="space-y-6">
                         <h1 className="text-4xl md:text-6xl font-black text-white tracking-tighter uppercase leading-tight">
@@ -20,9 +18,6 @@ const Services: React.FC = () => {
                         </h1>
                         <p className="text-gray-400 text-lg md:text-xl font-medium max-w-2xl mx-auto">
                             Raising the floor. Smashing the ceiling. Welcome to the APEX Lab.
-                        </p>
-                        <p className="text-[10px] text-neutral-600 uppercase tracking-widest font-bold">
-                            Inspiration: Deion Sanders on the Discipline of Dreams
                         </p>
                     </div>
 
