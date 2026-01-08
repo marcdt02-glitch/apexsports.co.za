@@ -83,7 +83,10 @@ const Navbar: React.FC = () => {
                                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
                                     <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
                                 </span>
-                                <span className="text-white font-bold tracking-wide group-hover:text-blue-400 transition-colors">APEX Lab</span>
+                                <span className="text-white font-bold tracking-wide group-hover:text-blue-400 transition-colors flex items-center gap-2">
+                                    APEX Lab
+                                    <span className="text-[10px] bg-blue-600 text-white px-1.5 py-0.5 rounded font-black tracking-wider shadow-lg">BETA</span>
+                                </span>
                             </Link>
                         </div>
 

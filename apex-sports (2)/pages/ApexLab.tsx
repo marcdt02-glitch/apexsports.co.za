@@ -22,6 +22,7 @@ const ApexLab: React.FC = () => {
                     <h1 className="text-6xl md:text-8xl font-black text-white tracking-tighter uppercase leading-none drop-shadow-2xl">
                         Inside the <br />
                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-500">Apex Lab</span>
+                        <span className="ml-4 align-top text-xs md:text-sm font-bold bg-white/10 border border-white/20 text-white px-3 py-1 rounded-full tracking-widest backdrop-blur-sm">BETA</span>
                     </h1>
 
                     <p className="text-xl md:text-2xl text-gray-400 font-light max-w-2xl mx-auto leading-relaxed">
@@ -54,7 +55,10 @@ const ApexLab: React.FC = () => {
                                 <div className="p-4 bg-blue-500/20 rounded-2xl w-fit">
                                     <Film className="w-8 h-8 text-blue-400" />
                                 </div>
-                                <h3 className="text-3xl font-bold text-white uppercase tracking-tight">The Video Lab</h3>
+                                <h3 className="text-3xl font-bold text-white uppercase tracking-tight flex items-center gap-3">
+                                    The Video Lab
+                                    <span className="text-xs bg-blue-500/20 text-blue-300 px-2 py-1 rounded-full border border-blue-500/30">BETA</span>
+                                </h3>
                                 <p className="text-gray-400 leading-relaxed text-lg">
                                     Frame-by-frame biomechanical analysis. Upload your movement, annotate with pro tools, and get professional technical feedback directly on your footage.
                                 </p>
@@ -75,7 +79,10 @@ const ApexLab: React.FC = () => {
                                 <div className="p-4 bg-purple-500/20 rounded-2xl w-fit">
                                     <Brain className="w-8 h-8 text-purple-400" />
                                 </div>
-                                <h3 className="text-3xl font-bold text-white uppercase tracking-tight">AI Performance Agent</h3>
+                                <h3 className="text-3xl font-bold text-white uppercase tracking-tight flex items-center gap-3">
+                                    AI Performance Agent
+                                    <span className="text-xs bg-purple-500/20 text-purple-300 px-2 py-1 rounded-full border border-purple-500/30">BETA</span>
+                                </h3>
                                 <p className="text-gray-400 leading-relaxed text-lg">
                                     Your 24/7 scientific advisor. Trained on your specific physiological data to provide instant recovery tips, training adjustments, and load management advice.
                                 </p>
