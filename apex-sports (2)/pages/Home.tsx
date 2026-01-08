@@ -68,7 +68,7 @@ const Home: React.FC = () => {
         </div>
 
         <div className="relative z-20 max-w-5xl mx-auto text-center space-y-8 animate-fade-in-up">
-          <h1 className="text-5xl md:text-7xl font-bold text-white mb-8 tracking-tight drop-shadow-2xl">
+          <h1 className="text-5xl md:text-7xl font-bold font-sans text-white mb-8 tracking-tight drop-shadow-2xl">
             Apex Sports
           </h1>
 
@@ -81,7 +81,7 @@ const Home: React.FC = () => {
             />
           </div>
 
-          <h2 className="text-3xl md:text-4xl font-bold italic text-white tracking-wide drop-shadow-lg">
+          <h2 className="text-3xl md:text-4xl font-bold italic font-sans text-white tracking-wide drop-shadow-lg">
             What's next
           </h2>
 
