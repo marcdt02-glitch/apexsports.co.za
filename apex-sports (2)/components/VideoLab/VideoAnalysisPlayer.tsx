@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect, MouseEvent } from 'react';
-import { Play, Pause, Square, Circle, PenTool, Type, Save, Slash, MousePointer2, RotateCcw, FastForward, Rewind, Triangle, Download, Film, HelpCircle } from 'lucide-react';
+import { Play, Pause, Square, Circle, PenTool, Type, Save, Slash, MousePointer2, RotateCcw, FastForward, Rewind, Triangle, Download, Film, HelpCircle, Maximize } from 'lucide-react';
 import html2canvas from 'html2canvas'; // Assuming available or I will use raw canvas API if not installed. 
 // Actually I don't know if html2canvas is installed. I'll use raw canvas API to merge layers.
 
@@ -30,6 +30,17 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
     const videoRef1 = useRef<HTMLVideoElement>(null);
     const videoRef2 = useRef<HTMLVideoElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    const handleFullScreen = () => {
+        if (containerRef.current) {
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+            } else {
+                containerRef.current.requestFullscreen();
+            }
+        }
+    };
 
     // State
     const [isPlaying, setIsPlaying] = useState(false);
@@ -375,7 +386,7 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
     }, [drawings, currentDrawing, videoUrl]); // Re-render on updates
 
     return (
-        <div className="space-y-4">
+        <div ref={containerRef} className="flex flex-col gap-4 bg-black rounded-3xl overflow-hidden relative group">
             {/* Main Player Area */}
             <div className="relative bg-black rounded-3xl overflow-hidden border border-neutral-800 aspect-video group select-none">
                 <div className={`w-full h-full flex ${compareUrl ? 'grid grid-cols-2' : ''}`}>
@@ -481,6 +492,43 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
                 </div>
             )}
 
+            {/* Help Key Overlay */}
+            {showHelp && (
+                <div className="absolute inset-0 z-40 bg-black/80 backdrop-blur-sm flex items-center justify-center animate-fade-in p-8">
+                    <div className="bg-neutral-900 border border-neutral-700 p-8 rounded-3xl max-w-2xl w-full relative shadow-2xl">
+                        <button onClick={() => setShowHelp(false)} className="absolute top-4 right-4 text-gray-400 hover:text-white">
+                            <RotateCcw className="w-6 h-6 rotate-45" /> {/* Close Icon substitute or just X */}
+                        </button>
+                        <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                            <HelpCircle className="w-6 h-6 text-blue-500" />
+                            Video Lab Controls
+                        </h2>
+                        <div className="grid grid-cols-2 gap-8">
+                            <div className="space-y-4">
+                                <h3 className="text-gray-400 font-bold text-sm uppercase tracking-wider border-b border-gray-800 pb-2">Tools</h3>
+                                <div className="flex items-center gap-3 text-gray-300"><MousePointer2 className="w-4 h-4 text-blue-400" /> Select / Move</div>
+                                <div className="flex items-center gap-3 text-gray-300"><Slash className="w-4 h-4 text-blue-400" /> Draw Line (Vectors)</div>
+                                <div className="flex items-center gap-3 text-gray-300"><Circle className="w-4 h-4 text-blue-400" /> Draw Circle (Joints)</div>
+                                <div className="flex items-center gap-3 text-gray-300"><Triangle className="w-4 h-4 text-blue-400" /> Measure Angle</div>
+                            </div>
+                            <div className="space-y-4">
+                                <h3 className="text-gray-400 font-bold text-sm uppercase tracking-wider border-b border-gray-800 pb-2">Actions</h3>
+                                <div className="flex items-center gap-3 text-gray-300"><Film className="w-4 h-4 text-green-400" /> Screen Record Analysis</div>
+                                <div className="flex items-center gap-3 text-gray-300"><Download className="w-4 h-4 text-purple-400" /> Download Snapshot</div>
+                                <div className="flex items-center gap-3 text-gray-300"><Maximize className="w-4 h-4 text-white" /> Full Screen Mode</div>
+                                <div className="flex items-center gap-3 text-gray-300"><RotateCcw className="w-4 h-4 text-red-500" /> Clear Drawings</div>
+                            </div>
+                        </div>
+                        <div className="mt-8 pt-6 border-t border-gray-800 text-center text-xs text-gray-500">
+                            Pro Tip: Use Spacebar to Play/Pause. Shift+Click to draw instant lines.
+                        </div>
+                        <button onClick={() => setShowHelp(false)} className="mt-6 w-full py-3 bg-white text-black font-bold rounded-xl hover:bg-gray-200">
+                            Got it, let's work
+                        </button>
+                    </div>
+                </div>
+            )}
+
             {/* Tools Toolbar */}
             <div className="flex items-center justify-between bg-neutral-900 border border-neutral-800 p-4 rounded-2xl">
                 <div className="flex items-center gap-2">
@@ -524,6 +572,15 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
                             />
                         ))}
                     </div>
+
+                    <div className="w-px h-8 bg-neutral-800 mx-2"></div>
+
+                    <button onClick={() => setShowHelp(true)} className="p-3 rounded-xl text-gray-400 hover:bg-neutral-800 hover:text-white" title="Controls Key">
+                        <HelpCircle className="w-5 h-5" />
+                    </button>
+                    <button onClick={handleFullScreen} className="p-3 rounded-xl text-gray-400 hover:bg-neutral-800 hover:text-white" title="Full Screen">
+                        <Maximize className="w-5 h-5" />
+                    </button>
 
                     {onSave && (
                         <button onClick={() => onSave({ drawings, time: currentTime })} className="flex items-center gap-2 bg-white text-black font-bold px-4 py-2 rounded-xl text-sm hover:bg-gray-200">

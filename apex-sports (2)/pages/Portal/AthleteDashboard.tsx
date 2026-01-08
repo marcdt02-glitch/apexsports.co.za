@@ -783,13 +783,23 @@ const AthleteDashboard: React.FC = () => {
                                     </div>
                                 )}
 
-                                <div className="flex items-center gap-4">
-                                    <div className="hidden md:block text-right">
-                                        <h1 className="text-lg font-bold text-white leading-none">{athlete.name}</h1>
-                                        <p className="text-xs text-gray-500 font-mono">{athlete.package} Tier</p>
+                                <div className="flex items-center gap-6">
+                                    <div className="hidden md:flex flex-col items-end">
+                                        <div className="flex items-center gap-2 mb-1">
+                                            <span className="text-white font-black text-xl tracking-tighter italic">APEX LAB</span>
+                                            <div className="bg-red-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">BETA</div>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-gray-400 text-xs font-bold uppercase">{athlete.package} Tier</span>
+                                            <span className="text-neutral-700 text-xs">|</span>
+                                            <h1 className="text-sm font-bold text-white">{athlete.name}</h1>
+                                        </div>
                                     </div>
-                                    <div className="w-10 h-10 bg-neutral-800 rounded-full flex items-center justify-center border border-neutral-700">
-                                        <User className="w-5 h-5 text-gray-400" />
+                                    <div className="relative">
+                                        <div className="absolute -inset-2 bg-gradient-to-r from-red-600 to-blue-600 rounded-full opacity-20 blur-lg animate-pulse"></div>
+                                        <div className="relative w-12 h-12 bg-black rounded-full flex items-center justify-center border-2 border-white/10 shadow-2xl">
+                                            <img src="/images/logo.png" alt="Apex" className="w-8 h-8 object-contain" />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
