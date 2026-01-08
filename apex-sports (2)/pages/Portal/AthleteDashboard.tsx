@@ -994,6 +994,25 @@ const AthleteDashboard: React.FC = () => {
                                     </div>
                                 )}
 
+                                {/* Priority Focus - Full Width Top Integration */}
+                                <div className="bg-white text-black p-8 rounded-3xl mb-8 border border-neutral-200 shadow-xl shadow-white/5 animate-fade-in-up">
+                                    <div className="flex items-start justify-between">
+                                        <div>
+                                            <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 flex items-center gap-2">
+                                                <Target className="w-4 h-4 text-red-600" />
+                                                Priority Focus
+                                            </h3>
+                                            <h2 className="text-3xl font-black mb-2 leading-tight">{recommendation.focusArea}</h2>
+                                            <p className="text-gray-600 leading-relaxed max-w-3xl">{recommendation.description}</p>
+                                        </div>
+                                        <div className="hidden md:block">
+                                            <div className="p-4 bg-gray-100 rounded-2xl">
+                                                <Target className="w-8 h-8 text-black" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 {/* Main Grid: Charts & Performance */}
                                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
@@ -1217,7 +1236,7 @@ const AthleteDashboard: React.FC = () => {
                                                 The Science
                                             </button>
                                         </div>
-                                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                                             <MetricCard label="Agility T" value={`${athlete.agilityTime || '-'} s`} />
                                             <MetricCard label="Jump Dist." value={`${athlete.broadJump || '-'} cm`} />
 
@@ -1251,7 +1270,7 @@ const AthleteDashboard: React.FC = () => {
                                                 </div>
                                             </div>
 
-                                            <div className="grid grid-cols-2 md:grid-cols-3 gap-6 animate-fade-in">
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 animate-fade-in">
                                                 {clinicalTab === 'lower' && (
                                                     <>
                                                         <MetricCard label="H:Q Ratio (L)" value={athlete.hamstringQuadLeft} />
@@ -1284,11 +1303,7 @@ const AthleteDashboard: React.FC = () => {
                                 <div className="space-y-8">
 
                                     {/* Recommendations */}
-                                    <div className="bg-white text-black p-8 rounded-3xl">
-                                        <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-4">Priority Focus</h3>
-                                        <h2 className="text-3xl font-black mb-4 leading-tight">{recommendation.focusArea}</h2>
-                                        <p className="text-gray-600 leading-relaxed mb-6">{recommendation.description}</p>
-                                    </div>
+
 
                                     {/* v16.1 MoveHealth Live Feed */}
                                     <div className="bg-neutral-900/40 border border-neutral-800 p-6 rounded-3xl">
