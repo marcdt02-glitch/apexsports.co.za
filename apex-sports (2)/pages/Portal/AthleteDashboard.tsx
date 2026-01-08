@@ -19,6 +19,8 @@ import { ApexAgent } from '../../components/ApexAI/ApexAgent';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { generateTechnicalReport, generateDevelopmentReport, generateExecutiveReport } from '../../services/ReportService';
+import { CoachingScheduler } from '../../components/Coaching/CoachingScheduler';
+
 
 // --- UI Components ---
 
@@ -756,6 +758,13 @@ const AthleteDashboard: React.FC = () => {
 
                         {/* SCIENCE OVERLAY */}
                         {showScience && <ScienceOverlay type={showScience} onClose={() => setShowScience(null)} />}
+
+                        {/* VIEW: COACHING */}
+                        {activeView === 'coaching' && (
+                            <div className="animate-fade-in pb-20">
+                                <CoachingScheduler />
+                            </div>
+                        )}
 
                         {/* VIEW: PILLARS */}
                         {activeView === 'pillars' && renderPillars()}
