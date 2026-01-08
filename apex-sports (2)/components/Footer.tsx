@@ -34,9 +34,11 @@ const Footer: React.FC = () => {
 
           {/* Athlete Login (Centered) */}
           <div className="w-full flex justify-center my-4">
-            <a href="#/portal" className="bg-white text-black font-bold py-3 px-12 rounded-full shadow-[0_0_15px_rgba(255,255,255,0.1)] hover:shadow-[0_0_25px_rgba(255,255,255,0.3)] hover:scale-105 transition-all uppercase tracking-widest flex items-center gap-2">
-              <span className="w-2 h-2 bg-black rounded-full animate-pulse"></span>
-              Apex Lab
+            <a href="#/portal" className="group relative bg-black border border-neutral-800 text-white font-bold py-4 px-12 rounded-full overflow-hidden flex items-center gap-3 transition-all hover:border-blue-500/50 hover:scale-105">
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              <span className="w-2 h-2 bg-blue-500 rounded-full animate-pulse relative z-10"></span>
+              <span className="relative z-10 tracking-widest uppercase">Apex Lab</span>
+              <span className="relative z-10 text-[10px] bg-blue-600 text-white px-1.5 py-0.5 rounded font-black tracking-wider ml-1">BETA</span>
             </a>
           </div>
 
