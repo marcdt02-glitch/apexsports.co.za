@@ -161,7 +161,42 @@ export const generateTechnicalReport = (athlete: AthleteData, analysis: any) => 
     doc.text(`${asymmetry}% ${isHighAsym ? '(FLAGGED)' : '(Optimal)'}`, margin + 40, yPos);
     doc.setTextColor(255, 255, 255);
 
+    yPos += 25;
+
+    // --- NEW: MQS & Power Index ---
+    doc.setFontSize(14);
+    doc.setTextColor(59, 130, 246); // Blue header
+    doc.setFont("helvetica", "bold");
+    doc.text("ELITE METRICS EXPLAINED", margin, yPos);
+    yPos += 12;
+
+    const mqs = analysis.scores?.screening || 0;
+    const powerIndex = analysis.scores?.powerIndex || 0;
+
+    // MQS
+    doc.setFontSize(12);
+    doc.setTextColor(255, 255, 255);
+    doc.text(`Performance MQS: ${mqs}/100`, margin, yPos);
+    doc.setFontSize(9);
+    doc.setTextColor(180, 180, 180);
+    doc.setFont("helvetica", "normal");
+    const mqsDesc = "Explanation: The Movement Quality Score evaluates mechanical efficiency and injury risk. A score >85 indicates that your force is being directed efficiently into the ground, rather than being wasted through poor mechanics.";
+    doc.text(mqsDesc, margin, yPos + 5, { maxWidth: pageWidth - (margin * 2) });
+
     yPos += 20;
+
+    // Power Index
+    doc.setFontSize(12);
+    doc.setTextColor(255, 255, 255);
+    doc.setFont("helvetica", "bold");
+    doc.text(`Power Index: ${powerIndex}`, margin, yPos);
+    doc.setFontSize(9);
+    doc.setTextColor(180, 180, 180);
+    doc.setFont("helvetica", "normal");
+    const piDesc = "Explanation: This index combines your absolute force output with your velocity profile. It represents your 'Engine Size' - your total raw capacity for explosive sporting actions.";
+    doc.text(piDesc, margin, yPos + 5, { maxWidth: pageWidth - (margin * 2) });
+
+    yPos += 25;
 
     // Section 3: Video Lab Analysis
     doc.setFontSize(16);
