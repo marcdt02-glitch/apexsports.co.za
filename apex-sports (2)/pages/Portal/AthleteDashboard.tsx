@@ -1109,7 +1109,7 @@ const AthleteDashboard: React.FC = () => {
                                                 {/* 4. INJURY RISKS & WARNINGS BLOCK */}
                                                 <div className="bg-red-500/5 border border-red-500/20 p-6 rounded-3xl">
                                                     <h3 className="text-red-400 font-bold mb-4 flex items-center gap-2">
-                                                        <Triangle className="w-5 h-5" /> Risks & Warnings
+                                                        <AlertTriangle className="w-5 h-5" /> Risks & Warnings
                                                     </h3>
                                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                                         <div className="bg-red-500/10 p-4 rounded-xl">

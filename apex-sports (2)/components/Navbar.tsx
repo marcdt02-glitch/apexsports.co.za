@@ -95,7 +95,7 @@ const Navbar: React.FC = () => {
                             <div className="hidden xl:block">
                                 <Link to="/portal" className="bg-white text-black hover:bg-gray-200 px-6 py-2 rounded-full text-sm font-bold flex items-center gap-2 transition-all transform hover:scale-105 shadow-[0_0_15px_rgba(255,255,255,0.3)]">
                                     <UserPlus className="w-4 h-4" />
-                                    <span>Athlete Login</span>
+                                    <span>Apex Lab</span>
                                 </Link>
                             </div>
                         </div>

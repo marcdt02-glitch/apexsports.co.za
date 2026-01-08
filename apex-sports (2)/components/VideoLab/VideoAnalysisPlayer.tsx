@@ -77,6 +77,15 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
         if (videoRef2.current) videoRef2.current.playbackRate = rate;
     };
 
+    const handleScrub = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const time = parseFloat(e.target.value);
+        if (videoRef1.current) {
+            videoRef1.current.currentTime = time;
+            setCurrentTime(time);
+            if (videoRef2.current) videoRef2.current.currentTime = time;
+        }
+    };
+
     const stepFrame = (frames: number) => {
         if (videoRef1.current) {
             videoRef1.current.pause();
@@ -156,14 +165,7 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
         }
     };
 
-    const handleScrub = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const time = parseFloat(e.target.value);
-        if (videoRef1.current) {
-            videoRef1.current.currentTime = time;
-            setCurrentTime(time);
-            if (videoRef2.current) videoRef2.current.currentTime = time;
-        }
-    };
+
 
 
     // DRAWING LOGIC

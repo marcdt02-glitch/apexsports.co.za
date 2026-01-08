@@ -36,7 +36,7 @@ const Footer: React.FC = () => {
           <div className="w-full flex justify-center my-4">
             <a href="#/portal" className="bg-white text-black font-bold py-3 px-12 rounded-full shadow-[0_0_15px_rgba(255,255,255,0.1)] hover:shadow-[0_0_25px_rgba(255,255,255,0.3)] hover:scale-105 transition-all uppercase tracking-widest flex items-center gap-2">
               <span className="w-2 h-2 bg-black rounded-full animate-pulse"></span>
-              Athlete Login
+              Apex Lab
             </a>
           </div>
 
