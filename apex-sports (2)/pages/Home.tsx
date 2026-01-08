@@ -55,19 +55,11 @@ const Home: React.FC = () => {
       {/* Hero Section */}
       <section className="h-screen flex flex-col items-center justify-center relative overflow-hidden px-4">
         <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-b from-black via-black/80 to-black z-10"></div>
-          {/* Background image: Dark Gym/Sports atmosphere */}
-          {founderImages.map((src, index) => (
-            <img
-              key={src}
-              src={src}
-              alt="Hero Background"
-              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${index === currentFounderIndex ? 'opacity-40' : 'opacity-0'}`}
-            />
-          ))}
+          <div className="absolute inset-0 bg-gradient-to-b from-black via-neutral-950 to-black z-10"></div>
+          {/* Background Removed as per request */}
         </div>
 
-        <div className="relative z-20 max-w-5xl mx-auto text-center space-y-8 animate-fade-in-up">
+        <div className="relative z-20 max-w-5xl mx-auto text-center space-y-8 animate-fade-in-up pt-20 md:pt-32">
           <h1 className="text-6xl md:text-8xl font-bold font-sans text-white mb-10 tracking-tight drop-shadow-2xl uppercase">
             Apex Sports
           </h1>
