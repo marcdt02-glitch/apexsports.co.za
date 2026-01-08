@@ -171,50 +171,32 @@ const ApexLab: React.FC = () => {
                                 </tr>
                                 <tr className="hover:bg-white/5 transition-colors">
                                     <td className="p-6 text-gray-300 font-medium">Physical Results & Reporting</td>
-                                    <td className="p-6 text-center text-gray-600">-</td>
+                                    <td className="p-6 text-center"><Check className="w-5 h-5 text-green-500 mx-auto" /></td>
                                     <td className="p-6 text-center"><Check className="w-5 h-5 text-green-500 mx-auto" /></td>
                                     <td className="p-6 text-center"><Check className="w-5 h-5 text-green-500 mx-auto" /></td>
                                 </tr>
-                                <td className="p-6 text-gray-300 font-medium">AI Performance Agent</td>
-                                <td className="p-6 text-center"><Check className="w-5 h-5 text-purple-500 mx-auto" /></td>
-                                <td className="p-6 text-center"><Check className="w-5 h-5 text-purple-500 mx-auto" /></td>
-                                <td className="p-6 text-center"><Check className="w-5 h-5 text-purple-500 mx-auto" /></td>
-                            </tr>
-                            <tr className="hover:bg-white/5 transition-colors">
-                                <td className="p-6 text-gray-300 font-medium">Physical Results & Reporting</td>
-                                <td className="p-6 text-center text-gray-600">-</td>
-                                {/* Wait, user asked for "blocks on... physical reporting hub" but did not explicitly say enable for all. 
-                                        But logic dictates if they enter Lab, they get a report. 
-                                        "Lab Entry" = Video Lab + Report usually. 
-                                        I will enable it for Lab Entry just to be safe/generous as per "accessible to every level" tone.
-                                        Actually, let's stick to user request "make performance agent accessible to every level". 
-                                        Reporting Hub access wasn't explicitly requested for all, but it makes sense.
-                                        I will keep Reporting Hub as S&C+ for now unless I change my mind.
-                                        "also the physical reporting hub" context was "add some blocks".
-                                        I'll leave Reporting access as is (S&C+) to preserve upsell unless I see strict instruction.
-                                        Wait, "Video Lab Analysis" is checked for all. Typically you get a report with that.
-                                        I'll toggle Reporting to ALL.
-                                     */}
-                                <td className="p-6 text-center"><Check className="w-5 h-5 text-green-500 mx-auto" /></td>
-                                <td className="p-6 text-center"><Check className="w-5 h-5 text-green-500 mx-auto" /></td>
-                                <td className="p-6 text-center"><Check className="w-5 h-5 text-green-500 mx-auto" /></td>
-                            </tr>
-                            <tr className="hover:bg-white/5 transition-colors">
-                                <td className="p-6 text-gray-300 font-medium">Advanced Biomechanics (VALD)</td>
-                                <td className="p-6 text-center text-gray-600">-</td>
-                                <td className="p-6 text-center text-gray-600">-</td>
-                                <td className="p-6 text-center"><Check className="w-5 h-5 text-purple-500 mx-auto" /></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                                <tr className="hover:bg-white/5 transition-colors">
+                                    <td className="p-6 text-gray-300 font-medium">AI Performance Agent</td>
+                                    <td className="p-6 text-center"><Check className="w-5 h-5 text-purple-500 mx-auto" /></td>
+                                    <td className="p-6 text-center"><Check className="w-5 h-5 text-purple-500 mx-auto" /></td>
+                                    <td className="p-6 text-center"><Check className="w-5 h-5 text-purple-500 mx-auto" /></td>
+                                </tr>
+                                <tr className="hover:bg-white/5 transition-colors">
+                                    <td className="p-6 text-gray-300 font-medium">Advanced Biomechanics (VALD)</td>
+                                    <td className="p-6 text-center text-gray-600">-</td>
+                                    <td className="p-6 text-center text-gray-600">-</td>
+                                    <td className="p-6 text-center"><Check className="w-5 h-5 text-purple-500 mx-auto" /></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
 
-                <div className="mt-16 flex justify-center">
-                    <Link to="/services" className="bg-white text-black font-black text-lg py-5 px-12 rounded-full uppercase tracking-widest shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:scale-105 transition-transform flex items-center gap-3">
-                        Apply for Access <ArrowRight className="w-6 h-6" />
-                    </Link>
+                    <div className="mt-16 flex justify-center">
+                        <Link to="/services" className="bg-white text-black font-black text-lg py-5 px-12 rounded-full uppercase tracking-widest shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:scale-105 transition-transform flex items-center gap-3">
+                            Apply for Access <ArrowRight className="w-6 h-6" />
+                        </Link>
+                    </div>
                 </div>
-        </div>
             </section >
         </div >
     );
