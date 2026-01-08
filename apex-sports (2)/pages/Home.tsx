@@ -68,13 +68,22 @@ const Home: React.FC = () => {
         </div>
 
         <div className="relative z-20 max-w-5xl mx-auto text-center space-y-8 animate-fade-in-up">
-          <h1 className="text-5xl md:text-8xl font-black text-white uppercase tracking-tighter leading-none drop-shadow-2xl mb-8">
-            WHAT'S NEXT
+          <h1 className="text-5xl md:text-7xl font-bold text-white mb-8 tracking-tight drop-shadow-2xl">
+            Apex Sports
           </h1>
 
-          <div className="flex justify-center mb-8">
-            <ApexLogo className="w-32 h-32 md:w-48 md:h-48 text-white animate-pulse-slow" />
+          <div className="mb-8 relative group flex justify-center">
+            <div className="absolute inset-0 bg-white/5 blur-3xl -z-10 rounded-full opacity-0 group-hover:opacity-30 transition-opacity duration-500"></div>
+            <img
+              src="/images/logo.png"
+              alt="Apex Sports Logo"
+              className="w-32 h-32 md:w-48 md:h-48 object-contain drop-shadow-2xl animate-pulse-slow"
+            />
           </div>
+
+          <h2 className="text-3xl md:text-4xl font-bold italic text-white tracking-wide drop-shadow-lg">
+            What's next
+          </h2>
 
           <div className="flex flex-col md:flex-row items-center justify-center gap-6 pt-8">
             <Link
