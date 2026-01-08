@@ -118,41 +118,51 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
         }
     };
 
-    const handleExportVideo = async () => {
-        const video = videoRef1.current;
-        const canvas = canvasRef.current;
-        if (!video || !canvas) return;
+    const handleScreenRecord = async () => {
+        try {
+            const stream = await navigator.mediaDevices.getDisplayMedia({
+                video: { displaySurface: 'browser' },
+                audio: true
+            });
 
-        setIsRecording(true);
-        video.currentTime = 0;
-        await video.play();
+            const mime = MediaRecorder.isTypeSupported("video/mp4") ? "video/mp4" : "video/webm";
+            const ext = mime === "video/mp4" ? "mp4" : "webm";
 
-        const stream = canvas.captureStream(30);
-        const recorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
-        const chunks: Blob[] = [];
+            const recorder = new MediaRecorder(stream, { mimeType: mime });
+            const chunks: Blob[] = [];
 
-        recorder.ondataavailable = e => chunks.push(e.data);
-        recorder.onstop = () => {
-            const blob = new Blob(chunks, { type: 'video/webm' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `APEX_Analysis_${new Date().toISOString()}.webm`;
-            a.click();
+            recorder.ondataavailable = e => chunks.push(e.data);
+            recorder.onstop = () => {
+                const blob = new Blob(chunks, { type: mime });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `APEX_Analysis_ScreenRec.${ext}`;
+                a.click();
+                setIsRecording(false);
+                stream.getTracks().forEach(track => track.stop());
+            };
+
+            recorder.start();
+            setIsRecording(true);
+
+            stream.getVideoTracks()[0].onended = () => {
+                if (recorder.state !== "inactive") recorder.stop();
+            };
+
+        } catch (err) {
+            console.error("Screen recording cancelled or failed:", err);
             setIsRecording(false);
-        };
+        }
+    };
 
-        recorder.start();
-
-        const drawLoop = () => {
-            if (video.paused || video.ended) {
-                recorder.stop();
-                return;
-            }
-            requestAnimationFrame(drawLoop);
-            renderCanvas(true);
-        };
-        drawLoop();
+    const handleScrub = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const time = parseFloat(e.target.value);
+        if (videoRef1.current) {
+            videoRef1.current.currentTime = time;
+            setCurrentTime(time);
+            if (videoRef2.current) videoRef2.current.currentTime = time;
+        }
     };
 
 
