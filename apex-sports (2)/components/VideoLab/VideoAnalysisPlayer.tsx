@@ -302,6 +302,29 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
         }
     };
 
+    // --- IMPROVED ANGLE TOOL ---
+    const addAngleTool = () => {
+        if (!canvasRef.current) return;
+        const w = canvasRef.current.width;
+        const h = canvasRef.current.height;
+        const cx = w / 2;
+        const cy = h / 2;
+
+        // Create a default "V" shape angle roughly in center
+        const newAngle: Drawing = {
+            type: 'angle',
+            points: [
+                { x: cx, y: cy + 50 },      // P0: Vertex
+                { x: cx - 100, y: cy - 100 }, // P1: Arm Left
+                { x: cx + 100, y: cy - 100 }  // P2: Arm Right
+            ],
+            color: color
+        };
+
+        setDrawings([...drawings, newAngle]);
+        setTool('none'); // Immediately switch to Select/Move mode so user can drag handles
+    };
+
     // Canvas Rendering
     const renderCanvas = (drawVideo = false) => {
         const canvas = canvasRef.current;
@@ -316,9 +339,7 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
         if (drawVideo && videoRef1.current) {
             try {
                 ctx.drawImage(videoRef1.current, 0, 0, canvas.width, canvas.height);
-            } catch (e) {
-                // consume cors error silently during preview
-            }
+            } catch (e) { }
         }
 
         // Render Saved Drawings
@@ -341,51 +362,77 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
                 ctx.moveTo(d.points[0].x, d.points[0].y);
                 d.points.forEach(p => ctx.lineTo(p.x, p.y));
                 ctx.stroke();
-            } else if (d.type === 'angle' && d.points.length > 1) {
-                // P0 is Vertex. P1 is Arm 1. P2 is Arm 2.
-                // Draw Line P0 -> P1
-                ctx.moveTo(d.points[0].x, d.points[0].y);
-                ctx.lineTo(d.points[1].x, d.points[1].y);
+            } else if (d.type === 'angle' && d.points.length > 2) {
+                // P0 is Vertex. P1 and P2 are arms.
+                const p0 = d.points[0];
+                const p1 = d.points[1];
+                const p2 = d.points[2];
+
+                // Draw Arms
+                ctx.beginPath();
+                ctx.moveTo(p1.x, p1.y); // Arm 1
+                ctx.lineTo(p0.x, p0.y); // Vertex
+                ctx.lineTo(p2.x, p2.y); // Arm 2
+                ctx.strokeStyle = d.color;
                 ctx.stroke();
 
-                // Draw Line P0 -> P2 if exists
-                if (d.points.length > 2) {
-                    ctx.beginPath();
-                    ctx.moveTo(d.points[0].x, d.points[0].y);
-                    ctx.lineTo(d.points[2].x, d.points[2].y);
-                    ctx.stroke();
+                // Calculate Angles for Arc
+                // atan2 returns angle in radians from -PI to PI
+                const dx1 = p1.x - p0.x;
+                const dy1 = p1.y - p0.y;
+                const dx2 = p2.x - p0.x;
+                const dy2 = p2.y - p0.y;
 
-                    // Calculate Angle
-                    const angle = getAngle(d.points[1], d.points[0], d.points[2]); // Vertex is Center (P0)
-                    if (!isNaN(angle)) {
-                        // Draw Arc
-                        ctx.beginPath();
-                        ctx.strokeStyle = '#fff';
-                        ctx.lineWidth = 1;
-                        ctx.arc(d.points[0].x, d.points[0].y, 20, 0, 2 * Math.PI); // Full circle or just arc?
-                        // Arc is better but math is hard for simple canvas. Full circle logic is confusing visually.
-                        // I'll stick to text.
-                        // ctx.stroke();
+                let angle1 = Math.atan2(dy1, dx1);
+                let angle2 = Math.atan2(dy2, dx2);
 
-                        ctx.fillStyle = '#fff';
-                        ctx.font = 'bold 16px sans-serif';
-                        ctx.strokeStyle = '#000';
-                        ctx.lineWidth = 3;
-                        ctx.strokeText(`${angle.toFixed(1)}°`, d.points[0].x + 15, d.points[0].y - 15);
-                        ctx.fillText(`${angle.toFixed(1)}°`, d.points[0].x + 15, d.points[0].y - 15);
-                    }
+                // Draw Arc Sector (Pie Slice)
+                ctx.beginPath();
+                ctx.moveTo(p0.x, p0.y); // Center
+
+                // Draw arc from angle1 to angle2. 
+                // We always want the acute/interior angle visually? Or just the counter-clockwise one?
+                // Visualizing the angle calculated by getAngle (law of cosines) is safest.
+                // Draw simple arc:
+                ctx.arc(p0.x, p0.y, 40, angle1, angle2, false);
+                // Note: 'false' = clockwise? No, false = counterclockwise.
+                // We might need to check which direction is shorter.
+
+                ctx.fillStyle = `${d.color}33`; // 20% opacity hex
+                ctx.fill();
+
+                // Draw Arc Stroke
+                ctx.beginPath();
+                ctx.arc(p0.x, p0.y, 40, angle1, angle2, false);
+                ctx.strokeStyle = d.color;
+                ctx.lineWidth = 1;
+                ctx.stroke();
+
+                // Calculate Numerical Angle
+                const angleDeg = getAngle(p1, p0, p2);
+
+                // Text Label
+                if (!isNaN(angleDeg)) {
+                    ctx.fillStyle = '#fff';
+                    ctx.font = 'bold 14px "Inter", sans-serif';
+                    ctx.shadowColor = 'black';
+                    ctx.shadowBlur = 4;
+                    // Position text near the vertex
+                    ctx.fillText(`${angleDeg.toFixed(1)}°`, p0.x + 10, p0.y + 30);
+                    ctx.shadowBlur = 0; // Reset
                 }
             }
 
-            // Draw Handles if in 'Select' mode
-            if (tool === 'none') {
-                d.points.forEach(p => {
+            // Draw Handles if in 'Select' mode (always draw for Angle so they can drag)
+            if (tool === 'none' || d.type === 'angle') {
+                d.points.forEach((p, idx) => {
                     ctx.beginPath();
-                    ctx.fillStyle = '#fff';
+                    // Vertex is distinctly colored (white) for Angles
+                    ctx.fillStyle = (idx === 0 && d.type === 'angle') ? '#fff' : d.color;
                     ctx.arc(p.x, p.y, 6, 0, 2 * Math.PI);
                     ctx.fill();
-                    ctx.strokeStyle = '#000';
-                    ctx.lineWidth = 1;
+                    ctx.strokeStyle = '#fff';
+                    ctx.lineWidth = 2;
                     ctx.stroke();
                 });
             }
@@ -439,7 +486,7 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
                 {/* Canvas Overlay */}
                 <canvas
                     ref={canvasRef}
-                    className={`absolute inset-0 z-20 w-full h-full ${tool !== 'none' ? 'cursor-crosshair' : 'pointer-events-none'}`}
+                    className={`absolute inset-0 z-20 w-full h-full ${tool !== 'none' ? 'cursor-crosshair' : 'cursor-default'}`}
                     onMouseDown={handleMouseDown}
                     onMouseMove={handleMouseMove}
                     onMouseUp={handleMouseUp}
@@ -526,7 +573,8 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
                     <button title="Scribble" onClick={() => setTool('scribble')} className={`p-3 rounded-xl transition-all ${tool === 'scribble' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:bg-neutral-800'}`}>
                         <Pen className="w-5 h-5" />
                     </button>
-                    <button title="Measure Angle" onClick={() => setTool('angle')} className={`p-3 rounded-xl transition-all ${tool === 'angle' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:bg-neutral-800'}`}>
+                    {/* UPDATED ANGLE BUTTON */}
+                    <button title="Measure Angle" onClick={addAngleTool} className={`p-3 rounded-xl transition-all ${tool === 'angle' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:bg-neutral-800'}`}>
                         <Triangle className="w-5 h-5" />
                     </button>
                     <button title="Add Text" onClick={() => setTool('text')} className={`p-3 rounded-xl transition-all ${tool === 'text' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:bg-neutral-800'}`}>
@@ -591,7 +639,7 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
                     <ul className="space-y-2 text-gray-400">
                         <li className="flex items-center gap-2"><Slash className="w-3 h-3 text-blue-500" /> <span>Draw Line (Force Vector)</span></li>
                         <li className="flex items-center gap-2"><Circle className="w-3 h-3 text-blue-500" /> <span>Circle (Joint/CoM)</span></li>
-                        <li className="flex items-center gap-2"><Triangle className="w-3 h-3 text-blue-500" /> <span>Angle (Click Vertex-End-End)</span></li>
+                        <li className="flex items-center gap-2"><Triangle className="w-3 h-3 text-blue-500" /> <span>Angle (Spawns Tool)</span></li>
                         <li className="flex items-center gap-2"><Pen className="w-3 h-3 text-blue-500" /> <span>Freehand Scribble</span></li>
                         <li className="flex items-center gap-2"><Type className="w-3 h-3 text-blue-500" /> <span>Add Text Label</span></li>
                     </ul>
