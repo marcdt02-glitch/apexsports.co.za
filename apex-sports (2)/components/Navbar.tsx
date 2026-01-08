@@ -77,6 +77,14 @@ const Navbar: React.FC = () => {
                                     {link.name}
                                 </Link>
                             ))}
+                            {/* APEX Lab Link with Glow/Badge */}
+                            <Link to="/apex-lab" className="relative group px-3 py-2">
+                                <span className="absolute -top-1 -right-1 flex h-2 w-2">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+                                </span>
+                                <span className="text-white font-bold tracking-wide group-hover:text-blue-400 transition-colors">APEX Lab</span>
+                            </Link>
                         </div>
 
                         {/* Desktop Actions */}

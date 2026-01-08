@@ -11,6 +11,7 @@ import ApexPrivacy from './pages/ApexPrivacy';
 import Contact from './pages/Contact';
 import PaymentSuccess from './pages/PaymentSuccess';
 import Services from './pages/Services';
+import ApexLab from './pages/ApexLab';
 import WelcomeAthlete from './pages/WelcomeAthlete';
 
 import { DataProvider } from './context/DataContext';
@@ -46,6 +47,7 @@ const InnerLayout: React.FC = () => {
           <Route path="/strength" element={<Strength />} />
           <Route path="/mentorship" element={<Mentorship />} />
           <Route path="/goalkeeper" element={<Goalkeeper />} />
+          <Route path="/apex-lab" element={<ApexLab />} />
           <Route path="/booking-policy" element={<BookingPolicy />} />
           <Route path="/privacy-policy" element={<ApexPrivacy />} />
           <Route path="/contact" element={<Contact />} />
