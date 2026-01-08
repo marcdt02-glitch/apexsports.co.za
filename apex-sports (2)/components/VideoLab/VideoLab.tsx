@@ -204,7 +204,8 @@ export const VideoLab: React.FC = () => {
                     </div>
 
                     {/* Actions */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 h-64">
+                    <input type="file" ref={fileInputRef} hidden accept="video/*" onChange={handleLocalUpload} />
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-64">
                         {/* Upload / My Cloud */}
                         <button
                             onClick={() => handleSelectVideo(false)}
@@ -214,7 +215,19 @@ export const VideoLab: React.FC = () => {
                                 <UploadCloud className="w-8 h-8 text-blue-500" />
                             </div>
                             <h3 className="text-xl font-bold text-white mb-1">Open from Cloud</h3>
-                            <p className="text-xs text-gray-400">Google Drive Video Selection</p>
+                            <p className="text-xs text-gray-400">Google Drive</p>
+                        </button>
+
+                        {/* Local Upload */}
+                        <button
+                            onClick={() => fileInputRef.current?.click()}
+                            className="group relative bg-neutral-900/30 border-2 border-dashed border-neutral-800 rounded-3xl p-8 flex flex-col items-center justify-center hover:border-white hover:bg-neutral-800 transition-all text-center"
+                        >
+                            <div className="p-4 bg-neutral-800 rounded-full mb-4 group-hover:scale-110 transition-transform">
+                                <Upload className="w-8 h-8 text-white" />
+                            </div>
+                            <h3 className="text-xl font-bold text-white mb-1">Upload File</h3>
+                            <p className="text-xs text-gray-400">From Device</p>
                         </button>
 
                         {/* Pro Library */}
