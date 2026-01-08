@@ -68,19 +68,13 @@ const Home: React.FC = () => {
         </div>
 
         <div className="relative z-20 max-w-5xl mx-auto text-center space-y-8 animate-fade-in-up">
-          <div className="flex justify-center mb-6">
-            <ApexLogo className="w-24 h-24 md:w-32 md:h-32 text-white animate-pulse-slow" />
-          </div>
-
-          <h1 className="text-5xl md:text-8xl font-black text-white uppercase tracking-tighter leading-none drop-shadow-2xl">
-            FOR THE <br />
-            <span className="text-red-600">OBSESSED.</span>
+          <h1 className="text-5xl md:text-8xl font-black text-white uppercase tracking-tighter leading-none drop-shadow-2xl mb-8">
+            WHAT'S NEXT
           </h1>
 
-          <p className="text-xl md:text-2xl text-gray-300 max-w-2xl mx-auto font-light leading-relaxed">
-            Elite performance coaching for athletes who demand more from themselves.
-            <span className="block text-white font-medium mt-2">Data-driven. Science-backed. Chaos-proof.</span>
-          </p>
+          <div className="flex justify-center mb-8">
+            <ApexLogo className="w-32 h-32 md:w-48 md:h-48 text-white animate-pulse-slow" />
+          </div>
 
           <div className="flex flex-col md:flex-row items-center justify-center gap-6 pt-8">
             <Link
