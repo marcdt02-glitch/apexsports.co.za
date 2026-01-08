@@ -10,12 +10,13 @@ interface AnalysisPlayerProps {
     onSave?: (data: any) => void;
 }
 
-type Tool = 'none' | 'line' | 'angle' | 'circle';
+type Tool = 'none' | 'line' | 'angle' | 'circle' | 'text';
 
 interface Drawing {
     type: Tool;
     points: { x: number; y: number }[];
     color: string;
+    text?: string;
 }
 
 const getAngle = (p1: { x: number, y: number }, p2: { x: number, y: number }, p3: { x: number, y: number }) => {
@@ -194,7 +195,9 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
         if (tool === 'none') {
             // Check for handle hit
             drawings.forEach((d, dIdx) => {
-                d.points.forEach((p, pIdx) => {
+                const ptList = d.points;
+                // For text, check if click is near the point
+                ptList.forEach((p, pIdx) => {
                     const dist = Math.sqrt(Math.pow(p.x - pt.x, 2) + Math.pow(p.y - pt.y, 2));
                     if (dist < 15) { // 15px radius hit
                         setDraggingPoint({ drawingIndex: dIdx, pointIndex: pIdx });
@@ -204,6 +207,17 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
             });
             return;
         }
+
+        if (tool === 'text') {
+            const text = prompt("Enter text annotation:");
+            if (text) {
+                setDrawings([...drawings, { type: 'text', points: [pt], color, text }]);
+                // setTool('none'); // Optional: switch back to move tool
+                requestAnimationFrame(() => renderCanvas()); // Immediate render
+            }
+            return; // Text is instant, no drag
+        }
+
         setCurrentDrawing({ type: tool, points: [pt], color });
     };
 
@@ -510,6 +524,9 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
                     <button title="Measure Angle" onClick={() => setTool('angle')} className={`p-3 rounded-xl transition-all ${tool === 'angle' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:bg-neutral-800'}`}>
                         <Triangle className="w-5 h-5" />
                     </button>
+                    <button title="Add Text" onClick={() => setTool('text')} className={`p-3 rounded-xl transition-all ${tool === 'text' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:bg-neutral-800'}`}>
+                        <Type className="w-5 h-5" />
+                    </button>
 
                     <div className="w-px h-8 bg-neutral-800 mx-2"></div>
                     <button onClick={() => setDrawings([])} className="p-3 rounded-xl text-red-500 hover:bg-red-900/20" title="Clear All">
@@ -570,6 +587,7 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
                         <li className="flex items-center gap-2"><Slash className="w-3 h-3 text-blue-500" /> <span>Draw Line (Force Vector)</span></li>
                         <li className="flex items-center gap-2"><Circle className="w-3 h-3 text-blue-500" /> <span>Circle (Joint/CoM)</span></li>
                         <li className="flex items-center gap-2"><Triangle className="w-3 h-3 text-blue-500" /> <span>Measure Angle</span></li>
+                        <li className="flex items-center gap-2"><Type className="w-3 h-3 text-blue-500" /> <span>Add Text Label</span></li>
                     </ul>
                 </div>
                 <div>

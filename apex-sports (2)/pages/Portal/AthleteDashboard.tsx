@@ -1166,7 +1166,7 @@ const AthleteDashboard: React.FC = () => {
 
                                         {/* VIEW: ADVANCED */}
                                         {physicalViewMode === 'advanced' && showAdvancedMetrics && (
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-fade-in">
+                                            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 animate-fade-in">
                                                 {/* Standard Screening Profile */}
                                                 <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl relative">
                                                     <div className="flex items-center justify-between mb-8">
@@ -1242,7 +1242,7 @@ const AthleteDashboard: React.FC = () => {
                                                     </div>
                                                 </div>
 
-                                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 animate-fade-in">
+                                                <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 gap-6 animate-fade-in">
                                                     {clinicalTab === 'lower' && (
                                                         <>
                                                             <MetricCard label="H:Q Ratio (L)" value={athlete.hamstringQuadLeft} />
