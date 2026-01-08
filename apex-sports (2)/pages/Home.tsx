@@ -52,115 +52,55 @@ const Home: React.FC = () => {
   return (
     <div className="min-h-screen bg-black">
 
-      {/* Hero Section (Video Header) */}
-      <section className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden bg-black pt-20 pb-20">
-        <div className="z-20 w-full max-w-6xl mx-auto space-y-12 px-4">
-          {/* Video Container */}
-          <div className="w-full aspect-video bg-neutral-900 rounded-3xl overflow-hidden shadow-2xl shadow-blue-900/10 border border-neutral-800 relative group">
-            <iframe
-              className="w-full h-full object-cover"
-              src="https://www.youtube.com/embed/Q8YfGJwoTD8?rel=0&modestbranding=1"
-              title="Deion Sanders Inspiration"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            ></iframe>
+      {/* Hero Section */}
+      <section className="h-screen flex flex-col items-center justify-center relative overflow-hidden px-4">
+        <div className="absolute inset-0 z-0">
+          <div className="absolute inset-0 bg-gradient-to-b from-black via-black/80 to-black z-10"></div>
+          {/* Background image: Dark Gym/Sports atmosphere */}
+          <img
+            src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&q=80"
+            alt="Hero Background"
+            className="w-full h-full object-cover opacity-40"
+          />
+        </div>
+
+        <div className="relative z-20 max-w-5xl mx-auto text-center space-y-8 animate-fade-in-up">
+          <div className="flex justify-center mb-6">
+            <ApexLogo className="w-24 h-24 md:w-32 md:h-32 text-white animate-pulse-slow" />
           </div>
 
-          {/* Text & CTAs */}
-          <div className="text-center space-y-8 animate-fade-in-up">
-            <h1 className="text-4xl md:text-7xl font-black text-white uppercase tracking-tighter leading-none">
-              THE JOURNEY TO ELITE <span className="text-red-600">STARTS HERE.</span>
-            </h1>
-            <p className="text-xl md:text-2xl text-gray-400 max-w-3xl mx-auto font-medium">
-              Raising the floor. Smashing the ceiling. Welcome to the APEX Lab.
-            </p>
+          <h1 className="text-5xl md:text-8xl font-black text-white uppercase tracking-tighter leading-none drop-shadow-2xl">
+            FOR THE <br />
+            <span className="text-red-600">OBSESSED.</span>
+          </h1>
 
-            <div className="flex flex-col md:flex-row items-center justify-center gap-6">
-              <Link
-                to="/services"
-                className="bg-white text-black px-8 py-4 rounded-full font-black uppercase tracking-wider hover:bg-gray-200 transition-all hover:scale-105 flex items-center gap-2 shadow-lg shadow-white/10"
-              >
-                Start Signup <ArrowRight className="w-5 h-5" />
-              </Link>
-              <button
-                onClick={() => setIsModalOpen(true)}
-                className="bg-transparent border border-neutral-700 text-white px-8 py-4 rounded-full font-black uppercase tracking-wider hover:bg-neutral-800 transition-all hover:scale-105 flex items-center gap-2 ml-0 md:ml-4"
-              >
-                <Trophy className="w-5 h-5 text-yellow-500" />
-                Apply for Elite
-              </button>
-            </div>
+          <p className="text-xl md:text-2xl text-gray-300 max-w-2xl mx-auto font-light leading-relaxed">
+            Elite performance coaching for athletes who demand more from themselves.
+            <span className="block text-white font-medium mt-2">Data-driven. Science-backed. Chaos-proof.</span>
+          </p>
+
+          <div className="flex flex-col md:flex-row items-center justify-center gap-6 pt-8">
+            <Link
+              to="/services"
+              className="group relative bg-white text-black px-8 py-4 rounded-full font-black uppercase tracking-wider overflow-hidden hover:scale-105 transition-all duration-300 shadow-[0_0_30px_rgba(255,255,255,0.3)]"
+            >
+              <span className="relative z-10 flex items-center gap-2">
+                Start Your Journey <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </span>
+              <div className="absolute inset-0 bg-gray-200 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+            </Link>
+
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="group px-8 py-4 rounded-full font-bold uppercase tracking-wider text-white border border-white/20 hover:bg-white/10 hover:border-white transition-all backdrop-blur-sm"
+            >
+              Apply for Elite
+            </button>
           </div>
         </div>
 
-        <div className="absolute bottom-10 z-20 animate-bounce hidden md:block">
+        <div className="absolute bottom-10 z-20 animate-bounce cursor-pointer">
           <span className="text-white/30 text-xs tracking-widest uppercase">Scroll to Explore</span>
-        </div>
-      </section>
-      {/* 5 Pillars Section */}
-      <section className="py-24 px-4 bg-neutral-900 border-b border-neutral-800">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tighter mb-6">
-              The 5 Pillars of <span className="text-red-600">High Performance</span>
-            </h2>
-            <p className="text-gray-400 text-lg max-w-3xl mx-auto">
-              The APEX System. A holistic framework designed to build the complete athlete.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
-            {[
-              {
-                icon: Brain,
-                title: 'Psychological',
-                sub: 'Focus & Resilience',
-                desc: 'Mental toughness for the game and the boardroom.'
-              },
-              {
-                icon: Target,
-                title: 'Tactical',
-                sub: 'Decision Making',
-                desc: "Strategy on the field and in life's challenges."
-              },
-              {
-                icon: Zap,
-                title: 'Physical',
-                sub: 'Energy & Vitality',
-                desc: 'Building a body that fuels your ambition.'
-              },
-              {
-                icon: Award,
-                title: 'Technical',
-                sub: 'Mastery of Craft',
-                desc: 'Perfecting the mechanics of movement and skill.'
-              },
-              {
-                icon: Users,
-                title: 'Support',
-                sub: 'The Foundation',
-                desc: 'Managing your environment, nutrition, and team.'
-              }
-            ].map((pillar, idx) => (
-              <div key={idx} className="bg-black/50 p-6 rounded-2xl border border-neutral-800 hover:border-white/30 transition-all hover:-translate-y-2 group">
-                <div className="w-12 h-12 bg-neutral-800 rounded-xl flex items-center justify-center mb-6 group-hover:bg-white group-hover:text-black transition-colors">
-                  <pillar.icon className="w-6 h-6 text-white group-hover:text-black transition-colors" />
-                </div>
-                <h3 className="text-xl font-black text-white uppercase mb-1">{pillar.title}</h3>
-                <p className="text-xs font-bold text-red-500 uppercase tracking-wider mb-4">{pillar.sub}</p>
-                <p className="text-sm text-gray-500 leading-relaxed">
-                  {pillar.desc}
-                </p>
-              </div>
-            ))}
-          </div>
-
-          {/* Holistic CTA */}
-          <div className="mt-16 text-center border-t border-neutral-800 pt-16">
-            <p className="text-xl md:text-2xl text-white font-medium italic max-w-4xl mx-auto leading-relaxed">
-              "At APEX, we don't just train athletes; we develop high-performers. Our holistic approach ensures that the discipline you build in the lab translates to success in every sector of your life."
-            </p>
-          </div>
         </div>
       </section>
       {/* Services Section - Interactive Images */}
