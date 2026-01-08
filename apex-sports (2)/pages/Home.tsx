@@ -59,8 +59,8 @@ const Home: React.FC = () => {
           {/* Background Removed as per request */}
         </div>
 
-        <div className="relative z-20 max-w-5xl mx-auto text-center space-y-8 animate-fade-in-up pt-52 md:pt-80 pb-20">
-          <h1 className="text-5xl md:text-7xl font-bold font-sans text-white mb-10 tracking-tight drop-shadow-2xl uppercase">
+        <div className="relative z-20 max-w-5xl mx-auto text-center space-y-2 animate-fade-in-up pt-40 md:pt-48 pb-20">
+          <h1 className="text-5xl md:text-7xl font-bold font-sans text-white mb-2 tracking-tight drop-shadow-2xl uppercase">
             Apex Sports
           </h1>
 
@@ -355,50 +355,61 @@ const Home: React.FC = () => {
       <section className="py-20 px-4 bg-neutral-900 border-t border-gray-800">
         <div className="max-w-7xl mx-auto text-center">
           <h2 className="text-3xl font-bold text-white mb-16">Testimonials</h2>
-          <div className="relative max-w-4xl mx-auto">
-            <div className="bg-black p-8 md:p-12 rounded-3xl border border-neutral-800 relative min-h-[400px] flex flex-col justify-center">
-              <Quote className="absolute top-8 left-8 text-white/10 w-16 h-16" />
-
-              <div className="relative z-10">
-                <p className="text-gray-300 italic text-lg md:text-xl leading-relaxed mb-10 text-center">
-                  "{testimonials[currentTestimonialIndex].text}"
-                </p>
-
-                <div className="flex flex-col items-center justify-center gap-4">
-                  <div className="w-16 h-16 bg-gray-700 rounded-full overflow-hidden border-2 border-white/20">
-                    <img src={testimonials[currentTestimonialIndex].image} alt="Avatar" className="w-full h-full object-cover" />
-                  </div>
-                  <div className="text-center">
-                    <h4 className="text-white font-bold text-lg">{testimonials[currentTestimonialIndex].name}</h4>
-                    <span className="text-sm text-gray-500">{testimonials[currentTestimonialIndex].role}</span>
+          <div className="relative max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10 transition-all duration-500">
+              {/* Testimonial 1 */}
+              <div className="bg-black p-8 md:p-12 rounded-3xl border border-neutral-800 relative min-h-[400px] flex flex-col justify-center">
+                <Quote className="absolute top-8 left-8 text-white/10 w-16 h-16" />
+                <div className="relative z-10">
+                  <p className="text-gray-300 italic text-lg md:text-xl leading-relaxed mb-10 text-center">
+                    "{testimonials[currentTestimonialIndex].text}"
+                  </p>
+                  <div className="flex flex-col items-center justify-center gap-4">
+                    <div className="w-16 h-16 bg-gray-700 rounded-full overflow-hidden border-2 border-white/20">
+                      <img src={testimonials[currentTestimonialIndex].image} alt="Avatar" className="w-full h-full object-cover" />
+                    </div>
+                    <div className="text-center">
+                      <h4 className="text-white font-bold text-lg">{testimonials[currentTestimonialIndex].name}</h4>
+                      <span className="text-sm text-gray-500">{testimonials[currentTestimonialIndex].role}</span>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              {/* Controls */}
-              <button
-                onClick={prevTestimonial}
-                className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 p-3 rounded-full text-white transition-all"
-              >
-                <ChevronLeft className="w-6 h-6" />
-              </button>
-              <button
-                onClick={nextTestimonial}
-                className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 p-3 rounded-full text-white transition-all"
-              >
-                <ChevronRight className="w-6 h-6" />
-              </button>
-
-              {/* Indicators */}
-              <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
-                {testimonials.map((_, idx) => (
-                  <div
-                    key={idx}
-                    className={`w-2 h-2 rounded-full transition-all ${idx === currentTestimonialIndex ? 'bg-white w-4' : 'bg-white/30'}`}
-                  />
-                ))}
+              {/* Testimonial 2 (Desktop Only - Logic to show next index) */}
+              <div className="hidden md:flex bg-black p-8 md:p-12 rounded-3xl border border-neutral-800 relative min-h-[400px] flex-col justify-center">
+                <Quote className="absolute top-8 left-8 text-white/10 w-16 h-16" />
+                <div className="relative z-10">
+                  {/* Calculate Next Index safely */}
+                  <p className="text-gray-300 italic text-lg md:text-xl leading-relaxed mb-10 text-center">
+                    "{testimonials[(currentTestimonialIndex + 1) % testimonials.length].text}"
+                  </p>
+                  <div className="flex flex-col items-center justify-center gap-4">
+                    <div className="w-16 h-16 bg-gray-700 rounded-full overflow-hidden border-2 border-white/20">
+                      <img src={testimonials[(currentTestimonialIndex + 1) % testimonials.length].image} alt="Avatar" className="w-full h-full object-cover" />
+                    </div>
+                    <div className="text-center">
+                      <h4 className="text-white font-bold text-lg">{testimonials[(currentTestimonialIndex + 1) % testimonials.length].name}</h4>
+                      <span className="text-sm text-gray-500">{testimonials[(currentTestimonialIndex + 1) % testimonials.length].role}</span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
+
+            {/* Controls (Outside Grid) */}
+            <button
+              onClick={prevTestimonial}
+              className="absolute -left-4 md:-left-12 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 p-3 rounded-full text-white transition-all z-20"
+            >
+              <ChevronLeft className="w-6 h-6" />
+            </button>
+            <button
+              onClick={nextTestimonial}
+              className="absolute -right-4 md:-right-12 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 p-3 rounded-full text-white transition-all z-20"
+            >
+              <ChevronRight className="w-6 h-6" />
+            </button>
           </div>
         </div>
       </section>

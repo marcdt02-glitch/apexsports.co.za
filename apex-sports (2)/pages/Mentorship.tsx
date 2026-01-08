@@ -7,17 +7,17 @@ const Mentorship: React.FC = () => {
   const packages = [
     {
       title: "Goal-Setting Access",
-      price: "R100 / month",
+      price: "R150 / month",
       description: "Self-guided growth.",
       actions: [
-        { label: "Subscribe", link: LINKS.SIGN_UP, priceLabel: "R100/mo", primary: true }
+        { label: "Apply Now", link: "mailto:marc@apexsports.co.za", priceLabel: "R150/mo", primary: true }
       ],
       features: [
         "Access to Goal Setting Portal",
-        "Quarterly Review",
+        "Video Lab Access",
+        "Apex AI Agent Access",
         "Progress Tracking",
         "Self-Reflection Tools",
-        "Basic Support"
       ]
     },
     {
@@ -25,8 +25,8 @@ const Mentorship: React.FC = () => {
       price: "R500 / month",
       description: <><strong>Monthly:</strong> R500 | <strong>Annual:</strong> R5,000 (Save R1,000).</>,
       actions: [
-        { label: "Subscribe", link: "https://paystack.shop/pay/Mentorship-Monthly", priceLabel: "R500/mo", primary: true },
-        { label: "Pay Annual", link: "https://paystack.shop/pay/mentorship-Onceoff", priceLabel: "R5,000/yr", primary: false }
+        { label: "Apply", link: "mailto:marc@apexsports.co.za?subject=Mentorship Application", priceLabel: "R500/mo", primary: true },
+        { label: "Contact for Annual", link: "mailto:marc@apexsports.co.za?subject=Annual Mentorship Query", priceLabel: "R5,000/yr", primary: false }
       ],
       features: [
         "Monthly 1-on-1 Strategy Call",
@@ -42,8 +42,8 @@ const Mentorship: React.FC = () => {
       price: "R2,500 / month",
       description: <><strong>Monthly:</strong> R2,500 | <strong>Annual:</strong> R27,000 (Save R3,000).</>,
       actions: [
-        { label: "Subscribe", link: "https://paystack.shop/pay/ApexMembership-Monthly", priceLabel: "R2,500/mo", primary: true },
-        { label: "Pay Annual", link: "https://paystack.shop/pay/apexmembership-once-off", priceLabel: "R27,000/yr", primary: false }
+        { label: "Apply for Elite", link: "mailto:marc@apexsports.co.za?subject=Apex Membership Application", priceLabel: "R2,500/mo", primary: true },
+        { label: "Contact for Annual", link: "mailto:marc@apexsports.co.za?subject=Annual Apex Membership Query", priceLabel: "R27,000/yr", primary: false }
       ],
       features: [
         "Mentorship Program",

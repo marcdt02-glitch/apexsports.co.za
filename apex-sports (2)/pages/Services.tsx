@@ -161,10 +161,10 @@ const Services: React.FC = () => {
                                     <Zap className="text-yellow-500" /> 12-Week General Program
                                 </h3>
                                 <div className="grid grid-cols-2 gap-4">
-                                    <a href="https://paystack.shop/pay/12weekgeneralprogram-onceoff" target="_blank" rel="noreferrer" className="bg-black hover:bg-neutral-800 text-center py-3 rounded-lg text-sm text-gray-300 transition-colors border border-neutral-700">
+                                    <a href="mailto:marc@apexsports.co.za?subject=General Program Inquiry" className="bg-black hover:bg-neutral-800 text-center py-3 rounded-lg text-sm text-gray-300 transition-colors border border-neutral-700">
                                         Once-off: <strong className="text-white block text-lg">R1,500</strong>
                                     </a>
-                                    <a href="https://paystack.shop/pay/12WeekGeneralProgram-Monthly" target="_blank" rel="noreferrer" className="bg-black hover:bg-neutral-800 text-center py-3 rounded-lg text-sm text-gray-300 transition-colors border border-neutral-700">
+                                    <a href="mailto:marc@apexsports.co.za?subject=General Program Inquiry" className="bg-black hover:bg-neutral-800 text-center py-3 rounded-lg text-sm text-gray-300 transition-colors border border-neutral-700">
                                         Monthly: <strong className="text-white block text-lg">R500</strong>
                                     </a>
                                 </div>
