@@ -12,7 +12,7 @@ import {
 import {
     AlertTriangle, CheckCircle, UploadCloud, AlertCircle, Zap,
     LayoutDashboard, Target, BookOpen, FileText, Menu, X, Save, ExternalLink,
-    Activity, Shield, Battery, TrendingUp, ChevronRight, Lock, User, LogOut, MonitorPlay, Home, CheckSquare, BarChart2, Sliders, Layers, Info, Video, Users
+    Activity, Shield, Battery, TrendingUp, ChevronRight, Lock, User, LogOut, MonitorPlay, Home, CheckSquare, BarChart2, Sliders, Layers, Info, Video, Users, Brain, Award
 } from 'lucide-react';
 import { VideoLab } from '../../components/VideoLab/VideoLab';
 import { ApexAgent } from '../../components/ApexAI/ApexAgent';
@@ -479,24 +479,86 @@ const AthleteDashboard: React.FC = () => {
     };
 
     const renderHome = () => (
-        <div className="space-y-8 animate-fade-in">
-            {/* Header / Instructional Video */}
-            <div className="bg-neutral-900 border border-neutral-800 rounded-3xl overflow-hidden">
+        <div className="space-y-12 animate-fade-in pb-20">
+            {/* Header / Instructional Video (Deion Sanders) */}
+            <div className="bg-neutral-900 border border-neutral-800 rounded-3xl overflow-hidden shadow-2xl">
                 <div className="aspect-video w-full bg-black relative flex items-center justify-center group">
-                    {/* Placeholder Video */}
-                    <video
-                        className="w-full h-full object-cover opacity-80"
-                        src="/videos/Training Footage 1.mov"
-                        controls
-                        muted
-                        autoPlay
-                        loop
-                        playsInline
-                    />
+                    <iframe
+                        className="w-full h-full object-cover"
+                        src="https://www.youtube.com/embed/Q8YfGJwoTD8?rel=0&modestbranding=1"
+                        title="Deion Sanders Inspiration"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                    ></iframe>
                 </div>
-                <div className="p-6">
-                    <h2 className="text-2xl font-black text-white mb-2">Welcome to Your Portal</h2>
-                    <p className="text-gray-400">Watch this short guide to understand how to maximize your APEX Performance journey.</p>
+                <div className="p-8 text-center bg-black">
+                    <h2 className="text-3xl font-black text-white uppercase tracking-tighter mb-2">THE JOURNEY STARTS HERE</h2>
+                    <p className="text-gray-400">Raising the floor. Smashing the ceiling. Welcome to the APEX Lab.</p>
+                </div>
+            </div>
+
+            {/* 5 Pillars Section */}
+            <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl">
+                <div className="text-center mb-12">
+                    <h2 className="text-3xl font-black text-white uppercase tracking-tighter mb-4">
+                        The 5 Pillars of <span className="text-red-500">High Performance</span>
+                    </h2>
+                    <p className="text-gray-400 max-w-2xl mx-auto">
+                        The APEX System. A holistic framework designed to build the complete athlete.
+                    </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+                    {[
+                        {
+                            icon: Brain,
+                            title: 'Psychological',
+                            sub: 'Focus & Resilience',
+                            desc: 'Mental toughness for the game and the boardroom.'
+                        },
+                        {
+                            icon: Target,
+                            title: 'Tactical',
+                            sub: 'Decision Making',
+                            desc: "Strategy on the field and in life's challenges."
+                        },
+                        {
+                            icon: Zap,
+                            title: 'Physical',
+                            sub: 'Energy & Vitality',
+                            desc: 'Building a body that fuels your ambition.'
+                        },
+                        {
+                            icon: Award,
+                            title: 'Technical',
+                            sub: 'Mastery of Craft',
+                            desc: 'Perfecting the mechanics of movement and skill.'
+                        },
+                        {
+                            icon: Users,
+                            title: 'Support',
+                            sub: 'The Foundation',
+                            desc: 'Managing your environment, nutrition, and team.'
+                        }
+                    ].map((pillar, idx) => (
+                        <div key={idx} className="bg-black/40 p-5 rounded-2xl border border-neutral-800 hover:border-neutral-600 transition-all hover:-translate-y-1 group">
+                            <div className="w-10 h-10 bg-neutral-800 rounded-lg flex items-center justify-center mb-4 group-hover:bg-white group-hover:text-black transition-colors">
+                                <pillar.icon className="w-5 h-5 text-white group-hover:text-black transition-colors" />
+                            </div>
+                            <h3 className="text-lg font-black text-white uppercase mb-1">{pillar.title}</h3>
+                            <p className="text-[10px] font-bold text-red-500 uppercase tracking-wider mb-2">{pillar.sub}</p>
+                            <p className="text-xs text-gray-400 leading-relaxed">
+                                {pillar.desc}
+                            </p>
+                        </div>
+                    ))}
+                </div>
+
+                {/* Holistic CTA */}
+                <div className="mt-12 text-center border-t border-neutral-800 pt-8">
+                    <p className="text-lg text-white font-medium italic max-w-3xl mx-auto leading-relaxed">
+                        "At APEX, we don't just train athletes; we develop high-performers. Our holistic approach ensures that the discipline you build in the lab translates to success in every sector of your life."
+                    </p>
                 </div>
             </div>
 
