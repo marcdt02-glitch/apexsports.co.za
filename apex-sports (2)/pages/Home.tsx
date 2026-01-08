@@ -59,7 +59,7 @@ const Home: React.FC = () => {
           {/* Background Removed as per request */}
         </div>
 
-        <div className="relative z-20 max-w-5xl mx-auto text-center space-y-8 animate-fade-in-up pt-40 md:pt-60 pb-20">
+        <div className="relative z-20 max-w-5xl mx-auto text-center space-y-8 animate-fade-in-up pt-52 md:pt-80 pb-20">
           <h1 className="text-5xl md:text-7xl font-bold font-sans text-white mb-10 tracking-tight drop-shadow-2xl uppercase">
             Apex Sports
           </h1>
