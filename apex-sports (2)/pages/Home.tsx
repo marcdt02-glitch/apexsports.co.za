@@ -55,11 +55,11 @@ const Home: React.FC = () => {
       {/* Hero Section */}
       <section className="h-screen flex flex-col items-center justify-center relative overflow-hidden px-4">
         <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-b from-black via-neutral-950 to-black z-10"></div>
+          <div className="absolute inset-0 bg-black z-10"></div>
           {/* Background Removed as per request */}
         </div>
 
-        <div className="relative z-20 max-w-5xl mx-auto text-center space-y-8 animate-fade-in-up pt-20 md:pt-32">
+        <div className="relative z-20 max-w-5xl mx-auto text-center space-y-8 animate-fade-in-up pt-20 md:pt-32 pb-32">
           <h1 className="text-6xl md:text-8xl font-bold font-sans text-white mb-10 tracking-tight drop-shadow-2xl uppercase">
             Apex Sports
           </h1>
@@ -69,7 +69,7 @@ const Home: React.FC = () => {
             <img
               src="/images/logo.png"
               alt="Apex Sports Logo"
-              className="w-40 h-40 md:w-56 md:h-56 object-contain drop-shadow-2xl animate-pulse-slow mix-blend-screen"
+              className="w-40 h-40 md:w-56 md:h-56 object-contain drop-shadow-2xl animate-pulse-slow mix-blend-lighten"
             />
           </div>
 
@@ -97,7 +97,7 @@ const Home: React.FC = () => {
           </div>
         </div>
 
-        <div className="absolute bottom-10 z-20 animate-bounce cursor-pointer">
+        <div className="absolute bottom-4 z-20 animate-bounce cursor-pointer">
           <span className="text-white/30 text-xs tracking-widest uppercase">Scroll to Explore</span>
         </div>
       </section>

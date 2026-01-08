@@ -17,7 +17,7 @@ const Services: React.FC = () => {
                             THE JOURNEY TO ELITE <span className="text-red-600">STARTS HERE.</span>
                         </h1>
                         <p className="text-gray-400 text-lg md:text-xl font-medium max-w-2xl mx-auto">
-                            Raising the floor. Smashing the ceiling. Welcome to the APEX Lab.
+                            Raising the floor. Smashing the ceiling. Welcome to the Apex Services Hub.
                         </p>
                     </div>
 
