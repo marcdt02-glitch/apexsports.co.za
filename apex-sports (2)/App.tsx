@@ -19,6 +19,7 @@ import AthleteDashboard from './pages/Portal/AthleteDashboard';
 import TeamDashboard from './pages/Portal/TeamDashboard';
 import PortalLogin from './pages/Portal/PortalLogin';
 import ErrorBoundary from './components/ErrorBoundary';
+import { ApexAgent } from './components/ApexAI/ApexAgent';
 
 // Wrapper to handle scroll to top on route change
 const ScrollToTop = () => {
@@ -60,6 +61,7 @@ const InnerLayout: React.FC = () => {
         </Routes>
       </main>
       {!isDashboard && <Footer />}
+      <ApexAgent />
     </div>
   );
 };

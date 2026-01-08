@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ApexLogo } from '../components/ApexLogo';
-import { ArrowRight, Quote, Award, GraduationCap, Briefcase, ChevronRight, ChevronLeft, Mail } from 'lucide-react';
+import { ArrowRight, Quote, Award, GraduationCap, Briefcase, ChevronRight, ChevronLeft, Mail, Trophy } from 'lucide-react';
+import { ApplicationModal } from '../components/ApplicationModal';
 
 const Home: React.FC = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   // Founder images for rotation
   const founderImages = [
     "/images/Marc du Toit 1.JPG",
@@ -50,39 +52,49 @@ const Home: React.FC = () => {
   return (
     <div className="min-h-screen bg-black">
 
-      {/* Hero Section */}
-      <section className="h-screen flex flex-col items-center justify-center relative overflow-hidden px-4">
-        <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-b from-black via-black/80 to-black z-10"></div>
-          {/* Background image: Dark Gym/Sports atmosphere */}
-          <img
-            src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&q=80"
-            alt="Hero Background"
-            className="w-full h-full object-cover opacity-40"
-          />
-        </div>
+      {/* Hero Section (Video Header) */}
+      <section className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden bg-black pt-20 pb-20">
+        <div className="z-20 w-full max-w-6xl mx-auto space-y-12 px-4">
+          {/* Video Container */}
+          <div className="w-full aspect-video bg-neutral-900 rounded-3xl overflow-hidden shadow-2xl shadow-blue-900/10 border border-neutral-800 relative group">
+            <iframe
+              className="w-full h-full object-cover"
+              src="https://www.youtube.com/embed/Q8YfGJwoTD8?rel=0&modestbranding=1"
+              title="Deion Sanders Inspiration"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            ></iframe>
+          </div>
 
-        <div className="z-20 text-center flex flex-col items-center animate-fade-in-up">
-          <img src="/images/logo.png" alt="Apex Sports Logo" className="w-48 h-48 md:w-64 md:h-64 mb-8 object-contain" />
-          <h1 className="text-4xl md:text-6xl font-extrabold text-white tracking-widest uppercase mb-4">
-            Apex Sports
-          </h1>
-          <p className="text-3xl md:text-5xl font-extrabold text-white italic tracking-widest uppercase mb-6 drop-shadow-lg">
-            WHAT'S NEXT?
-          </p>
-          <p className="text-xl text-gray-300 font-light tracking-wide max-w-2xl">
-            Providing the support to those looking to achieve the peak of sporting success.
-          </p>
-          <div className="flex flex-col md:flex-row gap-4 mt-8">
-            <Link to="/portal" className="bg-white text-black px-8 py-3 rounded-full font-bold uppercase tracking-wider hover:bg-gray-200 transition-colors flex items-center gap-2">
-              <span className="w-2 h-2 bg-black rounded-full"></span>
-              Athlete Login
-            </Link>
+          {/* Text & CTAs */}
+          <div className="text-center space-y-8 animate-fade-in-up">
+            <h1 className="text-4xl md:text-7xl font-black text-white uppercase tracking-tighter leading-none">
+              THE JOURNEY TO ELITE <span className="text-red-600">STARTS HERE.</span>
+            </h1>
+            <p className="text-xl md:text-2xl text-gray-400 max-w-3xl mx-auto font-medium">
+              Raising the floor. Smashing the ceiling. Welcome to the APEX Lab.
+            </p>
+
+            <div className="flex flex-col md:flex-row items-center justify-center gap-6">
+              <Link
+                to="/services"
+                className="bg-white text-black px-8 py-4 rounded-full font-black uppercase tracking-wider hover:bg-gray-200 transition-all hover:scale-105 flex items-center gap-2 shadow-lg shadow-white/10"
+              >
+                Start Signup <ArrowRight className="w-5 h-5" />
+              </Link>
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className="bg-transparent border border-neutral-700 text-white px-8 py-4 rounded-full font-black uppercase tracking-wider hover:bg-neutral-800 transition-all hover:scale-105 flex items-center gap-2 ml-0 md:ml-4"
+              >
+                <Trophy className="w-5 h-5 text-yellow-500" />
+                Apply for Elite
+              </button>
+            </div>
           </div>
         </div>
 
-        <div className="absolute bottom-10 z-20 animate-bounce">
-          <span className="text-white/50 text-sm tracking-widest">SCROLL TO EXPLORE</span>
+        <div className="absolute bottom-10 z-20 animate-bounce hidden md:block">
+          <span className="text-white/30 text-xs tracking-widest uppercase">Scroll to Explore</span>
         </div>
       </section>
 
@@ -416,6 +428,11 @@ const Home: React.FC = () => {
         </div>
       </section>
 
+      <ApplicationModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        tierName="Apex Membership (Application)"
+      />
     </div>
   );
 };
