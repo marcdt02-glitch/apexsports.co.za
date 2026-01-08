@@ -17,6 +17,7 @@ const Navbar: React.FC = () => {
     ];
 
     const rightLinks = [
+        { name: 'Apex Lab', path: '/apex-lab' },
         { name: 'Services Hub', path: '/services' },
     ];
 

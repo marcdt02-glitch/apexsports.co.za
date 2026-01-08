@@ -303,7 +303,7 @@ export const generateDevelopmentReport = (athlete: AthleteData, analysis: any) =
     const margin = 20;
     let yPos = 50;
 
-    addHeader(doc, "Athlete Progress Journey", "Development Summary", athlete.name, false);
+    addBallisticHeader(doc, "Athlete Progress Journey", "Development Summary", athlete);
 
     // Section 1: The Engine Check (Physical)
     doc.setFontSize(16);
@@ -407,7 +407,7 @@ export const generateExecutiveReport = (athlete: AthleteData, analysis: any) => 
     const margin = 20;
     let yPos = 50;
 
-    addHeader(doc, "Quarterly Executive Summary", "Strategic Review", athlete.name, false);
+    addBallisticHeader(doc, "Quarterly Executive Summary", "Strategic Review", athlete);
 
     // Executive Summary
     doc.setFontSize(14);
@@ -477,3 +477,171 @@ export const generateExecutiveReport = (athlete: AthleteData, analysis: any) => 
 
     doc.save(`${athlete.name}_Executive_Report.pdf`);
 };
+
+// 4. QUARTERLY REPORT (All-in-One)
+export const generateQuarterlyReport = (athlete: AthleteData, analysis: any) => {
+    const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const margin = 20;
+
+    // --- PAGE 1: EXECUTIVE & PILLARS ---
+    addBallisticHeader(doc, "Quarterly Report", "Holistic Performance Review", athlete);
+
+    let yPos = 50;
+
+    // Executive Summary Box
+    doc.setFillColor(245, 245, 245);
+    doc.roundedRect(margin, yPos, pageWidth - (margin * 2), 35, 3, 3, 'F');
+    doc.setFontSize(14);
+    doc.setTextColor(0, 0, 0);
+    doc.setFont("helvetica", "bold");
+    doc.text("EXECUTIVE SUMMARY", margin + 10, yPos + 12);
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    doc.text(`${athlete.name} has demonstrated excellent consistency this quarter. The focus on raising the 'floor'`, margin + 10, yPos + 20);
+    doc.text("of performance has resulted in stable metrics across both physical and technical pillars.", margin + 10, yPos + 26);
+
+    yPos += 50;
+
+    // Pillar Status
+    doc.setFontSize(16);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(59, 130, 246);
+    doc.text("1. THE 5 PILLARS STATUS", margin, yPos);
+    yPos += 15;
+
+    const pillars = [
+        { name: "PHYSICAL", score: 85, status: "Peak", color: [34, 197, 94] },
+        { name: "TECHNICAL", score: 70, status: "Developing", color: [234, 179, 8] },
+        { name: "TACTICAL", score: 75, status: "Good", color: [59, 130, 246] },
+        { name: "MENTAL", score: 90, status: "Elite", color: [168, 85, 247] },
+        { name: "LIFESTYLE", score: 80, status: "Stable", color: [34, 197, 94] }
+    ];
+
+    pillars.forEach((p, i) => {
+        const x = margin + (i * 35);
+        // Circle BG
+        doc.setFillColor(250, 250, 250);
+        doc.circle(x + 10, yPos + 10, 14, 'F');
+        // Ring
+        doc.setDrawColor(p.color[0], p.color[1], p.color[2]);
+        doc.setLineWidth(1.5);
+        doc.circle(x + 10, yPos + 10, 14, 'S');
+        // Score
+        doc.setTextColor(0, 0, 0);
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "bold");
+        doc.text(`${p.score}`, x + 6, yPos + 13);
+
+        // Label
+        doc.setFontSize(7);
+        doc.setTextColor(100, 100, 100);
+        doc.text(p.name, x, yPos + 30);
+    });
+
+    yPos += 50;
+
+    // --- PAGE 2: PHYSICAL DEEP DIVE ---
+    // doc.addPage(); // Keeping it compact for now or add page if needed
+    // Let's add page for clarity as requested "All-in-one" often implies detailed
+    doc.addPage();
+
+    // Set Dark Mode Background for Physical Page
+    doc.setFillColor(15, 15, 15);
+    doc.rect(0, 0, pageWidth, pageHeight, 'F');
+    doc.setTextColor(255, 255, 255);
+
+    // Header
+    doc.setFontSize(24);
+    doc.text("PHYSICAL PERFORMANCE", margin, 30);
+    doc.setFontSize(10);
+    doc.setTextColor(150, 150, 150);
+    doc.text("BIOMECHANICAL LOAD & RESPONSE", margin, 38);
+
+    yPos = 60;
+
+    // Key Metrics Grid
+    const metrics = [
+        { label: "MQS", val: "88/100", desc: "Movement Quality" },
+        { label: "Power Index", val: "92", desc: "Explosiveness" },
+        { label: "RSI", val: "2.4", desc: "Reactive Strength" },
+        { label: "Force Asym", val: "4%", desc: "L/R Balance" } // using mock 4% from dash
+    ];
+
+    metrics.forEach((m, i) => {
+        const x = margin + (i * 45);
+        // Card
+        doc.setDrawColor(50, 50, 50);
+        doc.setFillColor(30, 30, 30);
+        doc.roundedRect(x, yPos, 40, 30, 2, 2, 'FD');
+
+        doc.setFontSize(14);
+        doc.setTextColor(255, 255, 255);
+        doc.text(m.val, x + 5, yPos + 12);
+
+        doc.setFontSize(8);
+        doc.setTextColor(59, 130, 246);
+        doc.text(m.label, x + 5, yPos + 20);
+
+        doc.setTextColor(100, 100, 100);
+        doc.text(m.desc, x + 5, yPos + 25);
+    });
+
+    yPos += 50;
+
+    // Injury Status
+    doc.setFontSize(16);
+    doc.setTextColor(255, 255, 255);
+    doc.text("INJURY STATUS: ACTIVE", margin, yPos);
+    doc.setFontSize(10);
+    doc.setTextColor(34, 197, 94); // Green
+    doc.text("All systems go. No major red flags detected.", margin, yPos + 8);
+
+    // --- PAGE 3: MENTAL & COACHING ---
+    doc.addPage();
+    doc.setFillColor(255, 255, 255); // White bg again
+    doc.rect(0, 0, pageWidth, pageHeight, 'F');
+    doc.setTextColor(0, 0, 0);
+
+    addBallisticHeader(doc, "Mentorship & Coaching", "Psychological Profile", athlete);
+    yPos = 60;
+
+    // Mentorship/SPAT Section
+    doc.setFontSize(16);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(168, 85, 247); // Purple
+    doc.text("MENTAL PERFORMANCE (SPAT)", margin, yPos);
+    yPos += 15;
+
+    doc.setFontSize(11);
+    doc.setTextColor(50, 50, 50);
+    doc.setFont("helvetica", "normal");
+    doc.text("Routines Implemented:", margin, yPos);
+
+    const routines = ["Pre-Game Synchronization", "Mistake Recovery (0.2s Rule)", "Visualisation"];
+    routines.forEach((r, i) => {
+        yPos += 8;
+        doc.text(`• ${r}`, margin + 5, yPos);
+    });
+
+    yPos += 20;
+
+    // Coaching Plan
+    doc.setFontSize(16);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(0, 0, 0);
+    doc.text("COACHING & FORWARD PLANNING", margin, yPos);
+    yPos += 15;
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    doc.text("Focus for next cycle: Technical refinement of max velocity sprint mechanics.", margin, yPos);
+
+    addVerifiedStamp(doc, pageWidth, pageHeight);
+
+    doc.save(`${athlete.name}_Quarterly_Report.pdf`);
+};
+
+// Alias addHeader to addBallisticHeader to fix existing compilation errors
+const addHeader = addBallisticHeader;

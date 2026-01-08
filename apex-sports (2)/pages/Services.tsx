@@ -314,7 +314,7 @@ const Services: React.FC = () => {
                             <p className="text-gray-400 text-sm mb-4">
                                 Includes <strong>Psychological Skills Assessment</strong> & Basic Game Footage Review.
                             </p>
-                            <a href="https://paystack.shop/pay/GoalSettingAccess-Monthly" target="_blank" rel="noreferrer" className="block w-full bg-black text-white font-bold py-3 rounded-lg hover:bg-neutral-800 transition-colors border border-neutral-700">
+                            <a href="mailto:performance@apexsports.co.za?subject=Goal Setting Access Inquiry" className="block w-full bg-black text-white font-bold py-3 rounded-lg hover:bg-neutral-800 transition-colors border border-neutral-700">
                                 Subscribe: R150/pm
                             </a>
                         </div>
@@ -324,10 +324,10 @@ const Services: React.FC = () => {
                             <h3 className="text-white font-bold mb-2 text-xl">The Mentorship</h3>
                             <p className="text-gray-400 text-sm mb-6">Full access to our psychological curriculum, weekly seminars, and resource library.</p>
                             <div className="space-y-4">
-                                <a href="https://paystack.shop/pay/mentorship-Onceoff" target="_blank" rel="noreferrer" className="block w-full bg-white text-black font-bold py-4 rounded-lg hover:bg-gray-200 transition-colors">
+                                <a href="mailto:performance@apexsports.co.za?subject=Mentorship Once-off Inquiry" className="block w-full bg-white text-black font-bold py-4 rounded-lg hover:bg-gray-200 transition-colors">
                                     Once-off: R5,000
                                 </a>
-                                <a href="https://paystack.shop/pay/Mentorship-Monthly" target="_blank" rel="noreferrer" className="block w-full bg-black text-white font-bold py-4 rounded-lg hover:bg-neutral-800 transition-colors border border-neutral-700">
+                                <a href="mailto:performance@apexsports.co.za?subject=Mentorship Monthly Inquiry" className="block w-full bg-black text-white font-bold py-4 rounded-lg hover:bg-neutral-800 transition-colors border border-neutral-700">
                                     Monthly: R500
                                 </a>
                             </div>

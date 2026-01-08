@@ -9,7 +9,7 @@ const Strength: React.FC = () => {
       price: "R1,000",
       description: "Per session. Objective measurement using Vald technology.",
       actions: [
-        { label: "Book Test", link: "https://paystack.shop/pay/testingdynamo", priceLabel: "R1,000", primary: true }
+        { label: "Book Test", link: "mailto:performance@apexsports.co.za?subject=Performance Testing Inquiry", priceLabel: "R1,000", primary: true }
       ],
       features: [
         "Vald Dynamometer Strength Testing",
@@ -24,8 +24,8 @@ const Strength: React.FC = () => {
       price: "R500 / month",
       description: "3-Month Commitment. Or R1,500 Once-off.",
       actions: [
-        { label: "Subscribe", link: "https://paystack.shop/pay/12WeekGeneralProgram-Monthly", priceLabel: "R500/mo", primary: true },
-        { label: "Buy Once-off", link: "https://paystack.shop/pay/12weekgeneralprogram-onceoff", priceLabel: "R1,500", primary: false }
+        { label: "Subscribe", link: "mailto:performance@apexsports.co.za?subject=General S&C Monthly Inquiry", priceLabel: "R500/mo", primary: true },
+        { label: "Buy Once-off", link: "mailto:performance@apexsports.co.za?subject=General S&C Once-off Inquiry", priceLabel: "R1,500", primary: false }
       ],
       features: [
         "12-Week Training Cycle",
@@ -40,8 +40,8 @@ const Strength: React.FC = () => {
       price: "R1,500 / month",
       description: "12-Month Commitment. Or R15,000 Once-off.",
       actions: [
-        { label: "Subscribe", link: "https://paystack.shop/pay/12WeekSpecifcProgram-Monthly", priceLabel: "R1,500/mo", primary: true },
-        { label: "Buy Annual", link: "https://paystack.shop/pay/12weekspecifcprogram-onceoff", priceLabel: "R15,000", primary: false }
+        { label: "Subscribe", link: "mailto:performance@apexsports.co.za?subject=Specific S&C Monthly Inquiry", priceLabel: "R1,500/mo", primary: true },
+        { label: "Buy Annual", link: "mailto:performance@apexsports.co.za?subject=Specific S&C Annual Inquiry", priceLabel: "R15,000", primary: false }
       ],
       features: [
         "Annual Periodization Plan",
@@ -56,8 +56,8 @@ const Strength: React.FC = () => {
       price: "R2,500 / month",
       description: <><strong>Monthly:</strong> R2,500 | <strong>Annual:</strong> R27,000 (Save R3,000).</>,
       actions: [
-        { label: "Subscribe", link: "https://paystack.shop/pay/ApexMembership-Monthly", priceLabel: "R2,500/mo", primary: true },
-        { label: "Pay Annual", link: "https://paystack.shop/pay/apexmembership-once-off", priceLabel: "R27,000/yr", primary: false }
+        { label: "Subscribe", link: "mailto:performance@apexsports.co.za?subject=Apex Membership Inquiry", priceLabel: "R2,500/mo", primary: true },
+        { label: "Pay Annual", link: "mailto:performance@apexsports.co.za?subject=Apex Membership Annual Inquiry", priceLabel: "R27,000/yr", primary: false }
       ],
       features: [
         "25 Coaching Sessions",

@@ -12,13 +12,13 @@ import {
 import {
     AlertTriangle, CheckCircle, UploadCloud, AlertCircle, Zap,
     LayoutDashboard, Target, BookOpen, FileText, Menu, X, Save, ExternalLink,
-    Activity, Shield, Battery, TrendingUp, ChevronRight, Lock, User, LogOut, MonitorPlay, Home, CheckSquare, BarChart2, Sliders, Layers, Info, Video, Users, Brain, Award, Triangle
+    Activity, Shield, Battery, TrendingUp, ChevronRight, Lock, User, LogOut, MonitorPlay, Home, CheckSquare, BarChart2, Sliders, Layers, Info, Video, Users, Brain, Award, Triangle, Download
 } from 'lucide-react';
 import { VideoLab } from '../../components/VideoLab/VideoLab';
 import { ApexAgent } from '../../components/ApexAI/ApexAgent';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
-import { generateTechnicalReport, generateDevelopmentReport, generateExecutiveReport } from '../../services/ReportService';
+import { generateTechnicalReport, generateDevelopmentReport, generateExecutiveReport, generateQuarterlyReport } from '../../services/ReportService';
 import { CoachingScheduler } from '../../components/Coaching/CoachingScheduler';
 
 
@@ -622,9 +622,11 @@ const AthleteDashboard: React.FC = () => {
         </div>
     );
     // PDF Handlers
+    // PDF Handlers
     const handleDownloadTechnical = () => generateTechnicalReport(athlete, analysis);
     const handleDownloadDevelopment = () => generateDevelopmentReport(athlete, analysis);
     const handleDownloadExecutive = () => generateExecutiveReport(athlete, analysis);
+    const handleDownloadQuarterly = () => generateQuarterlyReport(athlete, analysis);
 
     return (
         <SafetyGuard athlete={athlete}>
@@ -1073,8 +1075,8 @@ const AthleteDashboard: React.FC = () => {
                                                 </div>
 
                                                 {/* 3. BAR GRAPH + CONSISTENCY */}
-                                                <div className="grid grid-cols-1 gap-6">
-                                                    <div className="md:col-span-2 bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl">
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                                    <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl">
                                                         <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
                                                             <Activity className="w-5 h-5 text-blue-500" />
                                                             Performance Summary
@@ -1427,8 +1429,68 @@ const AthleteDashboard: React.FC = () => {
                         {activeView === 'reports' && (
                             <div className="space-y-8 animate-fade-in">
                                 <h2 className="text-3xl font-black text-white">Performance Reports</h2>
-                                <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl">
-                                    <p className="text-gray-500">No quarterly reports available yet.</p>
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+                                    {/* Quarterly Report (New) */}
+                                    <div className="bg-gradient-to-br from-neutral-900 to-black border border-neutral-800 p-8 rounded-3xl flex flex-col justify-between group hover:border-blue-600 transition-all">
+                                        <div>
+                                            <div className="w-12 h-12 bg-blue-900/20 text-blue-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                                                <Layers className="w-6 h-6" />
+                                            </div>
+                                            <h3 className="text-xl font-bold text-white mb-2">Quarterly Executive</h3>
+                                            <p className="text-gray-400 text-sm leading-relaxed mb-8">
+                                                Comprehensive review of all 5 pillars, including physical metrics, mental performance, and coach's strategic notes.
+                                            </p>
+                                        </div>
+                                        <button
+                                            onClick={handleDownloadQuarterly}
+                                            className="w-full py-4 bg-white text-black font-bold rounded-xl flex items-center justify-center gap-2 hover:bg-gray-200 transition-colors"
+                                        >
+                                            <Download className="w-4 h-4" />
+                                            Download PDF
+                                        </button>
+                                    </div>
+
+                                    {/* Technical Report */}
+                                    <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl flex flex-col justify-between group hover:border-purple-600 transition-all">
+                                        <div>
+                                            <div className="w-12 h-12 bg-purple-900/20 text-purple-500 rounded-xl flex items-center justify-center mb-6">
+                                                <Activity className="w-6 h-6" />
+                                            </div>
+                                            <h3 className="text-xl font-bold text-white mb-2">Technical Analysis</h3>
+                                            <p className="text-gray-400 text-sm leading-relaxed mb-8">
+                                                Deep dive into biomechanics, force plate data, and video lab kinematics. Recommended for S&C coaches.
+                                            </p>
+                                        </div>
+                                        <button
+                                            onClick={handleDownloadTechnical}
+                                            className="w-full py-4 bg-neutral-800 text-white font-bold rounded-xl flex items-center justify-center gap-2 hover:bg-neutral-700 transition-colors"
+                                        >
+                                            <FileText className="w-4 h-4" />
+                                            Download PDF
+                                        </button>
+                                    </div>
+
+                                    {/* Development Summary */}
+                                    <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl flex flex-col justify-between group hover:border-green-600 transition-all">
+                                        <div>
+                                            <div className="w-12 h-12 bg-green-900/20 text-green-500 rounded-xl flex items-center justify-center mb-6">
+                                                <Target className="w-6 h-6" />
+                                            </div>
+                                            <h3 className="text-xl font-bold text-white mb-2">Development Summary</h3>
+                                            <p className="text-gray-400 text-sm leading-relaxed mb-8">
+                                                Simplified progress report for parents and players. Focuses on consistency and injury prevention status.
+                                            </p>
+                                        </div>
+                                        <button
+                                            onClick={handleDownloadDevelopment}
+                                            className="w-full py-4 bg-neutral-800 text-white font-bold rounded-xl flex items-center justify-center gap-2 hover:bg-neutral-700 transition-colors"
+                                        >
+                                            <FileText className="w-4 h-4" />
+                                            Download PDF
+                                        </button>
+                                    </div>
+
                                 </div>
                             </div>
                         )}

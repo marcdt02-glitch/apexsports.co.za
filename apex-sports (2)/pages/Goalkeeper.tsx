@@ -22,7 +22,7 @@ const Goalkeeper: React.FC = () => {
       price: "R2,500",
       description: "Flexible development block (R500/session).",
       actions: [
-        { label: "Buy Pack", link: "https://paystack.shop/pay/5hourcoachingpack", priceLabel: "R2,500", primary: true }
+        { label: "Buy Pack", link: "mailto:performance@apexsports.co.za?subject=5-Session Pack Inquiry", priceLabel: "R2,500", primary: true }
       ],
       features: [
         "5 Hours of Technical Training",
@@ -37,8 +37,8 @@ const Goalkeeper: React.FC = () => {
       price: "R4,000",
       description: <><strong>Upfront:</strong> R4,000 | <strong>Split:</strong> R2,250 x 2 months (Total R4,500).</>,
       actions: [
-        { label: "Buy Upfront", link: "#", priceLabel: "R4,000", primary: true }, // Placeholder link
-        { label: "Split Payment", link: "#", priceLabel: "R2,250/m", primary: false } // Placeholder link
+        { label: "Buy Upfront", link: "mailto:performance@apexsports.co.za?subject=10-Session Pack Upfront Inquiry", priceLabel: "R4,000", primary: true }, // Placeholder link
+        { label: "Split Payment", link: "mailto:performance@apexsports.co.za?subject=10-Session Pack Split Inquiry", priceLabel: "R2,250/m", primary: false } // Placeholder link
       ],
       features: [
         "10 Hours of Technical Training",
@@ -53,8 +53,8 @@ const Goalkeeper: React.FC = () => {
       price: "R9,000",
       description: <><strong>Upfront:</strong> R9,000 | <strong>Monthly:</strong> R833 (Total R10,000).</>,
       actions: [
-        { label: "Buy Upfront", link: "https://paystack.shop/pay/25hourcoachingpack-onceoff", priceLabel: "R9,000", primary: true },
-        { label: "Sub Weekly", link: "https://paystack.shop/pay/25HourCoachingPack-Monthly", priceLabel: "R833/mo", primary: false }
+        { label: "Buy Upfront", link: "mailto:performance@apexsports.co.za?subject=25-Session Pack Upfront Inquiry", priceLabel: "R9,000", primary: true },
+        { label: "Sub Weekly", link: "mailto:performance@apexsports.co.za?subject=25-Session Pack Monthly Inquiry", priceLabel: "R833/mo", primary: false }
       ],
       features: [
         "25 Hours of Technical Training",
@@ -69,8 +69,8 @@ const Goalkeeper: React.FC = () => {
       price: "R2,500 / month",
       description: <><strong>Monthly:</strong> R2,500 | <strong>Annual:</strong> R27,000 (Save R3,000).</>,
       actions: [
-        { label: "Subscribe", link: "https://paystack.shop/pay/ApexMembership-Monthly", priceLabel: "R2,500/mo", primary: true },
-        { label: "Pay Annual", link: "https://paystack.shop/pay/apexmembership-once-off", priceLabel: "R27,000/yr", primary: false }
+        { label: "Subscribe", link: "mailto:performance@apexsports.co.za?subject=Apex Membership Inquiry", priceLabel: "R2,500/mo", primary: true },
+        { label: "Pay Annual", link: "mailto:performance@apexsports.co.za?subject=Apex Membership Annual Inquiry", priceLabel: "R27,000/yr", primary: false }
       ],
       features: [
         "25 Coaching Sessions",

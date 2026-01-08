@@ -26,12 +26,10 @@ const SafetyGuard: React.FC<SafetyGuardProps> = ({ athlete, children }) => {
                         Your account is currently inactive. To restore access to the APEX Athlete Portal, please complete your subscription payment.
                     </p>
                     <a
-                        href="https://paystack.com/pay/apex-missed-payment"
-                        target="_blank"
-                        rel="noreferrer"
+                        href="mailto:admin@apexsports.co.za?subject=Account Reactivation Request"
                         className="bg-red-600 text-white font-bold py-4 px-8 rounded-xl hover:bg-red-500 transition-colors uppercase tracking-widest inline-flex items-center gap-2"
                     >
-                        Reactivate Membership
+                        Contact to Reactivate
                     </a>
                 </div>
             </div>

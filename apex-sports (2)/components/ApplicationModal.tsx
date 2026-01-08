@@ -12,7 +12,8 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({ isOpen, onCl
     const [formData, setFormData] = useState({
         goal: '',
         hours: '',
-        sport: ''
+        sport: '',
+        packages: ''
     });
 
     if (!isOpen) return null;
@@ -25,14 +26,14 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({ isOpen, onCl
     const handleConfirm = () => {
         // Construct Mailto
         const subject = `Application for ${tierName}`;
-        const body = `Hi Marc,%0D%0A%0D%0AI would like to apply for the ${tierName}.%0D%0A%0D%0AHere are my details:%0D%0A1. Primary Goal: ${formData.goal}%0D%0A2. Commitment: ${formData.hours} hours/week%0D%0A3. Sport & Level: ${formData.sport}%0D%0A%0D%0ALooking forward to hearing from you.`;
+        const body = `Hi Marc,%0D%0A%0D%0AI would like to apply for the ${tierName}.%0D%0A%0D%0AHere are my details:%0D%0A1. Primary Goal: ${formData.goal}%0D%0A2. Commitment: ${formData.hours} hours/week%0D%0A3. Sport & Level: ${formData.sport}%0D%0A4. Interested Packages: ${formData.packages}%0D%0A%0D%0ALooking forward to hearing from you.`;
 
         window.location.href = `mailto:admin@apexsports.co.za?subject=${subject}&body=${body}`;
         onClose();
         // Reset after close
         setTimeout(() => {
             setStep('form');
-            setFormData({ goal: '', hours: '', sport: '' });
+            setFormData({ goal: '', hours: '', sport: '', packages: '' });
         }, 500);
     };
 
@@ -96,6 +97,20 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({ isOpen, onCl
                                     placeholder="e.g. Rugby (Craven Week), Hockey (Club)..."
                                     value={formData.sport}
                                     onChange={(e) => setFormData({ ...formData, sport: e.target.value })}
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">
+                                    4. What packages are you interested in?
+                                </label>
+                                <input
+                                    required
+                                    type="text"
+                                    className="w-full bg-black border border-neutral-700 rounded-lg p-3 text-white focus:border-white focus:outline-none transition-colors"
+                                    placeholder="e.g. Elite Membership, Testing, 5-Session Pack..."
+                                    value={formData.packages}
+                                    onChange={(e) => setFormData({ ...formData, packages: e.target.value })}
                                 />
                             </div>
 
