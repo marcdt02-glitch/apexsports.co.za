@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ApexLogo } from '../components/ApexLogo';
-import { ArrowRight, Quote, Award, GraduationCap, Briefcase, ChevronRight, ChevronLeft, Mail, Trophy } from 'lucide-react';
+import { ArrowRight, Quote, Award, GraduationCap, Briefcase, ChevronRight, ChevronLeft, Mail, Trophy, Brain, Target, Zap, Users } from 'lucide-react';
 import { ApplicationModal } from '../components/ApplicationModal';
 
 const Home: React.FC = () => {
@@ -97,7 +97,72 @@ const Home: React.FC = () => {
           <span className="text-white/30 text-xs tracking-widest uppercase">Scroll to Explore</span>
         </div>
       </section>
+      {/* 5 Pillars Section */}
+      <section className="py-24 px-4 bg-neutral-900 border-b border-neutral-800">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tighter mb-6">
+              The 5 Pillars of <span className="text-red-600">High Performance</span>
+            </h2>
+            <p className="text-gray-400 text-lg max-w-3xl mx-auto">
+              The APEX System. A holistic framework designed to build the complete athlete.
+            </p>
+          </div>
 
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
+            {[
+              {
+                icon: Brain,
+                title: 'Psychological',
+                sub: 'Focus & Resilience',
+                desc: 'Mental toughness for the game and the boardroom.'
+              },
+              {
+                icon: Target,
+                title: 'Tactical',
+                sub: 'Decision Making',
+                desc: "Strategy on the field and in life's challenges."
+              },
+              {
+                icon: Zap,
+                title: 'Physical',
+                sub: 'Energy & Vitality',
+                desc: 'Building a body that fuels your ambition.'
+              },
+              {
+                icon: Award,
+                title: 'Technical',
+                sub: 'Mastery of Craft',
+                desc: 'Perfecting the mechanics of movement and skill.'
+              },
+              {
+                icon: Users,
+                title: 'Support',
+                sub: 'The Foundation',
+                desc: 'Managing your environment, nutrition, and team.'
+              }
+            ].map((pillar, idx) => (
+              <div key={idx} className="bg-black/50 p-6 rounded-2xl border border-neutral-800 hover:border-white/30 transition-all hover:-translate-y-2 group">
+                <div className="w-12 h-12 bg-neutral-800 rounded-xl flex items-center justify-center mb-6 group-hover:bg-white group-hover:text-black transition-colors">
+                  <pillar.icon className="w-6 h-6 text-white group-hover:text-black transition-colors" />
+                </div>
+                <h3 className="text-xl font-black text-white uppercase mb-1">{pillar.title}</h3>
+                <p className="text-xs font-bold text-red-500 uppercase tracking-wider mb-4">{pillar.sub}</p>
+                <p className="text-sm text-gray-500 leading-relaxed">
+                  {pillar.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          {/* Holistic CTA */}
+          <div className="mt-16 text-center border-t border-neutral-800 pt-16">
+            <p className="text-xl md:text-2xl text-white font-medium italic max-w-4xl mx-auto leading-relaxed">
+              "At APEX, we don't just train athletes; we develop high-performers. Our holistic approach ensures that the discipline you build in the lab translates to success in every sector of your life."
+            </p>
+          </div>
+        </div>
+      </section>
       {/* Services Section - Interactive Images */}
       <section className="py-20 px-4 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-auto md:h-[600px]">

@@ -603,14 +603,7 @@ const AthleteDashboard: React.FC = () => {
                                 Coaching
                             </button>
 
-                            {/* PERFORMANCE PILLARS (New) */}
-                            <button
-                                onClick={() => { setActiveView('pillars'); setSidebarOpen(false); }}
-                                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeView === 'pillars' ? 'bg-white text-black font-bold' : 'text-gray-400 hover:bg-neutral-800 hover:text-white'}`}
-                            >
-                                <Layers className="w-5 h-5" />
-                                APEX Pillars
-                            </button>
+
 
                             {/* VIDEO LAB (v20.0) */}
                             <button
