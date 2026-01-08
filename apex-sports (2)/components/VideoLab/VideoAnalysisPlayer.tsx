@@ -492,42 +492,7 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
                 </div>
             )}
 
-            {/* Help Key Overlay */}
-            {showHelp && (
-                <div className="absolute inset-0 z-40 bg-black/80 backdrop-blur-sm flex items-center justify-center animate-fade-in p-8">
-                    <div className="bg-neutral-900 border border-neutral-700 p-8 rounded-3xl max-w-2xl w-full relative shadow-2xl">
-                        <button onClick={() => setShowHelp(false)} className="absolute top-4 right-4 text-gray-400 hover:text-white">
-                            <RotateCcw className="w-6 h-6 rotate-45" /> {/* Close Icon substitute or just X */}
-                        </button>
-                        <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-                            <HelpCircle className="w-6 h-6 text-blue-500" />
-                            Video Lab Controls
-                        </h2>
-                        <div className="grid grid-cols-2 gap-8">
-                            <div className="space-y-4">
-                                <h3 className="text-gray-400 font-bold text-sm uppercase tracking-wider border-b border-gray-800 pb-2">Tools</h3>
-                                <div className="flex items-center gap-3 text-gray-300"><MousePointer2 className="w-4 h-4 text-blue-400" /> Select / Move</div>
-                                <div className="flex items-center gap-3 text-gray-300"><Slash className="w-4 h-4 text-blue-400" /> Draw Line (Vectors)</div>
-                                <div className="flex items-center gap-3 text-gray-300"><Circle className="w-4 h-4 text-blue-400" /> Draw Circle (Joints)</div>
-                                <div className="flex items-center gap-3 text-gray-300"><Triangle className="w-4 h-4 text-blue-400" /> Measure Angle</div>
-                            </div>
-                            <div className="space-y-4">
-                                <h3 className="text-gray-400 font-bold text-sm uppercase tracking-wider border-b border-gray-800 pb-2">Actions</h3>
-                                <div className="flex items-center gap-3 text-gray-300"><Film className="w-4 h-4 text-green-400" /> Screen Record Analysis</div>
-                                <div className="flex items-center gap-3 text-gray-300"><Download className="w-4 h-4 text-purple-400" /> Download Snapshot</div>
-                                <div className="flex items-center gap-3 text-gray-300"><Maximize className="w-4 h-4 text-white" /> Full Screen Mode</div>
-                                <div className="flex items-center gap-3 text-gray-300"><RotateCcw className="w-4 h-4 text-red-500" /> Clear Drawings</div>
-                            </div>
-                        </div>
-                        <div className="mt-8 pt-6 border-t border-gray-800 text-center text-xs text-gray-500">
-                            Pro Tip: Use Spacebar to Play/Pause. Shift+Click to draw instant lines.
-                        </div>
-                        <button onClick={() => setShowHelp(false)} className="mt-6 w-full py-3 bg-white text-black font-bold rounded-xl hover:bg-gray-200">
-                            Got it, let's work
-                        </button>
-                    </div>
-                </div>
-            )}
+
 
             {/* Tools Toolbar */}
             <div className="flex items-center justify-between bg-neutral-900 border border-neutral-800 p-4 rounded-2xl">
@@ -575,9 +540,7 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
 
                     <div className="w-px h-8 bg-neutral-800 mx-2"></div>
 
-                    <button onClick={() => setShowHelp(true)} className="p-3 rounded-xl text-gray-400 hover:bg-neutral-800 hover:text-white" title="Controls Key">
-                        <HelpCircle className="w-5 h-5" />
-                    </button>
+                    {/* Help Button Removed - Replaced by Footer */}
                     <button onClick={handleFullScreen} className="p-3 rounded-xl text-gray-400 hover:bg-neutral-800 hover:text-white" title="Full Screen">
                         <Maximize className="w-5 h-5" />
                     </button>
@@ -588,6 +551,40 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
                             Save Analysis
                         </button>
                     )}
+                </div>
+            </div>
+
+            {/* Persistent Controls Legend Footer */}
+            <div className="bg-neutral-900/50 border border-neutral-800 pt-6 px-6 pb-6 rounded-3xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-xs">
+                <div>
+                    <h4 className="font-bold text-gray-500 uppercase tracking-wider mb-3 flex items-center gap-2"><MousePointer2 className="w-3 h-3" /> Navigation</h4>
+                    <ul className="space-y-2 text-gray-400">
+                        <li className="flex justify-between"><span>Play / Pause</span> <kbd className="bg-neutral-800 px-1 rounded">Space</kbd></li>
+                        <li className="flex justify-between"><span>Step +/- 5 Frames</span> <kbd className="bg-neutral-800 px-1 rounded">◄ / ►</kbd></li>
+                        <li className="flex justify-between"><span>Scrub Timeline</span> <kbd className="bg-neutral-800 px-1 rounded">Drag</kbd></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 className="font-bold text-gray-500 uppercase tracking-wider mb-3 flex items-center gap-2"><PenTool className="w-3 h-3" /> Drawing Tools</h4>
+                    <ul className="space-y-2 text-gray-400">
+                        <li className="flex items-center gap-2"><Slash className="w-3 h-3 text-blue-500" /> <span>Draw Line (Force Vector)</span></li>
+                        <li className="flex items-center gap-2"><Circle className="w-3 h-3 text-blue-500" /> <span>Circle (Joint/CoM)</span></li>
+                        <li className="flex items-center gap-2"><Triangle className="w-3 h-3 text-blue-500" /> <span>Measure Angle</span></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 className="font-bold text-gray-500 uppercase tracking-wider mb-3 flex items-center gap-2"><Zap className="w-3 h-3" /> Pro Actions</h4>
+                    <ul className="space-y-2 text-gray-400">
+                        <li className="flex items-center gap-2"><Film className="w-3 h-3 text-green-500" /> <span>Screen Record Analysis</span></li>
+                        <li className="flex items-center gap-2"><Download className="w-3 h-3 text-purple-500" /> <span>Download Snapshot</span></li>
+                        <li className="flex items-center gap-2"><RotateCcw className="w-3 h-3 text-red-500" /> <span>Clear / Reset</span></li>
+                    </ul>
+                </div>
+                <div className="opacity-50">
+                    <h4 className="font-bold text-gray-500 uppercase tracking-wider mb-3">Tips</h4>
+                    <p className="text-gray-400 leading-relaxed">
+                        Use full screen for maximum precision. Hold <kbd className="bg-neutral-800 px-1 rounded">Shift</kbd> while drawing for straight lines.
+                    </p>
                 </div>
             </div>
         </div>
