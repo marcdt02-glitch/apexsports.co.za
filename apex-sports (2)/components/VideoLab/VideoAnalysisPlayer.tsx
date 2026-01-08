@@ -504,8 +504,8 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
                     <button onClick={handleSnapshot} className="p-3 rounded-xl text-purple-400 hover:bg-purple-900/20" title="Download Snapshot">
                         <Download className="w-5 h-5" />
                     </button>
-                    {/* Export Video */}
-                    <button onClick={handleExportVideo} disabled={isRecording} className={`p-3 rounded-xl ${isRecording ? 'text-red-500 animate-pulse' : 'text-green-400 hover:bg-green-900/20'}`} title="Export MP4 Video">
+                    {/* Export Video (Screen Record) */}
+                    <button onClick={handleScreenRecord} disabled={isRecording} className={`p-3 rounded-xl ${isRecording ? 'text-red-500 animate-pulse' : 'text-green-400 hover:bg-green-900/20'}`} title="Start Screen Recording">
                         <Film className="w-5 h-5" />
                     </button>
                 </div>
