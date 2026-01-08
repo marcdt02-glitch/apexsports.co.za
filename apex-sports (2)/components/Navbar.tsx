@@ -77,17 +77,6 @@ const Navbar: React.FC = () => {
                                     {link.name}
                                 </Link>
                             ))}
-                            {/* APEX Lab Link with Glow/Badge */}
-                            <Link to="/apex-lab" className="relative group px-3 py-2">
-                                <span className="absolute -top-1 -right-1 flex h-2 w-2">
-                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
-                                </span>
-                                <span className="text-white font-bold tracking-wide group-hover:text-blue-400 transition-colors flex items-center gap-2">
-                                    APEX Lab
-                                    <span className="text-[10px] bg-blue-600 text-white px-1.5 py-0.5 rounded font-black tracking-wider shadow-lg">BETA</span>
-                                </span>
-                            </Link>
                         </div>
 
                         {/* Desktop Actions */}
@@ -105,7 +94,7 @@ const Navbar: React.FC = () => {
                             {/* Book Button (Desktop) */}
                             <div className="hidden xl:block">
                                 <Link to="/portal" className="group relative px-6 py-2 rounded-full flex items-center gap-2 overflow-hidden bg-black border border-neutral-800 hover:border-blue-500/50 transition-all duration-300">
-                                    <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                    <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-cyan-500/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                                     <UserPlus className="w-4 h-4 text-white relative z-10" />
                                     <span className="text-sm font-bold text-white relative z-10">Apex Lab</span>
                                     <span className="relative z-10 text-[10px] bg-blue-600/80 text-white px-1.5 py-0.5 rounded font-bold tracking-wider ml-1">BETA</span>
