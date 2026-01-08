@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect, MouseEvent } from 'react';
-import { Play, Pause, Square, Circle, PenTool, Type, Save, Slash, MousePointer2, RotateCcw, FastForward, Rewind, Triangle, Download, Film, HelpCircle, Maximize } from 'lucide-react';
+import { Play, Pause, Square, Circle, PenTool, Type, Save, Slash, MousePointer2, RotateCcw, FastForward, Rewind, Triangle, Download, Film, HelpCircle, Maximize, Zap } from 'lucide-react';
 import html2canvas from 'html2canvas'; // Assuming available or I will use raw canvas API if not installed. 
 // Actually I don't know if html2canvas is installed. I'll use raw canvas API to merge layers.
 
