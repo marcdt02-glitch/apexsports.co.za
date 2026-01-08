@@ -136,9 +136,10 @@ const Navbar: React.FC = () => {
                         ))}
 
                         <div className="mt-4 pt-4 border-t border-gray-700 space-y-3">
-                            <Link to="/portal" className="w-full bg-white text-black hover:bg-gray-200 px-4 py-3 rounded-md font-bold flex items-center justify-center gap-2">
-                                <UserPlus className="w-4 h-4" />
-                                <span>Athlete Login</span>
+                            <Link to="/portal" className="w-full relative overflow-hidden bg-black border border-neutral-800 px-4 py-3 rounded-xl font-bold flex items-center justify-center gap-3 group">
+                                <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                <UserPlus className="w-4 h-4 text-white relative z-10" />
+                                <span className="text-white relative z-10">Athlete Login</span>
                             </Link>
                         </div>
                     </div>
