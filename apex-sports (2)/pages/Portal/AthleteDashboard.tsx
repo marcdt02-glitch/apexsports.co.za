@@ -742,7 +742,7 @@ const AthleteDashboard: React.FC = () => {
                     </div>
 
                     {/* Content Area */}
-                    <div ref={dashboardRef} className="pt-32 px-4 md:px-8 max-w-[1920px] mx-auto space-y-8 lg:pl-72">
+                    <div ref={dashboardRef} className="pt-32 px-4 md:px-8 w-full mx-auto space-y-8 lg:pl-72">
 
                         {/* Floating Control Bar (The "Shorter Rectangle") */}
                         <div className="bg-neutral-900/50 border border-neutral-800 p-4 rounded-2xl flex flex-col lg:flex-row items-center justify-between gap-6 backdrop-blur-sm">
