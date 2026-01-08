@@ -1012,6 +1012,37 @@ const AthleteDashboard: React.FC = () => {
 
 
 
+                                {/* 1. KEY TAKEAWAYS (Top) - Full Width */}
+                                {physicalViewMode === 'simple' && (
+                                    <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl relative overflow-hidden mb-8">
+                                        <div className="flex items-center justify-between mb-6">
+                                            <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                                                <Users className="w-5 h-5 text-yellow-500" />
+                                                Your 3 Key Takeaways
+                                            </h3>
+                                            <span className="text-xs font-mono text-gray-500 uppercase">Priority Actions</span>
+                                        </div>
+                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                            {[
+                                                { label: 'Explosiveness', score: athlete.scoreQuad || 70, note: 'Increase plyometric volume + Focus on landing mechanics.' },
+                                                { label: 'Speed Endurance', score: athlete.scoreHamstring || 75, note: 'Add 1x specific conditioning session per week.' },
+                                                { label: 'Strength Base', score: athlete.scoreAdduction || 85, note: 'Maintain current strength blocks. Good foundation.' }
+                                            ].sort((a, b) => a.score - b.score).map((p, i) => (
+                                                <div key={i} className="bg-black/20 p-4 rounded-2xl border border-white/5 flex flex-col gap-3">
+                                                    <div className="flex items-center justify-between">
+                                                        <span className="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-neutral-800 rounded-lg text-white font-black text-sm border border-neutral-700">{i + 1}</span>
+                                                        <span className={`text-sm font-black ${getTrafficColor(p.score).text}`}>{p.score}/100</span>
+                                                    </div>
+                                                    <div>
+                                                        <h4 className="text-white font-bold text-sm mb-1">{p.label} Priority</h4>
+                                                        <p className="text-gray-400 text-xs leading-relaxed">{p.note}</p>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
                                 {/* Main Grid: Charts & Performance */}
                                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
@@ -1022,34 +1053,7 @@ const AthleteDashboard: React.FC = () => {
                                         {physicalViewMode === 'simple' && (
                                             <div className="flex flex-col gap-6 animate-fade-in">
 
-                                                {/* 1. KEY TAKEAWAYS (Top) */}
-                                                <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl relative overflow-hidden">
-                                                    <div className="flex items-center justify-between mb-6">
-                                                        <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                                                            <Users className="w-5 h-5 text-yellow-500" />
-                                                            Your 3 Key Takeaways
-                                                        </h3>
-                                                        <span className="text-xs font-mono text-gray-500 uppercase">Priority Actions</span>
-                                                    </div>
-                                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                                        {[
-                                                            { label: 'Explosiveness', score: athlete.scoreQuad || 70, note: 'Increase plyometric volume + Focus on landing mechanics.' },
-                                                            { label: 'Speed Endurance', score: athlete.scoreHamstring || 75, note: 'Add 1x specific conditioning session per week.' },
-                                                            { label: 'Strength Base', score: athlete.scoreAdduction || 85, note: 'Maintain current strength blocks. Good foundation.' }
-                                                        ].sort((a, b) => a.score - b.score).map((p, i) => (
-                                                            <div key={i} className="bg-black/20 p-4 rounded-2xl border border-white/5 flex flex-col gap-3">
-                                                                <div className="flex items-center justify-between">
-                                                                    <span className="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-neutral-800 rounded-lg text-white font-black text-sm border border-neutral-700">{i + 1}</span>
-                                                                    <span className={`text-sm font-black ${getTrafficColor(p.score).text}`}>{p.score}/100</span>
-                                                                </div>
-                                                                <div>
-                                                                    <h4 className="text-white font-bold text-sm mb-1">{p.label} Priority</h4>
-                                                                    <p className="text-gray-400 text-xs leading-relaxed">{p.note}</p>
-                                                                </div>
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                </div>
+
 
                                                 {/* 2. INJURY STATUS (Simple Banner) */}
                                                 <div className="bg-green-500/10 border border-green-500/20 p-4 rounded-2xl flex items-center justify-between">
