@@ -59,8 +59,8 @@ const Home: React.FC = () => {
           {/* Background Removed as per request */}
         </div>
 
-        <div className="relative z-20 max-w-5xl mx-auto text-center space-y-8 animate-fade-in-up pt-20 md:pt-32 pb-32">
-          <h1 className="text-6xl md:text-8xl font-bold font-sans text-white mb-10 tracking-tight drop-shadow-2xl uppercase">
+        <div className="relative z-20 max-w-5xl mx-auto text-center space-y-8 animate-fade-in-up pt-40 md:pt-60 pb-20">
+          <h1 className="text-5xl md:text-7xl font-bold font-sans text-white mb-10 tracking-tight drop-shadow-2xl uppercase">
             Apex Sports
           </h1>
 
@@ -73,7 +73,7 @@ const Home: React.FC = () => {
             />
           </div>
 
-          <h2 className="text-4xl md:text-5xl font-bold italic font-sans text-white tracking-wide drop-shadow-lg uppercase">
+          <h2 className="text-3xl md:text-4xl font-bold italic font-sans text-white tracking-wide drop-shadow-lg uppercase">
             What's next
           </h2>
 
@@ -88,12 +88,16 @@ const Home: React.FC = () => {
               <div className="absolute inset-0 bg-gray-200 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
             </Link>
 
-            <button
-              onClick={() => setIsModalOpen(true)}
-              className="group px-8 py-4 rounded-full font-bold uppercase tracking-wider text-white border border-white/20 hover:bg-white/10 hover:border-white transition-all backdrop-blur-sm"
+            <Link
+              to="/apex-lab"
+              className="group relative px-8 py-4 rounded-full font-bold uppercase tracking-wider text-white border border-blue-500/50 hover:border-blue-400 bg-black/50 backdrop-blur-md overflow-hidden transition-all hover:shadow-[0_0_20px_rgba(59,130,246,0.5)]"
             >
-              Apply for Elite
-            </button>
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
+              <span className="relative z-10 flex items-center gap-2 text-blue-100 group-hover:text-white transition-colors">
+                <Zap className="w-5 h-5 text-blue-400 group-hover:text-yellow-400 transition-colors" />
+                Enter The Lab
+              </span>
+            </Link>
           </div>
         </div>
 
