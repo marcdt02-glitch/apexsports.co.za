@@ -53,7 +53,8 @@ const PortalLogin: React.FC = () => {
 
     return (
 
-        <div className="min-h-screen bg-black flex items-center justify-center px-4 relative overflow-hidden">
+    return (
+        <div className="min-h-screen bg-black flex flex-col justify-start md:justify-center items-center pt-32 md:pt-0 px-4 relative overflow-hidden">
             {/* Background Effects */}
             <div className="absolute inset-0 z-0">
                 <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-blue-600/20 rounded-full blur-[120px] -translate-x-1/2 -translate-y-1/2 animate-pulse-slow"></div>
