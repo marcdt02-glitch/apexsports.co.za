@@ -35,39 +35,84 @@ const addVerifiedStamp = (doc: jsPDF, pageWidth: number, pageHeight: number) => 
     doc.text("APEX SPORTS", x - 5, y + 8);
 };
 
-// Helper: Header
-const addHeader = (doc: jsPDF, title: string, subTitle: string, athleteName: string, isDark: boolean = false) => {
+// Helper: Ballistic Header (High Impact)
+const addBallisticHeader = (doc: jsPDF, title: string, subTitle: string, athlete: AthleteData) => {
     const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const primaryColor = [59, 130, 246]; // Blue-500
+    const secondaryColor = [168, 85, 247]; // Purple-500
+    const accentColor = [34, 197, 94]; // Green-500
 
-    // Background
-    if (isDark) {
-        doc.setFillColor(10, 10, 10); // Nearly black
-        doc.rect(0, 0, pageWidth, 40, 'F');
-        doc.setTextColor(255, 255, 255);
-    } else {
-        doc.setTextColor(0, 0, 0);
-    }
+    // 1. Top Bar Gradient Simulation
+    doc.setFillColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+    doc.rect(0, 0, pageWidth, 4, 'F');
 
-    doc.setFontSize(24);
+    // 2. Main Header Background (Rich Black)
+    doc.setFillColor(10, 10, 10);
+    doc.rect(0, 4, pageWidth, 50, 'F');
+
+    // 3. Logo Placeholder (Text for now due to image complexity, or loaded image if available)
+    // Assuming logo handling needs base64, we'll stick to heavy typographical logo
+    doc.setTextColor(255, 255, 255);
     doc.setFont("helvetica", "bold");
-    doc.text("APEX SPORTS", 20, 20);
+    doc.setFontSize(28);
+    doc.text("APEX", 20, 24);
+    doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]); // Blue Apex
+    doc.text("SPORTS", 95, 24); // Adjust X based on "APEX" width
 
-    doc.setFontSize(10);
+    // Slogan
+    doc.setFontSize(8);
+    doc.setTextColor(150, 150, 150);
     doc.setFont("helvetica", "normal");
-    doc.text(title.toUpperCase(), 20, 32);
+    doc.text("WHERE SCIENCE MEETS EXECUTION", 20, 32);
+    doc.setDrawColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+    doc.setLineWidth(0.5);
+    doc.line(20, 35, 120, 35); // Underline slogan
 
-    // Right side info
-    const date = new Date().toLocaleDateString();
-    doc.setFontSize(10);
-    doc.text(date, pageWidth - 20, 20, { align: 'right' });
-    doc.text(athleteName.toUpperCase(), pageWidth - 20, 32, { align: 'right' });
+    // Report Titles
+    doc.setFontSize(16);
+    doc.setTextColor(255, 255, 255);
+    doc.text(title.toUpperCase(), 20, 48);
 
-    // Reset colors for body
-    if (isDark) {
-        doc.setTextColor(255, 255, 255);
-    } else {
-        doc.setTextColor(0, 0, 0);
-    }
+    // Subtitle / Date
+    const today = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+    doc.setFontSize(9);
+    doc.setTextColor(100, 100, 100);
+    doc.text(`${subTitle.toUpperCase()} | ${today}`, 20 + doc.getStringUnitWidth(title.toUpperCase()) * 16 / 2 + 5, 48); // Simple offset approximation
+
+    // 4. Athlete Metadata Card (Right aligned)
+    const cardWidth = 80;
+    const cardHeight = 36;
+    const cardX = pageWidth - 20 - cardWidth;
+    const cardY = 10;
+
+    // Glassmorphism Card Effect
+    doc.setDrawColor(40, 40, 40);
+    doc.setFillColor(20, 20, 20);
+    doc.roundedRect(cardX, cardY, cardWidth, cardHeight, 2, 2, 'FD');
+
+    // Avatar Circle (Placeholder)
+    doc.setFillColor(30, 30, 30);
+    doc.circle(cardX + 10, cardY + 18, 14, 'F');
+    doc.setFontSize(12);
+    doc.setTextColor(100, 100, 100);
+    doc.text(athlete.name.charAt(0), cardX + 7, cardY + 22);
+
+    // Info
+    doc.setFontSize(12);
+    doc.setTextColor(255, 255, 255);
+    doc.setFont("helvetica", "bold");
+    doc.text(athlete.name, cardX + 28, cardY + 12);
+
+    doc.setFontSize(8);
+    doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+    doc.text(`${athlete.productTier || 'Athlete'} Tier`.toUpperCase(), cardX + 28, cardY + 20);
+
+    doc.setTextColor(150, 150, 150);
+    doc.text(`ID: #${Math.floor(Math.random() * 10000)}`, cardX + 28, cardY + 28);
+
+    // Reset
+    doc.setTextColor(255, 255, 255);
 };
 
 // 1. TECHNICAL LAB REPORT
@@ -79,11 +124,17 @@ export const generateTechnicalReport = (athlete: AthleteData, analysis: any) => 
     const margin = 20;
 
     // Set Dark Mode Background for whole page
-    doc.setFillColor(20, 20, 20);
+    doc.setFillColor(15, 15, 15); // Deep Charcoal
     doc.rect(0, 0, pageWidth, pageHeight, 'F');
     doc.setTextColor(255, 255, 255);
 
-    addHeader(doc, "Biomechanical & Physiological Profile", "Technical Lab Report", athlete.name, true);
+    // Add Watermark
+    doc.setTextColor(20, 20, 20);
+    doc.setFontSize(150);
+    doc.setFont("helvetica", "bold");
+    doc.text("APEX", 40, pageHeight / 2, { angle: 45 });
+
+    addBallisticHeader(doc, "Technical Lab Report", "Biomechanical & Physiological Profile", athlete);
 
     // Section 1: CNS & Readiness
     doc.setFontSize(16);
