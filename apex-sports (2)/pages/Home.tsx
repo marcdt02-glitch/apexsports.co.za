@@ -57,11 +57,14 @@ const Home: React.FC = () => {
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-gradient-to-b from-black via-black/80 to-black z-10"></div>
           {/* Background image: Dark Gym/Sports atmosphere */}
-          <img
-            src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&q=80"
-            alt="Hero Background"
-            className="w-full h-full object-cover opacity-40"
-          />
+          {founderImages.map((src, index) => (
+            <img
+              key={src}
+              src={src}
+              alt="Hero Background"
+              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${index === currentFounderIndex ? 'opacity-40' : 'opacity-0'}`}
+            />
+          ))}
         </div>
 
         <div className="relative z-20 max-w-5xl mx-auto text-center space-y-8 animate-fade-in-up">

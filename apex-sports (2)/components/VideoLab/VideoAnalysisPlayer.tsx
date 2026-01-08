@@ -117,6 +117,43 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
         }
     };
 
+    const handleExportVideo = async () => {
+        const video = videoRef1.current;
+        const canvas = canvasRef.current;
+        if (!video || !canvas) return;
+
+        setIsRecording(true);
+        video.currentTime = 0;
+        await video.play();
+
+        const stream = canvas.captureStream(30);
+        const recorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
+        const chunks: Blob[] = [];
+
+        recorder.ondataavailable = e => chunks.push(e.data);
+        recorder.onstop = () => {
+            const blob = new Blob(chunks, { type: 'video/webm' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `APEX_Analysis_${new Date().toISOString()}.webm`;
+            a.click();
+            setIsRecording(false);
+        };
+
+        recorder.start();
+
+        const drawLoop = () => {
+            if (video.paused || video.ended) {
+                recorder.stop();
+                return;
+            }
+            requestAnimationFrame(drawLoop);
+            renderCanvas(true);
+        };
+        drawLoop();
+    };
+
 
     // DRAWING LOGIC
     const getPoint = (e: MouseEvent) => {
