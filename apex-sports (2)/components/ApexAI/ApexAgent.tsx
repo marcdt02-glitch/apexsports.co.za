@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { MessageSquare, X, Send, Bot, AlertTriangle, User, Zap, Activity } from 'lucide-react';
 
 interface ApexAgentProps {
-    athlete: any; // Using any for flexibility with the AthleteData type
+    athlete?: any; // Optional for Guest mode on Home page
 }
 
 interface Message {
@@ -42,11 +42,25 @@ export const ApexAgent: React.FC<ApexAgentProps> = ({ athlete }) => {
 
     // Initial Trigger (Red Wellness)
     useEffect(() => {
-        const wellness = athlete.readinessScore || 75; // specific prop check
+        if (!athlete) {
+            if (messages.length === 0) {
+                addMessage({
+                    id: 'init-guest',
+                    text: `Hi there! I'm the APEX Performance AI. I can explain our philosophy, the 5 Pillars, or how we track progress. Ask me anything!`,
+                    sender: 'agent',
+                    timestamp: new Date()
+                });
+            }
+            return;
+        }
+
+        const wellness = athlete.readinessScore || 75;
+        const firstName = athlete.name ? athlete.name.split(' ')[0] : 'Athlete';
+
         if (wellness < 50 && messages.length === 0) {
             addMessage({
                 id: 'init-alert',
-                text: `Hey ${athlete.name.split(' ')[0]}! 🚨 I noticed your Readiness Score is low (${wellness}%). Check your 'Recovery' pillar today and prioritize sleep tonight.`,
+                text: `Hey ${firstName}! 🚨 I noticed your Readiness Score is low (${wellness}%). Check your 'Recovery' pillar today and prioritize sleep tonight.`,
                 sender: 'agent',
                 timestamp: new Date(),
                 type: 'alert'
@@ -56,7 +70,7 @@ export const ApexAgent: React.FC<ApexAgentProps> = ({ athlete }) => {
             // Default greeting
             addMessage({
                 id: 'init-greet',
-                text: `Hi ${athlete.name.split(' ')[0]}. I'm the APEX AI. I can explain your Ratios, Science concepts, or feedback. What's on your mind?`,
+                text: `Hi ${firstName}. I'm the APEX AI. I can explain your Ratios, Science concepts, or feedback. What's on your mind?`,
                 sender: 'agent',
                 timestamp: new Date()
             });
@@ -90,7 +104,7 @@ export const ApexAgent: React.FC<ApexAgentProps> = ({ athlete }) => {
             } else if (lowerInput.includes('hello') || lowerInput.includes('hi')) {
                 response = "Hey! Ready to dig into the data?";
             } else if (lowerInput.includes('tired') || lowerInput.includes('exhausted')) {
-                const wScore = athlete.readinessScore || 0;
+                const wScore = athlete?.readinessScore || 0;
                 response = `I see your Wellness is ${wScore}%. It's okay to be tired. Coach recommends focusing on mobility rather than max power when you're feeling this way.`;
             }
 
