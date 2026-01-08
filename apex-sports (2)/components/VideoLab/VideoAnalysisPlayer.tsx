@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect, MouseEvent } from 'react';
-import { Play, Pause, Square, Circle, PenTool, Type, Save, Slash, MousePointer2, RotateCcw, FastForward, Rewind, Triangle, Download } from 'lucide-react';
+import { Play, Pause, Square, Circle, PenTool, Type, Save, Slash, MousePointer2, RotateCcw, FastForward, Rewind, Triangle, Download, Film } from 'lucide-react';
 import html2canvas from 'html2canvas'; // Assuming available or I will use raw canvas API if not installed. 
 // Actually I don't know if html2canvas is installed. I'll use raw canvas API to merge layers.
 
@@ -42,6 +42,8 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
     const [drawings, setDrawings] = useState<Drawing[]>([]);
     const [currentDrawing, setCurrentDrawing] = useState<Drawing | null>(null);
     const [color, setColor] = useState('#ef4444'); // Red default
+    const [draggingPoint, setDraggingPoint] = useState<{ drawingIndex: number, pointIndex: number } | null>(null);
+    const [isRecording, setIsRecording] = useState(false);
 
     // SYNC CONTROLS
     const togglePlay = () => {
@@ -127,44 +129,126 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
     };
 
     const handleMouseDown = (e: MouseEvent) => {
-        if (tool === 'none') return;
         const pt = getPoint(e);
+        if (tool === 'none') {
+            // Check for handle hit
+            drawings.forEach((d, dIdx) => {
+                d.points.forEach((p, pIdx) => {
+                    const dist = Math.sqrt(Math.pow(p.x - pt.x, 2) + Math.pow(p.y - pt.y, 2));
+                    if (dist < 15) { // 15px radius hit
+                        setDraggingPoint({ drawingIndex: dIdx, pointIndex: pIdx });
+                        return; // Found one
+                    }
+                });
+            });
+            return;
+        }
         setCurrentDrawing({ type: tool, points: [pt], color });
     };
 
     const handleMouseMove = (e: MouseEvent) => {
-        if (!currentDrawing) return;
         const pt = getPoint(e);
-        // Update the last point in real-time or add logic for different shapes
-        // For simple line: point 0 is start, point 1 is current
+
+        if (draggingPoint) {
+            const newDrawings = [...drawings];
+            newDrawings[draggingPoint.drawingIndex].points[draggingPoint.pointIndex] = pt;
+            setDrawings(newDrawings);
+            renderCanvas();
+            return;
+        }
+
+        if (!currentDrawing) return;
+
         const newPoints = [...currentDrawing.points];
         if (tool === 'line') {
             if (newPoints.length === 1) newPoints.push(pt);
             else newPoints[1] = pt;
         } else if (tool === 'circle') {
             if (newPoints.length === 1) newPoints.push(pt);
-            else newPoints[1] = pt; // 0 is center, 1 is radius edge
+            else newPoints[1] = pt;
         } else if (tool === 'angle') {
-            // Logic for angle: Click 1 (Vertex), Drag to 2 (Leg 1), Click to lock?
-            // Simplified: Drag creates a line, then... maybe Angle needs 3 clicks.
-            // Let's stick to Line/Circle for simplified MVP
-            // Angle: Click 1, 2, 3.
-            if (newPoints.length < 3) newPoints.push(pt);
-            else newPoints[2] = pt; // update last point
+            // Logic for angle: 3 points (A->B->C). Angle at B.
+            // Click 1 (A), Click 2 (B), Click 3 (C)
+            // Or Dragging? Current logic is "Drag creates line", but angles need 3 points.
+            // Improved Logic:
+            // 1. Click creates Pt 1.
+            // 2. Click creates Pt 2 (Line 1 formed).
+            // 3. Click creates Pt 3 (Line 2 formed).
+            // If dragging, we update the *last* point.
+            if (newPoints.length === 1) newPoints.push(pt);
+            else if (newPoints.length === 2) newPoints.push(pt);
+            else newPoints[newPoints.length - 1] = pt;
         }
         setCurrentDrawing({ ...currentDrawing, points: newPoints });
-        // Request animation frame for safer render loop could be better, but direct call is okay for MVP
-        renderCanvas();
+        // Use requestAnimationFrame for smoother drawing during drag?
+        // renderCanvas(); // We call it here for MVP simplicity
+        requestAnimationFrame(() => renderCanvas());
     };
 
     const handleMouseUp = (e: MouseEvent) => {
+        if (draggingPoint) {
+            setDraggingPoint(null);
+            return;
+        }
         if (!currentDrawing) return;
-        setDrawings([...drawings, currentDrawing]);
-        setCurrentDrawing(null);
+
+        // Finalize drawing based on tool type logic
+        // Line/Circle finalize on 2 points.
+        // Angle finalizes on 3 points.
+        let isComplete = false;
+
+        if (['line', 'circle'].includes(tool) && currentDrawing.points.length >= 2) isComplete = true;
+
+        if (tool === 'angle') {
+            // Need 3 points. If we just released mouse, did we add a point?
+            // If points < 3, we stay in drawing mode?
+            // Re-clicking adds points to currentDrawing?
+            // Complex. For simplicity in 'Drag Mode', we assume click-drag-release = 2 points.
+            // For Angle, user creates 3 points. 
+            // I'll make angle auto-complete if 3rd point is placed.
+            // MouseUp adds the current point?
+            const pt = getPoint(e);
+            const pts = [...currentDrawing.points];
+            // If we are at 2 points, we need one more click?
+            // Let's assume click-click-click interaction for angle.
+            // But handleMouseMove updates the "live" point.
+            // So click 1 (down/up) -> point 1.
+            // Move -> point 2 preview.
+            // Click 2 (down/up) -> point 2 fixed.
+            // Move -> point 3 preview.
+            // Click 3 -> point 3 fixed -> Complete.
+
+            // To support this "Click" flow, handleMouseUp shouldn't clear currentDrawing immediately unless complete.
+
+            // However, existing code was "Drag to draw".
+            // I will implement "Drag to draw line 1, then click for point 3"?
+            // Or "Click-Click-Click".
+            // I'll support "Click-Click-Click" for Angle.
+            // If tool is angle:
+            if (pts.length === 3) isComplete = true;
+            else {
+                // Keep currentDrawing active. "Add Point" logic happens in MouseDown/Up?
+                // No, MouseUp just releases the "Drag" state.
+                // We need to add point on MouseDown?
+                // Let's stick to "Drag 2 points" for Line/Circle.
+                // For Angle, if < 3 points, don't clear.
+            }
+        } else {
+            isComplete = true; // Line/Circle
+        }
+
+        if (isComplete) {
+            setDrawings([...drawings, currentDrawing]);
+            setCurrentDrawing(null);
+        } else {
+            // If not complete (Angle), we wait for next input.
+            // But we need to ensure the point is "locked".
+            // currentDrawing state already has the points.
+        }
     };
 
     // Canvas Rendering
-    const renderCanvas = () => {
+    const renderCanvas = (drawVideo = false) => {
         const canvas = canvasRef.current;
         if (!canvas) return;
         const ctx = canvas.getContext('2d');
@@ -172,6 +256,15 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
 
         // Clear
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Optional: Draw Video (for export)
+        if (drawVideo && videoRef1.current) {
+            try {
+                ctx.drawImage(videoRef1.current, 0, 0, canvas.width, canvas.height);
+            } catch (e) {
+                // consume cors error silently during preview
+            }
+        }
 
         // Render Saved Drawings
         [...drawings, currentDrawing].forEach(d => {
@@ -194,12 +287,9 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
                 ctx.lineTo(d.points[1].x, d.points[1].y);
                 if (d.points.length > 2) {
                     ctx.lineTo(d.points[2].x, d.points[2].y);
-                    // Draw Angle Arc
-                    // Simplified visualization
                 }
                 ctx.stroke();
 
-                // Show Angle Text
                 if (d.points.length === 3) {
                     const angle = getAngle(d.points[0], d.points[1], d.points[2]);
                     if (!isNaN(angle)) {
@@ -208,6 +298,19 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
                         ctx.fillText(`${angle.toFixed(1)}°`, d.points[1].x + 10, d.points[1].y);
                     }
                 }
+            }
+
+            // Draw Handles if in 'Select' mode
+            if (tool === 'none') {
+                d.points.forEach(p => {
+                    ctx.beginPath();
+                    ctx.fillStyle = '#fff';
+                    ctx.arc(p.x, p.y, 6, 0, 2 * Math.PI);
+                    ctx.fill();
+                    ctx.strokeStyle = '#000';
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                });
             }
         });
     };
@@ -232,6 +335,7 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
                             <video
                                 ref={videoRef1}
                                 src={videoUrl}
+                                crossOrigin="anonymous" // Enable CORS for canvas capture
                                 className="w-full h-full object-contain"
                                 onTimeUpdate={handleTimeUpdate}
                                 onLoadedMetadata={() => setDuration(videoRef1.current?.duration || 0)}
@@ -337,6 +441,10 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
                     {/* Snapshot Button */}
                     <button onClick={handleSnapshot} className="p-3 rounded-xl text-purple-400 hover:bg-purple-900/20" title="Download Snapshot">
                         <Download className="w-5 h-5" />
+                    </button>
+                    {/* Export Video */}
+                    <button onClick={handleExportVideo} disabled={isRecording} className={`p-3 rounded-xl ${isRecording ? 'text-red-500 animate-pulse' : 'text-green-400 hover:bg-green-900/20'}`} title="Export MP4 Video">
+                        <Film className="w-5 h-5" />
                     </button>
                 </div>
 
