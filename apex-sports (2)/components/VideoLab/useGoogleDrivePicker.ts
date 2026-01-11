@@ -17,42 +17,78 @@ export interface DriveFile {
 }
 
 // NOTE: These should be replaced by your actual keys or environment variables
-// For now, we'll keep them effectively empty or placeholder
 const SCOPES = 'https://www.googleapis.com/auth/drive.readonly';
-const DISCOVERY_DOCS = ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'];
+// const DISCOVERY_DOCS = ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest']; // Not strictly needed for Picker alone but good for Drive API
 
 export const useGoogleDrivePicker = () => {
     const [pickerApiLoaded, setPickerApiLoaded] = useState(false);
     const [oauthToken, setOauthToken] = useState<string | null>(null);
+    const [isAuthorized, setIsAuthorized] = useState(false);
 
+    // Initial Load of GAPI Scripts
     useEffect(() => {
         const loadGapis = () => {
             const script = document.createElement("script");
             script.src = "https://apis.google.com/js/api.js";
             script.onload = () => {
-                window.gapi.load('client:auth2:picker', initClient);
+                window.gapi.load('client:auth2:picker', () => {
+                    setPickerApiLoaded(true);
+                });
             };
             document.body.appendChild(script);
-        };
-
-        const initClient = () => {
-            // We rely on the user providing a token or authentication flow in a real app.
-            // For this UI demo, we will simulate or assume a token is available if configured.
-            // Real implementation requires:
-            // window.gapi.client.init({ apiKey: '...', clientId: '...', discoveryDocs: DISCOVERY_DOCS, scope: SCOPES }).then(...)
-            console.log("GAPI Client Loaded (Placeholder Mode)");
-            setPickerApiLoaded(true);
         };
 
         if (!window.gapi) {
             loadGapis();
         } else {
-            window.gapi.load('client:auth2:picker', initClient);
+            window.gapi.load('client:auth2:picker', () => setPickerApiLoaded(true));
         }
     }, []);
 
+    // Function to Authenticate User
+    const handleAuthClick = (clientId: string) => {
+        if (!window.gapi || !window.gapi.auth2) {
+            console.error("GAPI not loaded");
+            return;
+        }
+
+        // Initialize Auth2 if not already
+        if (!window.gapi.auth2.getAuthInstance()) {
+            window.gapi.client.init({
+                clientId: clientId,
+                scope: SCOPES,
+            }).then(() => {
+                const auth = window.gapi.auth2.getAuthInstance();
+                auth.signIn().then(() => {
+                    const user = auth.currentUser.get();
+                    const token = user.getAuthResponse().access_token;
+                    setOauthToken(token);
+                    setIsAuthorized(true);
+                });
+            }).catch((err: any) => {
+                console.error("Auth Init Error:", err);
+                alert(`Google Auth Error: ${JSON.stringify(err)}. Check Console.`);
+            });
+        } else {
+            // Already initialized, just sign in
+            const auth = window.gapi.auth2.getAuthInstance();
+            auth.signIn().then(() => {
+                const user = auth.currentUser.get();
+                const token = user.getAuthResponse().access_token;
+                setOauthToken(token);
+                setIsAuthorized(true);
+            });
+        }
+    };
+
     // Function to trigger the picker - Requires Developer Key and Client ID
     const handleOpenPicker = (developerKey: string, clientId: string, onSelect: (file: DriveFile) => void) => {
+        if (!isAuthorized) {
+            // Auto-trigger auth if not signed in? Better to force user action.
+            alert("Please Sign In with Google first.");
+            return;
+        }
+
         if (pickerApiLoaded && window.google && window.google.picker) {
             const picker = new window.google.picker.PickerBuilder()
                 .addView(window.google.picker.ViewId.VIDEO_SEARCH)
@@ -76,19 +112,8 @@ export const useGoogleDrivePicker = () => {
             picker.setVisible(true);
         } else {
             console.warn("Google Picker API not loaded or configured.");
-            // Fallback for Demo: Prompt for a URL if API fails/missing
-            const fallbackUrl = prompt("Valid Google API Credentials not found for this demo.\n\nEnter a direct Video URL (mp4) to test the player:", "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4");
-            if (fallbackUrl) {
-                onSelect({
-                    id: 'demo-123',
-                    name: 'Demo Video (Fallback)',
-                    embedUrl: fallbackUrl,
-                    mimeType: 'video/mp4',
-                    url: fallbackUrl
-                });
-            }
         }
     };
 
-    return { openPicker: handleOpenPicker, isApiLoaded: pickerApiLoaded };
+    return { openPicker: handleOpenPicker, signIn: handleAuthClick, isApiLoaded: pickerApiLoaded, isAuthorized };
 };

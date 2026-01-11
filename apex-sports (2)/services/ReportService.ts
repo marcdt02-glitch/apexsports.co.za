@@ -14,48 +14,65 @@ interface AthleteData {
     acwr?: number;
     email?: string;
     access?: any;
+    peakForceAsymmetry?: number;
     // Add other fields as needed
 }
 
-// Helper: Add Validated Stamp
-const addVerifiedStamp = (doc: jsPDF, pageWidth: number, pageHeight: number) => {
-    const x = pageWidth - 40;
-    const y = pageHeight - 30;
-    doc.setDrawColor(0, 0, 0);
-    doc.setLineWidth(0.5);
-    doc.circle(x, y, 12, 'S');
 
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(6);
-    doc.setTextColor(0, 0, 0);
-    doc.text("VERIFIED", x - 4.5, y - 2);
-    doc.text("SCIENTIST", x - 4.5, y + 4);
 
-    doc.setFontSize(5);
-    doc.text("APEX SPORTS", x - 5, y + 8);
+// Helper: Load Image to Base64
+const loadImage = (url: string): Promise<string> => {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.src = url;
+        img.crossOrigin = 'Anonymous';
+        img.onload = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext('2d');
+            if (ctx) {
+                ctx.drawImage(img, 0, 0);
+                resolve(canvas.toDataURL('image/png'));
+            } else {
+                reject(new Error("Canvas context failed"));
+            }
+        };
+        img.onerror = (e) => reject(e);
+    });
 };
 
 // Helper: Clean Header (Solid Black - Mentorship Style)
-const addCleanHeader = (doc: jsPDF, title: string, subTitle: string, athlete: AthleteData) => {
+const addCleanHeader = async (doc: jsPDF, title: string, subTitle: string, athlete: AthleteData) => {
+    const pageWidth = doc.internal.pageSize.getWidth();
+
     // Solid Black Header
     doc.setFillColor(0, 0, 0);
-    doc.rect(0, 0, 210, 40, 'F');
+    doc.rect(0, 0, pageWidth, 40, 'F');
+
+    // Logo
+    try {
+        const logoData = await loadImage('/images/logo.png');
+        doc.addImage(logoData, 'PNG', 10, 5, 20, 20); // x, y, w, h
+    } catch (e) {
+        console.warn("Logo failed to load", e);
+    } // Fail gracefully if logo missing
 
     // Title
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(24);
     doc.setFont("helvetica", "bold");
-    doc.text("APEX PERFORMANCE", 20, 25);
+    doc.text("APEX PERFORMANCE", 40, 20); // Moved Right due to Logo
 
     // Subtitle / Report Type
     doc.setFontSize(14);
     doc.setFont("helvetica", "normal");
     doc.setTextColor(200, 200, 200);
-    doc.text(title.toUpperCase(), 190, 25, { align: 'right' });
+    doc.text(title.toUpperCase(), pageWidth - 20, 25, { align: 'right' });
 
     // Athlete Info Bar (Gray Strip)
     doc.setFillColor(240, 240, 240);
-    doc.rect(0, 40, 210, 12, 'F');
+    doc.rect(0, 40, pageWidth, 12, 'F');
 
     doc.setFontSize(10);
     doc.setTextColor(0, 0, 0);
@@ -64,20 +81,20 @@ const addCleanHeader = (doc: jsPDF, title: string, subTitle: string, athlete: At
 
     doc.setFont("helvetica", "normal");
     const today = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
-    doc.text(`Date: ${today}`, 190, 48, { align: 'right' });
+    doc.text(`Date: ${today}`, pageWidth - 20, 48, { align: 'right' });
 
-    doc.text(`Tier: ${athlete.productTier || 'Standard'}`, 105, 48, { align: 'center' });
+    doc.text(`Tier: ${athlete.productTier || 'Standard'}`, pageWidth / 2, 48, { align: 'center' });
 };
 
 // 1. TECHNICAL LAB REPORT
-export const generateTechnicalReport = (athlete: AthleteData, analysis: any) => {
+export const generateTechnicalReport = async (athlete: AthleteData, analysis: any) => {
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
     const margin = 20;
 
     // Clean Header
-    addCleanHeader(doc, "Technical Lab Report", "", athlete);
+    await addCleanHeader(doc, "Technical Lab Report", "", athlete);
 
     let yPos = 70; // Start lower due to header + info bar
 
@@ -198,18 +215,19 @@ export const generateTechnicalReport = (athlete: AthleteData, analysis: any) => 
     doc.setFont("helvetica", "italic");
     doc.text(`"${recText}"`, margin, yPos, { maxWidth: pageWidth - (margin * 2) });
 
-    addVerifiedStamp(doc, pageWidth, pageHeight);
+    // addVerifiedStamp(doc, pageWidth, pageHeight); - Removed by user request
     doc.save(`${athlete.name}_Technical_Report.pdf`);
 };
 
 // 2. ATHLETE DEVELOPMENT SUMMARY (Parent)
-export const generateDevelopmentReport = (athlete: AthleteData, analysis: any) => {
+export const generateDevelopmentReport = async (athlete: AthleteData, analysis: any) => {
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
     const margin = 20;
 
-    addCleanHeader(doc, "Development Summary", "Progress Journey", athlete);
+    await addCleanHeader(doc, "Development Summary", "Progress Journey", athlete);
+
 
     let yPos = 70;
 
@@ -309,19 +327,20 @@ export const generateDevelopmentReport = (athlete: AthleteData, analysis: any) =
     doc.text("Marc has shown incredible resilience this month. The shift in mindset during", margin + 5, yPos + 10);
     doc.text("tough sessions has been the biggest win. Keep pushing!", margin + 5, yPos + 16);
 
-    addVerifiedStamp(doc, pageWidth, pageHeight);
+    // addVerifiedStamp(doc, pageWidth, pageHeight);
+
 
     doc.save(`${athlete.name}_Development_Summary.pdf`);
 };
 
 // 3. EXECUTIVE QUARTERLY REPORT
-export const generateExecutiveReport = (athlete: AthleteData, analysis: any) => {
+export const generateExecutiveReport = async (athlete: AthleteData, analysis: any) => {
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
     const margin = 20;
 
-    addCleanHeader(doc, "Executive Summary", "Strategic Review", athlete);
+    await addCleanHeader(doc, "Executive Summary", "Strategic Review", athlete);
     let yPos = 70;
 
     // Executive Summary
@@ -384,20 +403,22 @@ export const generateExecutiveReport = (athlete: AthleteData, analysis: any) => 
     doc.setFont("helvetica", "normal");
     doc.text("PHASE 2: Transition from General Strength to Sport-Specific Power.", margin + 5, yPos + 12);
 
-    addVerifiedStamp(doc, pageWidth, pageHeight);
+    // addVerifiedStamp(doc, pageWidth, pageHeight);
+
 
     doc.save(`${athlete.name}_Executive_Report.pdf`);
 };
 
 // 4. QUARTERLY REPORT (All-in-One)
-export const generateQuarterlyReport = (athlete: AthleteData, analysis: any) => {
+export const generateQuarterlyReport = async (athlete: AthleteData, analysis: any) => {
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
     const margin = 20;
 
     // --- PAGE 1: EXECUTIVE & PILLARS ---
-    addCleanHeader(doc, "Quarterly Report", "Holistic Performance Review", athlete);
+    await addCleanHeader(doc, "Quarterly Report", "Holistic Performance Review", athlete);
+
 
     let yPos = 70;
 
@@ -458,7 +479,7 @@ export const generateQuarterlyReport = (athlete: AthleteData, analysis: any) => 
 
     // --- PAGE 2: PHYSICAL DEEP DIVE ---
     doc.addPage();
-    addCleanHeader(doc, "Physical Performance", "Deep Dive", athlete);
+    await addCleanHeader(doc, "Physical Performance", "Deep Dive", athlete);
     yPos = 70;
 
     // Header
@@ -514,7 +535,7 @@ export const generateQuarterlyReport = (athlete: AthleteData, analysis: any) => 
 
     // --- PAGE 3: MENTAL & COACHING ---
     doc.addPage();
-    addCleanHeader(doc, "Mentorship & Coaching", "Psychological Profile", athlete);
+    await addCleanHeader(doc, "Mentorship & Coaching", "Psychological Profile", athlete);
     yPos = 70;
 
     // Mentorship/SPAT Section
@@ -552,7 +573,8 @@ export const generateQuarterlyReport = (athlete: AthleteData, analysis: any) => 
     doc.setFontSize(10);
     doc.text("Focus for next cycle: Technical refinement of max velocity sprint mechanics.", margin, yPos);
 
-    addVerifiedStamp(doc, pageWidth, pageHeight);
+    // addVerifiedStamp(doc, pageWidth, pageHeight);
+
 
     doc.save(`${athlete.name}_Quarterly_Report.pdf`);
 };

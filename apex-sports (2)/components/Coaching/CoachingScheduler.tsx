@@ -242,7 +242,7 @@ export const CoachingScheduler: React.FC = () => {
             {/* Header */}
             <div className="flex justify-between items-end">
                 <div>
-                    <h2 className="text-2xl font-black text-white uppercase tracking-tight">Coaching Schedule</h2>
+                    <h2 className="text-2xl font-black text-white uppercase tracking-tight">Athlete Schedule</h2>
                     <p className="text-gray-400 text-sm">Manage practices, games, and performance goals.</p>
                 </div>
                 <div className="flex gap-2">
@@ -341,9 +341,12 @@ export const CoachingScheduler: React.FC = () => {
             <div className="hidden">
                 <div ref={printRef} className="bg-black text-white p-8 min-h-screen w-[800px]">
                     <div className="flex justify-between items-center mb-10 border-b border-white/20 pb-6">
-                        <div>
-                            <h1 className="text-3xl font-black uppercase">Schedule & Goals</h1>
-                            <p className="text-gray-400">APEX Performance</p>
+                        <div className="flex items-center gap-6">
+                            <img src="/images/logo.png" alt="Apex Logo" className="w-16 h-16 object-contain" />
+                            <div>
+                                <h1 className="text-3xl font-black uppercase">Schedule & Goals</h1>
+                                <p className="text-gray-400">APEX Performance</p>
+                            </div>
                         </div>
                         <div className="text-right">
                             <p className="text-sm font-bold">{new Date().toLocaleDateString()}</p>

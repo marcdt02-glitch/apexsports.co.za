@@ -623,10 +623,11 @@ const AthleteDashboard: React.FC = () => {
     );
     // PDF Handlers
     // PDF Handlers
-    const handleDownloadTechnical = () => generateTechnicalReport(athlete, analysis);
-    const handleDownloadDevelopment = () => generateDevelopmentReport(athlete, analysis);
-    const handleDownloadExecutive = () => generateExecutiveReport(athlete, analysis);
-    const handleDownloadQuarterly = () => generateQuarterlyReport(athlete, analysis);
+    // PDF Handlers
+    const handleDownloadTechnical = async () => await generateTechnicalReport(athlete, analysis);
+    const handleDownloadDevelopment = async () => await generateDevelopmentReport(athlete, analysis);
+    const handleDownloadExecutive = async () => await generateExecutiveReport(athlete, analysis);
+    const handleDownloadQuarterly = async () => await generateQuarterlyReport(athlete, analysis);
 
     return (
         <SafetyGuard athlete={athlete}>

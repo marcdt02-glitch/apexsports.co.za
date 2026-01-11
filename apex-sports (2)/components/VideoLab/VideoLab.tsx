@@ -18,7 +18,7 @@ export const VideoLab: React.FC = () => {
     const [compareVideo, setCompareVideo] = useState<DriveFile | null>(null);
     const [showBioInfo, setShowBioInfo] = useState(false);
     const [showProSidebar, setShowProSidebar] = useState(false);
-    const { openPicker } = useGoogleDrivePicker();
+    const { openPicker, signIn, isAuthorized } = useGoogleDrivePicker();
 
     // Refs
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -29,17 +29,21 @@ export const VideoLab: React.FC = () => {
 
     // Handlers
     const handleSelectVideo = (isCompare: boolean = false) => {
-        openPicker(GOOGLE_API_KEY, GOOGLE_CLIENT_ID, (file) => {
-            if (isCompare) setCompareVideo(file);
-            else setCurrentVideo(file);
-        });
+        if (!isAuthorized) {
+            signIn(GOOGLE_CLIENT_ID);
+        } else {
+            openPicker(GOOGLE_API_KEY, GOOGLE_CLIENT_ID, (file) => {
+                if (isCompare) setCompareVideo(file);
+                else setCurrentVideo(file);
+            });
+        }
     };
 
     const handleLocalUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
             const url = URL.createObjectURL(file);
-            const videoFile: DriveFile = { id: 'local', name: file.name, url, mimeType: file.type };
+            const videoFile: DriveFile = { id: 'local', name: file.name, url, mimeType: file.type, embedUrl: url };
             setCurrentVideo(videoFile);
         }
     };
@@ -214,7 +218,9 @@ export const VideoLab: React.FC = () => {
                             <div className="p-4 bg-blue-900/20 rounded-full mb-4 group-hover:scale-110 transition-transform">
                                 <UploadCloud className="w-8 h-8 text-blue-500" />
                             </div>
-                            <h3 className="text-xl font-bold text-white mb-1">Open from Cloud</h3>
+                            <h3 className="text-xl font-bold text-white mb-1">
+                                {isAuthorized ? "Open from Cloud" : "Sign In to Drive"}
+                            </h3>
                             <p className="text-xs text-gray-400">Google Drive</p>
                         </button>
 
