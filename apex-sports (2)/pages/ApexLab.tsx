@@ -93,7 +93,7 @@ const ApexLab: React.FC = () => {
                             </div>
                         </div>
 
-                        {/* Reporting Hub */}
+                        {/* Physical Performance Reporting */}
                         <div className="group relative bg-neutral-900/40 border border-neutral-800 p-10 rounded-3xl overflow-hidden hover:border-green-500/50 transition-all duration-500">
                             <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
                                 <BarChart2 className="w-32 h-32 text-green-500" />
@@ -102,14 +102,38 @@ const ApexLab: React.FC = () => {
                                 <div className="p-4 bg-green-500/20 rounded-2xl w-fit">
                                     <Activity className="w-8 h-8 text-green-400" />
                                 </div>
-                                <h3 className="text-3xl font-bold text-white uppercase tracking-tight">The Reporting Hub</h3>
+                                <h3 className="text-3xl font-bold text-white uppercase tracking-tight">Physical Performance Reporting</h3>
                                 <p className="text-gray-400 leading-relaxed text-lg">
-                                    Dynamic data visualization. Track your 5 Pillars (Physical, Tactical, Technical, Psychological, Support) in real-time with automated PDF report generation.
+                                    Turn raw data into actionable intelligence. We generate comprehensive PDF reports (Quarterly, Technical, & Development) that visualize your progress against elite benchmarks.
                                 </p>
+                                <ul className="space-y-3 pt-4">
+                                    <li className="flex items-center gap-3 text-sm text-gray-300"><Check className="w-4 h-4 text-green-500" /> <span>Quarterly Executive Summaries</span></li>
+                                    <li className="flex items-center gap-3 text-sm text-gray-300"><Check className="w-4 h-4 text-green-500" /> <span>Objective VALD Data Integration</span></li>
+                                </ul>
                             </div>
                         </div>
 
-                        {/* Wellness */}
+                        {/* Mentorship & Psychology (New) */}
+                        <div className="group relative bg-neutral-900/40 border border-neutral-800 p-10 rounded-3xl overflow-hidden hover:border-orange-500/50 transition-all duration-500 md:col-span-2 lg:col-span-1">
+                            <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
+                                <Target className="w-32 h-32 text-orange-500" />
+                            </div>
+                            <div className="relative z-10 space-y-6">
+                                <div className="p-4 bg-orange-500/20 rounded-2xl w-fit">
+                                    <Brain className="w-8 h-8 text-orange-400" />
+                                </div>
+                                <h3 className="text-3xl font-bold text-white uppercase tracking-tight">Mentorship & Psychology</h3>
+                                <p className="text-gray-400 leading-relaxed text-lg">
+                                    The "CEO of You" curriculum. A dedicated portal for mental performance, leadership development, and strategic goal setting.
+                                </p>
+                                <ul className="space-y-3 pt-4">
+                                    <li className="flex items-center gap-3 text-sm text-gray-300"><Check className="w-4 h-4 text-orange-500" /> <span>Psychological Skills Assessment</span></li>
+                                    <li className="flex items-center gap-3 text-sm text-gray-300"><Check className="w-4 h-4 text-orange-500" /> <span>Goal Setting & Habit Tracking</span></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        {/* Wellness & Load */}
                         <div className="group relative bg-neutral-900/40 border border-neutral-800 p-10 rounded-3xl overflow-hidden hover:border-yellow-500/50 transition-all duration-500">
                             <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
                                 <Shield className="w-32 h-32 text-yellow-500" />
