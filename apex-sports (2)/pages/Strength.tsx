@@ -24,15 +24,14 @@ const Strength: React.FC = () => {
       price: "R500 / month",
       description: "3-Month Commitment. Or R1,500 Once-off.",
       actions: [
-        { label: "Subscribe", link: "mailto:performance@apexsports.co.za?subject=General S&C Monthly Inquiry", priceLabel: "R500/mo", primary: true },
-        { label: "Buy Once-off", link: "mailto:performance@apexsports.co.za?subject=General S&C Once-off Inquiry", priceLabel: "R1,500", primary: false }
+        { label: "Subscribe", link: "mailto:performance@apexsports.co.za?subject=General S%26C Monthly Inquiry", priceLabel: "R500/mo", primary: true },
+        { label: "Buy Once-off", link: "mailto:performance@apexsports.co.za?subject=General S%26C Once-off Inquiry", priceLabel: "R1,500", primary: false }
       ],
       features: [
         "12-Week Training Cycle",
         "MoveHealth App Access",
         "Video Demonstrations",
-        "General Conditioning Focus",
-        "Standard Load Management"
+        "General Conditioning Focus"
       ]
     },
     {
@@ -40,8 +39,8 @@ const Strength: React.FC = () => {
       price: "R1,500 / month",
       description: "12-Month Commitment. Or R15,000 Once-off.",
       actions: [
-        { label: "Subscribe", link: "mailto:performance@apexsports.co.za?subject=Specific S&C Monthly Inquiry", priceLabel: "R1,500/mo", primary: true },
-        { label: "Buy Annual", link: "mailto:performance@apexsports.co.za?subject=Specific S&C Annual Inquiry", priceLabel: "R15,000", primary: false }
+        { label: "Subscribe", link: "mailto:performance@apexsports.co.za?subject=Specific S%26C Monthly Inquiry", priceLabel: "R1,500/mo", primary: true },
+        { label: "Buy Annual", link: "mailto:performance@apexsports.co.za?subject=Specific S%26C Annual Inquiry", priceLabel: "R15,000", primary: false }
       ],
       features: [
         "Annual Periodization Plan",
