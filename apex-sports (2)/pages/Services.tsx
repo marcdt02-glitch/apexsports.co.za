@@ -21,22 +21,7 @@ const Services: React.FC = () => {
                         </p>
                     </div>
 
-                    {/* CTA Buttons */}
-                    <div className="flex flex-col md:flex-row items-center justify-center gap-4">
-                        <a
-                            href="#general-training"
-                            className="w-full md:w-auto bg-white text-black font-black py-4 px-10 rounded-full hover:bg-gray-200 transition-all hover:scale-105 shadow-lg shadow-white/10"
-                        >
-                            Start Signup (General)
-                        </a>
-                        <button
-                            onClick={() => { setModalTier("Apex Membership"); setIsModalOpen(true); }}
-                            className="w-full md:w-auto bg-transparent border border-neutral-700 text-white font-bold py-4 px-10 rounded-full hover:bg-neutral-800 transition-all hover:scale-105 flex items-center justify-center gap-2"
-                        >
-                            <Trophy className="w-5 h-5 text-yellow-500" />
-                            Apply for Elite
-                        </button>
-                    </div>
+                    {/* CTA Buttons - REMOVED as per user request */}
                 </div>
             </div>
 
@@ -161,12 +146,12 @@ const Services: React.FC = () => {
                                     <Zap className="text-yellow-500" /> 12-Week General Program
                                 </h3>
                                 <div className="grid grid-cols-2 gap-4">
-                                    <a href="mailto:marc@apexsports.co.za?subject=General Program Inquiry" className="bg-black hover:bg-neutral-800 text-center py-3 rounded-lg text-sm text-gray-300 transition-colors border border-neutral-700">
+                                    <button onClick={() => { setModalTier("General S&C (Once-off)"); setIsModalOpen(true); }} className="bg-black hover:bg-neutral-800 text-center py-3 rounded-lg text-sm text-gray-300 transition-colors border border-neutral-700">
                                         Once-off: <strong className="text-white block text-lg">R1,500</strong>
-                                    </a>
-                                    <a href="mailto:marc@apexsports.co.za?subject=General Program Inquiry" className="bg-black hover:bg-neutral-800 text-center py-3 rounded-lg text-sm text-gray-300 transition-colors border border-neutral-700">
+                                    </button>
+                                    <button onClick={() => { setModalTier("General S&C (Monthly)"); setIsModalOpen(true); }} className="bg-black hover:bg-neutral-800 text-center py-3 rounded-lg text-sm text-gray-300 transition-colors border border-neutral-700">
                                         Monthly: <strong className="text-white block text-lg">R500</strong>
-                                    </a>
+                                    </button>
                                 </div>
                             </div>
 
@@ -314,9 +299,9 @@ const Services: React.FC = () => {
                             <p className="text-gray-400 text-sm mb-4">
                                 Includes <strong>Psychological Skills Assessment</strong> & Basic Game Footage Review.
                             </p>
-                            <a href="mailto:performance@apexsports.co.za?subject=Goal Setting Access Inquiry" className="block w-full bg-black text-white font-bold py-3 rounded-lg hover:bg-neutral-800 transition-colors border border-neutral-700">
+                            <button onClick={() => { setModalTier("Goal Setting Access"); setIsModalOpen(true); }} className="block w-full bg-black text-white font-bold py-3 rounded-lg hover:bg-neutral-800 transition-colors border border-neutral-700">
                                 Subscribe: R150/pm
-                            </a>
+                            </button>
                         </div>
 
                         {/* Full Mentorship */}
@@ -324,12 +309,14 @@ const Services: React.FC = () => {
                             <h3 className="text-white font-bold mb-2 text-xl">The Mentorship</h3>
                             <p className="text-gray-400 text-sm mb-6">Full access to our psychological curriculum, weekly seminars, and resource library.</p>
                             <div className="space-y-4">
-                                <a href="mailto:performance@apexsports.co.za?subject=Mentorship Once-off Inquiry" className="block w-full bg-white text-black font-bold py-4 rounded-lg hover:bg-gray-200 transition-colors">
-                                    Once-off: R5,000
-                                </a>
-                                <a href="mailto:performance@apexsports.co.za?subject=Mentorship Monthly Inquiry" className="block w-full bg-black text-white font-bold py-4 rounded-lg hover:bg-neutral-800 transition-colors border border-neutral-700">
-                                    Monthly: R500
-                                </a>
+                                <div className="space-y-4">
+                                    <button onClick={() => { setModalTier("Mentorship (Once-off)"); setIsModalOpen(true); }} className="block w-full bg-white text-black font-bold py-4 rounded-lg hover:bg-gray-200 transition-colors">
+                                        Once-off: R5,000
+                                    </button>
+                                    <button onClick={() => { setModalTier("Mentorship (Monthly)"); setIsModalOpen(true); }} className="block w-full bg-black text-white font-bold py-4 rounded-lg hover:bg-neutral-800 transition-colors border border-neutral-700">
+                                        Monthly: R500
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>

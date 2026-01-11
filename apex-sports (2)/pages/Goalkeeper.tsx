@@ -1,9 +1,18 @@
 import React, { useState } from 'react';
 import { Video, Shield, Zap, Award, BookOpen, TrendingUp, PlayCircle, UploadCloud, MonitorPlay, Image as ImageIcon, ChevronLeft, ChevronRight } from 'lucide-react';
 import PricingCard from '../components/PricingCard';
+import { ApplicationModal } from '../components/ApplicationModal';
 
 const Goalkeeper: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalTier, setModalTier] = useState('');
+
+  const handleActionClick = (tier: string) => {
+    setModalTier(tier);
+    setIsModalOpen(true);
+  };
+
 
   const galleryMedia = [
     { type: 'video', src: '/videos/Training Footage 1.mov' }, // Existing
@@ -22,7 +31,7 @@ const Goalkeeper: React.FC = () => {
       price: "R2,500",
       description: "Flexible development block (R500/session).",
       actions: [
-        { label: "Buy Pack", link: "mailto:performance@apexsports.co.za?subject=5-Session Pack Inquiry", priceLabel: "R2,500", primary: true }
+        { label: "Buy Pack", onClick: () => handleActionClick("5-Session Pack"), priceLabel: "R2,500", primary: true }
       ],
       features: [
         "5 Hours of Technical Training",
@@ -37,8 +46,8 @@ const Goalkeeper: React.FC = () => {
       price: "R4,000",
       description: <><strong>Upfront:</strong> R4,000 | <strong>Split:</strong> R2,250 x 2 months (Total R4,500).</>,
       actions: [
-        { label: "Buy Upfront", link: "mailto:performance@apexsports.co.za?subject=10-Session Pack Upfront Inquiry", priceLabel: "R4,000", primary: true }, // Placeholder link
-        { label: "Split Payment", link: "mailto:performance@apexsports.co.za?subject=10-Session Pack Split Inquiry", priceLabel: "R2,250/m", primary: false } // Placeholder link
+        { label: "Buy Upfront", onClick: () => handleActionClick("10-Session Pack (Upfront)"), priceLabel: "R4,000", primary: true },
+        { label: "Split Payment", onClick: () => handleActionClick("10-Session Pack (Split)"), priceLabel: "R2,250/m", primary: false }
       ],
       features: [
         "10 Hours of Technical Training",
@@ -53,8 +62,8 @@ const Goalkeeper: React.FC = () => {
       price: "R9,000",
       description: <><strong>Upfront:</strong> R9,000 | <strong>Monthly:</strong> R833 (Total R10,000).</>,
       actions: [
-        { label: "Buy Upfront", link: "mailto:performance@apexsports.co.za?subject=25-Session Pack Upfront Inquiry", priceLabel: "R9,000", primary: true },
-        { label: "Sub Weekly", link: "mailto:performance@apexsports.co.za?subject=25-Session Pack Monthly Inquiry", priceLabel: "R833/mo", primary: false }
+        { label: "Buy Upfront", onClick: () => handleActionClick("25-Session Pack (Upfront)"), priceLabel: "R9,000", primary: true },
+        { label: "Sub Weekly", onClick: () => handleActionClick("25-Session Pack (Monthly)"), priceLabel: "R833/mo", primary: false }
       ],
       features: [
         "25 Hours of Technical Training",
@@ -69,8 +78,8 @@ const Goalkeeper: React.FC = () => {
       price: "R2,500 / month",
       description: <><strong>Monthly:</strong> R2,500 | <strong>Annual:</strong> R27,000 (Save R3,000).</>,
       actions: [
-        { label: "Subscribe", link: "mailto:performance@apexsports.co.za?subject=Apex Membership Inquiry", priceLabel: "R2,500/mo", primary: true },
-        { label: "Pay Annual", link: "mailto:performance@apexsports.co.za?subject=Apex Membership Annual Inquiry", priceLabel: "R27,000/yr", primary: false }
+        { label: "Subscribe", onClick: () => handleActionClick("Apex Membership (Monthly)"), priceLabel: "R2,500/mo", primary: true },
+        { label: "Pay Annual", onClick: () => handleActionClick("Apex Membership (Annual)"), priceLabel: "R27,000/yr", primary: false }
       ],
       features: [
         "25 Coaching Sessions",
@@ -219,7 +228,7 @@ const Goalkeeper: React.FC = () => {
             <div className="md:w-1/2">
               <h2 className="text-3xl font-bold text-white mb-6">Professional Video Analysis</h2>
               <p className="text-gray-300 mb-8">
-                We utilize the <strong>CoachNow Analysis App</strong> to provide frame-by-frame breakdowns, telestration, and voiceover feedback. Every session is an opportunity for deep learning.
+                We utilize the <strong>Apex Video Lab Analysis</strong> to provide frame-by-frame breakdowns, telestration, and voiceover feedback. Every session is an opportunity for deep learning.
               </p>
 
               <div className="space-y-6">
@@ -228,7 +237,7 @@ const Goalkeeper: React.FC = () => {
                     <MonitorPlay className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold text-white">CoachNow Markup</h3>
+                    <h3 className="text-lg font-bold text-white">Video Lab Analysis</h3>
                     <p className="text-sm text-gray-400">Detailed annotations on your save technique, showing angles and timing adjustments visually.</p>
                   </div>
                 </div>
@@ -321,6 +330,11 @@ const Goalkeeper: React.FC = () => {
         </div>
 
       </div>
+      <ApplicationModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        tierName={modalTier}
+      />
     </div>
   );
 };

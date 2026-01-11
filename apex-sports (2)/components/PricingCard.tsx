@@ -9,7 +9,8 @@ interface PricingCardProps {
   isHighlighted?: boolean;
   actions?: { // Array of buttons
     label: string;
-    link: string;
+    link?: string;
+    onClick?: () => void;
     priceLabel?: string; // Optional small price text inside button e.g. "R350"
     primary?: boolean;
   }[];
@@ -50,18 +51,31 @@ const PricingCard: React.FC<PricingCardProps> = ({ title, price, description, fe
 
       <div className={`mt-auto ${actions && actions.length > 1 ? 'grid grid-cols-2 gap-2' : ''}`}>
         {actions && actions.map((action, idx) => (
-          <a
-            key={idx}
-            href={action.link}
-            target="_blank"
-            rel="noreferrer"
-            className={`block w-full bg-neutral-800 hover:bg-neutral-700 text-center py-2 rounded text-xs text-gray-300 transition-colors ${!action.priceLabel ? 'font-bold text-white' : ''}`}
-          >
-            {action.label}
-            {action.priceLabel && (
-              <>: <strong className="text-white">{action.priceLabel}</strong></>
-            )}
-          </a>
+          action.onClick ? (
+            <button
+              key={idx}
+              onClick={action.onClick}
+              className={`block w-full bg-neutral-800 hover:bg-neutral-700 text-center py-2 rounded text-xs text-gray-300 transition-colors ${!action.priceLabel ? 'font-bold text-white' : ''}`}
+            >
+              {action.label}
+              {action.priceLabel && (
+                <>: <strong className="text-white">{action.priceLabel}</strong></>
+              )}
+            </button>
+          ) : (
+            <a
+              key={idx}
+              href={action.link}
+              target="_blank"
+              rel="noreferrer"
+              className={`block w-full bg-neutral-800 hover:bg-neutral-700 text-center py-2 rounded text-xs text-gray-300 transition-colors ${!action.priceLabel ? 'font-bold text-white' : ''}`}
+            >
+              {action.label}
+              {action.priceLabel && (
+                <>: <strong className="text-white">{action.priceLabel}</strong></>
+              )}
+            </a>
+          )
         ))}
       </div>
     </div>

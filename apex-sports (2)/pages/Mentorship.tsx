@@ -1,16 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BookOpen, Calendar, UserPlus, Brain, Target, Compass } from 'lucide-react';
 import { LINKS } from '../constants';
 import PricingCard from '../components/PricingCard';
+import { ApplicationModal } from '../components/ApplicationModal';
 
 const Mentorship: React.FC = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalTier, setModalTier] = useState('');
+
+  const handleActionClick = (tier: string) => {
+    setModalTier(tier);
+    setIsModalOpen(true);
+  };
+
   const packages = [
     {
       title: "Goal-Setting Access",
       price: "R150 / month",
       description: "Self-guided growth.",
       actions: [
-        { label: "Apply Now", link: "mailto:marc@apexsports.co.za", priceLabel: "R150/mo", primary: true }
+        { label: "Apply Now", onClick: () => handleActionClick("Goal-Setting Access"), priceLabel: "R150/mo", primary: true }
       ],
       features: [
         "Access to Goal Setting Portal",
@@ -25,8 +34,8 @@ const Mentorship: React.FC = () => {
       price: "R500 / month",
       description: <><strong>Monthly:</strong> R500 | <strong>Annual:</strong> R5,000 (Save R1,000).</>,
       actions: [
-        { label: "Apply", link: "mailto:marc@apexsports.co.za?subject=Mentorship Application", priceLabel: "R500/mo", primary: true },
-        { label: "Contact for Annual", link: "mailto:marc@apexsports.co.za?subject=Annual Mentorship Query", priceLabel: "R5,000/yr", primary: false }
+        { label: "Apply", onClick: () => handleActionClick("Mentorship (Monthly)"), priceLabel: "R500/mo", primary: true },
+        { label: "Contact for Annual", onClick: () => handleActionClick("Mentorship (Annual)"), priceLabel: "R5,000/yr", primary: false }
       ],
       features: [
         "Monthly 1-on-1 Strategy Call",
@@ -42,8 +51,8 @@ const Mentorship: React.FC = () => {
       price: "R2,500 / month",
       description: <><strong>Monthly:</strong> R2,500 | <strong>Annual:</strong> R27,000 (Save R3,000).</>,
       actions: [
-        { label: "Apply for Elite", link: "mailto:marc@apexsports.co.za?subject=Apex Membership Application", priceLabel: "R2,500/mo", primary: true },
-        { label: "Contact for Annual", link: "mailto:marc@apexsports.co.za?subject=Annual Apex Membership Query", priceLabel: "R27,000/yr", primary: false }
+        { label: "Apply for Elite", onClick: () => handleActionClick("Apex Membership (Elite)"), priceLabel: "R2,500/mo", primary: true },
+        { label: "Contact for Annual", onClick: () => handleActionClick("Apex Membership (Annual)"), priceLabel: "R27,000/yr", primary: false }
       ],
       features: [
         "Mentorship Program",
@@ -178,20 +187,17 @@ const Mentorship: React.FC = () => {
         {/* Call to Action Buttons */}
         <div className="flex flex-col md:flex-row gap-6 justify-center mb-24">
           <a
-            href={LINKS.CALENDAR}
-            target="_blank"
-            rel="noreferrer"
+            href="mailto:marc@apexsports.co.za?subject=Mentorship Discovery"
             className="bg-white text-black px-8 py-4 rounded-full font-bold text-lg hover:bg-gray-200 transition-colors flex items-center justify-center gap-3 shadow-lg shadow-white/10"
           >
             <Calendar className="w-5 h-5" />
             Book Discovery Call
           </a>
           <a
-            href={LINKS.SIGN_UP}
-            target="_blank"
-            rel="noreferrer"
+            href="mailto:marc@apexsports.co.za?subject=Mentorship Waiting List"
             className="bg-neutral-900 border border-neutral-800 text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-neutral-800 transition-colors flex items-center justify-center gap-3"
           >
+            <UserPlus className="w-5 h-5" />
             Join Waiting List
           </a>
         </div>
@@ -233,6 +239,11 @@ const Mentorship: React.FC = () => {
           </ul>
         </div>
       </div>
+      <ApplicationModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        tierName={modalTier}
+      />
     </div>
   );
 };
