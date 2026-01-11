@@ -197,7 +197,7 @@ export const parseAthleteData = (csvString: string): AthleteData[] => {
 
         return {
             id: `athlete-${index}`, // Generating ID
-            name: row['Athlete'] || 'Unknown Athlete',
+            name: (row['First Name'] || row['Surname']) ? `${row['First Name'] || ''} ${row['Surname'] || ''}`.trim() : (row['Athlete'] || 'Unknown Athlete'),
             email: row['Email'] || 'no-email@apexsports.co.za',
             date: row['Date'] || new Date().toISOString().split('T')[0],
 
