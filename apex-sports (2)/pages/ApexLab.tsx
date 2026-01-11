@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Film, Brain, Activity, Shield, Check, Info, ArrowRight, Zap, PlayCircle, BarChart2, Target } from 'lucide-react';
+import { Film, Brain, Activity, Shield, Check, Info, ArrowRight, Zap, PlayCircle, BarChart2, Target, Users, MapPin } from 'lucide-react';
 
 const ApexLab: React.FC = () => {
     return (
@@ -149,6 +149,41 @@ const ApexLab: React.FC = () => {
                             </div>
                         </div>
 
+                    </div>
+                </div>
+            </section>
+
+            {/* 3. THE ORGANIZATION (Sporting Hub) */}
+            <section className="py-24 px-4 bg-neutral-900 border-y border-neutral-800">
+                <div className="max-w-4xl mx-auto text-center space-y-8">
+                    <div className="w-20 h-20 bg-blue-600 rounded-2xl flex items-center justify-center mx-auto shadow-2xl shadow-blue-900/50">
+                        <Users className="w-10 h-10 text-white" />
+                    </div>
+
+                    <div>
+                        <h2 className="text-4xl md:text-5xl font-black text-white uppercase tracking-tighter mb-6">
+                            More Than Just a Platform. <br />
+                            <span className="text-blue-500">A High-Performance Hub.</span>
+                        </h2>
+
+                        <p className="text-gray-300 text-lg md:text-xl leading-relaxed font-light">
+                            Apex Sport is an elite performance organization based in <span className="text-white font-bold">Stellenbosch</span>. We serve as a central hub for athletes who demand more than standard coaching.
+                        </p>
+                        <p className="text-gray-400 text-lg leading-relaxed font-light mt-4">
+                            By integrating our physical facility with this digital command center, we bridge the gap between the gym floor and the data lab. When you join Apex, you aren't just buying an app—you are joining a team of sports scientists, biomechanists, and high-performance coaches dedicated to your career.
+                        </p>
+                    </div>
+
+                    <div className="flex flex-wrap items-center justify-center gap-4 text-sm font-bold text-gray-500 uppercase tracking-widest pt-4">
+                        <span className="flex items-center gap-2 px-4 py-2 bg-black rounded-lg border border-neutral-800">
+                            <MapPin className="w-4 h-4 text-blue-500" /> Stellenbosch, SA
+                        </span>
+                        <span className="flex items-center gap-2 px-4 py-2 bg-black rounded-lg border border-neutral-800">
+                            <Activity className="w-4 h-4 text-green-500" /> Biomechanics Lab
+                        </span>
+                        <span className="flex items-center gap-2 px-4 py-2 bg-black rounded-lg border border-neutral-800">
+                            <Users className="w-4 h-4 text-purple-500" /> Elite Community
+                        </span>
                     </div>
                 </div>
             </section>
