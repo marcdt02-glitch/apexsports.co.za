@@ -10,6 +10,7 @@ interface RoutineBlock {
     notes: string;
 }
 
+
 const DEFAULT_GAMEDAY: RoutineBlock[] = [
     { id: '1', time: '08:00', activity: 'Wake Up & Hydrate', notes: '500ml Water + Electrolytes' },
     { id: '2', time: '09:00', activity: 'Breakfast', notes: 'High Carbs, Moderate Protein' },
@@ -22,15 +23,22 @@ const DEFAULT_PRACTICE: RoutineBlock[] = [
     { id: '3', time: '19:00', activity: 'Recovery', notes: 'Protein Shake + Stretch' },
 ];
 
+const DEFAULT_DAILY: RoutineBlock[] = [
+    { id: '1', time: '07:00', activity: 'Morning Primer', notes: 'Sunlight + Movement' },
+    { id: '2', time: '20:00', activity: 'Digital Sunset', notes: 'Blue light blockers on' },
+    { id: '3', time: '22:00', activity: 'Sleep', notes: 'Cool dark room' },
+];
+
 interface RoutineEditorProps {
     athleteName: string;
     tier: string;
 }
 
 const RoutineEditor: React.FC<RoutineEditorProps> = ({ athleteName, tier }) => {
-    const [activeTab, setActiveTab] = useState<'game' | 'practice'>('game');
+    const [activeTab, setActiveTab] = useState<'game' | 'practice' | 'daily'>('game');
     const [gameRoutine, setGameRoutine] = useState<RoutineBlock[]>([]);
     const [practiceRoutine, setPracticeRoutine] = useState<RoutineBlock[]>([]);
+    const [dailyRoutine, setDailyRoutine] = useState<RoutineBlock[]>([]);
     const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
     // Load from LocalStorage
@@ -40,14 +48,16 @@ const RoutineEditor: React.FC<RoutineEditorProps> = ({ athleteName, tier }) => {
             const parsed = JSON.parse(saved);
             setGameRoutine(parsed.game || DEFAULT_GAMEDAY);
             setPracticeRoutine(parsed.practice || DEFAULT_PRACTICE);
+            setDailyRoutine(parsed.daily || DEFAULT_DAILY);
         } else {
             setGameRoutine(DEFAULT_GAMEDAY);
             setPracticeRoutine(DEFAULT_PRACTICE);
+            setDailyRoutine(DEFAULT_DAILY);
         }
     }, []);
 
     const handleSave = () => {
-        const data = { game: gameRoutine, practice: practiceRoutine };
+        const data = { game: gameRoutine, practice: practiceRoutine, daily: dailyRoutine };
         localStorage.setItem('apex_routines', JSON.stringify(data));
         setHasUnsavedChanges(false);
         // Could add toast notification here
@@ -55,12 +65,17 @@ const RoutineEditor: React.FC<RoutineEditorProps> = ({ athleteName, tier }) => {
 
     const updateRoutine = (newRoutine: RoutineBlock[]) => {
         if (activeTab === 'game') setGameRoutine(newRoutine);
-        else setPracticeRoutine(newRoutine);
+        else if (activeTab === 'practice') setPracticeRoutine(newRoutine);
+        else setDailyRoutine(newRoutine);
         setHasUnsavedChanges(true);
     };
 
     const addBlock = () => {
-        const current = activeTab === 'game' ? gameRoutine : practiceRoutine;
+        let current: RoutineBlock[] = [];
+        if (activeTab === 'game') current = gameRoutine;
+        else if (activeTab === 'practice') current = practiceRoutine;
+        else current = dailyRoutine;
+
         const newBlock: RoutineBlock = {
             id: Date.now().toString(),
             time: '00:00',
@@ -71,13 +86,21 @@ const RoutineEditor: React.FC<RoutineEditorProps> = ({ athleteName, tier }) => {
     };
 
     const updateBlock = (id: string, field: keyof RoutineBlock, value: string) => {
-        const current = activeTab === 'game' ? gameRoutine : practiceRoutine;
+        let current: RoutineBlock[] = [];
+        if (activeTab === 'game') current = gameRoutine;
+        else if (activeTab === 'practice') current = practiceRoutine;
+        else current = dailyRoutine;
+
         const updated = current.map(b => b.id === id ? { ...b, [field]: value } : b);
         updateRoutine(updated);
     };
 
     const deleteBlock = (id: string) => {
-        const current = activeTab === 'game' ? gameRoutine : practiceRoutine;
+        let current: RoutineBlock[] = [];
+        if (activeTab === 'game') current = gameRoutine;
+        else if (activeTab === 'practice') current = practiceRoutine;
+        else current = dailyRoutine;
+
         updateRoutine(current.filter(b => b.id !== id));
     };
 
@@ -85,14 +108,26 @@ const RoutineEditor: React.FC<RoutineEditorProps> = ({ athleteName, tier }) => {
         if (confirm("Reset to default templates? This will erase your changes.")) {
             setGameRoutine(DEFAULT_GAMEDAY);
             setPracticeRoutine(DEFAULT_PRACTICE);
+            setDailyRoutine(DEFAULT_DAILY);
             setHasUnsavedChanges(true);
         }
     };
 
     const handleDownloadPDF = () => {
         const doc = new jsPDF();
-        const routine = activeTab === 'game' ? gameRoutine : practiceRoutine;
-        const title = activeTab === 'game' ? 'Game Day Routine' : 'Practice Routine';
+        let routine: RoutineBlock[] = [];
+        let title = '';
+
+        if (activeTab === 'game') {
+            routine = gameRoutine;
+            title = 'Game Day Routine';
+        } else if (activeTab === 'practice') {
+            routine = practiceRoutine;
+            title = 'Practice Routine';
+        } else {
+            routine = dailyRoutine;
+            title = 'Daily Habits';
+        }
 
         // Header
         doc.setFillColor(0, 0, 0);
@@ -158,7 +193,10 @@ const RoutineEditor: React.FC<RoutineEditorProps> = ({ athleteName, tier }) => {
         doc.save(`Apex_${title.replace(/ /g, '_')}.pdf`);
     };
 
-    const displayedRoutine = activeTab === 'game' ? gameRoutine : practiceRoutine;
+    let displayedRoutine: RoutineBlock[] = [];
+    if (activeTab === 'game') displayedRoutine = gameRoutine;
+    else if (activeTab === 'practice') displayedRoutine = practiceRoutine;
+    else displayedRoutine = dailyRoutine;
 
     return (
         <div className="max-w-4xl mx-auto">
@@ -170,15 +208,21 @@ const RoutineEditor: React.FC<RoutineEditorProps> = ({ athleteName, tier }) => {
                 <div className="flex items-center gap-2 bg-neutral-900 p-1 rounded-xl border border-neutral-800">
                     <button
                         onClick={() => setActiveTab('game')}
-                        className={`px - 6 py - 2 rounded - lg text - sm font - bold transition - all ${activeTab === 'game' ? 'bg-white text-black shadow-md' : 'text-gray-400 hover:text-white'} `}
+                        className={`px-6 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === 'game' ? 'bg-white text-black shadow-md' : 'text-gray-400 hover:text-white'} `}
                     >
                         Game Day
                     </button>
                     <button
                         onClick={() => setActiveTab('practice')}
-                        className={`px - 6 py - 2 rounded - lg text - sm font - bold transition - all ${activeTab === 'practice' ? 'bg-white text-black shadow-md' : 'text-gray-400 hover:text-white'} `}
+                        className={`px-6 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === 'practice' ? 'bg-white text-black shadow-md' : 'text-gray-400 hover:text-white'} `}
                     >
                         Practice Day
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('daily')}
+                        className={`px-6 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === 'daily' ? 'bg-white text-black shadow-md' : 'text-gray-400 hover:text-white'} `}
+                    >
+                        Daily Habits
                     </button>
                 </div>
             </div>
@@ -234,7 +278,7 @@ const RoutineEditor: React.FC<RoutineEditorProps> = ({ athleteName, tier }) => {
             {/* Floating Action Bar */}
             <div className="fixed bottom-8 right-8 flex flex-col gap-4">
                 <button
-                    onClick={() => handleDownloadPDF('light')}
+                    onClick={() => handleDownloadPDF()}
                     className="bg-white text-black p-4 rounded-full shadow-lg hover:bg-gray-200 hover:scale-110 transition-transform"
                     title="Download PDF"
                 >
