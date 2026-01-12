@@ -178,9 +178,7 @@ const ApexLab: React.FC = () => {
                         <span className="flex items-center gap-2 px-4 py-2 bg-black rounded-lg border border-neutral-800">
                             <MapPin className="w-4 h-4 text-blue-500" /> Stellenbosch, SA
                         </span>
-                        <span className="flex items-center gap-2 px-4 py-2 bg-black rounded-lg border border-neutral-800">
-                            <Activity className="w-4 h-4 text-green-500" /> Biomechanics Lab
-                        </span>
+
                         <span className="flex items-center gap-2 px-4 py-2 bg-black rounded-lg border border-neutral-800">
                             <Users className="w-4 h-4 text-purple-500" /> Elite Community
                         </span>
@@ -247,12 +245,7 @@ const ApexLab: React.FC = () => {
                                     <td className="p-6 text-center"><Check className="w-5 h-5 text-purple-500 mx-auto" /></td>
                                     <td className="p-6 text-center"><Check className="w-5 h-5 text-purple-500 mx-auto" /></td>
                                 </tr>
-                                <tr className="hover:bg-white/5 transition-colors">
-                                    <td className="p-6 text-gray-300 font-medium">Advanced Biomechanics (VALD)</td>
-                                    <td className="p-6 text-center text-gray-600">-</td>
-                                    <td className="p-6 text-center text-gray-600">-</td>
-                                    <td className="p-6 text-center"><Check className="w-5 h-5 text-purple-500 mx-auto" /></td>
-                                </tr>
+
                             </tbody>
                         </table>
                     </div>
