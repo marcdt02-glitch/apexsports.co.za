@@ -508,7 +508,7 @@ const AthleteDashboard: React.FC = () => {
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-5 gap-4 md:gap-6">
+                <div className="grid grid-cols-1 gap-4">
                     {[
                         {
                             icon: Brain,
@@ -541,15 +541,17 @@ const AthleteDashboard: React.FC = () => {
                             desc: 'Managing your environment, nutrition, and team.'
                         }
                     ].map((pillar, idx) => (
-                        <div key={idx} className="bg-black/40 p-5 rounded-2xl border border-neutral-800 hover:border-neutral-600 transition-all hover:-translate-y-1 group">
-                            <div className="w-10 h-10 bg-neutral-800 rounded-lg flex items-center justify-center mb-4 group-hover:bg-white group-hover:text-black transition-colors">
-                                <pillar.icon className="w-5 h-5 text-white group-hover:text-black transition-colors" />
+                        <div key={idx} className="bg-black/40 p-5 rounded-2xl border border-neutral-800 hover:border-neutral-600 transition-all hover:-translate-y-1 group flex items-start gap-5">
+                            <div className="w-12 h-12 bg-neutral-800 rounded-xl flex-shrink-0 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-colors">
+                                <pillar.icon className="w-6 h-6 text-white group-hover:text-black transition-colors" />
                             </div>
-                            <h3 className="text-lg font-black text-white uppercase mb-1">{pillar.title}</h3>
-                            <p className="text-[10px] font-bold text-red-500 uppercase tracking-wider mb-2">{pillar.sub}</p>
-                            <p className="text-xs text-gray-400 leading-relaxed">
-                                {pillar.desc}
-                            </p>
+                            <div className="text-left">
+                                <h3 className="text-lg font-black text-white uppercase mb-0.5">{pillar.title}</h3>
+                                <p className="text-[10px] font-bold text-red-500 uppercase tracking-wider mb-2">{pillar.sub}</p>
+                                <p className="text-sm text-gray-400 leading-relaxed">
+                                    {pillar.desc}
+                                </p>
+                            </div>
                         </div>
                     ))}
                 </div>
