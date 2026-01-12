@@ -481,17 +481,17 @@ const AthleteDashboard: React.FC = () => {
     const renderHome = () => (
         <div className="space-y-12 animate-fade-in pb-20">
             {/* 5 Pillars Section */}
-            <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl">
-                <div className="text-center mb-12">
-                    <h2 className="text-3xl font-black text-white uppercase tracking-tighter mb-4">
-                        The 5 Pillars of <span className="text-red-500">High Performance</span>
+            <div className="bg-neutral-900/40 border border-neutral-800 p-4 md:p-8 rounded-3xl">
+                <div className="text-center mb-8 md:mb-12">
+                    <h2 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tighter mb-4">
+                        The 5 Pillars of <span className="text-red-500 block md:inline">High Performance</span>
                     </h2>
-                    <p className="text-gray-400 max-w-2xl mx-auto">
+                    <p className="text-gray-400 max-w-2xl mx-auto text-sm md:text-base">
                         The APEX System. A holistic framework designed to build the complete athlete.
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-5 gap-4 md:gap-6">
                     {[
                         {
                             icon: Brain,
@@ -538,8 +538,8 @@ const AthleteDashboard: React.FC = () => {
                 </div>
 
                 {/* Holistic CTA */}
-                <div className="mt-12 text-center border-t border-neutral-800 pt-8">
-                    <p className="text-lg text-white font-medium italic max-w-3xl mx-auto leading-relaxed">
+                <div className="mt-8 md:mt-12 text-center border-t border-neutral-800 pt-8">
+                    <p className="text-base md:text-lg text-white font-medium italic max-w-3xl mx-auto leading-relaxed">
                         "At APEX, we don't just train athletes; we develop high-performers. Our holistic approach ensures that the discipline you build in the lab translates to success in every sector of your life."
                     </p>
                 </div>
