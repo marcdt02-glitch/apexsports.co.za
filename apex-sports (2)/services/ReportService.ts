@@ -215,7 +215,7 @@ export const generateTechnicalReport = async (athlete: AthleteData, analysis: an
     doc.setFont("helvetica", "italic");
     doc.text(`"${recText}"`, margin, yPos, { maxWidth: pageWidth - (margin * 2) });
 
-    // addVerifiedStamp(doc, pageWidth, pageHeight); - Removed by user request
+
     doc.save(`${athlete.name}_Technical_Report.pdf`);
 };
 
@@ -327,7 +327,7 @@ export const generateDevelopmentReport = async (athlete: AthleteData, analysis: 
     doc.text("Marc has shown incredible resilience this month. The shift in mindset during", margin + 5, yPos + 10);
     doc.text("tough sessions has been the biggest win. Keep pushing!", margin + 5, yPos + 16);
 
-    // addVerifiedStamp(doc, pageWidth, pageHeight);
+
 
 
     doc.save(`${athlete.name}_Development_Summary.pdf`);
@@ -403,7 +403,7 @@ export const generateExecutiveReport = async (athlete: AthleteData, analysis: an
     doc.setFont("helvetica", "normal");
     doc.text("PHASE 2: Transition from General Strength to Sport-Specific Power.", margin + 5, yPos + 12);
 
-    // addVerifiedStamp(doc, pageWidth, pageHeight);
+
 
 
     doc.save(`${athlete.name}_Executive_Report.pdf`);
@@ -573,7 +573,7 @@ export const generateQuarterlyReport = async (athlete: AthleteData, analysis: an
     doc.setFontSize(10);
     doc.text("Focus for next cycle: Technical refinement of max velocity sprint mechanics.", margin, yPos);
 
-    // addVerifiedStamp(doc, pageWidth, pageHeight);
+
 
 
     doc.save(`${athlete.name}_Quarterly_Report.pdf`);
