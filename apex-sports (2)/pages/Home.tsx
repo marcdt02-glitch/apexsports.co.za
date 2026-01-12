@@ -8,8 +8,7 @@ const Home: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   // Founder images for rotation
   const founderImages = [
-    "/images/Marc du Toit 1.JPG",
-    "/images/Marc du Toit 2.jpg"
+    "/images/Marc du Toit 1.JPG"
   ];
 
   const [currentFounderIndex, setCurrentFounderIndex] = useState(0);
