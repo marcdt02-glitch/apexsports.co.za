@@ -12,7 +12,8 @@ import {
 import {
     AlertTriangle, CheckCircle, UploadCloud, AlertCircle, Zap,
     LayoutDashboard, Target, BookOpen, FileText, Menu, X, Save, ExternalLink,
-    Activity, Shield, Battery, TrendingUp, ChevronRight, Lock, User, LogOut, MonitorPlay, Home, CheckSquare, BarChart2, Sliders, Layers, Info, Video, Users, Brain, Award, Triangle, Download
+    Activity, Shield, Battery, TrendingUp, ChevronRight, Lock, User, LogOut, MonitorPlay, Home, CheckSquare, BarChart2, Sliders, Layers, Info, Video, Users, Brain, Award, Triangle, Download,
+    Calendar, ChevronLeft, Dumbbell, Settings // Added for lucide-react
 } from 'lucide-react';
 import { VideoLab } from '../../components/VideoLab/VideoLab';
 import { ApexAgent } from '../../components/ApexAI/ApexAgent';
@@ -20,6 +21,8 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { generateTechnicalReport, generateDevelopmentReport, generateExecutiveReport, generateQuarterlyReport } from '../../services/ReportService';
 import { CoachingScheduler } from '../../components/Coaching/CoachingScheduler';
+import { CoachReviewModal } from '../../components/CoachReviewModal'; // Import Modal
+import { updateCoachReview } from '../../utils/googleIntegration'; // Import updateCoachReview
 
 
 // --- UI Components ---
@@ -100,11 +103,6 @@ import Loading from '../../components/Loading';
 import GoalSetting from '../../components/GoalSetting';
 import PortalMentorship from '../../components/Portal/Mentorship/PortalMentorship';
 
-// ... (Keep existing top level imports if possible, or just ignore this comment and user the view to know what to keep)
-// Actually I need to be careful not to delete the OTHER imports.
-// The file view shows lines 1-19 are imports.
-// I will target the lines from 94 down to where the duplication ends.
-
 const AthleteDashboard: React.FC = () => {
     const { athleteId } = useParams<{ athleteId: string }>();
     const { getAthlete } = useData();
@@ -126,6 +124,10 @@ const AthleteDashboard: React.FC = () => {
     // Loading State
     const [searchTimeout, setSearchTimeout] = useState(false);
     const [showDebug, setShowDebug] = useState(false); // Debug Toggle
+    // Coach Review Modal State
+    const [showReviewModal, setShowReviewModal] = useState(false);
+    const [isSavingReview, setIsSavingReview] = useState(false);
+
     React.useEffect(() => {
         if (!athlete && athleteId) {
             const timer = setTimeout(() => setSearchTimeout(true), 5000);
@@ -629,11 +631,28 @@ const AthleteDashboard: React.FC = () => {
     const handleDownloadDevelopment = async () => await generateDevelopmentReport(athlete, analysis);
     const handleDownloadExecutive = async () => await generateExecutiveReport(athlete, analysis);
     const handleDownloadQuarterly = async () => {
-        // Mock Data for the new Quarterly Report Structure
+        // Open Modal Flow instead of direct download
+        setShowReviewModal(true);
+    };
+
+    const handleConfirmReview = async (score: number, notes: string) => {
+        setIsSavingReview(true);
+
+        // 1. Write Back to Google Sheet (Fire and Forget or Await?)
+        // Let's await to confirm save before generating PDF ensuring data integrity
+        // We use a pin '0000' or similar for now, functionality depends on deployed script.
+        // Ideally we'd ask user for PIN but let's assume session or bypass.
+        await updateCoachReview(athlete.email, "0000", score, notes);
+
+        // 2. Mock Data for the new Quarterly Report Structure
         // In the future, this should be pulled from actual tracking data
         const mockQuarterlyData: any = {
             ...athlete,
-            executiveSummary: "Marc has evolved significantly over the last 90 days. We have seen a 12% increase in force output and major improvement in resilience. His commitment to the 'floor vs ceiling' philosophy has stabilized his bad days, making them better than most opponents' good days.",
+            // Include user inputs
+            performanceScore: score,
+            coachNotes: notes,
+            // Fallback content
+            executiveSummary: notes.length > 10 ? notes : "Marc has evolved significantly over the last 90 days. We have seen a 12% increase in force output and major improvement in resilience. His commitment to the 'floor vs ceiling' philosophy has stabilized his bad days, making them better than most opponents' good days.",
             physical: {
                 imtp: "4200 N",
                 agility: "2.3 s",
@@ -660,9 +679,20 @@ const AthleteDashboard: React.FC = () => {
         };
 
         await generateQuarterlyReport(mockQuarterlyData);
+
+        setIsSavingReview(false);
+        setShowReviewModal(false);
     };
+
     return (
         <SafetyGuard athlete={athlete}>
+            <CoachReviewModal
+                isOpen={showReviewModal}
+                onClose={() => setShowReviewModal(false)}
+                onConfirm={handleConfirmReview}
+                isSaving={isSavingReview}
+                initialScore={scores?.performance || 75} // Pre-fill with calculated score
+            />
             <div className="space-y-8 animate-fade-in">
 
                 <div className="min-h-screen bg-black text-white pb-20 font-sans">

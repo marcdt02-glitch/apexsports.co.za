@@ -134,7 +134,77 @@ function onEdit(e) {
     var updateCol = headers.indexOf("Last Updated") + 1;
 
     // Update Timestamp (if column exists and we aren't editing it)
+    // Update Timestamp (if column exists and we aren't editing it)
     if (updateCol > 0 && r.getColumn() !== updateCol) {
         sheet.getRange(r.getRow(), updateCol).setValue(Utilities.formatDate(new Date(), "GMT+2", "dd MMM yyyy"));
+    }
+}
+
+// VERSION: v18.0 (Write Back Support)
+function doPost(e) {
+    try {
+        var action = e.parameter.action;
+        var email = e.parameter.email;
+        var pin = e.parameter.pin;
+
+        if (!email) return res({ status: "error", message: "Missing email" });
+
+        var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Athlete Data");
+        if (!sheet) return res({ status: "error", message: "Sheet not found" });
+
+        var data = sheet.getDataRange().getValues();
+        var headers = data[0];
+
+        // Find Athlete Row
+        var emailIdx = headers.findIndex(function (h) { return String(h).toLowerCase().trim() === "email"; });
+        var pinIdx = headers.findIndex(function (h) { return String(h).toLowerCase().trim() === "passcode"; });
+
+        var rowIndex = -1;
+        for (var i = 1; i < data.length; i++) {
+            if (String(data[i][emailIdx]).toLowerCase().trim() === String(email).toLowerCase().trim()) {
+                rowIndex = i + 1; // 1-based index
+
+                // Security Check
+                if (pinIdx !== -1) {
+                    var storedPin = String(data[i][pinIdx] || "").trim();
+                    if (storedPin !== "" && storedPin !== pin) return res({ status: "security_error", message: "Invalid PIN" });
+                }
+                break;
+            }
+        }
+
+        if (rowIndex === -1) return res({ status: "error", message: "Athlete not found" });
+
+        // ACTION HANDLERS
+        if (action === "update_coach_review") {
+            var score = e.parameter.performanceScore;
+            var notes = e.parameter.clinicalNotes;
+
+            // Map to Columns (Created if missing? No, assume existence or mapped)
+            // We need columns "Performance Score" and "Clinical Notes"
+
+            var setVal = function (headerName, val) {
+                var colIdx = headers.findIndex(function (h) { return String(h).trim() === headerName; });
+                if (colIdx !== -1) {
+                    sheet.getRange(rowIndex, colIdx + 1).setValue(val);
+                } else {
+                    // Optional: Create column? For now, just log/ignore to prevent destruction
+                }
+            };
+
+            if (score) setVal("Performance Score", score);
+            if (notes) setVal("Clinical Notes", notes);
+
+            // Mark Updated
+            var updateCol = headers.findIndex(function (h) { return h === "Last Updated"; });
+            if (updateCol !== -1) sheet.getRange(rowIndex, updateCol + 1).setValue(Utilities.formatDate(new Date(), "GMT+2", "dd MMM yyyy"));
+
+            return res({ status: "success", message: "Review Saved" });
+        }
+
+        return res({ status: "error", message: "Unknown Action" });
+
+    } catch (err) {
+        return res({ status: "error", message: String(err) });
     }
 }

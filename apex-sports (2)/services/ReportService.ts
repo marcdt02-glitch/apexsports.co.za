@@ -19,6 +19,10 @@ interface AthleteData {
 
 export interface QuarterlyData extends AthleteData {
     executiveSummary?: string;
+    // New fields for Coach Write Back
+    performanceScore?: number;
+    coachNotes?: string;
+
     physical?: {
         imtp?: string;
         agility?: string;
@@ -525,7 +529,7 @@ export const generateQuarterlyReport = async (athlete: QuarterlyData) => {
     await addCleanHeader(doc, "Quarterly Report", "General Summary", athlete);
     let yPos = 70;
 
-    // Executive Summary Block
+    // Executive Summary Box
     doc.setFillColor(245, 245, 245);
     doc.rect(margin, yPos, pageWidth - (margin * 2), 150, 'F');
 
@@ -534,9 +538,22 @@ export const generateQuarterlyReport = async (athlete: QuarterlyData) => {
     doc.setTextColor(0, 0, 0);
     doc.text("EXECUTIVE SUMMARY", margin + 10, yPos + 15);
 
+    // Coach Score Badge (Right Aligned)
+    if (athlete.performanceScore) {
+        doc.setFillColor(0, 0, 0);
+        doc.roundedRect(pageWidth - margin - 50, yPos + 8, 40, 12, 2, 2, 'F');
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(9);
+        doc.text(`SCORE: ${athlete.performanceScore}/100`, pageWidth - margin - 30, yPos + 15, { align: 'center' });
+    }
+
+    // Auto-Generated Summary Logic or Manual Notes
+    const summaryText = athlete.coachNotes || athlete.executiveSummary || "No summary provided.";
+
+    doc.setTextColor(0, 0, 0);
     doc.setFontSize(11);
     doc.setFont("helvetica", "normal");
-    const summaryLines = doc.splitTextToSize(athlete.executiveSummary || "No summary provided.", pageWidth - (margin * 2) - 20);
+    const summaryLines = doc.splitTextToSize(summaryText, pageWidth - (margin * 2) - 20);
     doc.text(summaryLines, margin + 10, yPos + 30);
 
     // --- PAGE 2: PHYSICAL ---

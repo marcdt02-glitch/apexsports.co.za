@@ -9,6 +9,42 @@ const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwKu1CBVS_C1VAQ
 // Temporary fallback to Mock until user provides their Script URL
 const USE_MOCK_FALLBACK = false;
 
+// Write Back Function
+export const updateCoachReview = async (email: string, pin: string, score: number, notes: string): Promise<boolean> => {
+    try {
+        console.log("📤 Sending Coach Review...", { email, score });
+
+        // Construct Post Data
+        // Google Apps Script doPost expects URL Encoded params or text/plain depending on setup.
+        // Easiest is URL parameters for simple data or form data.
+        // Let's use form-data style for compatibility with the generic doPost structure logic.
+
+        const params = new URLSearchParams();
+        params.append('action', 'update_coach_review');
+        params.append('email', email);
+        params.append('pin', pin);
+        params.append('performanceScore', score.toString());
+        params.append('clinicalNotes', notes);
+
+        const response = await fetch(APPS_SCRIPT_URL, {
+            method: 'POST',
+            body: params,
+        });
+
+        const result = await response.json();
+        if (result.status === 'success') {
+            console.log("✅ Coach Review Saved to Sheet!");
+            return true;
+        } else {
+            console.warn("⚠️ Save Warning:", result.message);
+            return false;
+        }
+    } catch (e) {
+        console.error("❌ Failed to save review:", e);
+        return false;
+    }
+};
+
 export const fetchAthleteFromGoogle = async (email: string, pin: string): Promise<AthleteData | null> => {
     if (USE_MOCK_FALLBACK) {
         console.log("Google Integration: Using Mock Fallback");
