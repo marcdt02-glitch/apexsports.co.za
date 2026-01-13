@@ -141,7 +141,7 @@ const AthleteDashboard: React.FC = () => {
                 <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-4 text-center">
                     <AlertTriangle className="w-16 h-16 text-red-500 mb-4" />
                     <h2 className="text-2xl font-bold mb-4 text-red-500">Athlete Not Found</h2>
-                    <button onClick={() => window.location.href = '/#/portal'} className="bg-white text-black font-bold py-3 px-8 rounded-lg hover:bg-gray-200 transition-colors">Return to Login</button>
+                    <button onClick={() => window.location.href = '/portal'} className="bg-white text-black font-bold py-3 px-8 rounded-lg hover:bg-gray-200 transition-colors">Return to Login</button>
                 </div>
             );
         }

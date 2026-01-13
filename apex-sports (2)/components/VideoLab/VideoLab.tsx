@@ -24,8 +24,8 @@ export const VideoLab: React.FC = () => {
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     // Placeholder Configuration - User must enter these
-    const GOOGLE_API_KEY = 'YOUR_API_KEY_HERE';
-    const GOOGLE_CLIENT_ID = 'YOUR_CLIENT_ID_HERE';
+    const GOOGLE_API_KEY = 'AIzaSyCXjGxlxaxQ4NygJfNaDr-IfKrJTXoI13g';
+    const GOOGLE_CLIENT_ID = '1065984102170-uq002j3qda0ui2op458vvjn4jp4k9gsr.apps.googleusercontent.com';
 
     // Handlers
     const handleSelectVideo = (isCompare: boolean = false) => {
