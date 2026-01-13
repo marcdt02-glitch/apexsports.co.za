@@ -625,12 +625,42 @@ const AthleteDashboard: React.FC = () => {
     );
     // PDF Handlers
     // PDF Handlers
-    // PDF Handlers
     const handleDownloadTechnical = async () => await generateTechnicalReport(athlete, analysis);
     const handleDownloadDevelopment = async () => await generateDevelopmentReport(athlete, analysis);
     const handleDownloadExecutive = async () => await generateExecutiveReport(athlete, analysis);
-    const handleDownloadQuarterly = async () => await generateQuarterlyReport(athlete, analysis);
+    const handleDownloadQuarterly = async () => {
+        // Mock Data for the new Quarterly Report Structure
+        // In the future, this should be pulled from actual tracking data
+        const mockQuarterlyData: any = {
+            ...athlete,
+            executiveSummary: "Marc has evolved significantly over the last 90 days. We have seen a 12% increase in force output and major improvement in resilience. His commitment to the 'floor vs ceiling' philosophy has stabilized his bad days, making them better than most opponents' good days.",
+            physical: {
+                imtp: "4200 N",
+                agility: "2.3 s",
+                broadJump: `${athlete.broadJump || 240} cm`,
+                strengths: ["Explosive Power (Vertical)", "Hamstring Strength", "Consistency"],
+                weaknesses: ["Left Knee Valgus", "Ankle Mobility", "Aerobic Base"]
+            },
+            mentorship: {
+                goals: ["Win the League Title", "Achieve 90% Pass Completion", "Master Visualization Routine"],
+                psychSkills: ["0.2s Mistake Recovery Rule", "Pre-Game Visualization", "Breathwork Reset"],
+                spatScores: [8, 7, 9, 6, 8] // Phys, Tech, Tac, Ment, Life
+            },
+            coaching: {
+                blockFocus: "Transition from General Strength to Sport-Specific Power. Emphasis on max velocity sprint mechanics and rapid deceleration.",
+                skillsLearnt: ["Linear Acceleration Mechanics", "Scanning under fatigue", "Defensive shape retention"],
+                technicalFeedback: [
+                    { skill: "9-Yard Acceleration", grade: "A-", note: "Explosive first step. Keep hips lower." },
+                    { skill: "Shot Stopping", grade: "B+", note: "Good reaction. Work on parrying to safe zones." },
+                    { skill: "Clearing", grade: "A", note: "Excellent distance and accuracy." },
+                    { skill: "Penalty Corner Defense", grade: "C+", note: "Reaction time needs improvement." },
+                    { skill: "Baseline Entries", grade: "B", note: "Good decision making. execute faster." }
+                ]
+            }
+        };
 
+        await generateQuarterlyReport(mockQuarterlyData);
+    };
     return (
         <SafetyGuard athlete={athlete}>
             <div className="space-y-8 animate-fade-in">

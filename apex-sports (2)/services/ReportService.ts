@@ -15,7 +15,27 @@ interface AthleteData {
     email?: string;
     access?: any;
     peakForceAsymmetry?: number;
-    // Add other fields as needed
+}
+
+export interface QuarterlyData extends AthleteData {
+    executiveSummary?: string;
+    physical?: {
+        imtp?: string;
+        agility?: string;
+        broadJump?: string;
+        strengths?: string[];
+        weaknesses?: string[];
+    };
+    mentorship?: {
+        goals?: string[];
+        psychSkills?: string[];
+        spatScores?: number[]; // [Physical, Technical, Tactical, Mental, Lifestyle]
+    };
+    coaching?: {
+        blockFocus?: string;
+        skillsLearnt?: string[];
+        technicalFeedback?: { skill: string; grade: string; note: string }[];
+    };
 }
 
 
@@ -409,172 +429,287 @@ export const generateExecutiveReport = async (athlete: AthleteData, analysis: an
     doc.save(`${athlete.name}_Executive_Report.pdf`);
 };
 
+// Helper: Draw Radar Chart (Pentagon)
+const drawRadarChart = (doc: jsPDF, centerX: number, centerY: number, radius: number, data: number[], labels: string[]) => {
+    const numPoints = 5;
+    const angleStep = (Math.PI * 2) / numPoints;
+    const startAngle = -Math.PI / 2; // Start at top
+
+    // Draw Grid (Concentric Pentagons)
+    doc.setDrawColor(200, 200, 200);
+    doc.setLineWidth(0.1);
+    for (let level = 1; level <= 5; level++) {
+        const r = (radius / 5) * level;
+        for (let i = 0; i < numPoints; i++) {
+            const angle = startAngle + (i * angleStep);
+            const nextAngle = startAngle + ((i + 1) * angleStep);
+            const x1 = centerX + r * Math.cos(angle);
+            const y1 = centerY + r * Math.sin(angle);
+            const x2 = centerX + r * Math.cos(nextAngle);
+            const y2 = centerY + r * Math.sin(nextAngle);
+            doc.line(x1, y1, x2, y2);
+        }
+    }
+
+    // Draw Axes & Labels
+    doc.setFontSize(8);
+    doc.setTextColor(150, 150, 150);
+    for (let i = 0; i < numPoints; i++) {
+        const angle = startAngle + (i * angleStep);
+        const x = centerX + radius * Math.cos(angle);
+        const y = centerY + radius * Math.sin(angle);
+        doc.line(centerX, centerY, x, y);
+
+        // Label Position (slightly outside)
+        const labelR = radius + 10;
+        const lx = centerX + labelR * Math.cos(angle);
+        const ly = centerY + labelR * Math.sin(angle);
+        doc.text(labels[i], lx, ly, { align: 'center' });
+    }
+
+    // Draw Data Polygon
+    doc.setDrawColor(59, 130, 246); // Blue
+    doc.setLineWidth(1.5);
+    doc.setFillColor(59, 130, 246);
+
+    // Draw lines
+    const getCoords = (value: number, index: number) => {
+        const r = (radius / 100) * (value || 0);
+        const a = startAngle + (index * angleStep);
+        return [centerX + r * Math.cos(a), centerY + r * Math.sin(a)];
+    };
+
+    // Fill area
+    doc.setFillColor(59, 130, 246);
+
+    const lines: any[] = [];
+    const [startPx, startPy] = getCoords(data[0], 0);
+
+    for (let i = 1; i < numPoints; i++) {
+        const [px, py] = getCoords(data[i], i);
+        // doc.lines expects vectors relative to the start point (x,y) 
+        // OR subsequent points are relative to the previous one
+        // Documentation says: lines(lines, x, y, scale, style, closed)
+        // lines is array of vectors [x, y].
+        // For absolute coords, we can use triangle or just build vectors.
+        // Simplified approach: Calculate vectors relative to *previous point*
+
+        const [prevX, prevY] = i === 1 ? [startPx, startPy] : getCoords(data[i - 1], i - 1);
+        lines.push([px - prevX, py - prevY]);
+    }
+
+    // Close shape
+    const [lastX, lastY] = getCoords(data[numPoints - 1], numPoints - 1);
+    lines.push([startPx - lastX, startPy - lastY]);
+
+    doc.lines(lines, startPx, startPy, [1, 1], 'F', true);
+
+    // Stroke lines
+    for (let i = 0; i < numPoints; i++) {
+        const [x1, y1] = getCoords(data[i], i);
+        const [x2, y2] = getCoords(data[(i + 1) % numPoints], (i + 1) % numPoints);
+        doc.line(x1, y1, x2, y2);
+        // Draw point
+        doc.circle(x1, y1, 2, 'F');
+    }
+};
+
 // 4. QUARTERLY REPORT (All-in-One)
-export const generateQuarterlyReport = async (athlete: AthleteData, analysis: any) => {
+export const generateQuarterlyReport = async (athlete: QuarterlyData) => {
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
     const margin = 20;
 
-    // --- PAGE 1: EXECUTIVE & PILLARS ---
-    await addCleanHeader(doc, "Quarterly Report", "Holistic Performance Review", athlete);
-
-
+    // --- PAGE 1: GENERAL SUMMARY ---
+    await addCleanHeader(doc, "Quarterly Report", "General Summary", athlete);
     let yPos = 70;
 
-    // Executive Summary Box
-    doc.setFillColor(230, 230, 230);
-    doc.rect(margin, yPos - 6, pageWidth - (margin * 2), 10, 'F');
-    doc.setFontSize(12);
+    // Executive Summary Block
+    doc.setFillColor(245, 245, 245);
+    doc.rect(margin, yPos, pageWidth - (margin * 2), 150, 'F');
+
+    doc.setFontSize(14);
     doc.setFont("helvetica", "bold");
     doc.setTextColor(0, 0, 0);
-    doc.text("EXECUTIVE SUMMARY", margin + 5, yPos);
-    yPos += 15;
+    doc.text("EXECUTIVE SUMMARY", margin + 10, yPos + 15);
 
-    doc.setFontSize(10);
+    doc.setFontSize(11);
     doc.setFont("helvetica", "normal");
-    doc.text(`${athlete.name} has demonstrated excellent consistency this quarter. The focus on raising the 'floor'`, margin, yPos);
-    doc.text("of performance has resulted in stable metrics across both physical and technical pillars.", margin, yPos + 6);
+    const summaryLines = doc.splitTextToSize(athlete.executiveSummary || "No summary provided.", pageWidth - (margin * 2) - 20);
+    doc.text(summaryLines, margin + 10, yPos + 30);
 
-    yPos += 30;
-
-    // Pillar Status
-    doc.setFillColor(230, 230, 230);
-    doc.rect(margin, yPos - 6, pageWidth - (margin * 2), 10, 'F');
-    doc.setFontSize(12);
-    doc.setFont("helvetica", "bold");
-    doc.text("1. THE 5 PILLARS STATUS", margin + 5, yPos);
-    yPos += 20;
-
-    const pillars = [
-        { name: "PHYSICAL", score: 85, status: "Peak", color: [34, 197, 94] },
-        { name: "TECHNICAL", score: 70, status: "Developing", color: [234, 179, 8] },
-        { name: "TACTICAL", score: 75, status: "Good", color: [59, 130, 246] },
-        { name: "MENTAL", score: 90, status: "Elite", color: [168, 85, 247] },
-        { name: "LIFESTYLE", score: 80, status: "Stable", color: [34, 197, 94] }
-    ];
-
-    pillars.forEach((p, i) => {
-        const x = margin + (i * 35);
-        // Circle BG
-        doc.setFillColor(250, 250, 250);
-        doc.circle(x + 10, yPos + 10, 14, 'F');
-        // Ring
-        doc.setDrawColor(p.color[0], p.color[1], p.color[2]);
-        doc.setLineWidth(1.5);
-        doc.circle(x + 10, yPos + 10, 14, 'S');
-        // Score
-        doc.setTextColor(0, 0, 0);
-        doc.setFontSize(10);
-        doc.setFont("helvetica", "bold");
-        doc.text(`${p.score}`, x + 6, yPos + 13);
-
-        // Label
-        doc.setFontSize(7);
-        doc.setTextColor(100, 100, 100);
-        doc.text(p.name, x, yPos + 30);
-    });
-
-    yPos += 50;
-
-    // --- PAGE 2: PHYSICAL DEEP DIVE ---
+    // --- PAGE 2: PHYSICAL ---
     doc.addPage();
-    await addCleanHeader(doc, "Physical Performance", "Deep Dive", athlete);
+    await addCleanHeader(doc, "Quarterly Report", "Physical Performance", athlete);
     yPos = 70;
 
-    // Header
-    doc.setFillColor(230, 230, 230);
-    doc.rect(margin, yPos - 6, pageWidth - (margin * 2), 10, 'F');
-    doc.setFontSize(12);
-    doc.setFont("helvetica", "bold");
-    doc.setTextColor(0, 0, 0);
-    doc.text("BIOMECHANICAL METRICS", margin + 5, yPos);
-    yPos += 20;
-
-    // Key Metrics Grid
+    // Top Metrics
     const metrics = [
-        { label: "MQS", val: "88/100", desc: "Movement Quality" },
-        { label: "Power Index", val: "92", desc: "Explosiveness" },
-        { label: "RSI", val: "2.4", desc: "Reactive Strength" },
-        { label: "Force Asym", val: "4%", desc: "L/R Balance" }
+        { label: "IMTP Peak Force", val: athlete.physical?.imtp || "-" },
+        { label: "5-0-5 Agility", val: athlete.physical?.agility || "-" },
+        { label: "Broad Jump", val: athlete.physical?.broadJump || "-" }
     ];
 
     metrics.forEach((m, i) => {
-        const x = margin + (i * 45);
-        // Card Background
+        const x = margin + (i * ((pageWidth - margin * 2) / 3));
         doc.setFillColor(245, 245, 245);
-        doc.roundedRect(x, yPos, 40, 30, 2, 2, 'F');
-
-        doc.setFontSize(14);
-        doc.setTextColor(0, 0, 0);
-        doc.text(m.val, x + 5, yPos + 12);
-
-        doc.setFontSize(8);
-        doc.setTextColor(59, 130, 246);
-        doc.text(m.label, x + 5, yPos + 20);
-
+        doc.roundedRect(x, yPos, 50, 40, 2, 2, 'F');
+        doc.setFontSize(10);
         doc.setTextColor(100, 100, 100);
-        doc.text(m.desc, x + 5, yPos + 25);
+        doc.text(m.label, x + 25, yPos + 15, { align: 'center' });
+        doc.setFontSize(16);
+        doc.setTextColor(0, 0, 0);
+        doc.setFont("helvetica", "bold");
+        doc.text(m.val, x + 25, yPos + 30, { align: 'center' });
     });
 
-    yPos += 50;
+    yPos += 60;
 
-    // Injury Status
-    doc.setFillColor(230, 230, 230);
-    doc.rect(margin, yPos - 6, pageWidth - (margin * 2), 10, 'F');
-    doc.setFontSize(12);
-    doc.setFont("helvetica", "bold");
+    // Strengths & Weaknesses
+    const colWidth = (pageWidth - (margin * 3)) / 2;
+
+    // Strengths
+    doc.setFillColor(220, 255, 220); // Light Green
+    doc.rect(margin, yPos, colWidth, 100, 'F');
+    doc.setTextColor(0, 100, 0);
+    doc.setFontSize(14);
+    doc.text("BIGGEST STRENGTHS", margin + 10, yPos + 15);
     doc.setTextColor(0, 0, 0);
-    doc.text("INJURY STATUS", margin + 5, yPos);
-    yPos += 15;
+    doc.setFontSize(11);
+    doc.setFont("helvetica", "normal");
+    (athlete.physical?.strengths || []).forEach((s, i) => {
+        doc.text(`• ${s}`, margin + 10, yPos + 35 + (i * 15));
+    });
 
-    doc.setFontSize(10);
-    doc.setTextColor(34, 197, 94); // Green
-    doc.text("Active: All systems go. No major red flags detected.", margin, yPos);
+    // Weaknesses
+    doc.setFillColor(255, 220, 220); // Light Red
+    doc.rect(margin + colWidth + margin, yPos, colWidth, 100, 'F');
+    doc.setTextColor(150, 0, 0);
+    doc.setFontSize(14);
+    doc.setFont("helvetica", "bold");
+    doc.text("AREAS FOR GROWTH", margin + colWidth + margin + 10, yPos + 15);
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(11);
+    doc.setFont("helvetica", "normal");
+    (athlete.physical?.weaknesses || []).forEach((w, i) => {
+        doc.text(`• ${w}`, margin + colWidth + margin + 10, yPos + 35 + (i * 15));
+    });
 
-
-    // --- PAGE 3: MENTAL & COACHING ---
+    // --- PAGE 3: MENTORSHIP ---
     doc.addPage();
-    await addCleanHeader(doc, "Mentorship & Coaching", "Psychological Profile", athlete);
+    await addCleanHeader(doc, "Quarterly Report", "Mentorship & Psychology", athlete);
     yPos = 70;
 
-    // Mentorship/SPAT Section
-    doc.setFillColor(230, 230, 230);
-    doc.rect(margin, yPos - 6, pageWidth - (margin * 2), 10, 'F');
+    // Goals (Top Left)
+    doc.setFontSize(14);
+    doc.setFont("helvetica", "bold");
+    doc.text("QUARTERLY GOALS", margin, yPos);
+    yPos += 15;
+    doc.setFontSize(11);
+    doc.setFont("helvetica", "normal");
+    (athlete.mentorship?.goals || []).forEach(g => {
+        doc.text(`• ${g}`, margin, yPos);
+        yPos += 10;
+    });
+
+    // Psych Skills (Bottom Left)
+    yPos += 20;
+    doc.setFontSize(14);
+    doc.setFont("helvetica", "bold");
+    doc.text("PSYCHOLOGICAL SKILLS LEARNT", margin, yPos);
+    yPos += 15;
+    doc.setFontSize(11);
+    doc.setFont("helvetica", "normal");
+    (athlete.mentorship?.psychSkills || []).forEach(s => {
+        doc.text(`• ${s}`, margin, yPos);
+        yPos += 10;
+    });
+
+    // Radar Chart (Right Side)
+    // SPAT Scores: [Physical, Technical, Tactical, Mental, Lifestyle]
+    const spatData = athlete.mentorship?.spatScores || [0, 0, 0, 0, 0];
+    const spatLabels = ["Physical", "Technical", "Tactical", "Mental", "Lifestyle"];
+
+    // Draw it roughly center-right
+    drawRadarChart(doc, 140, 130, 40, spatData, spatLabels);
+
+
+    // --- PAGE 4: COACHING ---
+    doc.addPage();
+    await addCleanHeader(doc, "Quarterly Report", "Coaching & Technical", athlete);
+    yPos = 70;
+
+    // Block Focus
+    doc.setFillColor(240, 240, 240);
+    doc.rect(margin, yPos, pageWidth - (margin * 2), 30, 'F');
     doc.setFontSize(12);
     doc.setFont("helvetica", "bold");
-    doc.setTextColor(0, 0, 0);
-    doc.text("MENTAL PERFORMANCE (SPAT)", margin + 5, yPos);
-    yPos += 15;
-
+    doc.text("FOCUS OF THE BLOCK", margin + 10, yPos + 10);
     doc.setFontSize(11);
-    doc.setTextColor(50, 50, 50);
     doc.setFont("helvetica", "normal");
-    doc.text("Routines Implemented:", margin, yPos);
+    doc.text(athlete.coaching?.blockFocus || "-", margin + 10, yPos + 22);
 
-    const routines = ["Pre-Game Synchronization", "Mistake Recovery (0.2s Rule)", "Visualisation"];
-    routines.forEach((r, i) => {
+    yPos += 40;
+
+    // Skills Learnt
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
+    doc.text("SKILLS LEARNT", margin, yPos);
+    yPos += 10;
+    (athlete.coaching?.skillsLearnt || []).forEach(s => {
+        doc.text(`• ${s}`, margin, yPos);
         yPos += 8;
-        doc.text(`• ${r}`, margin + 5, yPos);
     });
 
     yPos += 20;
 
-    // Coaching Plan
-    doc.setFillColor(230, 230, 230);
-    doc.rect(margin, yPos - 6, pageWidth - (margin * 2), 10, 'F');
+    // School Report Style Feedback
     doc.setFontSize(12);
     doc.setFont("helvetica", "bold");
-    doc.setTextColor(0, 0, 0);
-    doc.text("COACHING & FORWARD PLANNING", margin + 5, yPos);
-    yPos += 15;
+    doc.text("TECHNICAL FEEDBACK", margin, yPos);
+    yPos += 10;
 
-    doc.setFont("helvetica", "normal");
+    // Table Header
+    doc.setFillColor(0, 0, 0);
+    doc.rect(margin, yPos, pageWidth - (margin * 2), 10, 'F');
+    doc.setTextColor(255, 255, 255);
     doc.setFontSize(10);
-    doc.text("Focus for next cycle: Technical refinement of max velocity sprint mechanics.", margin, yPos);
+    doc.text("SKILL / AREA", margin + 5, yPos + 7);
+    doc.text("GRADE", margin + 70, yPos + 7);
+    doc.text("TUTOR COMMENT", margin + 100, yPos + 7);
 
+    yPos += 10;
+    doc.setTextColor(0, 0, 0);
+    doc.setFont("helvetica", "normal");
 
+    (athlete.coaching?.technicalFeedback || []).forEach((row, i) => {
+        if (i % 2 === 0) doc.setFillColor(245, 245, 245);
+        else doc.setFillColor(255, 255, 255);
 
+        doc.rect(margin, yPos, pageWidth - (margin * 2), 15, 'F'); // Row bg
+
+        doc.setFont("helvetica", "bold");
+        doc.text(row.skill, margin + 5, yPos + 10);
+
+        // Grade Color
+        const grade = row.grade.toUpperCase();
+        if (grade.startsWith('A') || grade === 'EXCELLENT') doc.setTextColor(0, 150, 0);
+        else if (grade.startsWith('C') || grade === 'SATISFACTORY') doc.setTextColor(200, 150, 0);
+        else doc.setTextColor(0, 0, 0);
+
+        doc.text(row.grade, margin + 70, yPos + 10);
+
+        doc.setTextColor(50, 50, 50);
+        doc.setFont("helvetica", "italic");
+        doc.setFontSize(9);
+        doc.text(row.note, margin + 100, yPos + 10, { maxWidth: 80 });
+
+        doc.setFontSize(10); // Reset
+        doc.setTextColor(0, 0, 0); // Reset
+
+        yPos += 15;
+    });
 
     doc.save(`${athlete.name}_Quarterly_Report.pdf`);
 };
