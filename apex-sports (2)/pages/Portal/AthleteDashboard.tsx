@@ -160,7 +160,7 @@ const AthleteDashboard: React.FC = () => {
 
     // SAFE ANALYSIS
     const analysis = analyzeAthlete(athlete);
-    const { flags, recommendation } = analysis;
+    const { flags, recommendation, scores } = analysis;
 
     // v19.0 Access Logic (Safe Fallback)
     const tier = (athlete.productTier || '').trim().toLowerCase();
