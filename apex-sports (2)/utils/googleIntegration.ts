@@ -45,6 +45,30 @@ export const updateCoachReview = async (email: string, pin: string, score: numbe
     }
 };
 
+// Update Athlete Goals (Year, Process, Why)
+export const updateAthleteGoals = async (email: string, goals: { year: string, process: string, why: string }): Promise<boolean> => {
+    try {
+        // Construct Post Data
+        const params = new URLSearchParams();
+        params.append('action', 'update_athlete_goals');
+        params.append('email', email);
+        params.append('goalsYear', goals.year);
+        params.append('goalsProcess', goals.process);
+        params.append('goalsWhy', goals.why);
+
+        // Fire and forget (or await if critical)
+        fetch(APPS_SCRIPT_URL, {
+            method: 'POST',
+            body: params,
+        }).catch(err => console.warn("Background Save Failed:", err));
+
+        return true;
+    } catch (e) {
+        console.error("Failed to sync goals:", e);
+        return false;
+    }
+};
+
 export const fetchAthleteFromGoogle = async (email: string, pin: string): Promise<AthleteData | null> => {
     if (USE_MOCK_FALLBACK) {
         console.log("Google Integration: Using Mock Fallback");

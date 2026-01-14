@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useData } from '../../context/DataContext';
 import { analyzeAthlete } from '../../utils/dataEngine';
@@ -13,8 +13,9 @@ import {
     AlertTriangle, CheckCircle, UploadCloud, AlertCircle, Zap,
     LayoutDashboard, Target, BookOpen, FileText, Menu, X, Save, ExternalLink,
     Activity, Shield, Battery, TrendingUp, ChevronRight, Lock, User, LogOut, MonitorPlay, Home, CheckSquare, BarChart2, Sliders, Layers, Info, Video, Users, Brain, Award, Triangle, Download,
-    Calendar, ChevronLeft, Dumbbell, Settings // Added for lucide-react
+    Calendar, ChevronLeft, Dumbbell, Settings, Edit3 // Added for lucide-react
 } from 'lucide-react';
+import { updateAthleteGoals } from '../../utils/googleIntegration';
 import { VideoLab } from '../../components/VideoLab/VideoLab';
 import { ApexAgent } from '../../components/ApexAI/ApexAgent';
 import html2canvas from 'html2canvas';
@@ -254,6 +255,41 @@ const AthleteDashboard: React.FC = () => {
     // SCIENCE EXPLAINED STATE
     const [showScience, setShowScience] = useState<'physical' | 'pillars' | 'wellness' | null>(null);
 
+    // --- EDITABLE GOALS STATE ---
+    const [goals, setGoals] = useState({
+        year: '',
+        process: '',
+        why: ''
+    });
+    const [isEditingGoals, setIsEditingGoals] = useState(false);
+
+    // Initialize Goals from LocalStorage (or Athlete Data if available in future)
+    useEffect(() => {
+        if (athlete?.id) {
+            const saved = localStorage.getItem(`apex_goals_${athlete.id}`);
+            if (saved) {
+                setGoals(JSON.parse(saved));
+            } else if (athlete.email === 'admin@apexsports.co.za') {
+                // Default for Admin/Demo
+                setGoals({
+                    year: "Win the League Title & Achieve 90% Pass Completion",
+                    process: "1. Sleep 8+ Hours\n2. Track Wellness Daily\n3. Visualise before every game",
+                    why: "To prove to myself that I can compete at the highest level."
+                });
+            }
+        }
+    }, [athlete?.id]);
+
+    const handleSaveGoals = () => {
+        setIsEditingGoals(false);
+        if (athlete?.id) {
+            // Local Save
+            localStorage.setItem(`apex_goals_${athlete.id}`, JSON.stringify(goals));
+            // Cloud Sync
+            updateAthleteGoals(athlete.email, goals);
+        }
+    };
+
     const ScienceOverlay = ({ type, onClose }: { type: string, onClose: () => void }) => {
         const content = {
             physical: {
@@ -482,6 +518,84 @@ const AthleteDashboard: React.FC = () => {
 
     const renderHome = () => (
         <div className="space-y-12 animate-fade-in pb-20">
+            {/* --- NEW: EDITABLE GOALS SECTION --- */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {/* Year Goals */}
+                <div className="bg-neutral-900/80 border border-neutral-800 p-6 rounded-3xl relative group">
+                    <div className="flex justify-between items-start mb-4">
+                        <div className="flex items-center gap-2">
+                            <Target className="w-5 h-5 text-red-500" />
+                            <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest">Year Goals</h3>
+                        </div>
+                        <button onClick={() => isEditingGoals ? handleSaveGoals() : setIsEditingGoals(true)} className="text-gray-500 hover:text-white transition-colors">
+                            {isEditingGoals ? <CheckCircle className="w-4 h-4 text-green-500" /> : <Edit3 className="w-4 h-4" />}
+                        </button>
+                    </div>
+                    {isEditingGoals ? (
+                        <textarea
+                            value={goals.year}
+                            onChange={(e) => setGoals({ ...goals, year: e.target.value })}
+                            className="w-full bg-black/50 text-white text-lg font-bold p-3 rounded-xl border border-neutral-700 focus:border-red-500 outline-none h-32 resize-none"
+                            placeholder="What do you want to achieve this year?"
+                        />
+                    ) : (
+                        <p className="text-lg font-bold text-white whitespace-pre-wrap min-h-[3rem]">
+                            {goals.year || <span className="text-gray-600 italic">Click edit to set your goals...</span>}
+                        </p>
+                    )}
+                </div>
+
+                {/* The Process */}
+                <div className="bg-neutral-900/80 border border-neutral-800 p-6 rounded-3xl relative group">
+                    <div className="flex justify-between items-start mb-4">
+                        <div className="flex items-center gap-2">
+                            <Layers className="w-5 h-5 text-blue-500" />
+                            <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest">The Process</h3>
+                        </div>
+                        <button onClick={() => isEditingGoals ? handleSaveGoals() : setIsEditingGoals(true)} className="text-gray-500 hover:text-white transition-colors">
+                            {isEditingGoals ? <CheckCircle className="w-4 h-4 text-green-500" /> : <Edit3 className="w-4 h-4" />}
+                        </button>
+                    </div>
+                    {isEditingGoals ? (
+                        <textarea
+                            value={goals.process}
+                            onChange={(e) => setGoals({ ...goals, process: e.target.value })}
+                            className="w-full bg-black/50 text-white text-lg font-bold p-3 rounded-xl border border-neutral-700 focus:border-blue-500 outline-none h-32 resize-none"
+                            placeholder="What daily habits will get you there?"
+                        />
+                    ) : (
+                        <p className="text-lg font-bold text-white whitespace-pre-wrap min-h-[3rem]">
+                            {goals.process || <span className="text-gray-600 italic">Define your daily habits...</span>}
+                        </p>
+                    )}
+                </div>
+
+                {/* The Why */}
+                <div className="bg-neutral-900/80 border border-neutral-800 p-6 rounded-3xl relative group">
+                    <div className="flex justify-between items-start mb-4">
+                        <div className="flex items-center gap-2">
+                            <Zap className="w-5 h-5 text-yellow-500" />
+                            <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest">Your Why</h3>
+                        </div>
+                        <button onClick={() => isEditingGoals ? handleSaveGoals() : setIsEditingGoals(true)} className="text-gray-500 hover:text-white transition-colors">
+                            {isEditingGoals ? <CheckCircle className="w-4 h-4 text-green-500" /> : <Edit3 className="w-4 h-4" />}
+                        </button>
+                    </div>
+                    {isEditingGoals ? (
+                        <textarea
+                            value={goals.why}
+                            onChange={(e) => setGoals({ ...goals, why: e.target.value })}
+                            className="w-full bg-black/50 text-white text-lg font-bold p-3 rounded-xl border border-neutral-700 focus:border-yellow-500 outline-none h-32 resize-none"
+                            placeholder="What drives you?"
+                        />
+                    ) : (
+                        <p className="text-lg font-bold text-white whitespace-pre-wrap min-h-[3rem]">
+                            {goals.why || <span className="text-gray-600 italic">State your purpose...</span>}
+                        </p>
+                    )}
+                </div>
+            </div>
+
             {/* Header / Instructional Video (Deion Sanders) */}
             <div className="bg-neutral-900 border border-neutral-800 rounded-3xl overflow-hidden shadow-2xl">
                 <div className="aspect-video w-full bg-black relative flex items-center justify-center group">
