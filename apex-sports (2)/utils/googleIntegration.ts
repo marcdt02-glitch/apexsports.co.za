@@ -145,7 +145,20 @@ const mapGoogleRowToAthlete = (row: any): AthleteData => {
     return {
         id: row._id || row.id || `google-${Date.now()}`,
         // Administrative: User uses "Name" and "Surname"
-        name: row._name || row.name || row['Name'] ? `${row['Name']} ${row['Surname'] || ''}`.trim() : `${row.firstName || ''} ${row.surname || ''}`.trim() || 'Unknown Athlete',
+        // Administrative: User uses "Name" and "Surname"
+        name: (() => {
+            // Check all common variations
+            const n = row['Name'] || row['name'] || row['Athlete'] || row['athlete'] || row['Full Name'] || row['full name'] || row['First Name'];
+            const s = row['Surname'] || row['surname'] || row['Last Name'] || row['last name'] || '';
+
+            if (n && s) return `${n} ${s}`.trim();
+            if (n) return String(n).trim();
+
+            // Try fallback to composite keys if 'n' was just First Name found in a specific way
+            if (row['First Name'] || row['Surname']) return `${row['First Name'] || ''} ${row['Surname'] || ''}`.trim();
+
+            return 'Unknown Athlete';
+        })(),
         email: row._email || row.email || row['Email'] || '',
         date: new Date().toISOString().split('T')[0],
         lastUpdated: row['Last Updated'] || row.timestamp || '',
