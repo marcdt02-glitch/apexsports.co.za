@@ -21,7 +21,7 @@ import { ApexAgent } from '../../components/ApexAI/ApexAgent';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { generateTechnicalReport, generateDevelopmentReport, generateExecutiveReport, generateQuarterlyReport } from '../../services/ReportService';
-import { CoachingScheduler } from '../../components/Coaching/CoachingScheduler';
+import { PortalCoaching } from '../../components/Coaching/PortalCoaching';
 import { CoachReviewModal } from '../../components/CoachReviewModal'; // Import Modal
 import { updateCoachReview } from '../../utils/googleIntegration'; // Import updateCoachReview
 
@@ -1019,7 +1019,7 @@ const AthleteDashboard: React.FC = () => {
                         {/* VIEW: COACHING */}
                         {activeView === 'coaching' && (
                             <div className="animate-fade-in pb-20">
-                                <CoachingScheduler />
+                                <PortalCoaching />
                             </div>
                         )}
 
