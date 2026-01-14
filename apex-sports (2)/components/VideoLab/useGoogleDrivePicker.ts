@@ -16,8 +16,8 @@ export interface DriveFile {
     url?: string;
 }
 
-// Scope for Drive Read Only
-const SCOPES = 'https://www.googleapis.com/auth/drive.readonly';
+// Scope for Drive Per-File Access (Best for Picker, avoids full read-only safety checks)
+const SCOPES = 'https://www.googleapis.com/auth/drive.file';
 
 export const useGoogleDrivePicker = () => {
     const [pickerApiLoaded, setPickerApiLoaded] = useState(false);
