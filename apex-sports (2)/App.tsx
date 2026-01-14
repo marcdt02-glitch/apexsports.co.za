@@ -8,6 +8,7 @@ import Mentorship from './pages/Mentorship';
 import Goalkeeper from './pages/Goalkeeper';
 import BookingPolicy from './pages/BookingPolicy';
 import ApexPrivacy from './pages/ApexPrivacy';
+import TermsOfService from './pages/TermsOfService';
 import Contact from './pages/Contact';
 import PaymentSuccess from './pages/PaymentSuccess';
 import Services from './pages/Services';
@@ -50,6 +51,7 @@ const InnerLayout: React.FC = () => {
           <Route path="/apex-lab" element={<ApexLab />} />
           <Route path="/booking-policy" element={<BookingPolicy />} />
           <Route path="/privacy-policy" element={<ApexPrivacy />} />
+          <Route path="/terms" element={<TermsOfService />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/services" element={<Services />} />
           <Route path="/welcome-athlete" element={<WelcomeAthlete />} />
