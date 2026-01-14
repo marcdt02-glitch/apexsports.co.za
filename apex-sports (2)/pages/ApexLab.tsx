@@ -186,77 +186,7 @@ const ApexLab: React.FC = () => {
                 </div>
             </section>
 
-            {/* 3. ACCESS TABLE (Transparency Layer) */}
-            <section className="py-24 px-4 bg-neutral-950">
-                <div className="max-w-7xl mx-auto">
-                    <div className="text-center mb-16">
-                        <h2 className="text-4xl font-bold text-white uppercase tracking-tight mb-4">Lab Access Levels</h2>
-                        <p className="text-gray-400 text-lg">Choose the level of scientific support your career demands.</p>
-                    </div>
 
-                    <div className="overflow-x-auto">
-                        <table className="w-full min-w-[800px] border-collapse">
-                            <thead>
-                                <tr>
-                                    <th className="p-6 text-left text-gray-500 font-bold uppercase tracking-widest text-sm border-b border-gray-800">Feature</th>
-                                    <th className="p-6 text-center border-b border-gray-800 bg-neutral-900/50 rounded-t-2xl">
-                                        <span className="block text-white font-black text-xl uppercase">Lab Entry</span>
-                                        <span className="block text-gray-400 text-sm mt-1">R150 / mo</span>
-                                    </th>
-                                    <th className="p-6 text-center border-b border-gray-800">
-                                        <span className="block text-white font-black text-xl uppercase">S&C Standard</span>
-                                        <span className="block text-gray-400 text-sm mt-1">R500 / mo</span>
-                                    </th>
-                                    <th className="p-6 text-center border-b border-gray-800 relative overflow-hidden">
-                                        <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-blue-500 to-purple-500"></div>
-                                        <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 font-black text-xl uppercase">Elite / Apex</span>
-                                        <span className="block text-gray-400 text-sm mt-1">R1500+ / mo</span>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gray-800">
-                                <tr className="hover:bg-white/5 transition-colors">
-                                    <td className="p-6 text-gray-300 font-medium">Video Lab Analysis</td>
-                                    <td className="p-6 text-center"><Check className="w-5 h-5 text-green-500 mx-auto" /></td>
-                                    <td className="p-6 text-center"><Check className="w-5 h-5 text-green-500 mx-auto" /></td>
-                                    <td className="p-6 text-center"><Check className="w-5 h-5 text-green-500 mx-auto" /></td>
-                                </tr>
-                                <tr className="hover:bg-white/5 transition-colors">
-                                    <td className="p-6 text-gray-300 font-medium">Goal Setting & Tracking</td>
-                                    <td className="p-6 text-center"><Check className="w-5 h-5 text-green-500 mx-auto" /></td>
-                                    <td className="p-6 text-center"><Check className="w-5 h-5 text-green-500 mx-auto" /></td>
-                                    <td className="p-6 text-center"><Check className="w-5 h-5 text-green-500 mx-auto" /></td>
-                                </tr>
-                                <tr className="hover:bg-white/5 transition-colors">
-                                    <td className="p-6 text-gray-300 font-medium">Wellness & Load Monitoring</td>
-                                    <td className="p-6 text-center text-gray-600">-</td>
-                                    <td className="p-6 text-center"><Check className="w-5 h-5 text-green-500 mx-auto" /></td>
-                                    <td className="p-6 text-center"><Check className="w-5 h-5 text-green-500 mx-auto" /></td>
-                                </tr>
-                                <tr className="hover:bg-white/5 transition-colors">
-                                    <td className="p-6 text-gray-300 font-medium">Physical Results & Reporting</td>
-                                    <td className="p-6 text-center"><Check className="w-5 h-5 text-green-500 mx-auto" /></td>
-                                    <td className="p-6 text-center"><Check className="w-5 h-5 text-green-500 mx-auto" /></td>
-                                    <td className="p-6 text-center"><Check className="w-5 h-5 text-green-500 mx-auto" /></td>
-                                </tr>
-                                <tr className="hover:bg-white/5 transition-colors">
-                                    <td className="p-6 text-gray-300 font-medium">AI Performance Agent</td>
-                                    <td className="p-6 text-center"><Check className="w-5 h-5 text-purple-500 mx-auto" /></td>
-                                    <td className="p-6 text-center"><Check className="w-5 h-5 text-purple-500 mx-auto" /></td>
-                                    <td className="p-6 text-center"><Check className="w-5 h-5 text-purple-500 mx-auto" /></td>
-                                </tr>
-
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div className="mt-16 flex justify-center">
-                        <Link to="/services" className="bg-white text-black font-black text-lg py-5 px-12 rounded-full uppercase tracking-widest shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:scale-105 transition-transform flex items-center gap-3">
-                            Apply for Access <ArrowRight className="w-6 h-6" />
-                        </Link>
-                    </div>
-                </div>
-            </section >
         </div >
     );
 };

@@ -1226,7 +1226,7 @@ const AthleteDashboard: React.FC = () => {
                                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
                                     {/* Left Column: Toggled Content (Simple vs Advanced) */}
-                                    <div className="lg:col-span-2 space-y-8">
+                                    <div className={`space-y-8 ${physicalViewMode === 'simple' ? 'lg:col-span-3' : 'lg:col-span-2'}`}>
 
                                         {/* VIEW: SIMPLIFIED */}
                                         {physicalViewMode === 'simple' && (
@@ -1461,127 +1461,130 @@ const AthleteDashboard: React.FC = () => {
                                     </div>
 
 
-                                </div>
-
-                                {/* Right Column: Recommendations & Workload (v15.1) */}
-                                <div className="space-y-8">
-
-                                    {/* Recommendations */}
 
 
-                                    {/* v16.1 MoveHealth Live Feed */}
-                                    <div className="bg-neutral-900/40 border border-neutral-800 p-6 rounded-3xl">
-                                        <div className="flex items-center justify-between mb-4">
-                                            <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500 flex items-center gap-2">
-                                                <Activity className="w-4 h-4 text-purple-500" />
-                                                Recent Training
-                                            </h3>
-                                            <span className="text-[10px] text-gray-600 bg-neutral-900 border border-neutral-800 px-2 py-1 rounded">MoveHealth</span>
-                                        </div>
+                                    {/* Right Column: Recommendations & Workload (v15.1) */}
+                                    {physicalViewMode === 'advanced' && (
+                                        <div className="space-y-8">
 
-                                        {/* v8.0 Performance Metrics Vault (Moved to Right Col for Vertical Stack) */}
-                                        <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl">
-                                            <div className="flex items-center justify-between mb-6">
-                                                <h2 className="text-xl font-bold flex items-center gap-3">
-                                                    <span className="w-1 h-6 bg-blue-600 rounded-full"></span>
-                                                    {showAdvancedMetrics ? 'Performance' : 'Field Tests'}
-                                                </h2>
-                                                <button onClick={() => setShowScience('physical')} className="text-gray-400 hover:text-white"><Info className="w-4 h-4" /></button>
-                                            </div>
-                                            <div className="grid grid-cols-1 gap-4">
-                                                <MetricCard label="Agility T" value={`${athlete.agilityTime || '-'} s`} />
-                                                <MetricCard label="Jump Dist." value={`${athlete.broadJump || '-'} cm`} />
-                                                {showAdvancedMetrics && (
-                                                    <>
-                                                        <MetricCard label="IMTP Peak" value={`${athlete.imtpPeakForce} N`} />
-                                                        <MetricCard label="IMTP RFD" value={`${athlete.imtpRfd200} N/s`} />
-                                                    </>
-                                                )}
-                                            </div>
-                                        </div>
+                                            {/* Recommendations */}
 
-                                        {/* RPE Integrity Alert */}
-                                        {flags.isRpeDiscrepancy && (
-                                            <div className="mb-4 bg-red-900/20 border border-red-900/50 p-3 rounded-lg flex items-start gap-3">
-                                                <AlertTriangle className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
-                                                <div>
-                                                    <p className="text-xs font-bold text-red-500 uppercase">Data Discrepancy</p>
-                                                    <p className="text-[10px] text-gray-300 leading-tight mt-1">
-                                                        Session RPE ({athlete.sRPE}) differs significantly from Exercise RPE. Check compliance.
-                                                    </p>
+
+                                            {/* v16.1 MoveHealth Live Feed */}
+                                            <div className="bg-neutral-900/40 border border-neutral-800 p-6 rounded-3xl">
+                                                <div className="flex items-center justify-between mb-4">
+                                                    <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500 flex items-center gap-2">
+                                                        <Activity className="w-4 h-4 text-purple-500" />
+                                                        Recent Training
+                                                    </h3>
+                                                    <span className="text-[10px] text-gray-600 bg-neutral-900 border border-neutral-800 px-2 py-1 rounded">MoveHealth</span>
                                                 </div>
-                                            </div>
-                                        )}
 
-                                        <div className="space-y-3">
-                                            {athlete.moveHealth?.lastExercises?.length > 0 ? (
-                                                athlete.moveHealth.lastExercises.slice(0, 3).map((ex, i) => (
-                                                    <div key={i} className="bg-neutral-900 border border-neutral-800 p-3 rounded-xl flex justify-between items-center group hover:border-neutral-700 transition-colors">
+                                                {/* v8.0 Performance Metrics Vault (Moved to Right Col for Vertical Stack) */}
+                                                <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl">
+                                                    <div className="flex items-center justify-between mb-6">
+                                                        <h2 className="text-xl font-bold flex items-center gap-3">
+                                                            <span className="w-1 h-6 bg-blue-600 rounded-full"></span>
+                                                            {showAdvancedMetrics ? 'Performance' : 'Field Tests'}
+                                                        </h2>
+                                                        <button onClick={() => setShowScience('physical')} className="text-gray-400 hover:text-white"><Info className="w-4 h-4" /></button>
+                                                    </div>
+                                                    <div className="grid grid-cols-1 gap-4">
+                                                        <MetricCard label="Agility T" value={`${athlete.agilityTime || '-'} s`} />
+                                                        <MetricCard label="Jump Dist." value={`${athlete.broadJump || '-'} cm`} />
+                                                        {showAdvancedMetrics && (
+                                                            <>
+                                                                <MetricCard label="IMTP Peak" value={`${athlete.imtpPeakForce} N`} />
+                                                                <MetricCard label="IMTP RFD" value={`${athlete.imtpRfd200} N/s`} />
+                                                            </>
+                                                        )}
+                                                    </div>
+                                                </div>
+
+                                                {/* RPE Integrity Alert */}
+                                                {flags.isRpeDiscrepancy && (
+                                                    <div className="mb-4 bg-red-900/20 border border-red-900/50 p-3 rounded-lg flex items-start gap-3">
+                                                        <AlertTriangle className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
                                                         <div>
-                                                            <p className="font-bold text-sm text-white group-hover:text-blue-400 transition-colors">{ex.name}</p>
-                                                            <p className="text-[10px] text-gray-500 font-mono">
-                                                                {ex.sets} x {ex.reps} @ {ex.weight}kg
+                                                            <p className="text-xs font-bold text-red-500 uppercase">Data Discrepancy</p>
+                                                            <p className="text-[10px] text-gray-300 leading-tight mt-1">
+                                                                Session RPE ({athlete.sRPE}) differs significantly from Exercise RPE. Check compliance.
                                                             </p>
                                                         </div>
-                                                        <div className="text-right">
-                                                            <div className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${ex.rpe >= 8 ? 'bg-red-900/30 text-red-500' : 'bg-green-900/30 text-green-500'}`}>
-                                                                RPE {ex.rpe}
-                                                            </div>
-                                                        </div>
                                                     </div>
-                                                ))
-                                            ) : (
-                                                <div className="text-center py-6">
-                                                    <Activity className="w-8 h-8 text-neutral-800 mx-auto mb-2" />
-                                                    <p className="text-xs text-gray-600">No recent activity logged.</p>
+                                                )}
+
+                                                <div className="space-y-3">
+                                                    {athlete.moveHealth?.lastExercises?.length > 0 ? (
+                                                        athlete.moveHealth.lastExercises.slice(0, 3).map((ex, i) => (
+                                                            <div key={i} className="bg-neutral-900 border border-neutral-800 p-3 rounded-xl flex justify-between items-center group hover:border-neutral-700 transition-colors">
+                                                                <div>
+                                                                    <p className="font-bold text-sm text-white group-hover:text-blue-400 transition-colors">{ex.name}</p>
+                                                                    <p className="text-[10px] text-gray-500 font-mono">
+                                                                        {ex.sets} x {ex.reps} @ {ex.weight}kg
+                                                                    </p>
+                                                                </div>
+                                                                <div className="text-right">
+                                                                    <div className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${ex.rpe >= 8 ? 'bg-red-900/30 text-red-500' : 'bg-green-900/30 text-green-500'}`}>
+                                                                        RPE {ex.rpe}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        ))
+                                                    ) : (
+                                                        <div className="text-center py-6">
+                                                            <Activity className="w-8 h-8 text-neutral-800 mx-auto mb-2" />
+                                                            <p className="text-xs text-gray-600">No recent activity logged.</p>
+                                                        </div>
+                                                    )}
                                                 </div>
-                                            )}
-                                        </div>
-                                    </div>
+                                            </div>
 
-                                    {/* v15.1 Workload Management */}
-                                    <div className="bg-neutral-900/40 border border-neutral-800 p-6 rounded-3xl">
-                                        <div className="flex items-center justify-between mb-6">
-                                            <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500">Workload (7-Day)</h3>
-                                            <div className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${acwrHighRisk ? 'bg-red-900/30 text-red-500 border border-red-900' : 'bg-green-900/30 text-green-500 border border-green-900'}`}>
-                                                {acwrHighRisk ? 'Injury Red Zone' : 'Optimal Zone'}
+                                            {/* v15.1 Workload Management */}
+                                            <div className="bg-neutral-900/40 border border-neutral-800 p-6 rounded-3xl">
+                                                <div className="flex items-center justify-between mb-6">
+                                                    <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500">Workload (7-Day)</h3>
+                                                    <div className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${acwrHighRisk ? 'bg-red-900/30 text-red-500 border border-red-900' : 'bg-green-900/30 text-green-500 border border-green-900'}`}>
+                                                        {acwrHighRisk ? 'Injury Red Zone' : 'Optimal Zone'}
+                                                    </div>
+                                                </div>
+
+                                                {/* Chart */}
+                                                <div className="h-32 w-full mb-6">
+                                                    <ResponsiveContainer width="100%" height="100%">
+                                                        <AreaChart data={recentSessions}>
+                                                            <defs>
+                                                                <linearGradient id="colorLoad" x1="0" y1="0" x2="0" y2="1">
+                                                                    <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
+                                                                    <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                                                                </linearGradient>
+                                                            </defs>
+                                                            <XAxis dataKey="date" hide />
+                                                            <RechartsTooltip
+                                                                contentStyle={{ backgroundColor: '#111', borderColor: '#333', borderRadius: '8px', fontSize: '12px' }}
+                                                                itemStyle={{ color: '#fff' }}
+                                                                labelStyle={{ display: 'none' }}
+                                                            />
+                                                            <Area type="monotone" dataKey="load" stroke="#3b82f6" fillOpacity={1} fill="url(#colorLoad)" />
+                                                        </AreaChart>
+                                                    </ResponsiveContainer>
+                                                </div>
+
+                                                <div className="flex items-center justify-between border-t border-white/5 pt-4">
+                                                    <div>
+                                                        <p className="text-[10px] text-gray-500 font-bold uppercase">Daily Load</p>
+                                                        <p className="text-2xl font-black text-white">{athlete.dailyLoad || 0}</p>
+                                                    </div>
+                                                    <div className="text-right">
+                                                        <p className="text-[10px] text-gray-500 font-bold uppercase">ACWR</p>
+                                                        <p className={`text-2xl font-black ${acwrHighRisk ? 'text-red-500' : 'text-green-500'}`}>
+                                                            {acwrValue.toFixed(2)}
+                                                        </p>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-
-                                        {/* Chart */}
-                                        <div className="h-32 w-full mb-6">
-                                            <ResponsiveContainer width="100%" height="100%">
-                                                <AreaChart data={recentSessions}>
-                                                    <defs>
-                                                        <linearGradient id="colorLoad" x1="0" y1="0" x2="0" y2="1">
-                                                            <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
-                                                            <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
-                                                        </linearGradient>
-                                                    </defs>
-                                                    <XAxis dataKey="date" hide />
-                                                    <RechartsTooltip
-                                                        contentStyle={{ backgroundColor: '#111', borderColor: '#333', borderRadius: '8px', fontSize: '12px' }}
-                                                        itemStyle={{ color: '#fff' }}
-                                                        labelStyle={{ display: 'none' }}
-                                                    />
-                                                    <Area type="monotone" dataKey="load" stroke="#3b82f6" fillOpacity={1} fill="url(#colorLoad)" />
-                                                </AreaChart>
-                                            </ResponsiveContainer>
-                                        </div>
-
-                                        <div className="flex items-center justify-between border-t border-white/5 pt-4">
-                                            <div>
-                                                <p className="text-[10px] text-gray-500 font-bold uppercase">Daily Load</p>
-                                                <p className="text-2xl font-black text-white">{athlete.dailyLoad || 0}</p>
-                                            </div>
-                                            <div className="text-right">
-                                                <p className="text-[10px] text-gray-500 font-bold uppercase">ACWR</p>
-                                                <p className={`text-2xl font-black ${acwrHighRisk ? 'text-red-500' : 'text-green-500'}`}>
-                                                    {acwrValue.toFixed(2)}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    )}
                                 </div>
 
                             </div>
