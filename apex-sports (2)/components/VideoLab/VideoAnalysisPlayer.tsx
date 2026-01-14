@@ -458,6 +458,14 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
                     ctx.fillText(`${angleDeg.toFixed(1)}°`, p0.x + 10, p0.y + 30);
                     ctx.shadowBlur = 0; // Reset
                 }
+            } else if (d.type === 'text' && d.text) {
+                ctx.fillStyle = d.color || '#fff'; // Default white
+                ctx.font = 'bold 16px "Inter", sans-serif'; // Standard Font
+                ctx.shadowColor = 'black';
+                ctx.shadowBlur = 4; // Readability
+                const p = d.points[0];
+                ctx.fillText(d.text, p.x, p.y);
+                ctx.shadowBlur = 0; // Reset
             }
 
             // Draw Handles if in 'Select' mode (always draw for Angle so they can drag)
