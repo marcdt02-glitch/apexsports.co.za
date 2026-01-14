@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 // Declarations to satisfy TS for the Google API global objects
 declare global {
@@ -11,81 +11,94 @@ declare global {
 export interface DriveFile {
     id: string;
     name: string;
-    embedUrl: string; // We'll try to construct a usable URL
+    embedUrl: string;
     mimeType: string;
     url?: string;
 }
 
-// NOTE: These should be replaced by your actual keys or environment variables
+// Scope for Drive Read Only
 const SCOPES = 'https://www.googleapis.com/auth/drive.readonly';
-// const DISCOVERY_DOCS = ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest']; // Not strictly needed for Picker alone but good for Drive API
 
 export const useGoogleDrivePicker = () => {
     const [pickerApiLoaded, setPickerApiLoaded] = useState(false);
+    const [gisLoaded, setGisLoaded] = useState(false);
     const [oauthToken, setOauthToken] = useState<string | null>(null);
     const [isAuthorized, setIsAuthorized] = useState(false);
 
-    // Initial Load of GAPI Scripts
+    // Ref to hold the token client to avoid recreation
+    const tokenClient = useRef<any>(null);
+
+    // Initial Load of Scripts (GAPI for Picker, GIS for Auth)
     useEffect(() => {
-        const loadGapis = () => {
-            const script = document.createElement("script");
-            script.src = "https://apis.google.com/js/api.js";
-            script.onload = () => {
-                window.gapi.load('client:auth2:picker', () => {
+        const loadScripts = () => {
+            // 1. Load GAPI (Legacy API for Picker)
+            const scriptGapi = document.createElement("script");
+            scriptGapi.src = "https://apis.google.com/js/api.js";
+            scriptGapi.async = true;
+            scriptGapi.defer = true;
+            scriptGapi.onload = () => {
+                window.gapi.load('picker', () => {
                     setPickerApiLoaded(true);
+                    console.log("✅ GAPI Picker Loaded");
                 });
             };
-            document.body.appendChild(script);
+            document.body.appendChild(scriptGapi);
+
+            // 2. Load GIS (New Identity Services for Auth)
+            const scriptGis = document.createElement("script");
+            scriptGis.src = "https://accounts.google.com/gsi/client";
+            scriptGis.async = true;
+            scriptGis.defer = true;
+            scriptGis.onload = () => {
+                setGisLoaded(true);
+                console.log("✅ GIS Auth Loaded");
+            };
+            document.body.appendChild(scriptGis);
         };
 
-        if (!window.gapi) {
-            loadGapis();
-        } else {
-            window.gapi.load('client:auth2:picker', () => setPickerApiLoaded(true));
+        loadScripts();
+
+        return () => {
+            // Cleanup if needed
         }
     }, []);
 
     // Function to Authenticate User
     const handleAuthClick = (clientId: string) => {
-        if (!window.gapi || !window.gapi.auth2) {
-            console.error("GAPI not loaded");
+        if (!gisLoaded) {
+            console.error("Google Identity Services not loaded yet.");
             return;
         }
 
-        // Initialize Auth2 if not already
-        if (!window.gapi.auth2.getAuthInstance()) {
-            window.gapi.client.init({
-                clientId: clientId,
+        // Initialize Token Client if not already done
+        if (!tokenClient.current) {
+            tokenClient.current = window.google.accounts.oauth2.initTokenClient({
+                client_id: clientId,
                 scope: SCOPES,
-            }).then(() => {
-                const auth = window.gapi.auth2.getAuthInstance();
-                auth.signIn().then(() => {
-                    const user = auth.currentUser.get();
-                    const token = user.getAuthResponse().access_token;
-                    setOauthToken(token);
+                callback: async (response: any) => {
+                    if (response.error !== undefined) {
+                        console.error("Auth Error:", response);
+                        alert(`Auth Error: ${response.error}`);
+                        return;
+                    }
+                    console.log("🔓 OAuth Success:", response);
+                    setOauthToken(response.access_token);
                     setIsAuthorized(true);
-                });
-            }).catch((err: any) => {
-                console.error("Auth Init Error:", err);
-                alert(`Google Auth Error: ${JSON.stringify(err)}. Check Console.`);
-            });
-        } else {
-            // Already initialized, just sign in
-            const auth = window.gapi.auth2.getAuthInstance();
-            auth.signIn().then(() => {
-                const user = auth.currentUser.get();
-                const token = user.getAuthResponse().access_token;
-                setOauthToken(token);
-                setIsAuthorized(true);
+                },
             });
         }
+
+        // Trigger the popup
+        // Use prompt: '' to try silent, or 'consent' to force screen
+        // For first time or explicitly clicking 'Sign In', we might want to ensure they see it if needed,
+        // but typically requestAccessToken() handles it.
+        tokenClient.current.requestAccessToken({ prompt: '' });
     };
 
-    // Function to trigger the picker - Requires Developer Key and Client ID
+    // Function to trigger the picker
     const handleOpenPicker = (developerKey: string, clientId: string, onSelect: (file: DriveFile) => void) => {
-        if (!isAuthorized) {
-            // Auto-trigger auth if not signed in? Better to force user action.
-            alert("Please Sign In with Google first.");
+        if (!isAuthorized || !oauthToken) {
+            alert("No Access Token. Please Sign In first.");
             return;
         }
 
@@ -93,7 +106,7 @@ export const useGoogleDrivePicker = () => {
             const picker = new window.google.picker.PickerBuilder()
                 .addView(window.google.picker.ViewId.VIDEO_SEARCH)
                 .addView(window.google.picker.ViewId.DOCS_VIDEOS)
-                .setOAuthToken(oauthToken || '')
+                .setOAuthToken(oauthToken) // Pass the token explicitly
                 .setDeveloperKey(developerKey)
                 .setCallback((data: any) => {
                     if (data[window.google.picker.Response.ACTION] === window.google.picker.Action.PICKED) {
@@ -105,15 +118,21 @@ export const useGoogleDrivePicker = () => {
                             mimeType: doc[window.google.picker.Document.MIME_TYPE],
                             url: doc.url
                         };
+                        console.log("📁 File Picked:", file);
                         onSelect(file);
                     }
                 })
                 .build();
             picker.setVisible(true);
         } else {
-            console.warn("Google Picker API not loaded or configured.");
+            console.warn("Google Picker API not loaded.");
         }
     };
 
-    return { openPicker: handleOpenPicker, signIn: handleAuthClick, isApiLoaded: pickerApiLoaded, isAuthorized };
+    return {
+        openPicker: handleOpenPicker,
+        signIn: handleAuthClick,
+        isApiLoaded: pickerApiLoaded && gisLoaded,
+        isAuthorized
+    };
 };
