@@ -571,45 +571,63 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
                     onMouseUp={handleMouseUp}
                 />
 
+                {/* Central Play/Pause Overlay (Mobile Optimized) */}
+                <div
+                    className="absolute inset-0 z-40 flex items-center justify-center cursor-pointer"
+                    onClick={() => {
+                        togglePlay();
+                        // Also toggle full screen on double tap? Maybe later.
+                    }}
+                >
+                    {!isPlaying && (
+                        <div className="bg-black/40 backdrop-blur-sm p-6 rounded-full border border-white/20 hover:scale-110 transition-transform group/play">
+                            <Play className="w-12 h-12 text-white fill-white group-hover/play:text-blue-500 group-hover/play:fill-blue-500 transition-colors" />
+                        </div>
+                    )}
+                    {/* Show Pause temporarily on tap? For now just Play icon when paused is standard. */}
+                </div>
+
                 {/* Video Controls Overlay (Bottom) */}
-                <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/95 to-transparent opacity-0 group-hover:opacity-100 transition-opacity z-30">
-
-                    {/* Scrubber */}
-                    <div className="w-full mb-2 flex items-center gap-2">
-                        <input
-                            type="range"
-                            min={0}
-                            max={duration || 100}
-                            step={0.05}
-                            value={currentTime}
-                            onChange={handleScrub}
-                            className="w-full h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-blue-500 hover:h-2 transition-all"
-                        />
-                    </div>
-
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4">
-                            <button onClick={() => stepFrame(-5)} className="text-white hover:text-blue-400"><Rewind className="w-5 h-5" /></button>
-                            <button onClick={togglePlay} className="text-white hover:text-blue-400">
-                                {isPlaying ? <Pause className="w-8 h-8 fill-current" /> : <Play className="w-8 h-8 fill-current" />}
-                            </button>
-                            <button onClick={() => stepFrame(5)} className="text-white hover:text-blue-400"><FastForward className="w-5 h-5" /></button>
-
-                            <span className="text-xs font-mono text-gray-300">
-                                {currentTime.toFixed(2)}s / {duration.toFixed(2)}s
-                            </span>
+                <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/95 to-transparent opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity z-50 pointer-events-none">
+                    <div className="pointer-events-auto">
+                        {/* Scrubber */}
+                        <div className="w-full mb-4 flex items-center gap-2">
+                            {/* Made taller for touch */}
+                            <input
+                                type="range"
+                                min={0}
+                                max={duration || 100}
+                                step={0.05}
+                                value={currentTime}
+                                onChange={handleScrub}
+                                className="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-blue-500"
+                            />
                         </div>
 
-                        <div className="flex items-center gap-2">
-                            {[0.125, 0.25, 0.5, 1.0].map(rate => (
-                                <button
-                                    key={rate}
-                                    onClick={() => changeSpeed(rate)}
-                                    className={`px-2 py-1 rounded text-xs font-bold ${playbackRate === rate ? 'bg-blue-600 text-white' : 'bg-neutral-800 text-gray-400'}`}
-                                >
-                                    {rate}x
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-6">
+                                <button onClick={() => stepFrame(-5)} className="text-white hover:text-blue-400 p-2"><Rewind className="w-6 h-6" /></button>
+                                <button onClick={togglePlay} className="text-white hover:text-blue-400 md:hidden">
+                                    {isPlaying ? <Pause className="w-8 h-8 fill-current" /> : <Play className="w-8 h-8 fill-current" />}
                                 </button>
-                            ))}
+                                <button onClick={() => stepFrame(5)} className="text-white hover:text-blue-400 p-2"><FastForward className="w-6 h-6" /></button>
+
+                                <span className="text-xs font-mono text-gray-300 hidden sm:inline-block">
+                                    {currentTime.toFixed(2)}s / {duration.toFixed(2)}s
+                                </span>
+                            </div>
+
+                            <div className="flex items-center gap-2">
+                                {[0.25, 0.5, 1.0].map(rate => (
+                                    <button
+                                        key={rate}
+                                        onClick={() => changeSpeed(rate)}
+                                        className={`px-3 py-1.5 rounded text-xs font-bold ${playbackRate === rate ? 'bg-blue-600 text-white' : 'bg-neutral-800 text-gray-400'}`}
+                                    >
+                                        {rate}x
+                                    </button>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -636,76 +654,73 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
 
 
 
-            {/* Tools Toolbar */}
-            <div className="flex items-center justify-between bg-neutral-900 border border-neutral-800 p-4 rounded-2xl">
-                <div className="flex items-center gap-2">
-                    <button title="Select / Move" onClick={() => setTool('none')} className={`p-3 rounded-xl transition-all ${tool === 'none' ? 'bg-white text-black' : 'text-gray-400 hover:bg-neutral-800'}`}>
-                        <MousePointer2 className="w-5 h-5" />
+            {/* Tools Toolbar - Mobile Optimized (Scrollable) */}
+            <div className="flex items-center justify-between bg-neutral-900 border border-neutral-800 p-2 md:p-4 rounded-2xl overflow-x-auto no-scrollbar">
+                <div className="flex items-center gap-2 min-w-max px-2">
+                    <button title="Select / Move" onClick={() => setTool('none')} className={`p-4 rounded-xl transition-all ${tool === 'none' ? 'bg-white text-black' : 'text-gray-400 hover:bg-neutral-800'}`}>
+                        <MousePointer2 className="w-6 h-6" />
                     </button>
                     <div className="w-px h-8 bg-neutral-800 mx-2"></div>
-                    <button title="Draw Line" onClick={() => setTool('line')} className={`p-3 rounded-xl transition-all ${tool === 'line' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:bg-neutral-800'}`}>
-                        <Slash className="w-5 h-5" />
+                    <button title="Draw Line" onClick={() => setTool('line')} className={`p-4 rounded-xl transition-all ${tool === 'line' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:bg-neutral-800'}`}>
+                        <Slash className="w-6 h-6" />
                     </button>
-                    <button title="Draw Circle" onClick={() => setTool('circle')} className={`p-3 rounded-xl transition-all ${tool === 'circle' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:bg-neutral-800'}`}>
-                        <Circle className="w-5 h-5" />
+                    <button title="Draw Circle" onClick={() => setTool('circle')} className={`p-4 rounded-xl transition-all ${tool === 'circle' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:bg-neutral-800'}`}>
+                        <Circle className="w-6 h-6" />
                     </button>
-                    <button title="Scribble" onClick={() => setTool('scribble')} className={`p-3 rounded-xl transition-all ${tool === 'scribble' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:bg-neutral-800'}`}>
-                        <Pen className="w-5 h-5" />
+                    <button title="Scribble" onClick={() => setTool('scribble')} className={`p-4 rounded-xl transition-all ${tool === 'scribble' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:bg-neutral-800'}`}>
+                        <Pen className="w-6 h-6" />
                     </button>
                     {/* UPDATED ANGLE BUTTON */}
-                    <button title="Measure Angle" onClick={addAngleTool} className={`p-3 rounded-xl transition-all ${tool === 'angle' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:bg-neutral-800'}`}>
-                        <Triangle className="w-5 h-5" />
+                    <button title="Measure Angle" onClick={addAngleTool} className={`p-4 rounded-xl transition-all ${tool === 'angle' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:bg-neutral-800'}`}>
+                        <Triangle className="w-6 h-6" />
                     </button>
-                    <button title="Add Text" onClick={() => setTool('text')} className={`p-3 rounded-xl transition-all ${tool === 'text' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:bg-neutral-800'}`}>
-                        <Type className="w-5 h-5" />
+                    <button title="Add Text" onClick={() => setTool('text')} className={`p-4 rounded-xl transition-all ${tool === 'text' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:bg-neutral-800'}`}>
+                        <Type className="w-6 h-6" />
                     </button>
 
                     <div className="w-px h-8 bg-neutral-800 mx-2"></div>
-                    <button onClick={() => setDrawings([])} className="p-3 rounded-xl text-red-500 hover:bg-red-900/20" title="Clear All">
-                        <RotateCcw className="w-5 h-5" />
+                    <button onClick={() => setDrawings([])} className="p-4 rounded-xl text-red-500 hover:bg-red-900/20" title="Clear All">
+                        <RotateCcw className="w-6 h-6" />
                     </button>
-                    {/* Snapshot Button */}
-                    <button onClick={handleSnapshot} className="p-3 rounded-xl text-purple-400 hover:bg-purple-900/20" title="Download Snapshot">
-                        <Download className="w-5 h-5" />
+                    {/* Snapshot Button - Hidden on small mobile */}
+                    <button onClick={handleSnapshot} className="hidden sm:block p-4 rounded-xl text-purple-400 hover:bg-purple-900/20" title="Download Snapshot">
+                        <Download className="w-6 h-6" />
                     </button>
-                    {/* Export Video (Screen Record) */}
-                    {/* Export Video (Screen Record) */}
-                    <button onClick={handleScreenRecord} className={`p-3 rounded-xl transition-all ${isRecording ? 'text-white bg-red-600 animate-pulse' : 'text-green-400 hover:bg-green-900/20'}`} title={isRecording ? "Stop Recording" : "Start Screen Recording"}>
-                        {isRecording ? <Square className="w-5 h-5 fill-current" /> : <Film className="w-5 h-5" />}
+                    {/* Export Video */}
+                    <button onClick={handleScreenRecord} className={`hidden sm:block p-4 rounded-xl transition-all ${isRecording ? 'text-white bg-red-600 animate-pulse' : 'text-green-400 hover:bg-green-900/20'}`} title={isRecording ? "Stop Recording" : "Start Screen Recording"}>
+                        {isRecording ? <Square className="w-6 h-6 fill-current" /> : <Film className="w-6 h-6" />}
                     </button>
                 </div>
 
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4 min-w-max px-2 border-l border-neutral-800 ml-2 pl-2">
                     {/* Color Picker */}
-                    <div className="flex gap-2 bg-neutral-800 p-1 rounded-lg">
+                    <div className="flex gap-2 bg-neutral-800 p-1.5 rounded-lg">
                         {['#ef4444', '#3b82f6', '#22c55e', '#eab308', '#ffffff'].map(c => (
                             <button
                                 key={c}
                                 onClick={() => setColor(c)}
-                                className={`w-6 h-6 rounded-md ${color === c ? 'ring-2 ring-white scale-110' : 'opacity-70 hover:opacity-100'}`}
+                                className={`w-8 h-8 rounded-md ${color === c ? 'ring-2 ring-white scale-110' : 'opacity-70 hover:opacity-100'}`}
                                 style={{ backgroundColor: c }}
                             />
                         ))}
                     </div>
 
-                    <div className="w-px h-8 bg-neutral-800 mx-2"></div>
-
-                    {/* Help Button Removed - Replaced by Footer */}
-                    <button onClick={handleFullScreen} className="p-3 rounded-xl text-gray-400 hover:bg-neutral-800 hover:text-white" title="Full Screen">
-                        <Maximize className="w-5 h-5" />
+                    {/* Full Screen */}
+                    <button onClick={handleFullScreen} className="p-4 rounded-xl text-gray-400 hover:bg-neutral-800 hover:text-white" title="Full Screen">
+                        <Maximize className="w-6 h-6" />
                     </button>
 
                     {onSave && (
-                        <button onClick={() => onSave({ drawings, time: currentTime })} className="flex items-center gap-2 bg-white text-black font-bold px-4 py-2 rounded-xl text-sm hover:bg-gray-200">
+                        <button onClick={() => onSave({ drawings, time: currentTime })} className="hidden sm:flex items-center gap-2 bg-white text-black font-bold px-4 py-2 rounded-xl text-sm hover:bg-gray-200">
                             <Save className="w-4 h-4" />
-                            Save Analysis
+                            Save
                         </button>
                     )}
                 </div>
             </div>
 
-            {/* Persistent Controls Legend Footer */}
-            <div className="bg-neutral-900/50 border border-neutral-800 pt-6 px-6 pb-6 rounded-3xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-xs">
+            {/* Persistent Controls Legend Footer - Hidden on Mobile */}
+            <div className="hidden md:grid bg-neutral-900/50 border border-neutral-800 pt-6 px-6 pb-6 rounded-3xl grid-cols-2 lg:grid-cols-4 gap-6 text-xs">
                 <div>
                     <h4 className="font-bold text-gray-500 uppercase tracking-wider mb-3 flex items-center gap-2"><MousePointer2 className="w-3 h-3" /> Navigation</h4>
                     <ul className="space-y-2 text-gray-400">
