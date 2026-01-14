@@ -105,6 +105,13 @@ export interface AthleteData {
         trainingFolder: string;
     };
 
+    // v20.1 Editable Goals
+    goals?: {
+        year: string;
+        process: string;
+        why: string;
+    };
+
     // v38.0 Direct Score Mapping (Backend Calculated)
     performanceScore?: number;
     screeningScore?: number;

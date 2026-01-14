@@ -21,6 +21,7 @@ import AthleteDashboard from './pages/Portal/AthleteDashboard';
 import TeamDashboard from './pages/Portal/TeamDashboard';
 import PortalLogin from './pages/Portal/PortalLogin';
 import ErrorBoundary from './components/ErrorBoundary';
+import { AdminDashboard } from './pages/Portal/AdminDashboard';
 import { ApexAgent } from './components/ApexAI/ApexAgent';
 
 // Wrapper to handle scroll to top on route change
@@ -62,6 +63,7 @@ const InnerLayout: React.FC = () => {
           <Route path="/portal/team" element={<ErrorBoundary><TeamDashboard /></ErrorBoundary>} />
           <Route path="/portal/:athleteId" element={<ErrorBoundary><AthleteDashboard /></ErrorBoundary>} />
           <Route path="/admin-upload" element={<AdminUpload />} />
+          <Route path="/admin" element={<AdminDashboard />} />
         </Routes>
       </main>
       {!isDashboard && <Footer />}

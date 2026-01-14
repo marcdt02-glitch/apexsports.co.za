@@ -92,10 +92,8 @@ function doGet(e) {
                         });
                         // Take last 10, newest first
                         history = athleteLogs.slice(-10).reverse().map(function (row) {
-                            // Map relevant history columns (adjust keys as needed based on actual Log sheet)
-                            // Assuming similar structure or key metrics
                             return {
-                                date: row[0], // Assuming Date is first
+                                date: row[0],
                                 readiness: row[logHeaders.indexOf("Readiness Score (%)")] || 0,
                                 soreness: row[logHeaders.indexOf("Soreness Score")] || 0,
                                 sleep: row[logHeaders.indexOf("Sleep Score")] || 0
@@ -104,10 +102,30 @@ function doGet(e) {
                     }
                 }
             } catch (e) {
-                // Ignore history errors, return empty array
+                // Ignore history errors
             }
 
             return res({ status: "success", athlete: athleteData, access: access, history: history });
+        } else if (email === 'ALL' && pin === '9900') {
+            // ADMIN VIEW: Return All Athletes (Simplified Data)
+            var allAthletes = [];
+            for (var i = 1; i < data.length; i++) {
+                var row = data[i];
+                if (!row[emailIdx]) continue;
+
+                var ath = {};
+                headers.forEach(function (h, idx) {
+                    if (h) ath[h] = row[idx];
+                });
+
+                // Goals specific
+                ath['goalsYear'] = ath['Year Goals'] || "";
+                ath['goalsProcess'] = ath['The Process'] || "";
+                ath['goalsWhy'] = ath['The Why'] || "";
+
+                allAthletes.push(ath);
+            }
+            return res({ status: "success", athletes: allAthletes });
         }
 
         return res({ status: "error", message: "Athlete not found." });
@@ -200,6 +218,32 @@ function doPost(e) {
             if (updateCol !== -1) sheet.getRange(rowIndex, updateCol + 1).setValue(Utilities.formatDate(new Date(), "GMT+2", "dd MMM yyyy"));
 
             return res({ status: "success", message: "Review Saved" });
+        }
+
+        if (action === "update_athlete_goals") {
+            var goalsYear = e.parameter.goalsYear;
+            var goalsProcess = e.parameter.goalsProcess;
+            var goalsWhy = e.parameter.goalsWhy;
+
+            var setVal = function (headerName, val) {
+                var colIdx = headers.findIndex(function (h) { return String(h).trim() === headerName; });
+                if (colIdx !== -1) {
+                    sheet.getRange(rowIndex, colIdx + 1).setValue(val);
+                } else {
+                    // Auto-create column if missing? Dangerous but useful.
+                    // For now, let's assume user adds them.
+                }
+            };
+
+            if (goalsYear) setVal("Year Goals", goalsYear);
+            if (goalsProcess) setVal("The Process", goalsProcess);
+            if (goalsWhy) setVal("The Why", goalsWhy);
+
+            // Mark Updated
+            var updateCol = headers.findIndex(function (h) { return h === "Last Updated"; });
+            if (updateCol !== -1) sheet.getRange(rowIndex, updateCol + 1).setValue(Utilities.formatDate(new Date(), "GMT+2", "dd MMM yyyy"));
+
+            return res({ status: "success", message: "Goals Saved" });
         }
 
         return res({ status: "error", message: "Unknown Action" });

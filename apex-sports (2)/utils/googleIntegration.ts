@@ -146,6 +146,21 @@ export const fetchAthleteFromGoogle = async (email: string, pin: string): Promis
     }
 };
 
+export const fetchAllAthletes = async (pin: string): Promise<AthleteData[]> => {
+    try {
+        const response = await fetch(`${APPS_SCRIPT_URL}?email=ALL&pin=${encodeURIComponent(pin)}`);
+        const data = await response.json();
+
+        if (data.status === 'success' && data.athletes) {
+            return data.athletes.map((row: any) => mapGoogleRowToAthlete(row));
+        }
+        throw new Error(data.message || "Failed to fetch athletes");
+    } catch (err) {
+        console.error("Admin Fetch Error:", err);
+        return [];
+    }
+};
+
 const mapGoogleRowToAthlete = (row: any): AthleteData => {
     // Helper to find key case-insensitively if needed, though GAS usually preserves case.
     const findKey = (search: string) => Object.keys(row).find(k => k.toLowerCase().trim() === search.toLowerCase().trim());
@@ -311,6 +326,13 @@ const mapGoogleRowToAthlete = (row: any): AthleteData => {
             practiceFolder: row['Practice Folder'] || row['Practice Footage'] || '',
             gameFolder: row['Game Folder'] || row['Game Footage'] || '',
             trainingFolder: row['Training Folder'] || row['Training Footage'] || '',
+        },
+
+        // v20.1 Editable Goals
+        goals: {
+            year: row['Year Goals'] || row['goalsYear'] || '',
+            process: row['The Process'] || row['goalsProcess'] || '',
+            why: row['The Why'] || row['goalsWhy'] || ''
         }
     };
 };
