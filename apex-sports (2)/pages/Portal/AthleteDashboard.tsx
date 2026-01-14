@@ -518,6 +518,23 @@ const AthleteDashboard: React.FC = () => {
 
     const renderHome = () => (
         <div className="space-y-12 animate-fade-in pb-20">
+            {/* Header / Instructional Video (Deion Sanders) */}
+            <div className="bg-neutral-900 border border-neutral-800 rounded-3xl overflow-hidden shadow-2xl">
+                <div className="aspect-video w-full bg-black relative flex items-center justify-center group">
+                    <iframe
+                        className="w-full h-full object-cover"
+                        src="https://www.youtube.com/embed/Q8YfGJwoTD8?rel=0&modestbranding=1"
+                        title="Deion Sanders Inspiration"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                    ></iframe>
+                </div>
+                <div className="p-8 text-center bg-black">
+                    <h2 className="text-3xl font-black text-white uppercase tracking-tighter mb-2">THE JOURNEY STARTS HERE</h2>
+                    <p className="text-gray-400">Raising the floor. Smashing the ceiling. Welcome to the APEX Lab.</p>
+                </div>
+            </div>
+
             {/* --- NEW: EDITABLE GOALS SECTION --- */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {/* Year Goals */}
@@ -593,23 +610,6 @@ const AthleteDashboard: React.FC = () => {
                             {goals.why || <span className="text-gray-600 italic">State your purpose...</span>}
                         </p>
                     )}
-                </div>
-            </div>
-
-            {/* Header / Instructional Video (Deion Sanders) */}
-            <div className="bg-neutral-900 border border-neutral-800 rounded-3xl overflow-hidden shadow-2xl">
-                <div className="aspect-video w-full bg-black relative flex items-center justify-center group">
-                    <iframe
-                        className="w-full h-full object-cover"
-                        src="https://www.youtube.com/embed/Q8YfGJwoTD8?rel=0&modestbranding=1"
-                        title="Deion Sanders Inspiration"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowFullScreen
-                    ></iframe>
-                </div>
-                <div className="p-8 text-center bg-black">
-                    <h2 className="text-3xl font-black text-white uppercase tracking-tighter mb-2">THE JOURNEY STARTS HERE</h2>
-                    <p className="text-gray-400">Raising the floor. Smashing the ceiling. Welcome to the APEX Lab.</p>
                 </div>
             </div>
 
