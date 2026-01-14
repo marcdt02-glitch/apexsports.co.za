@@ -113,7 +113,7 @@ const GoalSetting: React.FC<GoalSettingProps> = ({ athleteName, tier }) => {
         setTimeout(() => { setIsSaving(false); alert("Goals saved successfully!"); }, 1000);
     };
 
-    const generatePDF = async () => {
+    const generatePDF = async (mode?: 'dark' | 'light') => {
         if (!printRef.current) return;
         setShowExportModal(false);
 
@@ -203,7 +203,7 @@ const GoalSetting: React.FC<GoalSettingProps> = ({ athleteName, tier }) => {
 
     // --- Configuration ---
     const tabs: { id: Tab; label: string; icon: any }[] = [
-        { id: 'seasonOutcome', label: 'Outcome', icon: Award },
+        { id: 'seasonOutcome', label: 'Yearly', icon: Award },
         { id: 'seasonProcess', label: 'Process', icon: List },
         { id: 'monthly', label: 'Monthly', icon: Calendar },
         { id: 'weekly', label: 'Weekly', icon: Target },
@@ -397,9 +397,9 @@ const GoalSetting: React.FC<GoalSettingProps> = ({ athleteName, tier }) => {
             {/* Header */}
             <Header title={tabs.find(t => t.id === activeTab)?.label || ''} />
 
-            {/* Desktop Navigation: Segmented Control */}
-            <div className="hidden md:flex px-6 mb-8 relative z-10 w-full">
-                <div className="flex w-full bg-[#111] p-1 rounded-none border border-neutral-800">
+            {/* Desktop Navigation: Segmented Control - STICKY */}
+            <div className="hidden md:flex px-6 mb-8 sticky top-[80px] z-40 w-full backdrop-blur-xl py-2 bg-[#0a0a0a]/80">
+                <div className="flex w-full bg-[#111] p-1 rounded-none border border-neutral-800 shadow-xl">
                     {tabs.map((tab) => (
                         <button
                             key={tab.id}
