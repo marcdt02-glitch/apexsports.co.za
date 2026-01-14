@@ -3,13 +3,12 @@ import { UploadCloud, Video, FolderOpen, PlayCircle, Grid, Info, X, CheckCircle,
 import { useGoogleDrivePicker, DriveFile } from './useGoogleDrivePicker';
 import { VideoAnalysisPlayer } from './VideoAnalysisPlayer';
 
-// Mock Pro Library
-const PRO_BENCHMARKS = [
+// Creative / Playground Videos
+const PLAYGROUND_VIDEOS = [
+    { id: 'playground-1', name: 'Training Footage 1 (Creative)', url: '/videos/Training%20Footage%201.mov' },
+    { id: 'playground-2', name: 'Training Footage 2 (Creative)', url: '/videos/Training%20Footage%202.mov' },
     { id: 'pro-1', name: 'Usain Bolt: Max Velocity Mechanics', url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4' },
-    { id: 'pro-2', name: 'Field Hockey GK: Split Save', url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4' },
-    { id: 'pro-3', name: 'Olympic Clean & Jerk (Side View)', url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4' },
-    { id: 'pro-4', name: 'Tennis Serve: Kinetic Chain', url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4' },
-    { id: 'pro-5', name: 'ACL Rehab: Landing Error Scoring', url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4' }
+    { id: 'pro-2', name: 'Field Hockey GK: Split Save', url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4' }
 ];
 
 export const VideoLab: React.FC = () => {
@@ -49,7 +48,7 @@ export const VideoLab: React.FC = () => {
     };
 
 
-    const loadProBenchmark = (item: typeof PRO_BENCHMARKS[0]) => {
+    const loadPlaygroundVideo = (item: typeof PLAYGROUND_VIDEOS[0]) => {
         const file: DriveFile = {
             id: item.id,
             name: item.name,
@@ -139,7 +138,7 @@ export const VideoLab: React.FC = () => {
                         className={`flex items-center gap-2 px-4 py-2 border rounded-full text-xs font-bold transition-all ${showProSidebar ? 'bg-purple-900 border-purple-500 text-white' : 'bg-neutral-900 border-neutral-800 text-gray-400 hover:text-white'}`}
                     >
                         <UserCheck className="w-4 h-4" />
-                        APEX Pro Benchmarks
+                        APEX Playground
                     </button>
                     <button
                         onClick={() => setShowBioInfo(true)}
@@ -157,17 +156,17 @@ export const VideoLab: React.FC = () => {
             {showProSidebar && (
                 <div className="absolute top-24 right-0 z-40 w-80 bg-neutral-900/95 backdrop-blur-xl border border-neutral-800 rounded-2xl shadow-2xl overflow-hidden animate-fade-in-left">
                     <div className="p-4 bg-purple-900/20 border-b border-white/5">
-                        <h3 className="text-white font-bold flex items-center gap-2"><Grid className="w-4 h-4 text-purple-400" /> Pro Library</h3>
+                        <h3 className="text-white font-bold flex items-center gap-2"><Grid className="w-4 h-4 text-purple-400" /> Playground / Creative</h3>
                     </div>
                     <div className="p-2 space-y-1">
-                        {PRO_BENCHMARKS.map(item => (
+                        {PLAYGROUND_VIDEOS.map(item => (
                             <div key={item.id} className="p-3 hover:bg-white/5 rounded-xl transition-all flex items-center justify-between group">
                                 <div className="text-sm text-gray-300 font-medium">{item.name}</div>
                                 <button
-                                    onClick={() => loadProBenchmark(item)}
+                                    onClick={() => loadPlaygroundVideo(item)}
                                     className="text-xs bg-purple-600 text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity"
                                 >
-                                    Compare
+                                    Load
                                 </button>
                             </div>
                         ))}
@@ -244,8 +243,8 @@ export const VideoLab: React.FC = () => {
                             <div className="p-4 bg-purple-900/20 rounded-full mb-4 group-hover:scale-110 transition-transform">
                                 <Grid className="w-8 h-8 text-purple-500" />
                             </div>
-                            <h3 className="text-xl font-bold text-white mb-1">APEX Pro Library</h3>
-                            <p className="text-xs text-gray-400">Compare with Elite Models</p>
+                            <h3 className="text-xl font-bold text-white mb-1">Playground</h3>
+                            <p className="text-xs text-gray-400">Training Footage & Creative</p>
                         </button>
                     </div>
                 </div>

@@ -56,7 +56,11 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
     const [color, setColor] = useState('#ef4444'); // Red default
     const [draggingPoint, setDraggingPoint] = useState<{ drawingIndex: number, pointIndex: number } | null>(null);
     const [isRecording, setIsRecording] = useState(false);
-    const [showHelp, setShowHelp] = useState(false);
+
+    // Custom Text Input State
+    const [textModal, setTextModal] = useState<{ isOpen: boolean, x: number, y: number, text: string }>({ isOpen: false, x: 0, y: 0, text: '' });
+    const textInputRef = useRef<HTMLInputElement>(null);
+    const mediaRecorderRef = useRef<MediaRecorder | null>(null);
 
     // SYNC CONTROLS
     const togglePlay = () => {
@@ -140,6 +144,13 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
     };
 
     const handleScreenRecord = async () => {
+        // STOP RECORDING logic
+        if (isRecording && mediaRecorderRef.current) {
+            mediaRecorderRef.current.stop();
+            return;
+        }
+
+        // START RECORDING logic
         try {
             const stream = await navigator.mediaDevices.getDisplayMedia({
                 video: { displaySurface: 'browser' },
@@ -150,6 +161,7 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
             const ext = mime === "video/mp4" ? "mp4" : "webm";
 
             const recorder = new MediaRecorder(stream, { mimeType: mime });
+            mediaRecorderRef.current = recorder;
             const chunks: Blob[] = [];
 
             recorder.ondataavailable = e => chunks.push(e.data);
@@ -160,13 +172,17 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
                 a.href = url;
                 a.download = `APEX_Analysis_ScreenRec.${ext}`;
                 a.click();
+
+                // Cleanup
                 setIsRecording(false);
+                mediaRecorderRef.current = null;
                 stream.getTracks().forEach(track => track.stop());
             };
 
             recorder.start();
             setIsRecording(true);
 
+            // Handle external stop (native browser "Stop Sharing" UI)
             stream.getVideoTracks()[0].onended = () => {
                 if (recorder.state !== "inactive") recorder.stop();
             };
@@ -209,13 +225,10 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
         }
 
         if (tool === 'text') {
-            const text = prompt("Enter text annotation:");
-            if (text) {
-                setDrawings([...drawings, { type: 'text', points: [pt], color, text }]);
-                // setTool('none'); // Optional: switch back to move tool
-                requestAnimationFrame(() => renderCanvas()); // Immediate render
-            }
-            return; // Text is instant, no drag
+            // Open Custom Text Modal instead of prompt
+            setTextModal({ isOpen: true, x: pt.x, y: pt.y, text: '' });
+            setTimeout(() => textInputRef.current?.focus(), 100);
+            return;
         }
 
         setCurrentDrawing({ type: tool, points: [pt], color });
@@ -325,6 +338,15 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
         setTool('none'); // Immediately switch to Select/Move mode so user can drag handles
     };
 
+    const confirmText = () => {
+        if (textModal.text.trim()) {
+            setDrawings([...drawings, { type: 'text', points: [{ x: textModal.x, y: textModal.y }], color: '#ffffff', text: textModal.text }]);
+        }
+        setTextModal({ isOpen: false, x: 0, y: 0, text: '' });
+        setTool('none');
+        requestAnimationFrame(() => renderCanvas());
+    };
+
     // Canvas Rendering
     const renderCanvas = (drawVideo = false) => {
         const canvas = canvasRef.current;
@@ -351,9 +373,24 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
             ctx.lineCap = 'round';
 
             if (d.type === 'line' && d.points.length > 1) {
-                ctx.moveTo(d.points[0].x, d.points[0].y);
-                ctx.lineTo(d.points[1].x, d.points[1].y);
+                const p1 = d.points[0];
+                const p2 = d.points[1];
+
+                ctx.moveTo(p1.x, p1.y);
+                ctx.lineTo(p2.x, p2.y);
                 ctx.stroke();
+
+                // Draw Arrowhead (Vector Support)
+                const headLen = 15;
+                const angle = Math.atan2(p2.y - p1.y, p2.x - p1.x);
+                ctx.beginPath();
+                ctx.moveTo(p2.x, p2.y);
+                ctx.lineTo(p2.x - headLen * Math.cos(angle - Math.PI / 6), p2.y - headLen * Math.sin(angle - Math.PI / 6));
+                ctx.lineTo(p2.x - headLen * Math.cos(angle + Math.PI / 6), p2.y - headLen * Math.sin(angle + Math.PI / 6));
+                ctx.lineTo(p2.x, p2.y);
+                ctx.fillStyle = d.color;
+                ctx.fill();
+
             } else if (d.type === 'circle' && d.points.length > 1) {
                 const r = Math.sqrt(Math.pow(d.points[1].x - d.points[0].x, 2) + Math.pow(d.points[1].y - d.points[0].y, 2));
                 ctx.arc(d.points[0].x, d.points[0].y, r, 0, 2 * Math.PI);
@@ -450,6 +487,40 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
 
     return (
         <div ref={containerRef} className="flex flex-col gap-4 bg-black rounded-3xl overflow-hidden relative group">
+            {/* Custom Text Modal Overlay */}
+            {textModal.isOpen && (
+                <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm animate-fade-in">
+                    <div className="bg-[#111] border border-neutral-700 p-6 rounded-2xl w-full max-w-sm shadow-2xl transform scale-100 transition-all">
+                        <h3 className="text-white font-bold mb-4 flex items-center gap-2">
+                            <Type className="w-4 h-4 text-blue-500" />
+                            Add Annotation
+                        </h3>
+                        <input
+                            ref={textInputRef}
+                            type="text"
+                            value={textModal.text}
+                            onChange={(e) => setTextModal({ ...textModal, text: e.target.value })}
+                            onKeyDown={(e) => e.key === 'Enter' && confirmText()}
+                            placeholder="Enter notes..."
+                            className="w-full bg-neutral-900 border border-neutral-700 rounded-xl p-3 text-white mb-4 focus:border-blue-500 outline-none"
+                        />
+                        <div className="flex justify-end gap-2">
+                            <button
+                                onClick={() => setTextModal({ ...textModal, isOpen: false, text: '' })}
+                                className="px-4 py-2 rounded-lg text-sm text-gray-400 hover:text-white"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={confirmText}
+                                className="px-6 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-sm font-bold"
+                            >
+                                Add Label
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
             {/* Main Player Area */}
             <div className="relative bg-black rounded-3xl overflow-hidden border border-neutral-800 aspect-video group select-none">
                 <div className={`w-full h-full flex ${compareUrl ? 'grid grid-cols-2' : ''}`}>
@@ -590,8 +661,9 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
                         <Download className="w-5 h-5" />
                     </button>
                     {/* Export Video (Screen Record) */}
-                    <button onClick={handleScreenRecord} disabled={isRecording} className={`p-3 rounded-xl ${isRecording ? 'text-red-500 animate-pulse' : 'text-green-400 hover:bg-green-900/20'}`} title="Start Screen Recording">
-                        <Film className="w-5 h-5" />
+                    {/* Export Video (Screen Record) */}
+                    <button onClick={handleScreenRecord} className={`p-3 rounded-xl transition-all ${isRecording ? 'text-white bg-red-600 animate-pulse' : 'text-green-400 hover:bg-green-900/20'}`} title={isRecording ? "Stop Recording" : "Start Screen Recording"}>
+                        {isRecording ? <Square className="w-5 h-5 fill-current" /> : <Film className="w-5 h-5" />}
                     </button>
                 </div>
 
