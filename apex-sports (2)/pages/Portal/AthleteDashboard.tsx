@@ -1455,6 +1455,46 @@ const AthleteDashboard: React.FC = () => {
                                                             <MetricCard label="Adduction Bal" value="-" />
                                                         </>
                                                     )}
+                                                    {clinicalTab === 'table' && (
+                                                        <div className="col-span-2 md:col-span-4 overflow-x-auto">
+                                                            <table className="w-full text-left border-collapse">
+                                                                <thead>
+                                                                    <tr className="border-b border-neutral-800 text-xs text-gray-500 uppercase tracking-widest">
+                                                                        <th className="py-2">Metric</th>
+                                                                        <th className="py-2">Left</th>
+                                                                        <th className="py-2">Right</th>
+                                                                        <th className="py-2">Asym %</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody className="divide-y divide-neutral-800 text-sm text-gray-300 font-mono">
+                                                                    <tr>
+                                                                        <td className="py-2 font-bold text-white">Knee Extension</td>
+                                                                        <td className="py-2">{athlete.kneeExtensionLeft} N</td>
+                                                                        <td className="py-2">{athlete.kneeExtensionRight} N</td>
+                                                                        <td className="py-2 text-yellow-500">{(Math.abs(athlete.kneeExtensionLeft - athlete.kneeExtensionRight) / Math.max(athlete.kneeExtensionLeft, athlete.kneeExtensionRight) * 100).toFixed(1)}%</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td className="py-2 font-bold text-white">Knee Flexion</td>
+                                                                        <td className="py-2">{athlete.kneeFlexionLeft} N</td>
+                                                                        <td className="py-2">{athlete.kneeFlexionRight} N</td>
+                                                                        <td className="py-2 text-green-500">{(Math.abs(athlete.kneeFlexionLeft - athlete.kneeFlexionRight) / Math.max(athlete.kneeFlexionLeft, athlete.kneeFlexionRight) * 100).toFixed(1)}%</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td className="py-2 font-bold text-white">Hip Adduction</td>
+                                                                        <td className="py-2">{athlete.adductionStrengthLeft} N</td>
+                                                                        <td className="py-2">{athlete.adductionStrengthRight} N</td>
+                                                                        <td className="py-2 text-green-500">{(Math.abs(athlete.adductionStrengthLeft - athlete.adductionStrengthRight) / Math.max(athlete.adductionStrengthLeft, athlete.adductionStrengthRight) * 100).toFixed(1)}%</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td className="py-2 font-bold text-white">Hip Abduction</td>
+                                                                        <td className="py-2">{athlete.hipAbductionLeft} N</td>
+                                                                        <td className="py-2">{athlete.hipAbductionRight} N</td>
+                                                                        <td className="py-2 text-green-500">{(Math.abs(athlete.hipAbductionLeft - athlete.hipAbductionRight) / Math.max(athlete.hipAbductionLeft, athlete.hipAbductionRight) * 100).toFixed(1)}%</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    )}
                                                 </div>
                                             </div>
                                         )}
