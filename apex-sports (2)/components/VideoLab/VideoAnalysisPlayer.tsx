@@ -587,8 +587,8 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
         <div ref={containerRef} className="flex flex-col gap-4 bg-black rounded-3xl overflow-hidden relative group">
             {/* Custom Text Modal Overlay */}
             {textModal.isOpen && (
-                <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm animate-fade-in">
-                    <div className="bg-[#111] border border-neutral-700 p-6 rounded-2xl w-full max-w-sm shadow-2xl transform scale-100 transition-all">
+                <div className="absolute inset-0 z-60 flex items-center justify-center bg-black/50 backdrop-blur-sm animate-fade-in">
+                    <div className="bg-[#111] border border-neutral-700 p-6 rounded-2xl w-full max-w-sm shadow-2xl transform scale-100 transition-all pointer-events-auto">
                         <h3 className="text-white font-bold mb-4 flex items-center gap-2">
                             <Type className="w-4 h-4 text-blue-500" />
                             Add Annotation
