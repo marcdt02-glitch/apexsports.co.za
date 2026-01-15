@@ -1,8 +1,5 @@
 import React, { useRef, useState, useEffect, MouseEvent } from 'react';
 import { Play, Pause, Square, Circle, PenTool, Type, Save, Slash, MousePointer2, RotateCcw, FastForward, Rewind, Triangle, Download, Film, HelpCircle, Maximize, Zap, Pen } from 'lucide-react';
-import html2canvas from 'html2canvas'; // Assuming available or I will use raw canvas API if not installed. 
-// Actually I don't know if html2canvas is installed. I'll use raw canvas API to merge layers.
-
 
 interface AnalysisPlayerProps {
     videoUrl?: string | null;
@@ -315,6 +312,92 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
         }
     };
 
+    // TOUCH HANDLERS (Mapping to Mouse Events)
+    const getTouchPoint = (e: React.TouchEvent) => {
+        const rect = canvasRef.current?.getBoundingClientRect();
+        if (!rect || e.touches.length === 0) return { x: 0, y: 0 };
+        const touch = e.touches[0];
+        return {
+            x: touch.clientX - rect.left,
+            y: touch.clientY - rect.top
+        };
+    };
+
+    const handleTouchStart = (e: React.TouchEvent) => {
+        e.preventDefault(); // Prevent scrolling
+        const pt = getTouchPoint(e);
+        // Reuse Mouse Logic
+        if (tool === 'none') {
+            drawings.forEach((d, dIdx) => {
+                d.points.forEach((p, pIdx) => {
+                    const dist = Math.sqrt(Math.pow(p.x - pt.x, 2) + Math.pow(p.y - pt.y, 2));
+                    if (dist < 30) { // INCREASED HIT AREA (30px)
+                        setDraggingPoint({ drawingIndex: dIdx, pointIndex: pIdx });
+                        return;
+                    }
+                });
+            });
+            return;
+        }
+        if (tool === 'text') {
+            setTextModal({ isOpen: true, x: pt.x, y: pt.y, text: '' });
+            setTimeout(() => textInputRef.current?.focus(), 100);
+            return;
+        }
+        setCurrentDrawing({ type: tool, points: [pt], color });
+    };
+
+    const handleTouchMove = (e: React.TouchEvent) => {
+        e.preventDefault();
+        const pt = getTouchPoint(e);
+
+        if (draggingPoint) {
+            const newDrawings = [...drawings];
+            newDrawings[draggingPoint.drawingIndex].points[draggingPoint.pointIndex] = pt;
+            setDrawings(newDrawings);
+            renderCanvas();
+            return;
+        }
+
+        if (!currentDrawing) return;
+
+        const newPoints = [...currentDrawing.points];
+        if (tool === 'scribble') newPoints.push(pt);
+        else if (tool === 'line' || tool === 'circle') {
+            if (newPoints.length === 1) newPoints.push(pt); else newPoints[1] = pt;
+        } else if (tool === 'angle') {
+            if (newPoints.length === 1) newPoints.push(pt);
+            else if (newPoints.length === 2) newPoints.push(pt);
+            else newPoints[newPoints.length - 1] = pt;
+        }
+        setCurrentDrawing({ ...currentDrawing, points: newPoints });
+        requestAnimationFrame(() => renderCanvas());
+    };
+
+    const handleTouchEnd = (e: React.TouchEvent) => {
+        e.preventDefault();
+        if (draggingPoint) {
+            setDraggingPoint(null);
+            return;
+        }
+        if (!currentDrawing) return;
+
+        let isComplete = false;
+        if (['line', 'circle'].includes(tool) && currentDrawing.points.length >= 2) isComplete = true;
+        if (tool === 'scribble') isComplete = true;
+
+        if (tool === 'angle') {
+            if (currentDrawing.points.length >= 3) isComplete = true;
+        } else {
+            isComplete = true;
+        }
+
+        if (isComplete) {
+            setDrawings([...drawings, currentDrawing]);
+            setCurrentDrawing(null);
+        }
+    };
+
     // --- IMPROVED ANGLE TOOL ---
     const addAngleTool = () => {
         if (!canvasRef.current) return;
@@ -474,7 +557,7 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
                     ctx.beginPath();
                     // Vertex is distinctly colored (white) for Angles
                     ctx.fillStyle = (idx === 0 && d.type === 'angle') ? '#fff' : d.color;
-                    ctx.arc(p.x, p.y, 6, 0, 2 * Math.PI);
+                    ctx.arc(p.x, p.y, 12, 0, 2 * Math.PI); // INCREASED HANDLE SIZE (12px)
                     ctx.fill();
                     ctx.strokeStyle = '#fff';
                     ctx.lineWidth = 2;
@@ -529,8 +612,9 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
                     </div>
                 </div>
             )}
-            {/* Main Player Area */}
-            <div className="relative bg-black rounded-3xl overflow-hidden border border-neutral-800 aspect-video group select-none">
+
+            {/* Main Player Area - Taller on Mobile */}
+            <div className="relative bg-black rounded-3xl overflow-hidden border border-neutral-800 aspect-[4/5] md:aspect-video group select-none">
                 <div className={`w-full h-full flex ${compareUrl ? 'grid grid-cols-2' : ''}`}>
                     {/* Primary Video */}
                     <div className="relative w-full h-full border-r border-neutral-800">
@@ -562,14 +646,18 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
                     )}
                 </div>
 
-                {/* Canvas Overlay */}
+                {/* Canvas Overlay with Touch Events */}
                 <canvas
                     ref={canvasRef}
                     className={`absolute inset-0 z-20 w-full h-full ${tool !== 'none' ? 'cursor-crosshair' : 'cursor-default'}`}
                     onMouseDown={handleMouseDown}
                     onMouseMove={handleMouseMove}
                     onMouseUp={handleMouseUp}
+                    onTouchStart={handleTouchStart}
+                    onTouchMove={handleTouchMove}
+                    onTouchEnd={handleTouchEnd}
                 />
+
 
                 {/* Central Play/Pause Overlay (Mobile Optimized) */}
                 <div
