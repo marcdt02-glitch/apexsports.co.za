@@ -623,6 +623,8 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
                                 ref={videoRef1}
                                 src={videoUrl}
                                 crossOrigin="anonymous" // Enable CORS for canvas capture
+                                playsInline
+                                webkit-playsinline="true"
                                 className="w-full h-full object-contain"
                                 onTimeUpdate={handleTimeUpdate}
                                 onLoadedMetadata={() => setDuration(videoRef1.current?.duration || 0)}
@@ -775,7 +777,7 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
                         <Download className="w-6 h-6" />
                     </button>
                     {/* Export Video */}
-                    <button onClick={handleScreenRecord} className={`hidden sm:block p-4 rounded-xl transition-all ${isRecording ? 'text-white bg-red-600 animate-pulse' : 'text-green-400 hover:bg-green-900/20'}`} title={isRecording ? "Stop Recording" : "Start Screen Recording"}>
+                    <button onClick={handleScreenRecord} className={`hidden md:block p-4 rounded-xl transition-all ${isRecording ? 'text-white bg-red-600 animate-pulse' : 'text-green-400 hover:bg-green-900/20'}`} title={isRecording ? "Stop Recording" : "Start Screen Recording"}>
                         {isRecording ? <Square className="w-6 h-6 fill-current" /> : <Film className="w-6 h-6" />}
                     </button>
                 </div>

@@ -924,12 +924,13 @@ const AthleteDashboard: React.FC = () => {
                     <div ref={dashboardRef} className="pt-32 px-4 md:px-8 w-full mx-auto space-y-8 lg:pl-72">
 
                         {/* Floating Control Bar (The "Shorter Rectangle") */}
-                        <div className="bg-neutral-900/50 border border-neutral-800 p-4 rounded-2xl flex flex-col lg:flex-row items-center justify-between gap-6 backdrop-blur-sm">
-                            <div className="flex items-center gap-4 w-full lg:w-auto">
+                        <div className="bg-neutral-900/50 border border-neutral-800 p-4 rounded-2xl flex flex-row items-center justify-between gap-4 backdrop-blur-sm w-full">
+                            <div className="flex items-center gap-4">
                                 <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 -ml-2 text-gray-400 hover:text-white lg:hidden">
                                     <Menu className="w-6 h-6" />
                                 </button>
-                                <div className="flex items-center gap-2">
+                                {/* Breadcrumbs - Hide on Mobile to save space */}
+                                <div className="hidden md:flex items-center gap-2">
                                     <span className="text-gray-500 font-mono text-xs uppercase tracking-widest">Portal</span>
                                     <ChevronRight className="w-3 h-3 text-gray-700" />
                                     <span className="text-white font-bold text-xs uppercase tracking-widest">
@@ -938,7 +939,7 @@ const AthleteDashboard: React.FC = () => {
                                 </div>
                             </div>
 
-                            <div className="flex items-center gap-8 w-full lg:w-auto justify-end">
+                            <div className="flex items-center gap-8 justify-end">
                                 {/* v8.0 Neural Readiness Stats (Desktop) */}
                                 {showAdvancedMetrics && (
                                     <div className="hidden md:flex items-center gap-8 mr-8 border-r border-neutral-800 pr-8">
@@ -970,13 +971,13 @@ const AthleteDashboard: React.FC = () => {
 
                                 <div className="flex items-center gap-6">
                                     <div className="flex flex-col items-end text-right whitespace-nowrap">
-                                        <div className="flex items-center gap-2 mb-1 justify-end">
+                                        <div className="hidden md:flex items-center gap-2 mb-1 justify-end">
                                             <span className="text-white font-black text-xl tracking-tighter italic">APEX LAB</span>
                                             <div className="bg-red-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">BETA</div>
                                         </div>
                                         <div className="flex items-center gap-2 justify-end">
-                                            <span className="text-gray-400 text-xs font-bold uppercase">{athlete.package} Tier</span>
-                                            <span className="text-neutral-700 text-xs">|</span>
+                                            <span className="hidden md:inline text-gray-400 text-xs font-bold uppercase">{athlete.package} Tier</span>
+                                            <span className="hidden md:inline text-neutral-700 text-xs">|</span>
                                             <h1 className="text-sm font-bold text-white">{athlete.name}</h1>
                                         </div>
                                     </div>
