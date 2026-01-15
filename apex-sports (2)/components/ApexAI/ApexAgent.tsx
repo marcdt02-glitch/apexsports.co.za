@@ -144,6 +144,12 @@ export const ApexAgent: React.FC<ApexAgentProps> = ({ athlete }) => {
                             <h3 className="text-white font-bold">APEX Agent</h3>
                             <p className="text-[10px] text-blue-400 uppercase tracking-wider font-bold">Jr. Sports Scientist</p>
                         </div>
+                        <button
+                            onClick={() => setIsOpen(false)}
+                            className="ml-auto p-2 text-gray-500 hover:text-white rounded-lg hover:bg-neutral-800 transition-colors"
+                        >
+                            <X className="w-5 h-5" />
+                        </button>
                     </div>
 
                     {/* Messages */}

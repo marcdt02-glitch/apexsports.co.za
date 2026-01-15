@@ -26,7 +26,7 @@ const PortalMentorship: React.FC<PortalMentorshipProps> = ({ athleteName, tier }
             <div className="flex flex-col md:flex-row justify-between items-end gap-4">
                 <div>
                     <h2 className="text-3xl font-black text-white">Mentorship Portal</h2>
-                    <p className="text-gray-400 mt-2">Unlock your mental edge with our elite psychology tools.</p>
+                    <p className="text-gray-400 mt-2">What's Next</p>
                 </div>
             </div>
 
