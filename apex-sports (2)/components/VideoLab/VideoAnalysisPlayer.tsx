@@ -331,7 +331,7 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
             drawings.forEach((d, dIdx) => {
                 d.points.forEach((p, pIdx) => {
                     const dist = Math.sqrt(Math.pow(p.x - pt.x, 2) + Math.pow(p.y - pt.y, 2));
-                    if (dist < 30) { // INCREASED HIT AREA (30px)
+                    if (dist < 40) { // INCREASED HIT AREA (40px)
                         setDraggingPoint({ drawingIndex: dIdx, pointIndex: pIdx });
                         return;
                     }
@@ -649,7 +649,7 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
                 {/* Canvas Overlay with Touch Events */}
                 <canvas
                     ref={canvasRef}
-                    className={`absolute inset-0 z-20 w-full h-full ${tool !== 'none' ? 'cursor-crosshair' : 'cursor-default'}`}
+                    className={`absolute inset-0 z-20 w-full h-full touch-none ${tool !== 'none' ? 'cursor-crosshair' : 'cursor-default'}`}
                     onMouseDown={handleMouseDown}
                     onMouseMove={handleMouseMove}
                     onMouseUp={handleMouseUp}

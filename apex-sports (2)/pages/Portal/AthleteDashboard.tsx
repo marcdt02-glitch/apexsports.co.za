@@ -969,18 +969,18 @@ const AthleteDashboard: React.FC = () => {
                                 )}
 
                                 <div className="flex items-center gap-6">
-                                    <div className="flex flex-col items-end">
-                                        <div className="flex items-center gap-2 mb-1">
+                                    <div className="flex flex-col items-end text-right whitespace-nowrap">
+                                        <div className="flex items-center gap-2 mb-1 justify-end">
                                             <span className="text-white font-black text-xl tracking-tighter italic">APEX LAB</span>
                                             <div className="bg-red-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">BETA</div>
                                         </div>
-                                        <div className="flex items-center gap-2">
+                                        <div className="flex items-center gap-2 justify-end">
                                             <span className="text-gray-400 text-xs font-bold uppercase">{athlete.package} Tier</span>
                                             <span className="text-neutral-700 text-xs">|</span>
                                             <h1 className="text-sm font-bold text-white">{athlete.name}</h1>
                                         </div>
                                     </div>
-                                    <div className="relative">
+                                    <div className="relative flex-shrink-0">
                                         <div className="absolute -inset-2 bg-gradient-to-r from-red-600 to-blue-600 rounded-full opacity-20 blur-lg animate-pulse"></div>
                                         <div className="relative w-12 h-12 bg-black rounded-full flex items-center justify-center border-2 border-white/10 shadow-2xl">
                                             <img src="/images/logo.png" alt="Apex" className="w-8 h-8 object-contain" />
