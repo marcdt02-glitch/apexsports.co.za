@@ -29,7 +29,7 @@ const Goalkeeper: React.FC = () => {
     {
       title: "5-Session Pack",
       price: "R2,500",
-      description: "Flexible development block (R500/session).",
+      description: "5 hours of Coaching at a time. Renewed upon completion.",
       actions: [
         { label: "Buy Pack", onClick: () => handleActionClick("5-Session Pack"), priceLabel: "R2,500", primary: true }
       ],
@@ -44,7 +44,7 @@ const Goalkeeper: React.FC = () => {
     {
       title: "10-Session Pack",
       price: "R4,000",
-      description: <><strong>Upfront:</strong> R4,000 | <strong>Split:</strong> R2,250 x 2 months (Total R4,500).</>,
+      description: <>10 Hours of Coaching. Renewed upon completion.<br /><br /><strong>Upfront:</strong> R4,000 | <strong>Split:</strong> R2,250 x 2 months (Total R4,500).</>,
       actions: [
         { label: "Buy Upfront", onClick: () => handleActionClick("10-Session Pack (Upfront)"), priceLabel: "R4,000", primary: true },
         { label: "Split Payment", onClick: () => handleActionClick("10-Session Pack (Split)"), priceLabel: "R2,250/m", primary: false }
@@ -60,7 +60,7 @@ const Goalkeeper: React.FC = () => {
     {
       title: "25-Session Pack",
       price: "R9,000",
-      description: <><strong>Upfront:</strong> R9,000 | <strong>Monthly:</strong> R833 (Total R10,000).</>,
+      description: <>Yearly package. Can be topped up if completed.<br /><br /><strong>Upfront:</strong> R9,000 | <strong>Monthly:</strong> R833 (Total R10,000).</>,
       actions: [
         { label: "Buy Upfront", onClick: () => handleActionClick("25-Session Pack (Upfront)"), priceLabel: "R9,000", primary: true },
         { label: "Sub Weekly", onClick: () => handleActionClick("25-Session Pack (Monthly)"), priceLabel: "R833/mo", primary: false }
