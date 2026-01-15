@@ -207,6 +207,8 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
         const pt = getPoint(e);
         if (tool === 'none') {
             // Check for handle hit
+            // Check for handle hit
+            let hit = false;
             drawings.forEach((d, dIdx) => {
                 const ptList = d.points;
                 // For text, check if click is near the point
@@ -214,10 +216,15 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
                     const dist = Math.sqrt(Math.pow(p.x - pt.x, 2) + Math.pow(p.y - pt.y, 2));
                     if (dist < 15) { // 15px radius hit
                         setDraggingPoint({ drawingIndex: dIdx, pointIndex: pIdx });
+                        hit = true;
                         return; // Found one
                     }
                 });
             });
+            if (!hit) {
+                // No handle hit, and tool is none -> Toggle Play
+                togglePlay();
+            }
             return;
         }
 
@@ -651,7 +658,7 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
                 {/* Canvas Overlay with Touch Events */}
                 <canvas
                     ref={canvasRef}
-                    className={`absolute inset-0 z-20 w-full h-full touch-none ${tool !== 'none' ? 'cursor-crosshair' : 'cursor-default'}`}
+                    className={`absolute inset-0 z-50 w-full h-full touch-none ${tool !== 'none' ? 'cursor-crosshair' : 'cursor-default'}`}
                     onMouseDown={handleMouseDown}
                     onMouseMove={handleMouseMove}
                     onMouseUp={handleMouseUp}
@@ -663,18 +670,13 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
 
                 {/* Central Play/Pause Overlay (Mobile Optimized) */}
                 <div
-                    className="absolute inset-0 z-40 flex items-center justify-center cursor-pointer"
-                    onClick={() => {
-                        togglePlay();
-                        // Also toggle full screen on double tap? Maybe later.
-                    }}
+                    className="absolute inset-0 z-40 flex items-center justify-center pointer-events-none"
                 >
                     {!isPlaying && (
-                        <div className="bg-black/40 backdrop-blur-sm p-6 rounded-full border border-white/20 hover:scale-110 transition-transform group/play">
-                            <Play className="w-12 h-12 text-white fill-white group-hover/play:text-blue-500 group-hover/play:fill-blue-500 transition-colors" />
+                        <div className="bg-black/40 backdrop-blur-sm p-6 rounded-full border border-white/20 shadow-2xl animate-fade-in group/play">
+                            <Play className="w-12 h-12 text-white fill-white" />
                         </div>
                     )}
-                    {/* Show Pause temporarily on tap? For now just Play icon when paused is standard. */}
                 </div>
 
                 {/* Video Controls Overlay (Bottom) */}
@@ -697,7 +699,7 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-6">
                                 <button onClick={() => stepFrame(-5)} className="text-white hover:text-blue-400 p-2"><Rewind className="w-6 h-6" /></button>
-                                <button onClick={togglePlay} className="text-white hover:text-blue-400 md:hidden">
+                                <button onClick={togglePlay} className="text-white hover:text-blue-400">
                                     {isPlaying ? <Pause className="w-8 h-8 fill-current" /> : <Play className="w-8 h-8 fill-current" />}
                                 </button>
                                 <button onClick={() => stepFrame(5)} className="text-white hover:text-blue-400 p-2"><FastForward className="w-6 h-6" /></button>
@@ -708,7 +710,7 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
                             </div>
 
                             <div className="flex items-center gap-2">
-                                {[0.25, 0.5, 1.0].map(rate => (
+                                {[0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 2.0].map(rate => (
                                     <button
                                         key={rate}
                                         onClick={() => changeSpeed(rate)}
