@@ -938,7 +938,7 @@ const AthleteDashboard: React.FC = () => {
                                 </div>
                             </div>
 
-                            <div className="flex items-center gap-8 w-full lg:w-auto justify-between lg:justify-end">
+                            <div className="flex items-center gap-8 w-full lg:w-auto justify-end">
                                 {/* v8.0 Neural Readiness Stats (Desktop) */}
                                 {showAdvancedMetrics && (
                                     <div className="hidden md:flex items-center gap-8 mr-8 border-r border-neutral-800 pr-8">
@@ -969,7 +969,7 @@ const AthleteDashboard: React.FC = () => {
                                 )}
 
                                 <div className="flex items-center gap-6">
-                                    <div className="hidden md:flex flex-col items-end">
+                                    <div className="flex flex-col items-end">
                                         <div className="flex items-center gap-2 mb-1">
                                             <span className="text-white font-black text-xl tracking-tighter italic">APEX LAB</span>
                                             <div className="bg-red-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">BETA</div>
