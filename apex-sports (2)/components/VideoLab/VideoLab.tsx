@@ -250,33 +250,34 @@ export const VideoLab: React.FC = () => {
                 </div>
             ) : (
                 // Analysis Mode
-                <div className="space-y-6">
+                <div className="space-y-2 md:space-y-6">
                     {/* Toolbar */}
-                    <div className="flex items-center justify-between bg-neutral-900 border border-neutral-800 p-4 rounded-2xl">
-                        <div className="flex items-center gap-4">
-                            <div className="flex items-center gap-2 px-4 py-2 bg-neutral-800 rounded-xl">
-                                <span className="text-xs font-bold text-gray-500 uppercase">Primary</span>
-                                <span className="text-sm font-bold text-white truncate max-w-[150px]">{currentVideo.name}</span>
+                    {/* Toolbar */}
+                    <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between bg-neutral-900 border border-neutral-800 p-4 rounded-2xl">
+                        <div className="flex flex-col gap-2 md:flex-row md:items-center md:gap-4">
+                            <div className="flex items-center gap-2 px-4 py-2 bg-neutral-800 rounded-xl w-full md:w-auto">
+                                <span className="text-xs font-bold text-gray-500 uppercase shrink-0">Primary</span>
+                                <span className="text-sm font-bold text-white truncate">{currentVideo.name}</span>
                             </div>
 
                             {compareVideo && (
-                                <div className="flex items-center gap-2 px-4 py-2 bg-neutral-800 rounded-xl border border-blue-900/50">
-                                    <span className="text-xs font-bold text-blue-500 uppercase">Compare</span>
-                                    <span className="text-sm font-bold text-white truncate max-w-[150px]">{compareVideo.name}</span>
+                                <div className="flex items-center gap-2 px-4 py-2 bg-neutral-800 rounded-xl border border-blue-900/50 w-full md:w-auto">
+                                    <span className="text-xs font-bold text-blue-500 uppercase shrink-0">Compare</span>
+                                    <span className="text-sm font-bold text-white truncate">{compareVideo.name}</span>
                                 </div>
                             )}
                         </div>
 
-                        <div className="flex gap-3">
+                        <div className="grid grid-cols-2 md:flex gap-3">
                             <button
                                 onClick={() => handleSelectVideo(true)}
-                                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all ${compareVideo ? 'bg-neutral-800 text-white' : 'bg-blue-600 text-white hover:bg-blue-500'}`}
+                                className={`flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all ${compareVideo ? 'bg-neutral-800 text-white' : 'bg-blue-600 text-white hover:bg-blue-500'}`}
                             >
-                                {compareVideo ? 'Change Compare Video' : '+ Add Comparison'}
+                                {compareVideo ? 'Change' : '+ Compare'}
                             </button>
                             <button
                                 onClick={() => { setCurrentVideo(null); setCompareVideo(null); }}
-                                className="px-4 py-2 rounded-xl text-sm font-bold bg-neutral-800 text-white hover:bg-neutral-700"
+                                className="px-4 py-2 rounded-xl text-sm font-bold bg-neutral-800 text-white hover:bg-neutral-700 flex items-center justify-center"
                             >
                                 Close Lab
                             </button>

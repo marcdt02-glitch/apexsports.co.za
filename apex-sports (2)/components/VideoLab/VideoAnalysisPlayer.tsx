@@ -584,11 +584,11 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
     }, [drawings, currentDrawing, videoUrl]); // Re-render on updates
 
     return (
-        <div ref={containerRef} className="flex flex-col gap-4 bg-black rounded-3xl overflow-hidden relative group">
+        <div ref={containerRef} className="flex flex-col gap-2 md:gap-4 bg-black rounded-3xl overflow-hidden relative group">
             {/* Custom Text Modal Overlay */}
             {textModal.isOpen && (
-                <div className="absolute inset-0 z-60 flex items-center justify-center bg-black/50 backdrop-blur-sm animate-fade-in">
-                    <div className="bg-[#111] border border-neutral-700 p-6 rounded-2xl w-full max-w-sm shadow-2xl transform scale-100 transition-all pointer-events-auto">
+                <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm animate-fade-in">
+                    <div className="bg-[#111] border border-neutral-700 p-6 rounded-2xl w-full max-w-sm shadow-2xl transform scale-100 transition-all pointer-events-auto mx-4">
                         <h3 className="text-white font-bold mb-4 flex items-center gap-2">
                             <Type className="w-4 h-4 text-blue-500" />
                             Add Annotation
@@ -680,7 +680,7 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
                 </div>
 
                 {/* Video Controls Overlay (Bottom) */}
-                <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/95 to-transparent opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity z-50 pointer-events-none">
+                <div className="absolute bottom-0 left-0 right-0 p-2 md:p-4 bg-gradient-to-t from-black/95 to-transparent opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity z-50 pointer-events-none">
                     <div className="pointer-events-auto">
                         {/* Scrubber */}
                         <div className="w-full mb-4 flex items-center gap-2">
