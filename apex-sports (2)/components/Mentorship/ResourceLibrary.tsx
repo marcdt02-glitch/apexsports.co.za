@@ -21,7 +21,7 @@ const RESOURCES: Record<Category, { title: string; description: string; icon: an
         items: [
             { id: 1, title: 'Box Breathing (Calm)', description: '4-4-4-4 Technique for reducing anxiety.', url: 'https://www.youtube.com/embed/FJJazKtH_9I', duration: '4:00' },
             { id: 2, title: 'Wim Hof Method (Energy)', description: 'Hyper-oxygenation to spike alertness.', url: 'https://www.youtube.com/embed/tybOi4hjZFQ', duration: '11:00' },
-            { id: 3, title: 'Pre-Game Pump Up', description: 'High-energy audio visual primer.', url: 'https://www.youtube.com/embed/UeG1ftTmLAg', duration: '3:00' }
+            { id: 3, title: 'Mamba Mentality (Kobe)', description: 'The mindset of a champion.', url: 'https://www.youtube.com/embed/dTRBnHtHehQ', duration: '10:00' }
         ]
     },
     visualization: {
@@ -30,8 +30,8 @@ const RESOURCES: Record<Category, { title: string; description: string; icon: an
         icon: Eye,
         color: "text-blue-500",
         items: [
-            { id: 4, title: 'Guided Visualization for Athletes', description: 'Structured mental rehearsal session.', url: 'https://www.youtube.com/embed/P_6vDLq64gE', duration: '8:00' },
-            { id: 5, title: 'Penalty Shootout Imagery', description: 'Specific scenario rehearsal.', url: 'https://www.youtube.com/embed/0U--Z1B9z8A', duration: '5:00' },
+            { id: 4, title: 'Michael Phelps Visualization', description: 'How the GOAT prepared for every scenario.', url: 'https://www.youtube.com/embed/3-mm90LFPqU', duration: '3:30' },
+            { id: 5, title: 'Mental Strength (Djokovic)', description: 'Staying calm under extreme pressure.', url: 'https://www.youtube.com/embed/S-s7qF-qJ4', duration: '6:00' },
         ]
     },
     goals: {
@@ -41,7 +41,7 @@ const RESOURCES: Record<Category, { title: string; description: string; icon: an
         color: "text-red-500",
         items: [
             { id: 6, title: 'Process vs Outcome Goals', description: 'Understanding the control spectrum.', url: 'https://www.youtube.com/embed/VA8D1cGW5Qk', duration: '6:30' },
-            { id: 7, title: 'The 1% Rule', description: 'Marginal gains philosophy.', url: 'https://www.youtube.com/embed/mPRO8751IQA', duration: '4:00' },
+            { id: 7, title: 'Atomic Habits (1% Rule)', description: 'Marginal gains philosophy (James Clear).', url: 'https://www.youtube.com/embed/PZ7lDrwYdZc', duration: '8:00' },
         ]
     },
     habits: {
@@ -50,9 +50,9 @@ const RESOURCES: Record<Category, { title: string; description: string; icon: an
         icon: Calendar,
         color: "text-green-500",
         items: [
-            { id: 8, title: 'Ideal Gameday Routine', description: 'From wake-up to kick-off.', url: 'https://www.youtube.com/embed/7X8II6J-6Rc', duration: '12:00' },
-            { id: 9, title: 'Morning Priming Routine', description: 'Start the day with intent.', url: 'https://www.youtube.com/embed/sq02N0-m8bU', duration: '8:00' },
-            { id: 10, title: 'Sleep Optimization', description: 'Recovery starts in bed.', url: 'https://www.youtube.com/embed/pwaWilO_Pig', duration: '15:00' },
+            { id: 8, title: 'CR7 Matchday Focus', description: 'Preparation secrets of Cristiano Ronaldo.', url: 'https://www.youtube.com/embed/tgq8I6-tJ4', duration: '5:00' },
+            { id: 9, title: 'Win The Morning', description: 'Start the day with intent.', url: 'https://www.youtube.com/embed/sq02N0-m8bU', duration: '8:00' },
+            { id: 10, title: 'LeBron James Sleep', description: 'Recovery is the #1 performance enhancer.', url: 'https://www.youtube.com/embed/aVoWkR24pj4', duration: '2:30' },
         ]
     }
 };
