@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { UploadCloud, Video, FolderOpen, PlayCircle, Grid, Info, X, CheckCircle, AlertTriangle, ArrowRight, UserCheck, Upload } from 'lucide-react';
+import { UploadCloud, Video, FolderOpen, PlayCircle, Grid, Info, X, CheckCircle, AlertTriangle, ArrowRight, UserCheck, Upload, Lock } from 'lucide-react';
 import { useGoogleDrivePicker, DriveFile } from './useGoogleDrivePicker';
 import { VideoAnalysisPlayer } from './VideoAnalysisPlayer';
 
