@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Download, Save, Target, Brain, Activity, Shield, Zap, Info, Check, Printer, X, Layout, Calendar, List, Award, Menu } from 'lucide-react';
+import { Download, Save, Target, Brain, Activity, Shield, Zap, Info, Check, Printer, X, Layout as LayoutIcon, Calendar, List, Award, Menu as MenuIcon } from 'lucide-react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
@@ -125,7 +125,7 @@ const GoalSetting: React.FC<GoalSettingProps> = ({ athleteName, tier }) => {
 
         // Load Logo
         const logoUrl = '/images/logo.png';
-        const logoImg = new Image();
+        const logoImg = document.createElement('img');
         logoImg.src = logoUrl;
         await new Promise((resolve) => { logoImg.onload = resolve; logoImg.onerror = resolve; });
 

@@ -149,6 +149,11 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
 
         // START RECORDING logic
         try {
+            if (typeof MediaRecorder === 'undefined' || !navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia) {
+                alert("Screen recording is not supported in this browser.");
+                return;
+            }
+
             const stream = await navigator.mediaDevices.getDisplayMedia({
                 video: { displaySurface: 'browser' },
                 audio: true
