@@ -22,7 +22,7 @@ const PortalMentorship: React.FC<PortalMentorshipProps> = ({ athleteName, tier }
     ];
 
     return (
-        <div className="space-y-8 animate-fade-in">
+        <div className="space-y-8">
             <div className="flex flex-col md:flex-row justify-between items-end gap-4">
                 <div>
                     <h2 className="text-3xl font-black text-white">Mentorship Portal</h2>

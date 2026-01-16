@@ -383,7 +383,7 @@ const GoalSetting: React.FC<GoalSettingProps> = ({ athleteName, tier }) => {
 
     return (
         // MAIN CONTAINER: #0a0a0a Matte Black + Subtle texture
-        <div className="w-full min-h-[700px] bg-[#0a0a0a] border border-neutral-800 rounded-3xl overflow-hidden shadow-2xl animate-fade-in relative flex flex-col font-sans selection:bg-white selection:text-black">
+        <div className="w-full min-h-[700px] bg-[#0a0a0a] border border-neutral-800 rounded-3xl overflow-hidden shadow-2xl relative flex flex-col font-sans selection:bg-white selection:text-black">
 
             {/* Subtle "Carbon" / Tech Background Overlay */}
             <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
@@ -424,8 +424,8 @@ const GoalSetting: React.FC<GoalSettingProps> = ({ athleteName, tier }) => {
                 }
             </div>
 
-            {/* Mobile Navigation: Bottom Fixed Bar */}
-            <div className="md:hidden fixed bottom-0 left-0 right-0 bg-[#0a0a0a]/95 backdrop-blur-xl border-t border-neutral-800 p-2 z-50 flex justify-between safe-area-pb">
+            {/* Mobile Navigation: Bottom Sticky Bar */}
+            <div className="md:hidden sticky bottom-0 left-0 right-0 bg-[#0a0a0a]/95 backdrop-blur-xl border-t border-neutral-800 p-2 z-50 flex justify-between safe-area-pb mt-auto">
                 {tabs.map((tab) => (
                     <button
                         key={tab.id}
