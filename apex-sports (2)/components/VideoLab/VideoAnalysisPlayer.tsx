@@ -210,16 +210,30 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
             // Check for handle hit
             let hit = false;
             drawings.forEach((d, dIdx) => {
-                const ptList = d.points;
-                // For text, check if click is near the point
-                ptList.forEach((p, pIdx) => {
-                    const dist = Math.sqrt(Math.pow(p.x - pt.x, 2) + Math.pow(p.y - pt.y, 2));
-                    if (dist < 15) { // 15px radius hit
-                        setDraggingPoint({ drawingIndex: dIdx, pointIndex: pIdx });
+                if (d.type === 'text' && d.text) {
+                    // Text Hit Detection (Bounding Box approximation)
+                    const p = d.points[0];
+                    const charWidth = 12; // Approx for 16px font
+                    const w = d.text.length * charWidth;
+                    const h = 30;
+                    // Check if point is inside text box (centered on y, starts at x)
+                    // Allow generous padding
+                    if (pt.x >= p.x - 20 && pt.x <= p.x + w + 20 && pt.y >= p.y - h && pt.y <= p.y + 20) {
+                        setDraggingPoint({ drawingIndex: dIdx, pointIndex: 0 });
                         hit = true;
-                        return; // Found one
+                        return;
                     }
-                });
+                } else {
+                    // Standard Point Hit
+                    d.points.forEach((p, pIdx) => {
+                        const dist = Math.sqrt(Math.pow(p.x - pt.x, 2) + Math.pow(p.y - pt.y, 2));
+                        if (dist < 30) { // 30px radius for Mouse
+                            setDraggingPoint({ drawingIndex: dIdx, pointIndex: pIdx });
+                            hit = true;
+                            return; // Found one
+                        }
+                    });
+                }
             });
             if (!hit) {
                 // No handle hit, and tool is none -> Toggle Play
@@ -336,13 +350,25 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
         // Reuse Mouse Logic
         if (tool === 'none') {
             drawings.forEach((d, dIdx) => {
-                d.points.forEach((p, pIdx) => {
-                    const dist = Math.sqrt(Math.pow(p.x - pt.x, 2) + Math.pow(p.y - pt.y, 2));
-                    if (dist < 40) { // INCREASED HIT AREA (40px)
-                        setDraggingPoint({ drawingIndex: dIdx, pointIndex: pIdx });
+                if (d.type === 'text' && d.text) {
+                    // Text Hit Detection (Bounding Box)
+                    const p = d.points[0];
+                    const charWidth = 12;
+                    const w = d.text.length * charWidth;
+                    const h = 30;
+                    if (pt.x >= p.x - 30 && pt.x <= p.x + w + 30 && pt.y >= p.y - h - 10 && pt.y <= p.y + 30) {
+                        setDraggingPoint({ drawingIndex: dIdx, pointIndex: 0 });
                         return;
                     }
-                });
+                } else {
+                    d.points.forEach((p, pIdx) => {
+                        const dist = Math.sqrt(Math.pow(p.x - pt.x, 2) + Math.pow(p.y - pt.y, 2));
+                        if (dist < 40) { // INCREASED HIT AREA (40px)
+                            setDraggingPoint({ drawingIndex: dIdx, pointIndex: pIdx });
+                            return;
+                        }
+                    });
+                }
             });
             return;
         }
@@ -779,7 +805,7 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
                         <Download className="w-6 h-6" />
                     </button>
                     {/* Export Video */}
-                    <button onClick={handleScreenRecord} className={`hidden md:block p-4 rounded-xl transition-all ${isRecording ? 'text-white bg-red-600 animate-pulse' : 'text-green-400 hover:bg-green-900/20'}`} title={isRecording ? "Stop Recording" : "Start Screen Recording"}>
+                    <button onClick={handleScreenRecord} className={`p-4 rounded-xl transition-all ${isRecording ? 'text-white bg-red-600 animate-pulse' : 'text-green-400 hover:bg-green-900/20'}`} title={isRecording ? "Stop Recording" : "Start Screen Recording"}>
                         {isRecording ? <Square className="w-6 h-6 fill-current" /> : <Film className="w-6 h-6" />}
                     </button>
                 </div>
