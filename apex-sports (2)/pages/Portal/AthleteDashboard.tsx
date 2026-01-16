@@ -1062,17 +1062,17 @@ const AthleteDashboard: React.FC = () => {
                                         {/* Report Downloads Dropdown (Mini) */}
                                         <div className="flex gap-2">
                                             {(showWellness || showPhysicalSimple) && (
-                                                <button onClick={handleDownloadDevelopment} className="p-3 bg-neutral-800 hover:bg-neutral-700 rounded-lg text-gray-400 hover:text-white transition-colors" title="Download Parent Summary">
-                                                    <FileText className="w-5 h-5" />
+                                                <button disabled className="p-3 bg-neutral-800/50 border border-neutral-700 rounded-lg text-gray-600 cursor-not-allowed" title="Report Locked">
+                                                    <Lock className="w-4 h-4" />
                                                 </button>
                                             )}
                                             {showPhysicalAdvanced && (
                                                 <>
-                                                    <button onClick={handleDownloadTechnical} className="p-3 bg-neutral-800 hover:bg-neutral-700 rounded-lg text-gray-400 hover:text-white transition-colors" title="Download Technical Report">
-                                                        <Activity className="w-5 h-5" />
+                                                    <button disabled className="p-3 bg-neutral-800/50 border border-neutral-700 rounded-lg text-gray-600 cursor-not-allowed" title="Report Locked">
+                                                        <Lock className="w-4 h-4" />
                                                     </button>
-                                                    <button onClick={handleDownloadExecutive} className="p-3 bg-neutral-800 hover:bg-neutral-700 rounded-lg text-yellow-500/80 hover:text-yellow-500 transition-colors" title="Download Executive Strategy">
-                                                        <LayoutDashboard className="w-5 h-5" />
+                                                    <button disabled className="p-3 bg-neutral-800/50 border border-neutral-700 rounded-lg text-gray-600 cursor-not-allowed" title="Report Locked">
+                                                        <Lock className="w-4 h-4" />
                                                     </button>
                                                 </>
                                             )}
