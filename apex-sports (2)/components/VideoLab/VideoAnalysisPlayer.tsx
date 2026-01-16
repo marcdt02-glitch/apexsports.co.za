@@ -186,6 +186,7 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
 
         } catch (err) {
             console.error("Screen recording cancelled or failed:", err);
+            alert("Screen recording is limited on mobile device browsers. Please use your device's native Screen Record feature (in Control Center on iOS/Android) for best results.");
             setIsRecording(false);
         }
     };
@@ -356,14 +357,14 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
                     const charWidth = 12;
                     const w = d.text.length * charWidth;
                     const h = 30;
-                    if (pt.x >= p.x - 30 && pt.x <= p.x + w + 30 && pt.y >= p.y - h - 10 && pt.y <= p.y + 30) {
+                    if (pt.x >= p.x - 10 && pt.x <= p.x + w + 10 && pt.y >= p.y - h - 10 && pt.y <= p.y + 10) {
                         setDraggingPoint({ drawingIndex: dIdx, pointIndex: 0 });
                         return;
                     }
                 } else {
                     d.points.forEach((p, pIdx) => {
                         const dist = Math.sqrt(Math.pow(p.x - pt.x, 2) + Math.pow(p.y - pt.y, 2));
-                        if (dist < 40) { // INCREASED HIT AREA (40px)
+                        if (dist < 30) { // Reduced from 40px to 30px
                             setDraggingPoint({ drawingIndex: dIdx, pointIndex: pIdx });
                             return;
                         }
@@ -699,8 +700,8 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
                     className="absolute inset-0 z-40 flex items-center justify-center pointer-events-none"
                 >
                     {!isPlaying && (
-                        <div className="bg-black/40 backdrop-blur-sm p-6 rounded-full border border-white/20 shadow-2xl animate-fade-in group/play">
-                            <Play className="w-12 h-12 text-white fill-white" />
+                        <div className="bg-black/40 backdrop-blur-sm p-4 md:p-6 rounded-full border border-white/20 shadow-2xl animate-fade-in group/play">
+                            <Play className="w-8 h-8 md:w-16 md:h-16 text-white fill-white" />
                         </div>
                     )}
                 </div>
