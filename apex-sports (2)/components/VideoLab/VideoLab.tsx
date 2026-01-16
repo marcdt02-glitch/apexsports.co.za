@@ -210,17 +210,18 @@ export const VideoLab: React.FC = () => {
                     <input type="file" ref={fileInputRef} hidden accept="video/*" onChange={handleLocalUpload} />
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-64">
                         {/* Upload / My Cloud */}
+                        {/* Upload / My Cloud */}
                         <button
-                            onClick={() => handleSelectVideo(false)}
-                            className="group relative bg-blue-900/10 border-2 border-dashed border-blue-900/30 rounded-3xl p-8 flex flex-col items-center justify-center hover:border-blue-500 hover:bg-blue-900/20 transition-all text-center"
+                            disabled
+                            className="group relative bg-neutral-900/30 border-2 border-dashed border-neutral-800 rounded-3xl p-8 flex flex-col items-center justify-center cursor-not-allowed opacity-50 text-center"
                         >
-                            <div className="p-4 bg-blue-900/20 rounded-full mb-4 group-hover:scale-110 transition-transform">
-                                <UploadCloud className="w-8 h-8 text-blue-500" />
+                            <div className="p-4 bg-neutral-800 rounded-full mb-4">
+                                <Lock className="w-8 h-8 text-gray-500" />
                             </div>
-                            <h3 className="text-xl font-bold text-white mb-1">
-                                {isAuthorized ? "Open from Cloud" : "Sign In to Drive"}
+                            <h3 className="text-xl font-bold text-gray-500 mb-1">
+                                Feature Locked
                             </h3>
-                            <p className="text-xs text-gray-400">Google Drive</p>
+                            <p className="text-xs text-gray-600">Google Drive</p>
                         </button>
 
                         {/* Local Upload */}

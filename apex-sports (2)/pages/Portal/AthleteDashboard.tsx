@@ -6,7 +6,7 @@ import SafetyGuard from '../../components/SafetyGuard';
 import {
     RadialBarChart, RadialBar, PolarAngleAxis,
     Radar, RadarChart, PolarGrid, PolarRadiusAxis,
-    Area, AreaChart, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer,
+    Area, AreaChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer,
     Legend
 } from 'recharts';
 import {
@@ -1601,12 +1601,15 @@ const AthleteDashboard: React.FC = () => {
                                                                 </linearGradient>
                                                             </defs>
                                                             <XAxis dataKey="date" hide />
+                                                            <YAxis yAxisId="left" hide />
+                                                            <YAxis yAxisId="right" orientation="right" domain={[0, 2]} hide />
                                                             <RechartsTooltip
                                                                 contentStyle={{ backgroundColor: '#111', borderColor: '#333', borderRadius: '8px', fontSize: '12px' }}
                                                                 itemStyle={{ color: '#fff' }}
                                                                 labelStyle={{ display: 'none' }}
                                                             />
-                                                            <Area type="monotone" dataKey="load" stroke="#3b82f6" fillOpacity={1} fill="url(#colorLoad)" />
+                                                            <Area yAxisId="left" type="monotone" dataKey="load" stroke="#3b82f6" fillOpacity={1} fill="url(#colorLoad)" />
+                                                            <Line yAxisId="right" type="monotone" dataKey="acwr" stroke="#10b981" strokeWidth={2} dot={{ r: 4, fill: '#10b981' }} />
                                                         </AreaChart>
                                                     </ResponsiveContainer>
                                                 </div>
@@ -1664,16 +1667,16 @@ const AthleteDashboard: React.FC = () => {
                                             </p>
                                         </div>
                                         <button
-                                            onClick={handleDownloadQuarterly}
-                                            className="w-full py-4 bg-white text-black font-bold rounded-xl flex items-center justify-center gap-2 hover:bg-gray-200 transition-colors"
+                                            disabled
+                                            className="w-full py-4 bg-neutral-800/50 text-gray-500 font-bold rounded-xl flex items-center justify-center gap-2 cursor-not-allowed border border-neutral-800"
                                         >
-                                            <Download className="w-4 h-4" />
-                                            Download PDF
+                                            <Lock className="w-4 h-4" />
+                                            Report Locked
                                         </button>
                                     </div>
 
                                     {/* Technical Report */}
-                                    <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl flex flex-col justify-between group hover:border-purple-600 transition-all">
+                                    <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl flex flex-col justify-between opacity-75">
                                         <div>
                                             <div className="w-12 h-12 bg-purple-900/20 text-purple-500 rounded-xl flex items-center justify-center mb-6">
                                                 <Activity className="w-6 h-6" />
@@ -1684,16 +1687,16 @@ const AthleteDashboard: React.FC = () => {
                                             </p>
                                         </div>
                                         <button
-                                            onClick={handleDownloadTechnical}
-                                            className="w-full py-4 bg-neutral-800 text-white font-bold rounded-xl flex items-center justify-center gap-2 hover:bg-neutral-700 transition-colors"
+                                            disabled
+                                            className="w-full py-4 bg-neutral-800/50 text-gray-500 font-bold rounded-xl flex items-center justify-center gap-2 cursor-not-allowed border border-neutral-800"
                                         >
-                                            <FileText className="w-4 h-4" />
-                                            Download PDF
+                                            <Lock className="w-4 h-4" />
+                                            Report Locked
                                         </button>
                                     </div>
 
                                     {/* Development Summary */}
-                                    <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl flex flex-col justify-between group hover:border-green-600 transition-all">
+                                    <div className="bg-neutral-900/40 border border-neutral-800 p-8 rounded-3xl flex flex-col justify-between opacity-75">
                                         <div>
                                             <div className="w-12 h-12 bg-green-900/20 text-green-500 rounded-xl flex items-center justify-center mb-6">
                                                 <Target className="w-6 h-6" />
@@ -1704,11 +1707,11 @@ const AthleteDashboard: React.FC = () => {
                                             </p>
                                         </div>
                                         <button
-                                            onClick={handleDownloadDevelopment}
-                                            className="w-full py-4 bg-neutral-800 text-white font-bold rounded-xl flex items-center justify-center gap-2 hover:bg-neutral-700 transition-colors"
+                                            disabled
+                                            className="w-full py-4 bg-neutral-800/50 text-gray-500 font-bold rounded-xl flex items-center justify-center gap-2 cursor-not-allowed border border-neutral-800"
                                         >
-                                            <FileText className="w-4 h-4" />
-                                            Download PDF
+                                            <Lock className="w-4 h-4" />
+                                            Report Locked
                                         </button>
                                     </div>
 
@@ -1725,15 +1728,13 @@ const AthleteDashboard: React.FC = () => {
                                         <h2 className="text-3xl font-black text-white">Wellness & CNS Status</h2>
                                         <p className="text-gray-400 mt-2">Track your recovery trends and neural readiness.</p>
                                     </div>
-                                    <a
-                                        href="https://docs.google.com/forms/d/e/1FAIpQLSebjaiFLu2pJS56XPidWAZI74xWQXra4SzbUB22UI9LSyRGbA/viewform?usp=header"
-                                        target="_blank"
-                                        rel="noreferrer"
-                                        className="bg-blue-600 text-white font-bold py-3 px-6 rounded-xl hover:bg-blue-500 transition-colors flex items-center gap-2"
+                                    <button
+                                        disabled
+                                        className="bg-neutral-800 text-gray-500 font-bold py-3 px-6 rounded-xl cursor-not-allowed flex items-center gap-2 border border-neutral-700"
                                     >
-                                        <Activity className="w-5 h-5" />
-                                        Submit Daily Wellness & Load
-                                    </a>
+                                        <Lock className="w-4 h-4" />
+                                        <span>Submissions Locked</span>
+                                    </button>
                                 </div>
 
                                 {/* CNS Readiness (Jump Gap) */}
