@@ -107,7 +107,10 @@ export const useGoogleDrivePicker = () => {
                 .addView(window.google.picker.ViewId.VIDEO_SEARCH)
                 .addView(window.google.picker.ViewId.DOCS_VIDEOS)
                 .setOAuthToken(oauthToken) // Pass the token explicitly
+                .setOAuthToken(oauthToken) // Pass the token explicitly
                 .setDeveloperKey(developerKey)
+                .setAppId(clientId)
+                .setOrigin(window.location.protocol + '//' + window.location.host)
                 .setCallback((data: any) => {
                     if (data[window.google.picker.Response.ACTION] === window.google.picker.Action.PICKED) {
                         const doc = data[window.google.picker.Response.DOCUMENTS][0];
