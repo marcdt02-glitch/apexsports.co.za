@@ -102,7 +102,8 @@ export const useGoogleDrivePicker = () => {
         // Use prompt: '' to try silent, or 'consent' to force screen
         // For first time or explicitly clicking 'Sign In', we might want to ensure they see it if needed,
         // but typically requestAccessToken() handles it.
-        tokenClient.current.requestAccessToken({ prompt: '' });
+        // Trigger the popup - FORCE CONSENT to ensure new scopes (drive.readonly) are granted
+        tokenClient.current.requestAccessToken({ prompt: 'consent' });
     };
 
     // Function to trigger the picker
@@ -114,13 +115,11 @@ export const useGoogleDrivePicker = () => {
 
         if (pickerApiLoaded && window.google && window.google.picker) {
             const picker = new window.google.picker.PickerBuilder()
-                .addView(window.google.picker.ViewId.VIDEO_SEARCH)
+                // Simpler View: Just Docs/Videos (no Search view which can be buggy with perms)
                 .addView(window.google.picker.ViewId.DOCS_VIDEOS)
                 .setOAuthToken(oauthToken) // Pass the token explicitly
                 .setDeveloperKey(developerKey)
-                // AppId should be the Project Number (first part of Client ID)
-                .setAppId(clientId.split('-')[0])
-                .setOrigin(window.location.protocol + '//' + window.location.host)
+                // Removed setAppId and setOrigin to rely on standard API Key Referrer checks
                 .setCallback((data: any) => {
                     if (data[window.google.picker.Response.ACTION] === window.google.picker.Action.PICKED) {
                         const doc = data[window.google.picker.Response.DOCUMENTS][0];
