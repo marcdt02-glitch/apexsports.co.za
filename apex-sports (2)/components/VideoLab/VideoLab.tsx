@@ -17,7 +17,7 @@ export const VideoLab: React.FC = () => {
     const [compareVideo, setCompareVideo] = useState<DriveFile | null>(null);
     const [showBioInfo, setShowBioInfo] = useState(false);
     const [showProSidebar, setShowProSidebar] = useState(false);
-    const { openPicker, signIn, isAuthorized } = useGoogleDrivePicker();
+    const { openPicker, signIn, signOut, isAuthorized } = useGoogleDrivePicker();
 
     // Refs
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -212,9 +212,27 @@ export const VideoLab: React.FC = () => {
                         {/* Upload / My Cloud */}
                         {/* Upload / My Cloud */}
                         <button
-                            onClick={() => handleSelectVideo(false)}
+                            onClick={() => {
+                                if (!isAuthorized) signIn(GOOGLE_CLIENT_ID);
+                                else handleSelectVideo(false);
+                            }}
                             className="group relative bg-neutral-900/30 border-2 border-dashed border-neutral-800 rounded-3xl p-8 flex flex-col items-center justify-center hover:border-blue-500 hover:bg-neutral-900/60 transition-all text-center"
                         >
+                            <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                {isAuthorized && (
+                                    <div
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            // signOut is not destructured yet, need to update component
+                                            // Using inline disconnect logic or update destructuring
+                                        }}
+                                        className="p-1.5 bg-red-900/50 rounded-full hover:bg-red-900 text-red-200"
+                                        title="Disconnect Account"
+                                    >
+                                        <X className="w-3 h-3" />
+                                    </div>
+                                )}
+                            </div>
                             <div className="p-4 bg-blue-900/20 rounded-full mb-4 group-hover:scale-110 transition-transform">
                                 <UploadCloud className="w-8 h-8 text-blue-500" />
                             </div>
@@ -234,18 +252,6 @@ export const VideoLab: React.FC = () => {
                             </div>
                             <h3 className="text-xl font-bold text-white mb-1">Upload File</h3>
                             <p className="text-xs text-gray-400">From Device</p>
-                        </button>
-
-                        {/* Pro Library */}
-                        <button
-                            onClick={() => setShowProSidebar(!showProSidebar)}
-                            className="group relative bg-neutral-900/30 border-2 border-dashed border-neutral-800 rounded-3xl p-8 flex flex-col items-center justify-center hover:border-purple-500 hover:bg-neutral-900/60 transition-all text-center"
-                        >
-                            <div className="p-4 bg-purple-900/20 rounded-full mb-4 group-hover:scale-110 transition-transform">
-                                <Grid className="w-8 h-8 text-purple-500" />
-                            </div>
-                            <h3 className="text-xl font-bold text-white mb-1">Playground</h3>
-                            <p className="text-xs text-gray-400">Training Footage & Creative</p>
                         </button>
                     </div>
                 </div>

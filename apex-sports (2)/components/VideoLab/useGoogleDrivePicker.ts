@@ -25,6 +25,15 @@ export const useGoogleDrivePicker = () => {
     const [oauthToken, setOauthToken] = useState<string | null>(null);
     const [isAuthorized, setIsAuthorized] = useState(false);
 
+    // Check for existing token in session storage on mount
+    useEffect(() => {
+        const storedToken = sessionStorage.getItem('google_access_token');
+        if (storedToken) {
+            setOauthToken(storedToken);
+            setIsAuthorized(true);
+        }
+    }, []);
+
     // Ref to hold the token client to avoid recreation
     const tokenClient = useRef<any>(null);
 
@@ -83,6 +92,7 @@ export const useGoogleDrivePicker = () => {
                     }
                     console.log("🔓 OAuth Success:", response);
                     setOauthToken(response.access_token);
+                    sessionStorage.setItem('google_access_token', response.access_token);
                     setIsAuthorized(true);
                 },
             });
@@ -132,9 +142,17 @@ export const useGoogleDrivePicker = () => {
         }
     };
 
+    const handleSignOut = () => {
+        setOauthToken(null);
+        setIsAuthorized(false);
+        sessionStorage.removeItem('google_access_token');
+        if (window.google) window.google.accounts.oauth2.revoke(oauthToken, () => { console.log('Token revoked') });
+    };
+
     return {
         openPicker: handleOpenPicker,
         signIn: handleAuthClick,
+        signOut: handleSignOut,
         isApiLoaded: pickerApiLoaded && gisLoaded,
         isAuthorized
     };
