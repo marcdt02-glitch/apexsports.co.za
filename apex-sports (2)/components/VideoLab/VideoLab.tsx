@@ -218,18 +218,17 @@ export const VideoLab: React.FC = () => {
                             }}
                             className="group relative bg-neutral-900/30 border-2 border-dashed border-neutral-800 rounded-3xl p-8 flex flex-col items-center justify-center hover:border-blue-500 hover:bg-neutral-900/60 transition-all text-center"
                         >
-                            <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <div className="absolute top-2 right-2">
                                 {isAuthorized && (
                                     <div
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            // signOut is not destructured yet, need to update component
-                                            // Using inline disconnect logic or update destructuring
+                                            if (confirm('Disconnect / Sign Out from Google Drive?')) signOut();
                                         }}
-                                        className="p-1.5 bg-red-900/50 rounded-full hover:bg-red-900 text-red-200"
+                                        className="p-2 bg-neutral-800 rounded-full hover:bg-red-900 border border-neutral-700 hover:border-red-500 text-gray-400 hover:text-white transition-all z-20 cursor-pointer shadow-lg"
                                         title="Disconnect Account"
                                     >
-                                        <X className="w-3 h-3" />
+                                        <X className="w-4 h-4" />
                                     </div>
                                 )}
                             </div>
