@@ -1,9 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { fetchAllAthletes } from '../../utils/googleIntegration';
-import { AthleteData } from '../../utils/dataEngine';
 import {
-    LayoutDashboard, Search, Lock, User, Activity, Calendar, Shield,
+    LayoutDashboard, Search, Lock, User, Activity as ActivityIcon, Calendar, Shield,
     Bell, ChevronRight, X, AlertCircle, RefreshCw, BarChart2
 } from 'lucide-react';
 
@@ -195,7 +191,7 @@ export const AdminDashboard: React.FC = () => {
                             {/* Readiness & Status */}
                             <div className="col-span-3 md:col-span-3">
                                 <div className={`inline-flex items-center gap-2 px-2.5 py-1 rounded-lg ${getScoreBg(athlete.readinessScore)} border border-white/5`}>
-                                    <Activity className="w-3.5 h-3.5" />
+                                    <ActivityIcon className="w-3.5 h-3.5" />
                                     <span className={`font-bold ${getScoreColor(athlete.readinessScore)}`}>
                                         {athlete.readinessScore}%
                                     </span>
@@ -277,7 +273,7 @@ export const AdminDashboard: React.FC = () => {
                             {/* Right Col: Metrics Snapshot */}
                             <div className="space-y-6">
                                 <h3 className="text-lg font-semibold text-emerald-400 flex items-center gap-2">
-                                    <Activity className="w-5 h-5" /> Recent Metrics
+                                    <ActivityIcon className="w-5 h-5" /> Recent Metrics
                                 </h3>
 
                                 <div className="grid grid-cols-2 gap-4">
