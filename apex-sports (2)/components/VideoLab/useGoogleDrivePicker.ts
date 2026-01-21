@@ -153,6 +153,7 @@ export const useGoogleDrivePicker = () => {
         signIn: handleAuthClick,
         signOut: handleSignOut,
         isApiLoaded: pickerApiLoaded && gisLoaded,
-        isAuthorized
+        isAuthorized,
+        oauthToken // Exposed for VideoLab to fetch blobs
     };
 };

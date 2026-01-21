@@ -154,15 +154,34 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
                 return;
             }
 
-            const stream = await navigator.mediaDevices.getDisplayMedia({
-                video: { displaySurface: 'browser' },
-                audio: true
-            });
-
             const mime = MediaRecorder.isTypeSupported("video/mp4") ? "video/mp4" : "video/webm";
             const ext = mime === "video/mp4" ? "mp4" : "webm";
 
-            const recorder = new MediaRecorder(stream, { mimeType: mime });
+            // 1. Capture Canvas Stream (Video)
+            if (!canvasRef.current) {
+                alert("Canvas not ready for recording.");
+                return;
+            }
+            const canvasStream = canvasRef.current.captureStream(30); // 30 FPS
+
+            // 2. Capture Microphone Stream (Audio) - Voiceover
+            let finalStream = canvasStream; // Start with canvas video
+            let audioStream: MediaStream | null = null;
+            try {
+                // Request mic permission
+                audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                // If successful, add the audio track to the canvas stream
+                if (audioStream.getAudioTracks().length > 0) {
+                    canvasStream.addTrack(audioStream.getAudioTracks()[0]);
+                }
+                console.log("🎤 Microphone added to recording");
+            } catch (micErr) {
+                console.warn("⚠️ Microphone access denied or failed. Recording video only.", micErr);
+                // Continue with just video if mic fails
+            }
+
+            // 3. Start Recorder
+            const recorder = new MediaRecorder(finalStream, { mimeType: mime });
             mediaRecorderRef.current = recorder;
             const chunks: Blob[] = [];
 
@@ -178,14 +197,16 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
                 // Cleanup
                 setIsRecording(false);
                 mediaRecorderRef.current = null;
-                stream.getTracks().forEach(track => track.stop());
+                // Stop all tracks (Video + Audio)
+                finalStream.getTracks().forEach(track => track.stop());
+                if (audioStream) audioStream.getTracks().forEach(track => track.stop());
             };
 
             recorder.start();
             setIsRecording(true);
 
-            // Handle external stop (native browser "Stop Sharing" UI)
-            stream.getVideoTracks()[0].onended = () => {
+            // Handle external stop (native browser "Stop Sharing" UI - rare for canvas but safe to keep)
+            canvasStream.getVideoTracks()[0].onended = () => {
                 if (recorder.state !== "inactive") recorder.stop();
             };
 
