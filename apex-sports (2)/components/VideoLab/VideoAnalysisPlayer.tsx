@@ -659,6 +659,7 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
         });
     };
 
+
     useEffect(() => {
         const canvas = canvasRef.current;
         if (canvas) {
@@ -666,7 +667,27 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
             canvas.height = canvas.offsetHeight;
             draw();
         }
-    }, [drawings, currentDrawing, videoUrl]); // Re-render on updates
+    }, [drawings, currentDrawing, videoUrl]);
+
+    // Continuous Render Loop (Dynamic) - Essential for Playback/Recording
+    useEffect(() => {
+        let animationFrameId: number;
+
+        const loop = () => {
+            draw();
+            if (isPlaying || isRecording) {
+                animationFrameId = requestAnimationFrame(loop);
+            }
+        };
+
+        if (isPlaying || isRecording) {
+            loop();
+        }
+
+        return () => {
+            if (animationFrameId) cancelAnimationFrame(animationFrameId);
+        };
+    }, [isPlaying, isRecording, drawings, currentDrawing, tool]); // Re-bind loop if state changes to avoid stale closures
 
     return (
         <div ref={containerRef} className="flex flex-col gap-2 md:gap-4 bg-black rounded-3xl overflow-hidden relative group">
