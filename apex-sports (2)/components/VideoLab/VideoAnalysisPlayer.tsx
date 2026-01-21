@@ -163,29 +163,37 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
                 return;
             }
             const canvasStream = canvasRef.current.captureStream(30); // 30 FPS
+            const videoTrack = canvasStream.getVideoTracks()[0];
 
             // 2. Capture Microphone Stream (Audio) - Voiceover
-            let finalStream = canvasStream; // Start with canvas video
             let audioStream: MediaStream | null = null;
+            let combinedTracks = [videoTrack];
+
             try {
                 // Request mic permission
                 audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                // If successful, add the audio track to the canvas stream
                 if (audioStream.getAudioTracks().length > 0) {
-                    canvasStream.addTrack(audioStream.getAudioTracks()[0]);
+                    combinedTracks.push(audioStream.getAudioTracks()[0]);
+                    console.log("🎤 Microphone added to recording");
                 }
-                console.log("🎤 Microphone added to recording");
             } catch (micErr) {
                 console.warn("⚠️ Microphone access denied or failed. Recording video only.", micErr);
-                // Continue with just video if mic fails
             }
 
-            // 3. Start Recorder
+            // 3. Create Final Mixed Stream
+            const finalStream = new MediaStream(combinedTracks);
+
+            // 4. Start Recorder
             const recorder = new MediaRecorder(finalStream, { mimeType: mime });
             mediaRecorderRef.current = recorder;
             const chunks: Blob[] = [];
 
-            recorder.ondataavailable = e => chunks.push(e.data);
+            recorder.ondataavailable = e => {
+                if (e.data && e.data.size > 0) {
+                    chunks.push(e.data);
+                }
+            };
+
             recorder.onstop = () => {
                 const blob = new Blob(chunks, { type: mime });
                 const url = URL.createObjectURL(blob);
@@ -200,13 +208,15 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
                 // Stop all tracks (Video + Audio)
                 finalStream.getTracks().forEach(track => track.stop());
                 if (audioStream) audioStream.getTracks().forEach(track => track.stop());
+                // Don't stop canvas stream tracks directly if it stops the loop? 
+                // Actually captureStream tracks are live. Stopping them might be okay.
             };
 
             recorder.start();
             setIsRecording(true);
 
-            // Handle external stop (native browser "Stop Sharing" UI - rare for canvas but safe to keep)
-            canvasStream.getVideoTracks()[0].onended = () => {
+            // Handle external stop
+            videoTrack.onended = () => {
                 if (recorder.state !== "inactive") recorder.stop();
             };
 
@@ -496,17 +506,22 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
         const video = videoRef1.current; // Assuming videoRef1 is the primary video
         if (!canvas || !video) return;
 
-        const ctx = canvas.getContext('2d');
+        const ctx = canvas.getContext('2d', { alpha: false }); // Optimize for frequent redraws
         if (!ctx) return;
 
         // Clear Canvas
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         // CRITICAL FOR RECORDING: Draw the video frame onto the canvas
-        // This ensures the recorder (captureStream) sees the video, not just the drawings.
-        // We do this always now to ensure consistency, or at least when isRecording or isPlaying.
-        // For performance, we can do it always, effectively making the canvas the display.
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        try {
+            // Only draw if video is ready
+            if (video.readyState >= 2) { // HAVE_CURRENT_DATA
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            }
+        } catch (err) {
+            // If this fails (e.g. CORS), the background will be black/transparent
+            // We can log once or ignore to avoid spam
+        }
 
         // Draw Drawings
         [...drawings, currentDrawing].forEach(d => {
