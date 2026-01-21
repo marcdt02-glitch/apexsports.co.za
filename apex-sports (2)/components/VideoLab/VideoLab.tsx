@@ -52,7 +52,9 @@ export const VideoLab: React.FC = () => {
                         if (!response.ok) throw new Error('Failed to fetch video content');
 
                         const blob = await response.blob();
-                        const blobUrl = URL.createObjectURL(blob);
+                        // CRITICAL: Force the correct MIME type (e.g. video/mp4) or the browser may treat it as generic binary/audio
+                        const explicitBlob = blob.slice(0, blob.size, file.mimeType || 'video/mp4');
+                        const blobUrl = URL.createObjectURL(explicitBlob);
 
                         // Override the URL with our playable Blob URL
                         const playableFile = { ...file, url: blobUrl, embedUrl: blobUrl };
