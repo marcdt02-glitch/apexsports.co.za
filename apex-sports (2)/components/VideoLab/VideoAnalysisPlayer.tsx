@@ -286,7 +286,7 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
             const newDrawings = [...drawings];
             newDrawings[draggingPoint.drawingIndex].points[draggingPoint.pointIndex] = pt;
             setDrawings(newDrawings);
-            renderCanvas();
+            draw();
             return;
         }
 
@@ -312,7 +312,7 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
             else newPoints[newPoints.length - 1] = pt; // Update latest point
         }
         setCurrentDrawing({ ...currentDrawing, points: newPoints });
-        requestAnimationFrame(() => renderCanvas());
+        requestAnimationFrame(() => draw());
     };
 
     const handleMouseUp = (e: MouseEvent) => {
@@ -415,7 +415,7 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
             const newDrawings = [...drawings];
             newDrawings[draggingPoint.drawingIndex].points[draggingPoint.pointIndex] = pt;
             setDrawings(newDrawings);
-            renderCanvas();
+            draw();
             return;
         }
 
@@ -431,7 +431,7 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
             else newPoints[newPoints.length - 1] = pt;
         }
         setCurrentDrawing({ ...currentDrawing, points: newPoints });
-        requestAnimationFrame(() => renderCanvas());
+        requestAnimationFrame(() => draw());
     };
 
     const handleTouchEnd = (e: React.TouchEvent) => {
@@ -487,27 +487,28 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
         }
         setTextModal({ isOpen: false, x: 0, y: 0, text: '' });
         setTool('none');
-        requestAnimationFrame(() => renderCanvas());
+        requestAnimationFrame(() => draw());
     };
 
     // Canvas Rendering
-    const renderCanvas = (drawVideo = false) => {
+    const draw = () => {
         const canvas = canvasRef.current;
-        if (!canvas) return;
+        const video = videoRef1.current; // Assuming videoRef1 is the primary video
+        if (!canvas || !video) return;
+
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
 
-        // Clear
+        // Clear Canvas
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Optional: Draw Video (for export)
-        if (drawVideo && videoRef1.current) {
-            try {
-                ctx.drawImage(videoRef1.current, 0, 0, canvas.width, canvas.height);
-            } catch (e) { }
-        }
+        // CRITICAL FOR RECORDING: Draw the video frame onto the canvas
+        // This ensures the recorder (captureStream) sees the video, not just the drawings.
+        // We do this always now to ensure consistency, or at least when isRecording or isPlaying.
+        // For performance, we can do it always, effectively making the canvas the display.
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-        // Render Saved Drawings
+        // Draw Drawings
         [...drawings, currentDrawing].forEach(d => {
             if (!d) return;
             ctx.beginPath();
@@ -632,7 +633,7 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
         if (canvas) {
             canvas.width = canvas.offsetWidth;
             canvas.height = canvas.offsetHeight;
-            renderCanvas();
+            draw();
         }
     }, [drawings, currentDrawing, videoUrl]); // Re-render on updates
 
@@ -778,24 +779,14 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
                 </div>
             </div>
 
-            {/* Scientific Insight Tooltip (Contextual) */}
+            {/* Scientific Insight Tooltip (Contextual) - HIDDEN: User requested "go without the key" */}
+            {/* 
             {tool !== 'none' && (
                 <div className="absolute top-4 left-4 right-4 z-30 animate-fade-in-down pointer-events-none">
-                    <div className="bg-blue-900/90 border border-blue-500/50 backdrop-blur-md p-3 rounded-xl inline-flex items-center gap-3 shadow-xl">
-                        <div className="p-2 bg-blue-500 rounded-lg">
-                            <MousePointer2 className="w-4 h-4 text-white" />
-                        </div>
-                        <div>
-                            <p className="text-[10px] font-bold text-blue-300 uppercase tracking-wider">Scientific Insight</p>
-                            <p className="text-white text-xs font-medium">
-                                {tool === 'line' && "Force Vectors: Are they pushing forward (Acceleration) or up (Vertical)?"}
-                                {tool === 'circle' && "Joint Stacking: Highlight the Center of Mass or stacked joints."}
-                                {tool === 'angle' && "Knee Valgus: Measure the angle of the knee during landing."}
-                            </p>
-                        </div>
-                    </div>
+                     ...
                 </div>
-            )}
+            )} 
+            */}
 
 
 
