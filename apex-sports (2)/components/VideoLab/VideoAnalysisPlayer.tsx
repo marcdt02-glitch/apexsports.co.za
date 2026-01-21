@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect, MouseEvent } from 'react';
-import { Play, Pause, Square, Circle, PenTool, Type, Save, Slash, MousePointer2, RotateCcw, FastForward, Rewind, Triangle, Download, Film, HelpCircle, Maximize, Zap, Pen } from 'lucide-react';
+import { Play, Pause, Square, Circle, PenTool, Type, Save, Slash, MousePointer2, RotateCcw, FastForward, Rewind, Triangle, Download, Film, HelpCircle, Maximize, Zap, Pen, Volume2, VolumeX } from 'lucide-react';
 
 interface AnalysisPlayerProps {
     videoUrl?: string | null;
@@ -45,6 +45,7 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
     const [playbackRate, setPlaybackRate] = useState(1);
+    const [isMuted, setIsMuted] = useState(false);
 
     // Drawing State
     const [tool, setTool] = useState<Tool>('none');
@@ -88,6 +89,13 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
         setPlaybackRate(rate);
         if (videoRef1.current) videoRef1.current.playbackRate = rate;
         if (videoRef2.current) videoRef2.current.playbackRate = rate;
+    };
+
+    const toggleMute = () => {
+        const newState = !isMuted;
+        setIsMuted(newState);
+        if (videoRef1.current) videoRef1.current.muted = newState;
+        if (videoRef2.current) videoRef2.current.muted = newState;
     };
 
     const handleScrub = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -154,8 +162,16 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
                 return;
             }
 
-            const mime = MediaRecorder.isTypeSupported("video/mp4") ? "video/mp4" : "video/webm";
-            const ext = mime === "video/mp4" ? "mp4" : "webm";
+            // QuickTime / iOS Compatibility
+            // We prioritize H.264 (avc1) in MP4 container.
+            const types = [
+                "video/mp4; codecs=\"avc1.42E01E, mp4a.40.2\"", // H.264 Main Profile
+                "video/mp4",
+                "video/webm; codecs=h264",
+                "video/webm" // Fallback
+            ];
+            const mime = types.find(t => MediaRecorder.isTypeSupported(t)) || "video/webm";
+            const ext = mime.includes("mp4") ? "mp4" : "webm";
 
             // 1. Capture Canvas Stream (Video)
             if (!canvasRef.current) {
@@ -767,6 +783,9 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
 
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-6">
+                                <button onClick={toggleMute} className="text-white hover:text-blue-400 p-2">
+                                    {isMuted ? <VolumeX className="w-6 h-6" /> : <Volume2 className="w-6 h-6" />}
+                                </button>
                                 <button onClick={() => stepFrame(-5)} className="text-white hover:text-blue-400 p-2"><Rewind className="w-6 h-6" /></button>
                                 <button onClick={togglePlay} className="text-white hover:text-blue-400">
                                     {isPlaying ? <Pause className="w-8 h-8 fill-current" /> : <Play className="w-8 h-8 fill-current" />}
