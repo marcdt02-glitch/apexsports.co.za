@@ -506,21 +506,21 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
         const video = videoRef1.current; // Assuming videoRef1 is the primary video
         if (!canvas || !video) return;
 
-        const ctx = canvas.getContext('2d', { alpha: false }); // Optimize for frequent redraws
+        const ctx = canvas.getContext('2d');
         if (!ctx) return;
 
         // Clear Canvas
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         // CRITICAL FOR RECORDING: Draw the video frame onto the canvas
-        try {
-            // Only draw if video is ready
-            if (video.readyState >= 2) { // HAVE_CURRENT_DATA
-                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-            }
-        } catch (err) {
-            // If this fails (e.g. CORS), the background will be black/transparent
-            // We can log once or ignore to avoid spam
+        // Only do this when recording to avoid performance overhead/sync issues during playback
+        if (isRecording) {
+            try {
+                // Only draw if video is ready
+                if (video.readyState >= 2) { // HAVE_CURRENT_DATA
+                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                }
+            } catch (err) { }
         }
 
         // Draw Drawings
