@@ -110,6 +110,9 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
 
         seekRafRef.current = requestAnimationFrame(() => {
             if (videoRef1.current) {
+                // GUARD: Prevent seek if already seeking (fixes black screen/stutter)
+                if (videoRef1.current.seeking) return;
+
                 // Use fastSeek if available (Safari/Firefox) for smooth scrubbing
                 if ('fastSeek' in videoRef1.current) {
                     (videoRef1.current as any).fastSeek(time);
@@ -118,7 +121,9 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
                 }
             }
             if (videoRef2.current) {
-                // Sync comparison video
+                // GUARD: Prevent seek if already seeking
+                if (videoRef2.current.seeking) return;
+
                 if ('fastSeek' in videoRef2.current) {
                     (videoRef2.current as any).fastSeek(time);
                 } else {
