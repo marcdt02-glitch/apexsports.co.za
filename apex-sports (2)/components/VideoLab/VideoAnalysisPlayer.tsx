@@ -59,6 +59,7 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
     const [textModal, setTextModal] = useState<{ isOpen: boolean, x: number, y: number, text: string }>({ isOpen: false, x: 0, y: 0, text: '' });
     const textInputRef = useRef<HTMLInputElement>(null);
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+    const seekRafRef = useRef<number | null>(null); // Throttling Seek
     const wasPlayingRef = useRef(false);
 
     // SYNC CONTROLS
@@ -101,11 +102,30 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
 
     const handleScrub = (e: React.ChangeEvent<HTMLInputElement>) => {
         const time = parseFloat(e.target.value);
-        if (videoRef1.current) {
-            videoRef1.current.currentTime = time;
-            setCurrentTime(time);
-            if (videoRef2.current) videoRef2.current.currentTime = time;
+        setCurrentTime(time); // Immediate UI update
+
+        if (seekRafRef.current) {
+            cancelAnimationFrame(seekRafRef.current);
         }
+
+        seekRafRef.current = requestAnimationFrame(() => {
+            if (videoRef1.current) {
+                // Use fastSeek if available (Safari/Firefox) for smooth scrubbing
+                if ('fastSeek' in videoRef1.current) {
+                    (videoRef1.current as any).fastSeek(time);
+                } else {
+                    videoRef1.current.currentTime = time;
+                }
+            }
+            if (videoRef2.current) {
+                // Sync comparison video
+                if ('fastSeek' in videoRef2.current) {
+                    (videoRef2.current as any).fastSeek(time);
+                } else {
+                    videoRef2.current.currentTime = time;
+                }
+            }
+        });
     };
 
     const handleScrubStart = () => {
