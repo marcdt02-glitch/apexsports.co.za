@@ -59,7 +59,11 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
     const [textModal, setTextModal] = useState<{ isOpen: boolean, x: number, y: number, text: string }>({ isOpen: false, x: 0, y: 0, text: '' });
     const textInputRef = useRef<HTMLInputElement>(null);
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+    const textInputRef = useRef<HTMLInputElement>(null);
+    const mediaRecorderRef = useRef<MediaRecorder | null>(null);
     const seekRafRef = useRef<number | null>(null); // Throttling Seek
+    const isSeekingRef = useRef(false); // Strict Seek Lock
+    const seekTimeoutRef = useRef<NodeJS.Timeout | null>(null); // Debounce
     const wasPlayingRef = useRef(false);
 
     // SYNC CONTROLS
@@ -104,33 +108,27 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
         const time = parseFloat(e.target.value);
         setCurrentTime(time); // Immediate UI update
 
-        if (seekRafRef.current) {
-            cancelAnimationFrame(seekRafRef.current);
+        // Clear previous debounce
+        if (seekTimeoutRef.current) {
+            clearTimeout(seekTimeoutRef.current);
         }
 
-        seekRafRef.current = requestAnimationFrame(() => {
+        // DEBOUNCE SEEK (50ms) - Prevents flooding the decoder
+        seekTimeoutRef.current = setTimeout(() => {
             if (videoRef1.current) {
-                // GUARD: Prevent seek if already seeking (fixes black screen/stutter)
-                if (videoRef1.current.seeking) return;
+                // STRICT LOCK: If browser says it's seeking, OR our lock is on, DO NOT TOUCH.
+                if (videoRef1.current.seeking || isSeekingRef.current) return;
 
-                // Use fastSeek if available (Safari/Firefox) for smooth scrubbing
-                if ('fastSeek' in videoRef1.current) {
-                    (videoRef1.current as any).fastSeek(time);
-                } else {
-                    videoRef1.current.currentTime = time;
-                }
+                isSeekingRef.current = true; // Engage Lock
+                videoRef1.current.currentTime = time;
             }
+            // Comparison Sync
             if (videoRef2.current) {
-                // GUARD: Prevent seek if already seeking
-                if (videoRef2.current.seeking) return;
-
-                if ('fastSeek' in videoRef2.current) {
-                    (videoRef2.current as any).fastSeek(time);
-                } else {
+                if (!videoRef2.current.seeking) {
                     videoRef2.current.currentTime = time;
                 }
             }
-        });
+        }, 50);
     };
 
     const handleScrubStart = () => {
@@ -792,6 +790,7 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
                                 className="w-full h-full object-contain"
                                 onTimeUpdate={handleTimeUpdate}
                                 onLoadedMetadata={() => setDuration(videoRef1.current?.duration || 0)}
+                                onSeeked={() => { isSeekingRef.current = false; }} // Release Lock
                             />
                         ) : (
                             <div className="w-full h-full flex items-center justify-center text-neutral-700">
