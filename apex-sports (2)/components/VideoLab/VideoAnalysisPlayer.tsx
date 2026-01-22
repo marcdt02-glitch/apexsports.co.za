@@ -59,6 +59,7 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
     const [textModal, setTextModal] = useState<{ isOpen: boolean, x: number, y: number, text: string }>({ isOpen: false, x: 0, y: 0, text: '' });
     const textInputRef = useRef<HTMLInputElement>(null);
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+    const wasPlayingRef = useRef(false);
 
     // SYNC CONTROLS
     const togglePlay = () => {
@@ -104,6 +105,23 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
             videoRef1.current.currentTime = time;
             setCurrentTime(time);
             if (videoRef2.current) videoRef2.current.currentTime = time;
+        }
+    };
+
+    const handleScrubStart = () => {
+        wasPlayingRef.current = isPlaying;
+        if (isPlaying) {
+            videoRef1.current?.pause();
+            videoRef2.current?.pause();
+            setIsPlaying(false);
+        }
+    };
+
+    const handleScrubEnd = () => {
+        if (wasPlayingRef.current) {
+            videoRef1.current?.play();
+            videoRef2.current?.play();
+            setIsPlaying(true);
         }
     };
 
@@ -798,6 +816,10 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
                                 step={0.05}
                                 value={currentTime}
                                 onChange={handleScrub}
+                                onMouseDown={handleScrubStart}
+                                onMouseUp={handleScrubEnd}
+                                onTouchStart={handleScrubStart}
+                                onTouchEnd={handleScrubEnd}
                                 className="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-blue-500"
                             />
                         </div>
