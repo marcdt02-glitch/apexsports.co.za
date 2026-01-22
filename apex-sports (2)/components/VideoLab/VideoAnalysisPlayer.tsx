@@ -572,15 +572,17 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
 
-        // Clear Canvas
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        // CANVAS PROXY RENDERING
+        // Check if we are seeking. If yes, DO NOT clear the canvas.
+        // This keeps the "old" frame visible while the "new" one loads (preventing black screen).
+        if (isSeekingRef.current || video.seeking) {
+            // Do nothing (Freeze Frame)
+        } else {
+            // Safe to redraw
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // CRITICAL FOR RECORDING: Draw the video frame onto the canvas
-        // Only do this when recording to avoid performance overhead/sync issues during playback
-        if (isRecording) {
             try {
-                // Only draw if video is ready
-                if (video.readyState >= 2) { // HAVE_CURRENT_DATA
+                if (video.readyState >= 2) {
                     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
                 }
             } catch (err) { }
@@ -785,7 +787,7 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
                                 crossOrigin="anonymous" // Enable CORS for canvas capture
                                 playsInline
                                 webkit-playsinline="true"
-                                className="w-full h-full object-contain"
+                                className="w-full h-full object-contain opacity-0" // HIDDEN: Canvas is the display now
                                 onTimeUpdate={handleTimeUpdate}
                                 onLoadedMetadata={() => setDuration(videoRef1.current?.duration || 0)}
                                 onSeeked={() => { isSeekingRef.current = false; }} // Release Lock
