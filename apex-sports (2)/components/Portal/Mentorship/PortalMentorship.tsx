@@ -95,26 +95,10 @@ const PortalMentorship: React.FC<PortalMentorshipProps> = ({ athleteName, tier }
                     </div>
                 )}
 
-                {/* TAB: SPAT (LOCKED) */}
+                {/* TAB: SPAT (UNLOCKED) */}
                 {activeTab === 'assessment' && (
-                    <div className="animate-fade-in flex flex-col items-center justify-center min-h-[500px] text-center p-8 bg-neutral-900/40 border border-neutral-800 rounded-3xl relative overflow-hidden">
-                        {/* Background Effect */}
-                        <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle, #333 1px, transparent 1px)', backgroundSize: '16px 16px' }}></div>
-
-                        <div className="bg-neutral-800 p-8 rounded-full mb-8 relative z-10 shadow-2xl border border-neutral-700">
-                            {/* Assuming lock icon available or just use Shield/Target if not */}
-                            <Activity className="w-16 h-16 text-gray-600" />
-                        </div>
-                        <h3 className="text-3xl font-black text-white uppercase tracking-tighter mb-4 relative z-10">System Offline</h3>
-                        <p className="text-gray-400 max-w-lg text-lg leading-relaxed relative z-10 mb-8">
-                            The Sport Psychology Assessment Tool (SPAT) is currently undergoing seasonal calibration.
-                            <br /><br />
-                            This module will be unlocked shortly to provide your updated mental performance baseline.
-                        </p>
-                        <div className="px-6 py-2 bg-neutral-800 rounded-full border border-neutral-700 text-xs font-mono text-blue-400 uppercase tracking-widest relative z-10 flex items-center gap-2">
-                            <span className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></span>
-                            Calibration in Progress
-                        </div>
+                    <div className="animate-fade-in">
+                        <SpatQuestionnaire athleteName={athleteName} tier={tier} />
                     </div>
                 )}
 

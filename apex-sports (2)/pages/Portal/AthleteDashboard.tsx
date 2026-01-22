@@ -620,7 +620,7 @@ const AthleteDashboard: React.FC = () => {
                         The 5 Pillars of <span className="text-red-500 block md:inline">High Performance</span>
                     </h2>
                     <p className="text-gray-400 max-w-2xl mx-auto text-sm md:text-base">
-                        The APEX System. A holistic framework designed to build the complete athlete.
+                        A holistic framework designed to build complete athletes.
                     </p>
                 </div>
 
@@ -675,7 +675,7 @@ const AthleteDashboard: React.FC = () => {
                 {/* Holistic CTA */}
                 <div className="mt-8 md:mt-12 text-center border-t border-neutral-800 pt-8">
                     <p className="text-base md:text-lg text-white font-medium italic max-w-3xl mx-auto leading-relaxed">
-                        "At APEX, we don't just train athletes; we develop high-performers. Our holistic approach ensures that the discipline you build in the lab translates to success in every sector of your life."
+                        "Our holistic approach ensures that the discipline you build in the lab translates to success in every sector of your life."
                     </p>
                 </div>
             </div>
@@ -719,7 +719,7 @@ const AthleteDashboard: React.FC = () => {
             </div>
 
             {/* Quick Actions */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <button
                     onClick={() => setActiveView('wellness')}
                     className="p-8 bg-gradient-to-br from-blue-900/40 to-blue-900/10 border border-blue-500/30 rounded-3xl text-left hover:border-blue-500 transition-all group"
@@ -735,6 +735,14 @@ const AthleteDashboard: React.FC = () => {
                     <BarChart2 className="w-10 h-10 text-green-400 mb-4 group-hover:scale-110 transition-transform" />
                     <h3 className="text-2xl font-black text-white mb-2">View My Progress</h3>
                     <p className="text-green-200/60 font-medium">Analyze your latest physical results &rarr;</p>
+                </button>
+                <button
+                    onClick={() => { setActiveView('mentorship'); setTimeout(() => setClinicalTab('lower'), 100); /* Hack to ensure render */ }}
+                    className="p-8 bg-gradient-to-br from-purple-900/40 to-purple-900/10 border border-purple-500/30 rounded-3xl text-left hover:border-purple-500 transition-all group"
+                >
+                    <Target className="w-10 h-10 text-purple-400 mb-4 group-hover:scale-110 transition-transform" />
+                    <h3 className="text-2xl font-black text-white mb-2">SPAT Assessment</h3>
+                    <p className="text-purple-200/60 font-medium">Take your Sport Psych Assessment &rarr;</p>
                 </button>
             </div>
         </div>
@@ -1285,7 +1293,7 @@ const AthleteDashboard: React.FC = () => {
                                                         <div className="w-full bg-neutral-800 h-2 rounded-full overflow-hidden mb-4">
                                                             <div className="bg-green-500 h-full rounded-full" style={{ width: '92%' }}></div>
                                                         </div>
-                                                        <p className="text-xs text-gray-400 italic">"Discipline is the bridge betwen goals and accomplishment."</p>
+                                                        <p className="text-xs text-gray-400 italic">"Discipline is the bridge between goals and accomplishment."</p>
                                                     </div>
                                                 </div>
 

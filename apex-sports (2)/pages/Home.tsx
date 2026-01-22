@@ -191,7 +191,7 @@ const Home: React.FC = () => {
                 Our Mission
               </h2>
               <p className="text-3xl md:text-5xl font-bold text-white leading-tight mb-8">
-                To provide world-class support to individuals and teams who are looking to achieve their goals.
+                To provide world-class support to individuals and teams who are looking to smash their goals.
               </p>
 
               <div className="space-y-6">

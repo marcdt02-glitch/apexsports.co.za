@@ -51,7 +51,6 @@ const RESOURCES: Record<Category, { title: string; description: string; icon: an
         color: "text-green-500",
         items: [
             { id: 8, title: 'CR7 Matchday Focus', description: 'Preparation secrets of Cristiano Ronaldo.', url: 'https://www.youtube.com/embed/tgq8I6-tJ4', duration: '5:00' },
-            { id: 9, title: 'Win The Morning', description: 'Start the day with intent.', url: 'https://www.youtube.com/embed/sq02N0-m8bU', duration: '8:00' },
             { id: 10, title: 'LeBron James Sleep', description: 'Recovery is the #1 performance enhancer.', url: 'https://www.youtube.com/embed/aVoWkR24pj4', duration: '2:30' },
         ]
     }

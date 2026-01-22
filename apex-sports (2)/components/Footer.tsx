@@ -15,7 +15,7 @@ const Footer: React.FC = () => {
               <span className="font-extrabold text-xl tracking-widest uppercase">APEX SPORTS</span>
             </div>
             <p className="text-gray-400 text-sm max-w-sm">
-              Providing world-class support to individuals and teams looking to achieve their goals through scientific rigor and passion.
+              Providing world-class support to individuals and teams looking to smash their goals through scientific rigor and passion.
             </p>
           </div>
 
@@ -64,10 +64,10 @@ const Footer: React.FC = () => {
                 <Instagram className="w-5 h-5" />
                 <span>@apex_sports_ZA</span>
               </a>
-              <div className="flex items-center justify-center gap-3 mt-4 text-gray-400">
+              <a href="https://maps.google.com/?q=Stellenbosch,+South+Africa" target="_blank" rel="noreferrer" className="flex items-center justify-center gap-3 mt-4 text-gray-400 hover:text-white transition-colors">
                 <MapPin className="w-5 h-5 shrink-0" />
                 <p>Stellenbosch, South Africa</p>
-              </div>
+              </a>
             </div>
           </div>
         </div>

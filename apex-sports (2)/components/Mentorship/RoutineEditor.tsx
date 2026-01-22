@@ -210,19 +210,19 @@ const RoutineEditor: React.FC<RoutineEditorProps> = ({ athleteName, tier }) => {
                         onClick={() => setActiveTab('game')}
                         className={`px-6 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === 'game' ? 'bg-white text-black shadow-md' : 'text-gray-400 hover:text-white'} `}
                     >
-                        Game Day
+                        GAME DAY
                     </button>
                     <button
                         onClick={() => setActiveTab('practice')}
                         className={`px-6 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === 'practice' ? 'bg-white text-black shadow-md' : 'text-gray-400 hover:text-white'} `}
                     >
-                        Practice Day
+                        PRACTICE DAY
                     </button>
                     <button
                         onClick={() => setActiveTab('daily')}
                         className={`px-6 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === 'daily' ? 'bg-white text-black shadow-md' : 'text-gray-400 hover:text-white'} `}
                     >
-                        Daily Habits
+                        DAILY HABITS
                     </button>
                 </div>
             </div>
