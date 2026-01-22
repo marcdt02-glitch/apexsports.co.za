@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Calendar, Save, Download, Plus, Trash2, CheckCircle, Clock, MapPin, Brain, Zap, Target, Activity, FileText, ChevronDown, ChevronUp } from 'lucide-react';
+import { Calendar, Save, Download, Plus, Trash2, CheckCircle, Clock, MapPin, Brain, Zap, Target, Activity, FileText, ChevronDown, ChevronUp, CalendarPlus } from 'lucide-react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
@@ -147,6 +147,23 @@ export const CoachingScheduler: React.FC = () => {
         pdf.save(`Apex_Schedule_Goals_${new Date().toISOString().split('T')[0]}.pdf`);
     };
 
+    const addToGoogleCalendar = (event: SportsEvent) => {
+        const title = encodeURIComponent(event.type === 'game' ? `Match vs ${event.opponent || 'TBA'}` : 'Training Session');
+        const location = encodeURIComponent(event.location || '');
+        const details = encodeURIComponent(`Goals:\n- PSYCH: ${event.goals.psychological}\n- TECH: ${event.goals.technical}\n- TAC: ${event.goals.tactical}\n- PHYS: ${event.goals.physical}`);
+
+        // Format Date: YYYYMMDDTHHMMSS
+        const start = new Date(`${event.date}T${event.time}`);
+        const end = new Date(start.getTime() + (90 * 60 * 1000)); // Default 90 mins
+
+        const formatTime = (date: Date) => date.toISOString().replace(/-|:|\.\d+/g, '');
+
+        const dates = `${formatTime(start)}/${formatTime(end)}`;
+
+        const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}&location=${location}&dates=${dates}`;
+        window.open(url, '_blank');
+    };
+
     // --- Render Helpers ---
 
     const renderEventCard = (event: SportsEvent, isPrint = false) => {
@@ -190,6 +207,13 @@ export const CoachingScheduler: React.FC = () => {
 
                     {!isPrint && (
                         <div className="flex items-center gap-4">
+                            <button
+                                onClick={(e) => { e.stopPropagation(); addToGoogleCalendar(event); }}
+                                className="p-2 text-neutral-600 hover:text-blue-500 transition-colors"
+                                title="Add to Google Calendar"
+                            >
+                                <CalendarPlus className="w-4 h-4" />
+                            </button>
                             <button
                                 onClick={(e) => { e.stopPropagation(); handleDeleteEvent(event.id); }}
                                 className="p-2 text-neutral-600 hover:text-red-500 transition-colors"
