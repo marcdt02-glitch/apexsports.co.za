@@ -246,7 +246,15 @@ export const VideoAnalysisPlayer: React.FC<AnalysisPlayerProps> = ({ videoUrl, c
                 // Actually captureStream tracks are live. Stopping them might be okay.
             };
 
-            recorder.start();
+            recorder.onerror = (e: any) => {
+                console.error("MediaRecorder Error:", e);
+                // Don't alert immediately if it's just a warning, but stop if fatal?
+                // Usually onerror is fatal.
+                alert("Recording stopped due to an error: " + (e.error?.message || "Unknown error"));
+                setIsRecording(false);
+            };
+
+            recorder.start(1000); // 1s timeslice to prevent huge buffers
             setIsRecording(true);
 
             // Handle external stop
