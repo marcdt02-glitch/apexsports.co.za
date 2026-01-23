@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Save, Eraser, Trash2, MousePointer, Pen, ArrowRight, Minus, UserPlus, UserMinus, FolderOpen, Type } from 'lucide-react';
+import { Save, Eraser, Trash2, MousePointer, Pen, ArrowRight, Minus, UserPlus, UserMinus, FolderOpen, Type, Mic, Square } from 'lucide-react';
 
 interface Token {
     id: number;
@@ -45,6 +45,10 @@ export const TacticalWhiteboard: React.FC = () => {
 
     // Saved Plays
     const [savedPlays, setSavedPlays] = useState<SavedPlay[]>([]);
+
+    // Screen Recording
+    const [isRecording, setIsRecording] = useState(false);
+    const mediaRecorderRef = useRef<MediaRecorder | null>(null);
 
     useEffect(() => {
         try {
@@ -314,6 +318,64 @@ export const TacticalWhiteboard: React.FC = () => {
         }
     };
 
+    const handleScreenRecord = async () => {
+        if (isRecording) {
+            mediaRecorderRef.current?.stop();
+            return;
+        }
+
+        try {
+            // 1. Capture Screen/Tab (Video)
+            // @ts-ignore - getDisplayMedia exists
+            const displayStream = await navigator.mediaDevices.getDisplayMedia({
+                video: { displaySurface: 'browser' },
+                audio: false
+            });
+            const videoTrack = displayStream.getVideoTracks()[0];
+
+            // 2. Capture User Mic (Audio)
+            const micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            const audioTrack = micStream.getAudioTracks()[0];
+
+            // 3. Combine
+            const combinedStream = new MediaStream([videoTrack, audioTrack]);
+
+            // 4. Start Recording
+            const mime = MediaRecorder.isTypeSupported("video/mp4; codecs=h264") ? "video/mp4; codecs=h264" : "video/webm";
+            const recorder = new MediaRecorder(combinedStream, { mimeType: mime });
+            mediaRecorderRef.current = recorder;
+            const chunks: Blob[] = [];
+
+            recorder.ondataavailable = (e) => { if (e.data.size > 0) chunks.push(e.data); };
+            recorder.onstop = () => {
+                const blob = new Blob(chunks, { type: mime });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `Tactical_Session_${Date.now()}.mp4`;
+                a.click();
+
+                // Stop tracks
+                videoTrack.stop();
+                audioTrack.stop();
+                setIsRecording(false);
+            };
+
+            // Handle user clicking "Stop Sharing" on browser UI
+            videoTrack.onended = () => {
+                if (recorder.state !== 'inactive') recorder.stop();
+            };
+
+            recorder.start();
+            setIsRecording(true);
+
+        } catch (err) {
+            console.error("Recording failed", err);
+            setIsRecording(false);
+            alert("Could not start recording. Please ensure permissions are granted.");
+        }
+    };
+
     // Helper to get image style based on view
     const getImageStyle = () => {
         if (view === 'full') return { objectFit: 'contain' as const };
@@ -386,6 +448,18 @@ export const TacticalWhiteboard: React.FC = () => {
                                 <Trash2 className="w-5 h-5" />
                             </button>
                         </div>
+
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                        <button
+                            onClick={handleScreenRecord}
+                            className={`flex items-center gap-2 px-4 py-2 rounded-lg font-bold transition-all shadow-lg ${isRecording ? 'bg-red-600 text-white animate-pulse' : 'bg-neutral-800 text-gray-400 hover:text-white hover:bg-neutral-700'}`}
+                            title="Record Screen + Mic"
+                        >
+                            {isRecording ? <Square className="w-4 h-4 fill-current" /> : <Mic className="w-4 h-4" />}
+                            {isRecording ? 'STOP REC' : 'REC'}
+                        </button>
 
                         <button onClick={saveCurrentPlay} className="flex items-center gap-2 bg-[#ceb888] text-black font-black px-6 py-2 rounded-lg hover:bg-white transition-all shadow-lg hover:shadow-[#ceb888]/20">
                             <Save className="w-4 h-4" />
