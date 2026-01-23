@@ -1701,13 +1701,11 @@ const AthleteDashboard: React.FC = () => {
                                             Review match footage, analyze opponent structures, and refine your game intelligence.
                                             This module is tailored for Paul Roos Gymnasium athletes.
                                         </p>
-                                        <div className="w-full h-[600px] border border-white/20 rounded-3xl overflow-hidden shadow-2xl relative z-20 mt-6">
+                                        <div className="w-full h-[850px] border border-white/20 rounded-3xl overflow-hidden shadow-2xl relative z-20 mt-6 bg-[#0a0a2a]">
                                             <TacticalWhiteboard />
                                         </div>
                                     </div>
                                 </div>
-
-                                <PortalCoaching />
                             </div>
                         )}
 
