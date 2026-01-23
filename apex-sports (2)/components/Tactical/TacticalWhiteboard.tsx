@@ -380,7 +380,7 @@ export const TacticalWhiteboard: React.FC = () => {
     const getImageStyle = () => {
         if (view === 'full') return { objectFit: 'contain' as const };
         if (view === 'half') return { objectFit: 'cover' as const, objectPosition: 'center' };
-        if (view === 'pc') return { objectFit: 'cover' as const, objectPosition: 'center' };
+        if (view === 'pc') return { objectFit: 'cover' as const, objectPosition: '50% 60%' };
         return {};
     };
 
@@ -480,7 +480,7 @@ export const TacticalWhiteboard: React.FC = () => {
                     {/* Dynamic Field Background logic */}
                     {/* Dynamic Field Background logic */}
                     <img
-                        src={view === 'pc' ? '/images/field-pc-v2.jpg' : view === 'half' ? '/images/field-half-v3.jpg' : '/images/field-full-v2.png'}
+                        src={view === 'pc' ? '/images/field-pc-blue.jpg' : view === 'half' ? '/images/field-half-blue.jpg' : '/images/field-full-blue.png'}
                         className="absolute inset-0 w-full h-full pointer-events-none opacity-100 transition-all duration-500"
                         style={getImageStyle()}
                         alt="Pitch"
