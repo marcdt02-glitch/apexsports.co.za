@@ -8,12 +8,9 @@ export const PortalCoaching: React.FC = () => {
 
     return (
         <div className="space-y-8 animate-fade-in">
-            <div className="flex flex-col md:flex-row justify-between items-end gap-4">
-                <div>
-                    <h2 className="text-3xl font-black text-white">Coaching Hub</h2>
-                    <p className="text-gray-400 mt-2">Manage your schedule and track your journey.</p>
-                </div>
-            </div>
+            {/* Header Removed as requested */}
+
+            {/* Tab Navigation */}
 
             {/* Tab Navigation */}
             <div className="border-b border-neutral-800">
