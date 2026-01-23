@@ -41,7 +41,7 @@ const InnerLayout: React.FC = () => {
   const isDashboard = /^\/portal\/.+/.test(location.pathname);
 
   return (
-    <div className="flex flex-col min-h-screen bg-black text-white font-sans antialiased selection:bg-white selection:text-black">
+    <div className="flex flex-col min-h-screen bg-transparent text-white font-sans antialiased selection:bg-white selection:text-black">
       {!isDashboard && <Navbar />}
       <main className="flex-grow">
         <Routes>
