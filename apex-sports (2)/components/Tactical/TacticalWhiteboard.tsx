@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Save, Eraser, Trash2, Undo, Redo, MousePointer, Pen, Circle, Square, Type, ArrowRight, Minus, UserPlus, UserMinus, FolderOpen, X } from 'lucide-react';
+import { Save, Eraser, Trash2, MousePointer, Pen, ArrowRight, Minus, UserPlus, UserMinus, FolderOpen, Type } from 'lucide-react';
 
 interface Token {
     id: number;
@@ -12,26 +12,26 @@ interface Token {
 interface DrawingElement {
     id: string;
     type: 'freehand' | 'line' | 'arrow' | 'text';
-    points?: { x: number; y: number }[]; // For freehand, line, arrow
-    x?: number; // For text
-    y?: number; // For text
-    text?: string; // For text
+    points?: { x: number; y: number }[];
+    x?: number;
+    y?: number;
+    text?: string;
     color: string;
-    width?: number; // For lines
-    fontSize?: number; // For text
+    width?: number;
+    fontSize?: number;
 }
 
 interface SavedPlay {
-    id: string; // Added ID for easier management
+    id: string;
     name: string;
     tokens: Token[];
     elements: DrawingElement[];
-    type: 'full' | 'half'; // changed quarter to half
-    date: string; // Added date
+    type: 'full' | 'half' | 'pc';
+    date: string;
 }
 
 export const TacticalWhiteboard: React.FC = () => {
-    const [view, setView] = useState<'full' | 'half'>('full');
+    const [view, setView] = useState<'full' | 'half' | 'pc'>('full');
     const [mode, setMode] = useState<'drag' | 'draw' | 'line' | 'arrow' | 'text'>('drag');
     const [tokens, setTokens] = useState<Token[]>([]);
     const [elements, setElements] = useState<DrawingElement[]>([]);
@@ -41,78 +41,87 @@ export const TacticalWhiteboard: React.FC = () => {
     const containerRef = useRef<HTMLDivElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [isDragging, setIsDragging] = useState<number | null>(null);
-    const [selectedToken, setSelectedToken] = useState<number | null>(null); // For deletion
+    const [selectedToken, setSelectedToken] = useState<number | null>(null);
 
-    // Saved Plays State
+    // Saved Plays
     const [savedPlays, setSavedPlays] = useState<SavedPlay[]>([]);
 
-    // Initial Load
     useEffect(() => {
-        const loaded = JSON.parse(localStorage.getItem('apex_tactics') || '[]');
-        setSavedPlays(loaded);
+        try {
+            const raw = localStorage.getItem('apex_tactics');
+            if (raw) {
+                const loaded = JSON.parse(raw);
+                // Safe migration/check
+                const safeLoaded = loaded.map((p: any) => ({
+                    ...p,
+                    id: p.id || String(Date.now() + Math.random()), // Fallback ID
+                    type: ['full', 'half', 'pc'].includes(p.type) ? p.type : 'full', // Fallback type
+                    tokens: p.tokens || [],
+                    elements: p.elements || []
+                }));
+                setSavedPlays(safeLoaded);
+            }
+        } catch (e) {
+            console.error("Failed to load saved plays", e);
+            setSavedPlays([]);
+        }
         resetBoard();
     }, []);
 
-    // Effect to reset board when view changes (unless loading a play)
-    // We need to be careful not to reset if we just loaded a play.
-    // For simplicity, we'll let the user manually reset or we reset on view switch if not loading.
-    // Actually, simpler to just reset when view explicitly changes via button click, handled there.
-
-    const resetBoard = (targetView: 'full' | 'half' | undefined = undefined) => {
+    const resetBoard = (targetView: 'full' | 'half' | 'pc' | undefined = undefined) => {
         const viewToUse = targetView || view;
         const newTokens: Token[] = [];
+        const now = Date.now();
 
         if (viewToUse === 'full') {
-            // 11 vs 11 Setup
-            // Attackers (Maroon) - 4-3-3
-            const attackerPositions = [
-                { x: 50, y: 90 }, // GK
+            // 11 vs 11
+            // Attackers (Maroon)
+            const att = [
+                { x: 50, y: 92 }, // GK
                 { x: 20, y: 75 }, { x: 40, y: 75 }, { x: 60, y: 75 }, { x: 80, y: 75 },
                 { x: 30, y: 55 }, { x: 50, y: 55 }, { x: 70, y: 55 },
                 { x: 20, y: 35 }, { x: 50, y: 30 }, { x: 80, y: 35 },
             ];
-
-            // Defenders (Navy) - Mirrored
-            const defenderPositions = [
-                { x: 50, y: 10 }, // GK
+            // Defenders (Navy)
+            const def = [
+                { x: 50, y: 8 }, // GK
                 { x: 20, y: 25 }, { x: 40, y: 25 }, { x: 60, y: 25 }, { x: 80, y: 25 },
                 { x: 30, y: 45 }, { x: 50, y: 45 }, { x: 70, y: 45 },
                 { x: 20, y: 65 }, { x: 50, y: 70 }, { x: 80, y: 65 },
             ];
 
-            attackerPositions.forEach((pos, i) => {
-                newTokens.push({ id: Date.now() + i, x: pos.x, y: pos.y, type: 'attacker', label: `${i === 0 ? 'GK' : i}` });
-            });
-            defenderPositions.forEach((pos, i) => {
-                newTokens.push({ id: Date.now() + i + 20, x: pos.x, y: pos.y, type: 'defender', label: `${i === 0 ? 'GK' : i}` });
-            });
+            att.forEach((p, i) => newTokens.push({ id: now + i, x: p.x, y: p.y, type: 'attacker', label: i === 0 ? 'GK' : `${i}` }));
+            def.forEach((p, i) => newTokens.push({ id: now + i + 20, x: p.x, y: p.y, type: 'defender', label: i === 0 ? 'GK' : `${i}` }));
+            newTokens.push({ id: 999, x: 50, y: 50, type: 'ball' });
 
+        } else if (viewToUse === 'half') {
+            // 7 vs 7 Half Field
+            // Attackers
+            const att = [
+                { x: 50, y: 80 },
+                { x: 30, y: 60 }, { x: 70, y: 60 },
+                { x: 20, y: 40 }, { x: 50, y: 40 }, { x: 80, y: 40 },
+                { x: 50, y: 25 }
+            ];
+            // Defenders (GK + 6)
+            const def = [
+                { x: 50, y: 8 }, // GK
+                { x: 35, y: 20 }, { x: 65, y: 20 },
+                { x: 25, y: 35 }, { x: 45, y: 35 }, { x: 55, y: 35 }, { x: 75, y: 35 }
+            ];
+            att.forEach((p, i) => newTokens.push({ id: now + i, x: p.x, y: p.y, type: 'attacker', label: `${i + 1}` }));
+            def.forEach((p, i) => newTokens.push({ id: now + i + 20, x: p.x, y: p.y, type: 'defender', label: i === 0 ? 'GK' : `${i}` }));
             newTokens.push({ id: 999, x: 50, y: 50, type: 'ball' });
 
         } else {
-            // Half Field Setup (7 vs 7 + GK) - e.g. Attacking D
-            // 7 Attackers (Maroon)
-            const attackerPositions = [
-                { x: 50, y: 70 },
-                { x: 30, y: 60 }, { x: 70, y: 60 },
-                { x: 20, y: 40 }, { x: 40, y: 45 }, { x: 60, y: 45 }, { x: 80, y: 40 },
-            ];
-
-            // 7 Defenders (Navy) + GK
-            const defenderPositions = [
-                { x: 50, y: 10 }, // GK
-                { x: 35, y: 20 }, { x: 65, y: 20 },
-                { x: 25, y: 30 }, { x: 45, y: 30 }, { x: 55, y: 30 }, { x: 75, y: 30 }, { x: 50, y: 35 }
-            ];
-
-            attackerPositions.forEach((pos, i) => {
-                newTokens.push({ id: Date.now() + i, x: pos.x, y: pos.y, type: 'attacker', label: `${i + 1}` });
-            });
-            defenderPositions.forEach((pos, i) => {
-                newTokens.push({ id: Date.now() + i + 20, x: pos.x, y: pos.y, type: 'defender', label: `${i === 0 ? 'GK' : i}` });
-            });
-
-            newTokens.push({ id: 999, x: 50, y: 50, type: 'ball' });
+            // PC Setup (Penalty Corner) - Zoomed in D
+            newTokens.push({ id: 1, x: 48, y: 15, type: 'attacker', label: 'IN' });
+            newTokens.push({ id: 2, x: 45, y: 90, type: 'attacker', label: 'S' });
+            newTokens.push({ id: 3, x: 50, y: 90, type: 'attacker', label: 'H' });
+            newTokens.push({ id: 4, x: 48, y: 10, type: 'defender', label: 'GK' });
+            newTokens.push({ id: 5, x: 42, y: 12, type: 'defender' });
+            newTokens.push({ id: 6, x: 54, y: 12, type: 'defender' });
+            newTokens.push({ id: 999, x: 48, y: 14, type: 'ball' });
         }
 
         setTokens(newTokens);
@@ -123,13 +132,10 @@ export const TacticalWhiteboard: React.FC = () => {
     // --- DYNAMIC PLAYERS ---
     const addPlayer = (type: 'attacker' | 'defender') => {
         const id = Date.now();
-        // Place near center but offset
         const x = 50 + (Math.random() * 10 - 5);
         const y = 50 + (Math.random() * 10 - 5);
-        // Find next label number
         const existing = tokens.filter(t => t.type === type);
         const label = `${existing.length + 1}`;
-
         setTokens([...tokens, { id, x, y, type, label }]);
     };
 
@@ -140,29 +146,22 @@ export const TacticalWhiteboard: React.FC = () => {
         }
     };
 
-    // --- DRAWING HARNESS ---
+    // --- DRAWING ---
     const getCanvasCoords = (e: React.MouseEvent) => {
         const rect = canvasRef.current?.getBoundingClientRect();
         if (!rect) return { x: 0, y: 0 };
-        return {
-            x: e.clientX - rect.left,
-            y: e.clientY - rect.top
-        };
+        return { x: e.clientX - rect.left, y: e.clientY - rect.top };
     };
 
     const startDrawing = (e: React.MouseEvent) => {
-        if (selectedToken) setSelectedToken(null); // Deselect on click elsewhere
+        if (selectedToken) setSelectedToken(null);
         if (mode === 'drag') return;
         const { x, y } = getCanvasCoords(e);
         const id = Date.now().toString();
 
-        if (mode === 'draw') {
-            setCurrentElement({ id, type: 'freehand', points: [{ x, y }], color: '#ffffff', width: 3 });
-        } else if (mode === 'line') {
-            setCurrentElement({ id, type: 'line', points: [{ x, y }, { x, y }], color: '#ffce00', width: 3 });
-        } else if (mode === 'arrow') {
-            setCurrentElement({ id, type: 'arrow', points: [{ x, y }, { x, y }], color: '#ffce00', width: 3 });
-        }
+        if (mode === 'draw') setCurrentElement({ id, type: 'freehand', points: [{ x, y }], color: '#ffffff', width: 3 });
+        else if (mode === 'line') setCurrentElement({ id, type: 'line', points: [{ x, y }, { x, y }], color: '#ceb888', width: 3 }); // Gold
+        else if (mode === 'arrow') setCurrentElement({ id, type: 'arrow', points: [{ x, y }, { x, y }], color: '#ceb888', width: 3 }); // Gold
     };
 
     const drawMove = (e: React.MouseEvent) => {
@@ -174,8 +173,7 @@ export const TacticalWhiteboard: React.FC = () => {
         } else if (mode === 'line' || mode === 'arrow') {
             setCurrentElement(prev => {
                 if (!prev || !prev.points) return null;
-                const newPoints = [prev.points[0], { x, y }];
-                return { ...prev, points: newPoints };
+                return { ...prev, points: [prev.points[0], { x, y }] };
             });
         }
     };
@@ -192,20 +190,12 @@ export const TacticalWhiteboard: React.FC = () => {
             const { x, y } = getCanvasCoords(e);
             const text = prompt("Enter text label:");
             if (text) {
-                setElements([...elements, {
-                    id: Date.now().toString(),
-                    type: 'text',
-                    x,
-                    y,
-                    text,
-                    color: '#ffffff',
-                    fontSize: 16
-                }]);
+                setElements([...elements, { id: Date.now().toString(), type: 'text', x, y, text, color: '#ffffff', fontSize: 16 }]);
             }
         }
     };
 
-    // --- RENDERING ---
+    // --- RENDER CANVAS ---
     useEffect(() => {
         const canvas = canvasRef.current;
         const ctx = canvas?.getContext('2d');
@@ -226,7 +216,7 @@ export const TacticalWhiteboard: React.FC = () => {
             ctx.fill();
         };
 
-        const renderElement = (el: DrawingElement) => {
+        const renderEl = (el: DrawingElement) => {
             ctx.strokeStyle = el.color;
             ctx.lineWidth = el.width || 3;
             ctx.lineCap = 'round';
@@ -256,14 +246,11 @@ export const TacticalWhiteboard: React.FC = () => {
                 ctx.fillText(el.text, el.x || 0, el.y || 0);
             }
         };
+        elements.forEach(renderEl);
+        if (currentElement) renderEl(currentElement);
+    }, [elements, currentElement, view, containerRef.current?.clientWidth]);
 
-        elements.forEach(renderElement);
-        if (currentElement) renderElement(currentElement);
-
-    }, [elements, currentElement, view, containerRef.current?.clientWidth]); // Re-render on resize too
-
-
-    // --- DRAG LOGIC ---
+    // --- DRAG ---
     const handleTokenDown = (e: React.MouseEvent, id: number) => {
         if (mode !== 'drag') return;
         e.stopPropagation();
@@ -275,8 +262,8 @@ export const TacticalWhiteboard: React.FC = () => {
         if (mode === 'drag') {
             if (isDragging !== null && containerRef.current) {
                 const rect = containerRef.current.getBoundingClientRect();
-                const x = ((e.clientX - rect.left) / rect.width) * 100;
-                const y = ((e.clientY - rect.top) / rect.height) * 100;
+                const x = Math.min(100, Math.max(0, ((e.clientX - rect.left) / rect.width) * 100));
+                const y = Math.min(100, Math.max(0, ((e.clientY - rect.top) / rect.height) * 100));
                 setTokens(tokens.map(t => t.id === isDragging ? { ...t, x, y } : t));
             }
         } else {
@@ -289,8 +276,7 @@ export const TacticalWhiteboard: React.FC = () => {
         setIsDragging(null);
     };
 
-
-    // --- SAVING & MANAGING PLAYS ---
+    // --- SAVED PLAYS ---
     const saveCurrentPlay = () => {
         const name = prompt("Name this tactic:");
         if (!name) return;
@@ -307,13 +293,11 @@ export const TacticalWhiteboard: React.FC = () => {
         const updated = [...savedPlays, newPlay];
         setSavedPlays(updated);
         localStorage.setItem('apex_tactics', JSON.stringify(updated));
-        alert("Play Saved!");
     };
 
     const loadPlay = (play: SavedPlay) => {
         if (confirm(`Load "${play.name}"? Unsaved changes will be lost.`)) {
             setView(play.type);
-            // Small timeout to allow View transition if background changes
             setTimeout(() => {
                 setTokens(play.tokens);
                 setElements(play.elements);
@@ -321,167 +305,180 @@ export const TacticalWhiteboard: React.FC = () => {
         }
     };
 
-    const deletePlay = (id: string) => {
-        if (confirm("Are you sure you want to delete this play?")) {
+    const deletePlay = (id: string | undefined) => {
+        if (!id) return;
+        if (confirm("Delete this play?")) {
             const updated = savedPlays.filter(p => p.id !== id);
             setSavedPlays(updated);
             localStorage.setItem('apex_tactics', JSON.stringify(updated));
         }
     };
 
+    // Helper to get image style based on view
+    const getImageStyle = () => {
+        if (view === 'full') return { objectFit: 'contain' as const };
+        if (view === 'half') return { objectFit: 'cover' as const, objectPosition: 'top' }; // Crop to top half
+        if (view === 'pc') return { objectFit: 'cover' as const, objectPosition: 'bottom' }; // Crop to bottom/D
+        return {};
+    };
+
     return (
         <div className="flex flex-col gap-6 h-full">
-            <div className="flex flex-col h-full bg-[#0a0a2a] rounded-3xl overflow-hidden border border-blue-900/30 flex-1 min-h-[600px]">
-                {/* Toolbar */}
-                <div className="bg-[#000020] p-4 flex flex-wrap items-center justify-between border-b border-white/10 gap-4">
-                    <div className="flex items-center gap-2">
-                        <button
-                            onClick={() => resetBoard('full')}
-                            className={`px-4 py-2 rounded-lg text-sm font-bold ${view === 'full' ? 'bg-[#800000] text-white' : 'text-gray-400 hover:text-white'}`}
-                        >
-                            Full Field
-                        </button>
-                        <button
-                            onClick={() => resetBoard('half')}
-                            className={`px-4 py-2 rounded-lg text-sm font-bold ${view === 'half' ? 'bg-[#800000] text-white' : 'text-gray-400 hover:text-white'}`}
-                        >
-                            Half Field
-                        </button>
+            <div className="flex flex-col h-full bg-gradient-to-br from-[#1a1a1a] to-[#0a0a2a] rounded-3xl overflow-hidden border border-[#ceb888]/30 flex-1 min-h-[600px] shadow-2xl">
+
+                {/* TOOLBAR */}
+                <div className="bg-[#000000]/80 backdrop-blur-md p-4 flex flex-wrap items-center justify-between border-b border-[#ceb888]/20 gap-4">
+
+                    {/* View Switcher */}
+                    <div className="flex items-center gap-1 bg-white/5 p-1 rounded-lg border border-white/10">
+                        {(['full', 'half', 'pc'] as const).map((v) => (
+                            <button
+                                key={v}
+                                onClick={() => resetBoard(v)}
+                                className={`px-4 py-2 rounded-md text-sm font-black uppercase tracking-wider transition-all ${view === v
+                                    ? 'bg-gradient-to-r from-[#800000] to-[#600000] text-white shadow-lg'
+                                    : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
+                            >
+                                {v === 'pc' ? 'Penalty Corners' : v === 'half' ? 'Half Field' : 'Full Field'}
+                            </button>
+                        ))}
                     </div>
 
-                    <div className="flex items-center gap-2">
-                        {/* Player Controls */}
-                        <div className="flex items-center bg-white/5 rounded-lg p-1 border border-white/10 mr-4">
-                            <button onClick={() => addPlayer('attacker')} className="p-2 text-gray-400 hover:text-red-400" title="Add Attacker">
-                                <UserPlus className="w-4 h-4" />
+                    {/* Tools */}
+                    <div className="flex items-center gap-4">
+                        {/* Players */}
+                        <div className="flex items-center bg-white/5 rounded-lg p-1 border border-white/10">
+                            <button onClick={() => addPlayer('attacker')} className="p-2 text-gray-400 hover:text-[#800000] transition-colors" title="Add Attacker">
+                                <UserPlus className="w-5 h-5" />
                             </button>
-                            <button onClick={() => addPlayer('defender')} className="p-2 text-gray-400 hover:text-blue-400" title="Add Defender">
-                                <UserPlus className="w-4 h-4 text-blue-400" />
+                            <button onClick={() => addPlayer('defender')} className="p-2 text-gray-400 hover:text-[#000050] transition-colors" title="Add Defender">
+                                <UserPlus className="w-5 h-5 text-blue-400" />
                             </button>
                             <div className="w-px h-6 bg-white/10 mx-1"></div>
-                            <button onClick={deleteSelectedPlayer} className={`p-2 ${selectedToken ? 'text-red-500 animate-pulse' : 'text-gray-600'}`} title="Delete Selected Player">
-                                <UserMinus className="w-4 h-4" />
+                            <button onClick={deleteSelectedPlayer} className={`p-2 transition-colors ${selectedToken ? 'text-red-500 hover:bg-red-900/20 rounded' : 'text-gray-600 cursor-not-allowed'}`} title="Delete Selected">
+                                <UserMinus className="w-5 h-5" />
                             </button>
                         </div>
 
-                        {/* Drawing Controls */}
+                        {/* Drawing */}
                         <div className="flex items-center bg-white/5 rounded-lg p-1 border border-white/10">
-                            <button onClick={() => setMode('drag')} className={`p-2 rounded ${mode === 'drag' ? 'bg-white text-black' : 'text-gray-400 hover:text-white'}`} title="Move Players">
+                            <button onClick={() => setMode('drag')} className={`p-2 rounded ${mode === 'drag' ? 'bg-[#ceb888] text-black' : 'text-gray-400 hover:text-white'}`} title="Move">
                                 <MousePointer className="w-5 h-5" />
                             </button>
                             <div className="w-px h-6 bg-white/10 mx-1"></div>
-                            <button onClick={() => setMode('draw')} className={`p-2 rounded ${mode === 'draw' ? 'bg-white text-black' : 'text-gray-400 hover:text-white'}`} title="Freehand">
+                            <button onClick={() => setMode('draw')} className={`p-2 rounded ${mode === 'draw' ? 'bg-[#ceb888] text-black' : 'text-gray-400 hover:text-white'}`} title="Freehand">
                                 <Pen className="w-5 h-5" />
                             </button>
-                            <button onClick={() => setMode('line')} className={`p-2 rounded ${mode === 'line' ? 'bg-white text-black' : 'text-gray-400 hover:text-white'}`} title="Line">
+                            <button onClick={() => setMode('line')} className={`p-2 rounded ${mode === 'line' ? 'bg-[#ceb888] text-black' : 'text-gray-400 hover:text-white'}`} title="Line">
                                 <Minus className="w-5 h-5" />
                             </button>
-                            <button onClick={() => setMode('arrow')} className={`p-2 rounded ${mode === 'arrow' ? 'bg-white text-black' : 'text-gray-400 hover:text-white'}`} title="Arrow">
+                            <button onClick={() => setMode('arrow')} className={`p-2 rounded ${mode === 'arrow' ? 'bg-[#ceb888] text-black' : 'text-gray-400 hover:text-white'}`} title="Arrow">
                                 <ArrowRight className="w-5 h-5" />
                             </button>
-                            <button onClick={() => setMode('text')} className={`p-2 rounded ${mode === 'text' ? 'bg-white text-black' : 'text-gray-400 hover:text-white'}`} title="Text Label">
+                            <button onClick={() => setMode('text')} className={`p-2 rounded ${mode === 'text' ? 'bg-[#ceb888] text-black' : 'text-gray-400 hover:text-white'}`} title="Text">
                                 <Type className="w-5 h-5" />
                             </button>
                             <div className="w-px h-6 bg-white/10 mx-1"></div>
-                            <button onClick={() => setElements([])} className="p-2 text-gray-400 hover:text-red-500" title="Clear Drawing">
+                            <button onClick={() => setElements([])} className="p-2 text-gray-400 hover:text-red-500 transition-colors" title="Clear Ink">
                                 <Eraser className="w-5 h-5" />
                             </button>
-                            <button onClick={() => resetBoard(view)} className="p-2 text-gray-400 hover:text-red-500" title="Reset Board">
+                            <button onClick={() => resetBoard(view)} className="p-2 text-gray-400 hover:text-red-500 transition-colors" title="Reset All">
                                 <Trash2 className="w-5 h-5" />
                             </button>
                         </div>
-                    </div>
 
-                    <div className="flex items-center gap-2">
-                        <button onClick={saveCurrentPlay} className="flex items-center gap-2 bg-[#ceb888] text-black font-bold px-4 py-2 rounded-lg hover:bg-white transition-colors">
+                        <button onClick={saveCurrentPlay} className="flex items-center gap-2 bg-[#ceb888] text-black font-black px-6 py-2 rounded-lg hover:bg-white transition-all shadow-lg hover:shadow-[#ceb888]/20">
                             <Save className="w-4 h-4" />
-                            Save
+                            SAVE
                         </button>
                     </div>
                 </div>
 
-                {/* Canvas Container */}
+                {/* CANVAS AREA */}
                 <div
                     ref={containerRef}
-                    className="flex-1 relative overflow-hidden bg-[#005a9c] cursor-crosshair select-none min-h-[500px]"
+                    className="flex-1 relative overflow-hidden bg-[#005a9c] cursor-crosshair select-none w-full h-full"
                     onMouseMove={handleMouseMove}
                     onMouseUp={handleMouseUp}
                     onMouseDown={startDrawing}
                     onClick={handleCanvasClick}
                 >
-                    {/* Background Image */}
+                    {/* Dynamic Field Background logic */}
                     <img
-                        src={view === 'full' ? '/images/field-full.png' : '/images/field-quarter.png'}
-                        className={`absolute inset-0 w-full h-full object-contain pointer-events-none opacity-80 ${view === 'half' ? 'object-bottom' : ''}`}
+                        src={view === 'pc' ? '/images/field-quarter.png' : '/images/field-full.png'}
+                        className="absolute inset-0 w-full h-full pointer-events-none opacity-90 transition-all duration-500"
+                        style={getImageStyle()}
                         alt="Pitch"
                     />
 
                     {/* Drawing Layer */}
                     <canvas
                         ref={canvasRef}
-                        width={containerRef.current?.clientWidth || 800}
-                        height={containerRef.current?.clientHeight || 600}
+                        width={containerRef.current?.clientWidth || 1200}
+                        height={containerRef.current?.clientHeight || 800}
                         className="absolute inset-0 pointer-events-none z-10"
                     />
 
-                    {/* Tokens Layer */}
+                    {/* Tokens */}
                     {tokens.map(token => (
                         <div
                             key={token.id}
                             onMouseDown={(e) => handleTokenDown(e, token.id)}
-                            className={`absolute w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs border-2 shadow-xl cursor-move z-20 hover:scale-110 transition-transform transform -translate-x-1/2 -translate-y-1/2
-                                ${token.type === 'attacker' ? 'bg-[#800000] text-white' :
-                                    token.type === 'defender' ? 'bg-[#000020] text-white' : 'bg-[#ceb888] text-black'}
-                                ${selectedToken === token.id ? 'ring-2 ring-yellow-400 border-yellow-400' : 'border-white'}
+                            className={`absolute w-10 h-10 rounded-full flex items-center justify-center font-black text-xs border-2 shadow-2xl cursor-move z-20 hover:scale-110 active:scale-125 transition-all
+                                ${token.type === 'attacker' ? 'bg-gradient-to-br from-[#800000] to-[#500000] text-white border-white/20' :
+                                    token.type === 'defender' ? 'bg-gradient-to-br from-[#000050] to-[#000020] text-white border-white/20' :
+                                        'bg-white text-black border-gray-300'}
+                                ${selectedToken === token.id ? 'ring-4 ring-[#ceb888] scale-110' : ''}
                             `}
-                            style={{
-                                left: `${token.x}%`,
-                                top: `${token.y}%`
-                            }}
+                            style={{ left: `${token.x}%`, top: `${token.y}%`, transform: 'translate(-50%, -50%)' }}
                         >
-                            {token.type === 'ball' ? '' : (token.label || '')}
+                            {token.type === 'ball' ? '' : token.label}
                         </div>
                     ))}
                 </div>
             </div>
 
-            {/* Saved Plays Manager (Replaces Journal/Schedule) */}
-            <div className="bg-[#0a0a2a] border border-neutral-800 rounded-3xl p-8">
-                <div className="flex items-center gap-3 mb-6">
+            {/* SAVED PLAYS MANAGER */}
+            <div className="bg-[#0a0a0a] border-t border-[#ceb888]/30 pt-8">
+                <div className="flex items-center gap-3 mb-6 px-4">
                     <FolderOpen className="w-6 h-6 text-[#ceb888]" />
-                    <h3 className="text-xl font-bold text-white">Saved Plays</h3>
+                    <h3 className="text-xl font-black text-white italic">TACTICAL VAULT</h3>
+                    <span className="text-xs font-mono text-gray-500 bg-white/5 px-2 py-1 rounded-full">{savedPlays.length} PLAYS SAVED</span>
                 </div>
 
                 {savedPlays.length === 0 ? (
-                    <div className="text-center py-12 border-2 border-dashed border-neutral-800 rounded-xl">
-                        <Save className="w-12 h-12 text-neutral-700 mx-auto mb-4" />
-                        <p className="text-gray-500">No saved plays yet. Design a tactic and click "Save".</p>
+                    <div className="text-center py-12 border border-dashed border-white/10 rounded-xl bg-white/5 mx-4">
+                        <Save className="w-12 h-12 text-gray-600 mx-auto mb-4" />
+                        <p className="text-gray-500 font-bold">No saved plays yet.</p>
+                        <p className="text-gray-600 text-sm">Design a strategy above and click SAVE.</p>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 px-4 pb-8">
                         {savedPlays.map((play) => (
-                            <div key={play.id || play.name} className="bg-neutral-900 border border-neutral-800 p-4 rounded-xl flex items-center justify-between group hover:border-[#ceb888] transition-colors">
+                            <div key={play.id} className="bg-[#1a1a1a] border border-white/10 p-5 rounded-2xl flex flex-col justify-between group hover:border-[#ceb888] transition-all hover:bg-[#222]">
                                 <div>
-                                    <h4 className="font-bold text-white">{play.name}</h4>
-                                    <div className="flex items-center gap-2 mt-1">
-                                        <span className={`text-[10px] px-2 py-0.5 rounded uppercase font-bold ${play.type === 'full' ? 'bg-blue-900/30 text-blue-400' : 'bg-green-900/30 text-green-400'}`}>
-                                            {play.type === 'full' ? 'Full Field' : 'Half Field'}
+                                    <div className="flex justify-between items-start mb-2">
+                                        <span className={`text-[10px] px-2 py-1 rounded font-bold uppercase tracking-wider
+                                            ${play.type === 'full' ? 'bg-blue-900/40 text-blue-400' :
+                                                play.type === 'half' ? 'bg-purple-900/40 text-purple-400' : 'bg-green-900/40 text-green-400'}`}>
+                                            {play.type === 'pc' ? 'Penalty Corner' : play.type}
                                         </span>
-                                        <span className="text-[10px] text-gray-500">{play.date || 'No Date'}</span>
+                                        <span className="text-[10px] text-gray-600 font-mono">{play.date}</span>
                                     </div>
+                                    <h4 className="font-bold text-white text-lg leading-tight mb-4 group-hover:text-[#ceb888] transition-colors">{play.name}</h4>
                                 </div>
-                                <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+
+                                <div className="flex items-center gap-2 border-t border-white/5 pt-4">
                                     <button
                                         onClick={() => loadPlay(play)}
-                                        className="p-2 bg-neutral-800 hover:bg-white hover:text-black rounded-lg text-gray-400 transition-colors"
-                                        title="Load Play"
+                                        className="flex-1 py-2 bg-white/5 hover:bg-white hover:text-black rounded-lg text-gray-400 font-bold text-xs uppercase tracking-wider transition-all"
                                     >
-                                        <FolderOpen className="w-4 h-4" />
+                                        Load
                                     </button>
                                     <button
-                                        onClick={() => deletePlay(play.id || play.name)}
-                                        className="p-2 bg-neutral-800 hover:bg-red-900 hover:text-red-500 rounded-lg text-gray-400 transition-colors"
-                                        title="Delete Play"
+                                        onClick={() => deletePlay(play.id)}
+                                        className="p-2 bg-white/5 hover:bg-red-900/50 hover:text-red-500 rounded-lg text-gray-400 transition-all"
+                                        title="Delete"
                                     >
                                         <Trash2 className="w-4 h-4" />
                                     </button>
@@ -494,4 +491,3 @@ export const TacticalWhiteboard: React.FC = () => {
         </div>
     );
 };
-
