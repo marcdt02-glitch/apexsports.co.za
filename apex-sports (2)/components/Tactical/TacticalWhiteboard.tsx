@@ -480,7 +480,7 @@ export const TacticalWhiteboard: React.FC = () => {
                     {/* Dynamic Field Background logic */}
                     {/* Dynamic Field Background logic */}
                     <img
-                        src={view === 'pc' ? '/images/field-pc-v2.jpg' : view === 'half' ? '/images/field-half-v2.jpg' : '/images/field-full-v2.png'}
+                        src={view === 'pc' ? '/images/field-pc-v2.jpg' : view === 'half' ? '/images/field-half-v3.jpg' : '/images/field-full-v2.png'}
                         className="absolute inset-0 w-full h-full pointer-events-none opacity-100 transition-all duration-500"
                         style={getImageStyle()}
                         alt="Pitch"
