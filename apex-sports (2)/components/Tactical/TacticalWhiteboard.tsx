@@ -379,14 +379,14 @@ export const TacticalWhiteboard: React.FC = () => {
     // Helper to get image style based on view
     const getImageStyle = () => {
         if (view === 'full') return { objectFit: 'contain' as const };
-        if (view === 'half') return { objectFit: 'cover' as const, objectPosition: 'top' }; // Crop to top half
-        if (view === 'pc') return { objectFit: 'cover' as const, objectPosition: 'bottom' }; // Crop to bottom/D
+        if (view === 'half') return { objectFit: 'cover' as const, objectPosition: 'center' };
+        if (view === 'pc') return { objectFit: 'cover' as const, objectPosition: 'center' };
         return {};
     };
 
     return (
         <div className="flex flex-col gap-6 h-full">
-            <div className="flex flex-col h-full bg-gradient-to-br from-[#1a1a1a] to-[#0a0a2a] rounded-3xl overflow-hidden border border-[#ceb888]/30 flex-1 min-h-[600px] shadow-2xl">
+            <div className="flex flex-col h-full bg-gradient-to-br from-[#800000] via-[#2a0000] to-[#000040] rounded-3xl overflow-hidden border border-[#ceb888]/30 flex-1 min-h-[600px] shadow-2xl">
 
                 {/* TOOLBAR */}
                 <div className="bg-[#000000]/80 backdrop-blur-md p-4 flex flex-wrap items-center justify-between border-b border-[#ceb888]/20 gap-4">
@@ -478,9 +478,10 @@ export const TacticalWhiteboard: React.FC = () => {
                     onClick={handleCanvasClick}
                 >
                     {/* Dynamic Field Background logic */}
+                    {/* Dynamic Field Background logic */}
                     <img
-                        src={view === 'pc' ? '/images/field-quarter.png' : '/images/field-full.png'}
-                        className="absolute inset-0 w-full h-full pointer-events-none opacity-90 transition-all duration-500"
+                        src={view === 'pc' ? '/images/field-pc-v2.jpg' : view === 'half' ? '/images/field-half-v2.jpg' : '/images/field-full-v2.png'}
+                        className="absolute inset-0 w-full h-full pointer-events-none opacity-100 transition-all duration-500"
                         style={getImageStyle()}
                         alt="Pitch"
                     />
