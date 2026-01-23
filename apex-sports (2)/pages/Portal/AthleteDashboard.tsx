@@ -104,10 +104,56 @@ import Loading from '../../components/Loading';
 import GoalSetting from '../../components/GoalSetting';
 import PortalMentorship from '../../components/Portal/Mentorship/PortalMentorship';
 
+// --- Helper Colors ---
+const getThemeColors = (membershipType?: string) => {
+    if (membershipType === 'PRG') {
+        return {
+            primary: '#800000', // Maroon
+            secondary: '#000080', // Navy
+            accent: '#FFD700', // Gold
+            text: '#ffffff',
+            bg: 'bg-neutral-900',
+            cardBg: 'bg-[#1a1a2e]'
+        };
+    }
+    return {
+        primary: '#3b82f6', // Blue
+        secondary: '#ef4444', // Red
+        accent: '#22c55e', // Green
+        text: '#ffffff',
+        bg: 'bg-black',
+        cardBg: 'bg-neutral-900'
+    };
+};
+
+const WrappedNavItem = ({ active, onClick, icon: Icon, label, theme }: any) => {
+    const isPrg = theme.primary === '#800000';
+    const activeClass = isPrg
+        ? 'font-bold shadow-lg'
+        : 'bg-white text-black font-bold';
+
+    const activeStyle = isPrg && active ? { backgroundColor: theme.accent, color: theme.secondary } : {};
+
+    return (
+        <button
+            onClick={onClick}
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${active ? activeClass : 'text-gray-400 hover:bg-neutral-800 hover:text-white'}`}
+            style={active ? activeStyle : {}}
+        >
+            <Icon className="w-5 h-5" />
+            <span>{label}</span>
+        </button>
+    );
+};
+
 const AthleteDashboard: React.FC = () => {
     const { athleteId } = useParams<{ athleteId: string }>();
     const { getAthlete } = useData();
-    const [activeView, setActiveView] = useState<'home' | 'dashboard' | 'goals' | 'library' | 'reports' | 'wellness' | 'mentorship' | 'coaching' | 'pillars' | 'videolab'>('home');
+
+    // Color State
+    const [theme, setTheme] = useState(getThemeColors());
+
+    const [activeView, setActiveView] = useState<'home' | 'dashboard' | 'goals' | 'library' | 'reports' | 'wellness' | 'mentorship' | 'coaching' | 'pillars' | 'videolab' | 'tactical'>('home');
     const [clinicalTab, setClinicalTab] = useState<'lower' | 'upper' | 'symmetry'>('lower');
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const dashboardRef = useRef<HTMLDivElement>(null);
@@ -118,7 +164,8 @@ const AthleteDashboard: React.FC = () => {
     React.useEffect(() => {
         if (athlete) {
             console.log("📊 Dashboard Loaded for:", athlete.name);
-            console.log("🔑 Access Object:", athlete.access);
+            // Set Theme
+            setTheme(getThemeColors(athlete.membershipType));
         }
     }, [athlete]);
 
@@ -827,47 +874,30 @@ const AthleteDashboard: React.FC = () => {
 
                     <div className={`fixed inset-y-0 left-0 z-40 w-64 bg-[#0a0a0a] border-r border-neutral-800 transform transition-transform duration-300 lg:translate-x-0 pt-8 pb-10 flex flex-col top-24 overflow-y-auto ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
                         <div className="px-6 space-y-2">
-                            {/* HOME (New Landing) */}
-                            <button
-                                onClick={() => { setActiveView('home'); setSidebarOpen(false); }}
-                                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeView === 'home' ? 'bg-white text-black font-bold' : 'text-gray-400 hover:bg-neutral-800 hover:text-white'}`}
-                            >
-                                <Home className="w-5 h-5" />
-                                Home
-                            </button>
+                            {/* HOME */}
+                            <WrappedNavItem active={activeView === 'home'} onClick={() => { setActiveView('home'); setSidebarOpen(false); }} icon={Home} label="Home" theme={theme} />
 
-                            {/* PHYSICAL RESULTS (Renamed Dashboard) */}
-                            <button
-                                onClick={() => { setActiveView('dashboard'); setSidebarOpen(false); }}
-                                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeView === 'dashboard' ? 'bg-white text-black font-bold' : 'text-gray-400 hover:bg-neutral-800 hover:text-white'}`}
-                            >
-                                <BarChart2 className="w-5 h-5" />
-                                Physical Results
-                            </button>
+                            {/* PHYSICAL RESULTS (Hide for PRG) */}
+                            {athlete.membershipType !== 'PRG' && (
+                                <>
+                                    <WrappedNavItem active={activeView === 'dashboard'} onClick={() => { setActiveView('dashboard'); setSidebarOpen(false); }} icon={BarChart2} label="Physical Results" theme={theme} />
+                                </>
+                            )}
 
-                            {/* COACHING LAYER (v18.5) */}
-                            <button
-                                onClick={() => { setActiveView('coaching'); setSidebarOpen(false); }}
-                                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeView === 'coaching' ? 'bg-white text-black font-bold' : 'text-gray-400 hover:bg-neutral-800 hover:text-white'}`}
-                            >
-                                <MonitorPlay className="w-5 h-5" />
-                                Coaching
-                            </button>
+                            {/* TACTICAL (PRG Only) */}
+                            {athlete.membershipType === 'PRG' && (
+                                <WrappedNavItem active={activeView === 'tactical'} onClick={() => { setActiveView('tactical'); setSidebarOpen(false); }} icon={Target} label="Tactical Analysis" theme={theme} />
+                            )}
 
+                            {/* COACHING */}
+                            <WrappedNavItem active={activeView === 'coaching'} onClick={() => { setActiveView('coaching'); setSidebarOpen(false); }} icon={MonitorPlay} label="Coaching" theme={theme} />
 
+                            {/* VIDEO LAB */}
+                            <WrappedNavItem active={activeView === 'videolab'} onClick={() => { setActiveView('videolab'); setSidebarOpen(false); }} icon={Video} label="Video Lab" theme={theme} />
 
-                            {/* VIDEO LAB (v20.0) */}
-                            <button
-                                onClick={() => { setActiveView('videolab'); setSidebarOpen(false); }}
-                                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeView === 'videolab' ? 'bg-white text-black font-bold' : 'text-gray-400 hover:bg-neutral-800 hover:text-white'}`}
-                            >
-                                <Video className="w-5 h-5" />
-                                Video Lab
-                            </button>
-
-                            {/* MENTORSHIP & GOALS (Internal View) */}
+                            {/* MENTORSHIP & GOALS */}
                             {(() => {
-                                const isUnlocked = isFullAccess; // v17.4: Now linked to master full access (Apex/Elite/Testing)
+                                const isUnlocked = isFullAccess;
                                 return (
                                     <button
                                         onClick={() => {
@@ -878,7 +908,8 @@ const AthleteDashboard: React.FC = () => {
                                                 setSidebarOpen(false);
                                             }
                                         }}
-                                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeView === 'mentorship' ? 'bg-white text-black font-bold' : isUnlocked ? 'text-gray-400 hover:text-white hover:bg-neutral-800' : 'text-gray-600 cursor-not-allowed opacity-50'}`}
+                                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeView === 'mentorship' ? (theme.primary === '#800000' ? 'font-bold shadow-lg' : 'bg-white text-black font-bold') : isUnlocked ? 'text-gray-400 hover:text-white hover:bg-neutral-800' : 'text-gray-600 cursor-not-allowed opacity-50'}`}
+                                        style={activeView === 'mentorship' && theme.primary === '#800000' ? { backgroundColor: theme.accent, color: theme.secondary } : {}}
                                     >
                                         <BookOpen className="w-5 h-5" />
                                         <span>Mentorship</span>
@@ -887,15 +918,14 @@ const AthleteDashboard: React.FC = () => {
                                 );
                             })()}
 
-
-
                             {/* REPORTS */}
-                            {(() => {
-                                const isUnlocked = isFullAccess; // v17.4: Now linked to master full access
+                            {athlete.membershipType !== 'PRG' && (() => {
+                                const isUnlocked = isFullAccess;
                                 return (
                                     <button
                                         onClick={() => { if (isUnlocked) { setActiveView('reports'); setSidebarOpen(false); } }}
-                                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeView === 'reports' ? 'bg-white text-black font-bold' : isUnlocked ? 'text-gray-400 hover:text-white hover:bg-neutral-800' : 'text-gray-600 cursor-not-allowed opacity-50'}`}
+                                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeView === 'reports' ? (theme.primary === '#800000' ? 'font-bold shadow-lg' : 'bg-white text-black font-bold') : isUnlocked ? 'text-gray-400 hover:text-white hover:bg-neutral-800' : 'text-gray-600 cursor-not-allowed opacity-50'}`}
+                                        style={activeView === 'reports' && theme.primary === '#800000' ? { backgroundColor: theme.accent, color: theme.secondary } : {}}
                                     >
                                         <FileText className="w-5 h-5" />
                                         <span>Reports</span>
@@ -904,14 +934,10 @@ const AthleteDashboard: React.FC = () => {
                                 );
                             })()}
 
-                            {/* WELLNESS (v11.5) */}
-                            <button
-                                onClick={() => { setActiveView('wellness'); setSidebarOpen(false); }}
-                                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeView === 'wellness' ? 'bg-white text-black font-bold' : 'text-gray-400 hover:text-white hover:bg-neutral-800'}`}
-                            >
-                                <Activity className="w-5 h-5" />
-                                <span>Wellness & CNS</span>
-                            </button>
+                            {/* WELLNESS (Hide for PRG) */}
+                            {athlete.membershipType !== 'PRG' && (
+                                <WrappedNavItem active={activeView === 'wellness'} onClick={() => { setActiveView('wellness'); setSidebarOpen(false); }} icon={Activity} label="Wellness & CNS" theme={theme} />
+                            )}
                         </div>
 
                         <div className="mt-auto px-6">
@@ -992,7 +1018,11 @@ const AthleteDashboard: React.FC = () => {
                                     <div className="relative flex-shrink-0">
                                         <div className="absolute -inset-2 bg-gradient-to-r from-red-600 to-blue-600 rounded-full opacity-20 blur-lg animate-pulse"></div>
                                         <div className="relative w-12 h-12 bg-black rounded-full flex items-center justify-center border-2 border-white/10 shadow-2xl">
-                                            <img src="/images/logo.png" alt="Apex" className="w-8 h-8 object-contain" />
+                                            {athlete.membershipType === 'PRG' ? (
+                                                <img src="/images/prg-logo.png" alt="PRG" className="w-10 h-10 object-contain" />
+                                            ) : (
+                                                <img src="/images/logo.png" alt="Apex" className="w-8 h-8 object-contain" />
+                                            )}
                                         </div>
                                     </div>
                                 </div>
@@ -1654,6 +1684,26 @@ const AthleteDashboard: React.FC = () => {
                         {activeView === 'videolab' && (
                             <div className="animate-fade-in text-white">
                                 <VideoLab />
+                            </div>
+                        )}
+
+                        {/* VIEW: TACTICAL (PRG Only) */}
+                        {activeView === 'tactical' && (
+                            <div className="animate-fade-in space-y-8">
+                                <div className="bg-[#1a1a2e] border border-blue-900/30 p-8 rounded-3xl relative overflow-hidden">
+                                    <div className="absolute top-0 right-0 p-4 opacity-10">
+                                        <Target className="w-32 h-32 text-white" />
+                                    </div>
+                                    <div className="relative z-10">
+                                        <h2 className="text-3xl font-black text-white uppercase italic mb-4">Tactical Analysis</h2>
+                                        <p className="text-gray-400 max-w-2xl text-lg">
+                                            Review match footage, analyze opponent structures, and refine your game intelligence.
+                                            This module is tailored for Paul Roos Gymnasium athletes.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <PortalCoaching />
                             </div>
                         )}
 

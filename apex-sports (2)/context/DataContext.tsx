@@ -32,6 +32,7 @@ export interface Athlete {
 
     // Meta
     focusArea?: string;
+    membershipType?: 'Standard' | 'PRG'; // NEW: Tenant/Role Support
 }
 
 interface DataContextType {
@@ -82,6 +83,11 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 // Determine ID based on email to ensure consistent URL
                 const safeId = email.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase();
                 athlete.id = safeId;
+
+                // MOCK: Force PRG Membership for testing if not present
+                if (!athlete.membershipType) {
+                    athlete.membershipType = 'PRG';
+                }
 
                 setData(prev => {
                     // Check if exists

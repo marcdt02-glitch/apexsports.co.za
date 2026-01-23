@@ -111,6 +111,7 @@ export interface AthleteData {
         process: string;
         why: string;
     };
+    membershipType?: 'Standard' | 'PRG'; // NEW: Tenant support
 
     // v38.0 Direct Score Mapping (Backend Calculated)
     performanceScore?: number;
