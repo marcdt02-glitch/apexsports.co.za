@@ -52,15 +52,15 @@ const PortalLogin: React.FC = () => {
     };
 
     return (
-        <div className="min-h-screen bg-black flex flex-col justify-start md:justify-center items-center pt-32 md:pt-0 px-4 relative overflow-hidden">
+        <div className="min-h-screen bg-[#0a0a2a] flex flex-col justify-start md:justify-center items-center pt-32 md:pt-0 px-4 relative overflow-hidden">
             {/* Background Effects */}
             <div className="absolute inset-0 z-0">
-                <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-blue-600/20 rounded-full blur-[120px] -translate-x-1/2 -translate-y-1/2 animate-pulse-slow"></div>
-                <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-purple-600/20 rounded-full blur-[120px] translate-x-1/2 translate-y-1/2 animate-pulse-slow delay-1000"></div>
+                <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-[#800000]/20 rounded-full blur-[120px] -translate-x-1/2 -translate-y-1/2 animate-pulse-slow"></div>
+                <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-[#ceb888]/20 rounded-full blur-[120px] translate-x-1/2 translate-y-1/2 animate-pulse-slow delay-1000"></div>
                 <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-20"></div> {/* Optional generic grid if available, or just noise */}
             </div>
 
-            <div className="bg-black/40 backdrop-blur-2xl border border-white/10 p-8 md:p-12 rounded-3xl w-full max-w-lg shadow-[0_0_50px_rgba(0,0,0,0.5)] relative z-20">
+            <div className="bg-[#0a0a2a]/40 backdrop-blur-2xl border border-white/10 p-8 md:p-12 rounded-3xl w-full max-w-lg shadow-[0_0_50px_rgba(0,0,0,0.5)] relative z-20">
                 <div className="text-center mb-10">
                     <div className="inline-flex items-center justify-center p-4 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-2xl border border-white/5 mb-6 shadow-glow">
                         <img src="/images/logo.png" alt="Apex Logo" className="w-12 h-12 object-contain" />

@@ -122,7 +122,7 @@ const getThemeColors = (membershipType?: string) => {
         secondary: '#ef4444', // Red
         accent: '#22c55e', // Green
         text: '#ffffff',
-        bg: 'bg-black',
+        bg: 'bg-transparent',
         cardBg: 'bg-neutral-900'
     };
 };
@@ -368,7 +368,7 @@ const AthleteDashboard: React.FC = () => {
 
         return (
             <div className="fixed inset-0 z-50 flex justify-end">
-                <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={onClose}></div>
+                <div className="absolute inset-0 bg-transparent/80 backdrop-blur-sm" onClick={onClose}></div>
                 <div className="relative z-10 w-full max-w-md bg-[#111] border-l border-neutral-800 h-full p-8 overflow-y-auto animate-fade-in-right shadow-2xl">
                     <button onClick={onClose} className="absolute top-6 right-6 p-2 bg-neutral-800 rounded-full text-gray-400 hover:text-white hover:bg-neutral-700">
                         <X className="w-5 h-5" />
@@ -568,7 +568,7 @@ const AthleteDashboard: React.FC = () => {
         <div className="space-y-12 animate-fade-in pb-20">
             {/* Header / Instructional Video (Deion Sanders) */}
             <div className="bg-neutral-900 border border-neutral-800 rounded-3xl overflow-hidden shadow-2xl">
-                <div className="aspect-video w-full bg-black relative flex items-center justify-center group">
+                <div className="aspect-video w-full bg-transparent relative flex items-center justify-center group">
                     <iframe
                         className="w-full h-full object-cover"
                         src="https://www.youtube.com/embed/Q8YfGJwoTD8?rel=0&modestbranding=1"
@@ -577,7 +577,7 @@ const AthleteDashboard: React.FC = () => {
                         allowFullScreen
                     ></iframe>
                 </div>
-                <div className="p-8 text-center bg-black">
+                <div className="p-8 text-center bg-transparent">
                     <h2 className="text-3xl font-black text-white uppercase tracking-tighter mb-2">THE JOURNEY STARTS HERE</h2>
                     <p className="text-gray-400">Raising the floor. Smashing the ceiling. Welcome to the APEX Lab.</p>
                 </div>
@@ -600,7 +600,7 @@ const AthleteDashboard: React.FC = () => {
                         <textarea
                             value={goals.year}
                             onChange={(e) => setGoals({ ...goals, year: e.target.value })}
-                            className="w-full bg-black/50 text-white text-lg font-bold p-3 rounded-xl border border-neutral-700 focus:border-red-500 outline-none h-32 resize-none"
+                            className="w-full bg-transparent/50 text-white text-lg font-bold p-3 rounded-xl border border-neutral-700 focus:border-red-500 outline-none h-32 resize-none"
                             placeholder="What do you want to achieve this year?"
                         />
                     ) : (
@@ -625,7 +625,7 @@ const AthleteDashboard: React.FC = () => {
                         <textarea
                             value={goals.process}
                             onChange={(e) => setGoals({ ...goals, process: e.target.value })}
-                            className="w-full bg-black/50 text-white text-lg font-bold p-3 rounded-xl border border-neutral-700 focus:border-blue-500 outline-none h-32 resize-none"
+                            className="w-full bg-transparent/50 text-white text-lg font-bold p-3 rounded-xl border border-neutral-700 focus:border-blue-500 outline-none h-32 resize-none"
                             placeholder="What daily habits will get you there?"
                         />
                     ) : (
@@ -650,7 +650,7 @@ const AthleteDashboard: React.FC = () => {
                         <textarea
                             value={goals.why}
                             onChange={(e) => setGoals({ ...goals, why: e.target.value })}
-                            className="w-full bg-black/50 text-white text-lg font-bold p-3 rounded-xl border border-neutral-700 focus:border-yellow-500 outline-none h-32 resize-none"
+                            className="w-full bg-transparent/50 text-white text-lg font-bold p-3 rounded-xl border border-neutral-700 focus:border-yellow-500 outline-none h-32 resize-none"
                             placeholder="What drives you?"
                         />
                     ) : (
@@ -705,7 +705,7 @@ const AthleteDashboard: React.FC = () => {
                             desc: 'Managing your environment, nutrition, and team.'
                         }
                     ].map((pillar, idx) => (
-                        <div key={idx} className="bg-black/40 p-5 rounded-2xl border border-neutral-800 hover:border-neutral-600 transition-all hover:-translate-y-1 group flex items-start gap-5">
+                        <div key={idx} className="bg-transparent/40 p-5 rounded-2xl border border-neutral-800 hover:border-neutral-600 transition-all hover:-translate-y-1 group flex items-start gap-5">
                             <div className="w-12 h-12 bg-neutral-800 rounded-xl flex-shrink-0 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-colors">
                                 <pillar.icon className="w-6 h-6 text-white group-hover:text-black transition-colors" />
                             </div>
@@ -735,28 +735,28 @@ const AthleteDashboard: React.FC = () => {
                     <h3 className="text-xl font-bold text-white">APEX Athlete Guide</h3>
                 </div>
                 <ul className="space-y-4">
-                    <li className="flex items-start gap-4 p-4 bg-black/20 rounded-xl border border-neutral-800/50">
+                    <li className="flex items-start gap-4 p-4 bg-transparent/20 rounded-xl border border-neutral-800/50">
                         <Info className="w-6 h-6 text-purple-500 flex-shrink-0 mt-0.5" />
                         <div>
                             <strong className="block text-white mb-1">Confused by a metric?</strong>
                             <span className="text-gray-400 text-sm">Look for the "The Science Explained" tab in each section to understand the 'Why' behind your data.</span>
                         </div>
                     </li>
-                    <li className="flex items-start gap-4 p-4 bg-black/20 rounded-xl border border-neutral-800/50">
+                    <li className="flex items-start gap-4 p-4 bg-transparent/20 rounded-xl border border-neutral-800/50">
                         <CheckCircle className="w-6 h-6 text-blue-500 flex-shrink-0 mt-0.5" />
                         <div>
                             <strong className="block text-white mb-1">Morning Wellness Check-in</strong>
                             <span className="text-gray-400 text-sm">Complete your scale ratings (1-10) every morning before 08:00 to track fatigue and readiness.</span>
                         </div>
                     </li>
-                    <li className="flex items-start gap-4 p-4 bg-black/20 rounded-xl border border-neutral-800/50">
+                    <li className="flex items-start gap-4 p-4 bg-transparent/20 rounded-xl border border-neutral-800/50">
                         <Activity className="w-6 h-6 text-green-500 flex-shrink-0 mt-0.5" />
                         <div>
                             <strong className="block text-white mb-1">Review Physical Results</strong>
                             <span className="text-gray-400 text-sm">Check your "Physical Results" tab after every testing session to see your progress.</span>
                         </div>
                     </li>
-                    <li className="flex items-start gap-4 p-4 bg-black/20 rounded-xl border border-neutral-800/50">
+                    <li className="flex items-start gap-4 p-4 bg-transparent/20 rounded-xl border border-neutral-800/50">
                         <AlertTriangle className="w-6 h-6 text-yellow-500 flex-shrink-0 mt-0.5" />
                         <div>
                             <strong className="block text-white mb-1">Monitor Red Flags</strong>
@@ -871,7 +871,7 @@ const AthleteDashboard: React.FC = () => {
 
                     {/* SIDEBAR NAVIGATION */}
                     {/* Overlay for Mobile */}
-                    {sidebarOpen && <div className="fixed inset-0 bg-black/80 z-40 lg:hidden" onClick={() => setSidebarOpen(false)} />}
+                    {sidebarOpen && <div className="fixed inset-0 bg-transparent/80 z-40 lg:hidden" onClick={() => setSidebarOpen(false)} />}
 
                     <div className={`fixed inset-y-0 left-0 z-40 w-64 bg-[#0a0a0a] border-r border-neutral-800 transform transition-transform duration-300 lg:translate-x-0 pt-8 pb-10 flex flex-col top-24 overflow-y-auto ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
                         <div className="px-6 space-y-2">
@@ -1018,7 +1018,7 @@ const AthleteDashboard: React.FC = () => {
                                     </div>
                                     <div className="relative flex-shrink-0">
                                         <div className="absolute -inset-2 bg-gradient-to-r from-red-600 to-blue-600 rounded-full opacity-20 blur-lg animate-pulse"></div>
-                                        <div className="relative w-12 h-12 bg-black rounded-full flex items-center justify-center border-2 border-white/10 shadow-2xl">
+                                        <div className="relative w-12 h-12 bg-transparent rounded-full flex items-center justify-center border-2 border-white/10 shadow-2xl">
                                             {athlete.membershipType === 'PRG' ? (
                                                 <img src="/images/prg-logo.png" alt="PRG" className="w-10 h-10 object-contain" />
                                             ) : (
@@ -1083,7 +1083,7 @@ const AthleteDashboard: React.FC = () => {
 
                                     <div className="flex items-center gap-4">
                                         {/* View Toggle */}
-                                        <div className="bg-black p-1 rounded-xl flex items-center border border-neutral-800">
+                                        <div className="bg-transparent p-1 rounded-xl flex items-center border border-neutral-800">
                                             <button
                                                 onClick={() => setPhysicalViewMode('simple')}
                                                 className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${physicalViewMode === 'simple' ? 'bg-neutral-800 text-white shadow-lg' : 'text-gray-500 hover:text-gray-300'}`}
@@ -1247,7 +1247,7 @@ const AthleteDashboard: React.FC = () => {
                                                 { label: 'Speed Endurance', score: athlete.scoreHamstring || 75, note: 'Add 1x specific conditioning session per week.' },
                                                 { label: 'Strength Base', score: athlete.scoreAdduction || 85, note: 'Maintain current strength blocks. Good foundation.' }
                                             ].sort((a, b) => a.score - b.score).map((p, i) => (
-                                                <div key={i} className="bg-black/20 p-4 rounded-2xl border border-white/5 flex flex-col gap-3">
+                                                <div key={i} className="bg-transparent/20 p-4 rounded-2xl border border-white/5 flex flex-col gap-3">
                                                     <div className="flex items-center justify-between">
                                                         <span className="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-neutral-800 rounded-lg text-white font-black text-sm border border-neutral-700">{i + 1}</span>
                                                         <span className={`text-sm font-black ${getTrafficColor(p.score).text}`}>{p.score}/100</span>
@@ -1458,7 +1458,7 @@ const AthleteDashboard: React.FC = () => {
                                                         <span className="w-1 h-6 bg-green-500 rounded-full"></span>
                                                         Dynamo Detail
                                                     </h2>
-                                                    <div className="flex bg-black rounded-lg p-1 border border-neutral-800 h-fit">
+                                                    <div className="flex bg-transparent rounded-lg p-1 border border-neutral-800 h-fit">
                                                         {['lower', 'upper', 'symmetry', 'table'].map((tab) => (
                                                             <button
                                                                 key={tab}

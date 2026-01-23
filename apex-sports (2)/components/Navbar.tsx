@@ -24,7 +24,7 @@ const Navbar: React.FC = () => {
     const isActive = (path: string) => location.pathname === path;
 
     return (
-        <nav className="fixed w-full z-50 bg-[#0a0a2a]/95 backdrop-blur-sm border-b border-gray-800">
+        <nav className="fixed w-full z-50 bg-black/95 backdrop-blur-sm border-b border-gray-800">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-24 relative">
 
@@ -109,7 +109,7 @@ const Navbar: React.FC = () => {
 
             {/* Mobile menu */}
             {isOpen && (
-                <div className="xl:hidden bg-[#0a0a2a] border-b border-gray-800 absolute w-full top-24 left-0">
+                <div className="xl:hidden bg-black border-b border-gray-800 absolute w-full top-24 left-0">
                     <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                         {[...leftLinks, ...rightLinks].map((link) => (
                             <Link
