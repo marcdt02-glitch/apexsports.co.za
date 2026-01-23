@@ -103,17 +103,18 @@ const getReadinessColor = (recent: number, max: number) => {
 import Loading from '../../components/Loading';
 import GoalSetting from '../../components/GoalSetting';
 import PortalMentorship from '../../components/Portal/Mentorship/PortalMentorship';
+import { TacticalWhiteboard } from '../../components/Tactical/TacticalWhiteboard';
 
 // --- Helper Colors ---
 const getThemeColors = (membershipType?: string) => {
     if (membershipType === 'PRG') {
         return {
             primary: '#800000', // Maroon
-            secondary: '#000080', // Navy
-            accent: '#FFD700', // Gold
+            secondary: '#ceb888', // Gold (Metallic) instead of pure Navy for secondary text? Or sticking to Gold.
+            accent: '#000080', // Navy
             text: '#ffffff',
-            bg: 'bg-neutral-900',
-            cardBg: 'bg-[#1a1a2e]'
+            bg: 'bg-[#000020]', // Deep Navy Black
+            cardBg: 'bg-[#0a0a2a]' // Navy Tinted Card
         };
     }
     return {
@@ -897,7 +898,7 @@ const AthleteDashboard: React.FC = () => {
 
                             {/* MENTORSHIP & GOALS */}
                             {(() => {
-                                const isUnlocked = isFullAccess;
+                                const isUnlocked = isFullAccess || athlete.membershipType === 'PRG';
                                 return (
                                     <button
                                         onClick={() => {
@@ -1700,6 +1701,9 @@ const AthleteDashboard: React.FC = () => {
                                             Review match footage, analyze opponent structures, and refine your game intelligence.
                                             This module is tailored for Paul Roos Gymnasium athletes.
                                         </p>
+                                        <div className="w-full h-[600px] border border-white/20 rounded-3xl overflow-hidden shadow-2xl relative z-20 mt-6">
+                                            <TacticalWhiteboard />
+                                        </div>
                                     </div>
                                 </div>
 
