@@ -385,8 +385,8 @@ export const TacticalWhiteboard: React.FC = () => {
     };
 
     return (
-        <div className="flex flex-col gap-6 h-full">
-            <div className="flex flex-col h-full bg-gradient-to-br from-[#800000] via-[#2a0000] to-[#000040] rounded-3xl overflow-hidden border border-[#ceb888]/30 flex-1 min-h-[600px] shadow-2xl">
+        <div className="flex flex-col gap-6 h-full p-2">
+            <div className="flex flex-col h-full bg-[#0a0a2a] rounded-3xl overflow-hidden border border-[#ceb888]/30 flex-1 shadow-2xl relative">
 
                 {/* TOOLBAR */}
                 <div className="bg-[#000000]/80 backdrop-blur-md p-4 flex flex-wrap items-center justify-between border-b border-[#ceb888]/20 gap-4">
@@ -468,10 +468,10 @@ export const TacticalWhiteboard: React.FC = () => {
                     </div>
                 </div>
 
-                {/* CANVAS AREA */}
+                {/* CANVAS AREA - Flex-1 to fill remaining space */}
                 <div
                     ref={containerRef}
-                    className="flex-1 relative overflow-hidden bg-[#0a0a2a] cursor-crosshair select-none w-full h-full"
+                    className="flex-1 relative overflow-hidden bg-[#0a0a2a] cursor-crosshair select-none w-full min-h-[500px]"
                     onMouseMove={handleMouseMove}
                     onMouseUp={handleMouseUp}
                     onMouseDown={startDrawing}
