@@ -100,32 +100,43 @@ export const TacticalWhiteboard: React.FC = () => {
 
         } else if (viewToUse === 'half') {
             // 7 vs 7 Half Field
-            // Attackers
+            // Attackers (Top Down)
             const att = [
-                { x: 50, y: 80 },
-                { x: 30, y: 60 }, { x: 70, y: 60 },
-                { x: 20, y: 40 }, { x: 50, y: 40 }, { x: 80, y: 40 },
-                { x: 50, y: 25 }
+                { x: 50, y: 30 },
+                { x: 30, y: 40 }, { x: 70, y: 40 },
+                { x: 20, y: 55 }, { x: 50, y: 55 }, { x: 80, y: 55 },
+                { x: 50, y: 70 }
             ];
-            // Defenders (GK + 6)
+            // Defenders (GK + 6) - GK at Bottom
             const def = [
-                { x: 50, y: 8 }, // GK
-                { x: 35, y: 20 }, { x: 65, y: 20 },
-                { x: 25, y: 35 }, { x: 45, y: 35 }, { x: 55, y: 35 }, { x: 75, y: 35 }
+                { x: 50, y: 92 }, // GK (Bottom)
+                { x: 35, y: 80 }, { x: 65, y: 80 },
+                { x: 25, y: 65 }, { x: 45, y: 65 }, { x: 55, y: 65 }, { x: 75, y: 65 }
             ];
             att.forEach((p, i) => newTokens.push({ id: now + i, x: p.x, y: p.y, type: 'attacker', label: `${i + 1}` }));
             def.forEach((p, i) => newTokens.push({ id: now + i + 20, x: p.x, y: p.y, type: 'defender', label: i === 0 ? 'GK' : `${i}` }));
             newTokens.push({ id: 999, x: 50, y: 50, type: 'ball' });
 
         } else {
-            // PC Setup (Penalty Corner) - Zoomed in D
-            newTokens.push({ id: 1, x: 48, y: 15, type: 'attacker', label: 'IN' });
-            newTokens.push({ id: 2, x: 45, y: 90, type: 'attacker', label: 'S' });
-            newTokens.push({ id: 3, x: 50, y: 90, type: 'attacker', label: 'H' });
-            newTokens.push({ id: 4, x: 48, y: 10, type: 'defender', label: 'GK' });
-            newTokens.push({ id: 5, x: 42, y: 12, type: 'defender' });
-            newTokens.push({ id: 6, x: 54, y: 12, type: 'defender' });
-            newTokens.push({ id: 999, x: 48, y: 14, type: 'ball' });
+            // PC Setup (Penalty Corner)
+            // 7 Attackers (Top)
+            const att = [
+                { x: 30, y: 15 }, { x: 36, y: 15 }, { x: 42, y: 15 }, // Castle
+                { x: 48, y: 8 }, // Injector (Very Top)
+                { x: 54, y: 15 }, { x: 60, y: 15 }, { x: 66, y: 15 }
+            ];
+
+            // 5 Defenders (Bottom / Goal)
+            const def = [
+                { x: 50, y: 94 }, // GK (Goal Line)
+                { x: 45, y: 92 }, { x: 55, y: 92 }, // Post men
+                { x: 40, y: 90 }, // Runner 1
+                { x: 60, y: 90 }  // Runner 2
+            ];
+
+            att.forEach((p, i) => newTokens.push({ id: now + i, x: p.x, y: p.y, type: 'attacker', label: i === 3 ? 'IN' : 'A' }));
+            def.forEach((p, i) => newTokens.push({ id: now + i + 20, x: p.x, y: p.y, type: 'defender', label: i === 0 ? 'GK' : 'D' }));
+            newTokens.push({ id: 999, x: 48, y: 10, type: 'ball' });
         }
 
         setTokens(newTokens);
@@ -468,7 +479,7 @@ export const TacticalWhiteboard: React.FC = () => {
                 {/* CANVAS AREA - Dynamic Aspect Ratio to fit V2 images */}
                 <div
                     ref={containerRef}
-                    className={`relative overflow-hidden cursor-crosshair select-none w-full shadow-2xl transition-all duration-300 ${view === 'full' ? 'bg-[#0a0a2a] aspect-[3/2] w-full' : 'bg-[#4a89f3] max-w-[800px] mx-auto aspect-[3/4] h-auto'
+                    className={`relative overflow-hidden cursor-crosshair select-none w-full shadow-2xl transition-all duration-300 ${view === 'full' ? 'bg-[#0a0a2a] aspect-[4/3] w-full' : 'bg-[#2c62c6] max-w-[800px] mx-auto aspect-[3/4] h-auto'
                         }`}
                     onMouseMove={handleMouseMove}
                     onMouseUp={handleMouseUp}
