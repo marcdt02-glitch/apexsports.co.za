@@ -378,10 +378,7 @@ export const TacticalWhiteboard: React.FC = () => {
 
     // Helper to get image style based on view
     const getImageStyle = () => {
-        if (view === 'full') return { objectFit: 'contain' as const };
-        if (view === 'half') return { objectFit: 'contain' as const, objectPosition: 'center' };
-        if (view === 'pc') return { objectFit: 'contain' as const, objectPosition: 'center' };
-        return {};
+        return { objectFit: 'cover' as const, objectPosition: 'center', width: '100%', height: '100%' };
     };
 
     return (
@@ -471,7 +468,7 @@ export const TacticalWhiteboard: React.FC = () => {
                 {/* CANVAS AREA - Dynamic Aspect Ratio to fit V2 images */}
                 <div
                     ref={containerRef}
-                    className={`relative overflow-hidden bg-[#0a0a2a] cursor-crosshair select-none w-full shadow-2xl transition-all duration-300 ${view === 'full' ? 'aspect-video w-full' : 'max-w-[500px] mx-auto aspect-[3/4] h-[600px] md:h-auto'
+                    className={`relative overflow-hidden bg-[#0a0a2a] cursor-crosshair select-none w-full shadow-2xl transition-all duration-300 ${view === 'full' ? 'aspect-video w-full' : 'max-w-[800px] mx-auto aspect-[3/4] h-auto'
                         }`}
                     onMouseMove={handleMouseMove}
                     onMouseUp={handleMouseUp}
