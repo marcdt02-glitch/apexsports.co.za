@@ -468,10 +468,11 @@ export const TacticalWhiteboard: React.FC = () => {
                     </div>
                 </div>
 
-                {/* CANVAS AREA - Flex-1 to fill remaining space */}
+                {/* CANVAS AREA - Dynamic Aspect Ratio to fit V2 images */}
                 <div
                     ref={containerRef}
-                    className="flex-1 relative overflow-hidden bg-[#0a0a2a] cursor-crosshair select-none w-full min-h-[500px]"
+                    className={`relative overflow-hidden bg-[#0a0a2a] cursor-crosshair select-none w-full shadow-2xl transition-all duration-300 ${view === 'full' ? 'aspect-video w-full' : 'max-w-[500px] mx-auto aspect-[3/4] h-[600px] md:h-auto'
+                        }`}
                     onMouseMove={handleMouseMove}
                     onMouseUp={handleMouseUp}
                     onMouseDown={startDrawing}
