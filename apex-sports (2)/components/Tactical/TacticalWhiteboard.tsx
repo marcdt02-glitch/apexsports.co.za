@@ -468,7 +468,7 @@ export const TacticalWhiteboard: React.FC = () => {
                 {/* CANVAS AREA - Dynamic Aspect Ratio to fit V2 images */}
                 <div
                     ref={containerRef}
-                    className={`relative overflow-hidden bg-[#0a0a2a] cursor-crosshair select-none w-full shadow-2xl transition-all duration-300 ${view === 'full' ? 'aspect-video w-full' : 'max-w-[800px] mx-auto aspect-[3/4] h-auto'
+                    className={`relative overflow-hidden cursor-crosshair select-none w-full shadow-2xl transition-all duration-300 ${view === 'full' ? 'bg-[#0a0a2a] aspect-[3/2] w-full' : 'bg-[#4a89f3] max-w-[800px] mx-auto aspect-[3/4] h-auto'
                         }`}
                     onMouseMove={handleMouseMove}
                     onMouseUp={handleMouseUp}
