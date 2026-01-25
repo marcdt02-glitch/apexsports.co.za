@@ -1048,7 +1048,7 @@ const AthleteDashboard: React.FC = () => {
                                             {athlete.membershipType === 'PRG' && athlete.productTier !== 'Apex' && (!athlete.package || !athlete.package.includes('Apex')) ? (
                                                 <img src="/images/prg-logo.png" alt="PRG" className="w-10 h-10 object-contain" />
                                             ) : (
-                                                <img src="/images/logo.png" alt="Apex" className="w-8 h-8 object-contain" />
+                                                <img src="/images/logo.png" alt="Apex" className="w-full h-full object-cover rounded-full" />
                                             )}
                                         </div>
                                     </div>
