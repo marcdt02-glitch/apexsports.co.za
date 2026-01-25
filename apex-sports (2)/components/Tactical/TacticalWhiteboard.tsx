@@ -393,7 +393,7 @@ export const TacticalWhiteboard: React.FC = () => {
     };
 
     return (
-        <div className="flex flex-col gap-6 h-full p-2">
+        <div className="flex flex-col gap-6 h-full">
             <div className="flex flex-col h-full bg-[#0a0a2a] rounded-3xl overflow-hidden border border-[#ceb888]/30 flex-1 shadow-2xl relative">
 
                 {/* TOOLBAR */}
@@ -479,7 +479,7 @@ export const TacticalWhiteboard: React.FC = () => {
                 {/* CANVAS AREA - Dynamic Aspect Ratio to fit V2 images */}
                 <div
                     ref={containerRef}
-                    className={`relative overflow-hidden cursor-crosshair select-none w-full shadow-2xl transition-all duration-300 ${view === 'full' ? 'bg-[#0a0a2a] aspect-[4/3] w-full' : 'bg-[#2c62c6] max-w-[800px] mx-auto aspect-[3/4] h-auto'
+                    className={`relative overflow-hidden cursor-crosshair select-none w-full shadow-2xl transition-all duration-300 ${view === 'full' ? 'bg-[#0a0a2a] aspect-square w-full' : 'bg-[#2c62c6] max-w-[800px] mx-auto aspect-[3/4] h-auto'
                         }`}
                     onMouseMove={handleMouseMove}
                     onMouseUp={handleMouseUp}
