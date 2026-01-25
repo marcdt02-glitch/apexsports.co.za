@@ -106,8 +106,11 @@ import PortalMentorship from '../../components/Portal/Mentorship/PortalMentorshi
 import { TacticalWhiteboard } from '../../components/Tactical/TacticalWhiteboard';
 
 // --- Helper Colors ---
-const getThemeColors = (membershipType?: string, productTier?: string) => {
-    if (membershipType === 'PRG' && productTier !== 'Apex') {
+const getThemeColors = (membershipType?: string, productTier?: string, pkg?: string) => {
+    // Check if user is Apex (override PRG)
+    const isApex = (productTier === 'Apex') || (pkg && pkg.includes('Apex'));
+
+    if (membershipType === 'PRG' && !isApex) {
         return {
             primary: '#800000', // Maroon
             secondary: '#ceb888', // Gold (Metallic) instead of pure Navy for secondary text? Or sticking to Gold.
@@ -164,10 +167,8 @@ const AthleteDashboard: React.FC = () => {
     // DEBUG: Component Mount Log
     React.useEffect(() => {
         if (athlete) {
-            console.log("📊 Dashboard Loaded for:", athlete.name);
-            const pkg = athlete?.package?.toLowerCase() || '';
-            const theme = getThemeColors(athlete?.membershipType, athlete?.productTier);
-            setTheme(theme);
+            console.log("📊 Dashboard Loaded for:", athlete.name, athlete);
+            setTheme(getThemeColors(athlete.membershipType, athlete.productTier, athlete.package));
         }
     }, [athlete]);
 
@@ -880,11 +881,19 @@ const AthleteDashboard: React.FC = () => {
                             <WrappedNavItem active={activeView === 'home'} onClick={() => { setActiveView('home'); setSidebarOpen(false); }} icon={Home} label="Home" theme={theme} />
 
                             {/* PHYSICAL RESULTS (Apex, Mentorship, Standard - Hide for pure PRG) */}
-                            {(athlete.membershipType !== 'PRG' || athlete.productTier === 'Apex' || athlete.package === 'Mentorship') && (
-                                <>
-                                    <WrappedNavItem active={activeView === 'dashboard'} onClick={() => { setActiveView('dashboard'); setSidebarOpen(false); }} icon={BarChart2} label="Physical Results" theme={theme} />
-                                </>
-                            )}
+                            {(() => {
+                                const isApex = athlete.productTier === 'Apex' || (athlete?.package && athlete.package.includes('Apex'));
+                                const isMentorship = athlete.package === 'Mentorship' || athlete.productTier === 'Mentorship';
+                                const isPRG = athlete.membershipType === 'PRG';
+
+                                // Show if NOT PRG, OR if specific Apex/Mentorship override exists
+                                if (!isPRG || isApex || isMentorship) {
+                                    return (
+                                        <WrappedNavItem active={activeView === 'dashboard'} onClick={() => { setActiveView('dashboard'); setSidebarOpen(false); }} icon={BarChart2} label="Physical Results" theme={theme} />
+                                    );
+                                }
+                                return null;
+                            })()}
 
                             {/* TACTICAL (PRG, Apex, Mentorship) */}
                             {(athlete.membershipType === 'PRG' || athlete.productTier === 'Apex' || athlete.package === 'Mentorship' || athlete.productTier === 'Mentorship') && (
@@ -921,25 +930,41 @@ const AthleteDashboard: React.FC = () => {
                             })()}
 
                             {/* REPORTS */}
-                            {(athlete.membershipType !== 'PRG' || athlete.productTier === 'Apex' || athlete.package === 'Mentorship') && (() => {
-                                const isUnlocked = isFullAccess;
-                                return (
-                                    <button
-                                        onClick={() => { if (isUnlocked) { setActiveView('reports'); setSidebarOpen(false); } }}
-                                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeView === 'reports' ? (theme.primary === '#800000' ? 'font-bold shadow-lg' : 'bg-white text-black font-bold') : isUnlocked ? 'text-gray-400 hover:text-white hover:bg-neutral-800' : 'text-gray-600 cursor-not-allowed opacity-50'}`}
-                                        style={activeView === 'reports' && theme.primary === '#800000' ? { backgroundColor: theme.accent, color: theme.secondary } : {}}
-                                    >
-                                        <FileText className="w-5 h-5" />
-                                        <span>Reports</span>
-                                        {!isUnlocked && <Lock className="w-4 h-4 ml-auto" />}
-                                    </button>
-                                );
+                            {(() => {
+                                const isApex = athlete.productTier === 'Apex' || (athlete?.package && athlete.package.includes('Apex'));
+                                const isMentorship = athlete.package === 'Mentorship' || athlete.productTier === 'Mentorship';
+                                const isPRG = athlete.membershipType === 'PRG';
+
+                                if (!isPRG || isApex || isMentorship) {
+                                    const isUnlocked = isFullAccess;
+                                    return (
+                                        <button
+                                            onClick={() => { if (isUnlocked) { setActiveView('reports'); setSidebarOpen(false); } }}
+                                            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeView === 'reports' ? (theme.primary === '#800000' ? 'font-bold shadow-lg' : 'bg-white text-black font-bold') : isUnlocked ? 'text-gray-400 hover:text-white hover:bg-neutral-800' : 'text-gray-600 cursor-not-allowed opacity-50'}`}
+                                            style={activeView === 'reports' && theme.primary === '#800000' ? { backgroundColor: theme.accent, color: theme.secondary } : {}}
+                                        >
+                                            <FileText className="w-5 h-5" />
+                                            <span>Reports</span>
+                                            {!isUnlocked && <Lock className="w-4 h-4 ml-auto" />}
+                                        </button>
+                                    );
+                                }
+                                return null;
                             })()}
 
-                            {/* WELLNESS (Hide for PRG) */}
-                            {(athlete.membershipType !== 'PRG' || athlete.productTier === 'Apex' || athlete.package === 'Mentorship') && (
-                                <WrappedNavItem active={activeView === 'wellness'} onClick={() => { setActiveView('wellness'); setSidebarOpen(false); }} icon={Activity} label="Wellness & CNS" theme={theme} />
-                            )}
+                            {/* WELLNESS (Hide for pure PRG) */}
+                            {(() => {
+                                const isApex = athlete.productTier === 'Apex' || (athlete?.package && athlete.package.includes('Apex'));
+                                const isMentorship = athlete.package === 'Mentorship' || athlete.productTier === 'Mentorship';
+                                const isPRG = athlete.membershipType === 'PRG';
+
+                                if (!isPRG || isApex || isMentorship) {
+                                    return (
+                                        <WrappedNavItem active={activeView === 'wellness'} onClick={() => { setActiveView('wellness'); setSidebarOpen(false); }} icon={Activity} label="Wellness & CNS" theme={theme} />
+                                    );
+                                }
+                                return null;
+                            })()}
                         </div>
 
                         <div className="mt-auto px-6">
@@ -1020,7 +1045,7 @@ const AthleteDashboard: React.FC = () => {
                                     <div className="relative flex-shrink-0">
                                         <div className="absolute -inset-2 bg-gradient-to-r from-red-600 to-blue-600 rounded-full opacity-20 blur-lg animate-pulse"></div>
                                         <div className="relative w-12 h-12 bg-transparent rounded-full flex items-center justify-center border-2 border-white/10 shadow-2xl">
-                                            {athlete.membershipType === 'PRG' && athlete.productTier !== 'Apex' ? (
+                                            {athlete.membershipType === 'PRG' && athlete.productTier !== 'Apex' && (!athlete.package || !athlete.package.includes('Apex')) ? (
                                                 <img src="/images/prg-logo.png" alt="PRG" className="w-10 h-10 object-contain" />
                                             ) : (
                                                 <img src="/images/logo.png" alt="Apex" className="w-8 h-8 object-contain" />
