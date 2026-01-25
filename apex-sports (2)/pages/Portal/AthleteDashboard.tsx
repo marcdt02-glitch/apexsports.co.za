@@ -106,8 +106,8 @@ import PortalMentorship from '../../components/Portal/Mentorship/PortalMentorshi
 import { TacticalWhiteboard } from '../../components/Tactical/TacticalWhiteboard';
 
 // --- Helper Colors ---
-const getThemeColors = (membershipType?: string) => {
-    if (membershipType === 'PRG') {
+const getThemeColors = (membershipType?: string, productTier?: string) => {
+    if (membershipType === 'PRG' && productTier !== 'Apex') {
         return {
             primary: '#800000', // Maroon
             secondary: '#ceb888', // Gold (Metallic) instead of pure Navy for secondary text? Or sticking to Gold.
@@ -165,8 +165,9 @@ const AthleteDashboard: React.FC = () => {
     React.useEffect(() => {
         if (athlete) {
             console.log("📊 Dashboard Loaded for:", athlete.name);
-            // Set Theme
-            setTheme(getThemeColors(athlete.membershipType));
+            const pkg = athlete?.package?.toLowerCase() || '';
+            const theme = getThemeColors(athlete?.membershipType, athlete?.productTier);
+            setTheme(theme);
         }
     }, [athlete]);
 
@@ -1019,7 +1020,7 @@ const AthleteDashboard: React.FC = () => {
                                     <div className="relative flex-shrink-0">
                                         <div className="absolute -inset-2 bg-gradient-to-r from-red-600 to-blue-600 rounded-full opacity-20 blur-lg animate-pulse"></div>
                                         <div className="relative w-12 h-12 bg-transparent rounded-full flex items-center justify-center border-2 border-white/10 shadow-2xl">
-                                            {athlete.membershipType === 'PRG' ? (
+                                            {athlete.membershipType === 'PRG' && athlete.productTier !== 'Apex' ? (
                                                 <img src="/images/prg-logo.png" alt="PRG" className="w-10 h-10 object-contain" />
                                             ) : (
                                                 <img src="/images/logo.png" alt="Apex" className="w-8 h-8 object-contain" />
