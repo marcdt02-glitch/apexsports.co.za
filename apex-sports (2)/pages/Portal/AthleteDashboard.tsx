@@ -885,8 +885,8 @@ const AthleteDashboard: React.FC = () => {
                                 </>
                             )}
 
-                            {/* TACTICAL (PRG Only) */}
-                            {athlete.membershipType === 'PRG' && (
+                            {/* TACTICAL (PRG, Apex, Mentorship) */}
+                            {(athlete.membershipType === 'PRG' || athlete.productTier === 'Apex' || athlete.package === 'Mentorship' || athlete.productTier === 'Mentorship') && (
                                 <WrappedNavItem active={activeView === 'tactical'} onClick={() => { setActiveView('tactical'); setSidebarOpen(false); }} icon={Target} label="Tactical Analysis" theme={theme} />
                             )}
 
@@ -1699,7 +1699,7 @@ const AthleteDashboard: React.FC = () => {
                                         <h2 className="text-3xl font-black text-white uppercase italic mb-4">Tactical Analysis</h2>
                                         <p className="text-gray-400 max-w-2xl text-lg">
                                             Review match footage, analyze opponent structures, and refine your game intelligence.
-                                            This module is tailored for Paul Roos Gymnasium athletes.
+                                            Tailored for elite performance analysis.
                                         </p>
                                         <div className="w-full h-[850px] border border-white/20 rounded-3xl overflow-hidden shadow-2xl relative z-20 mt-6 bg-[#0a0a2a]">
                                             <TacticalWhiteboard />
