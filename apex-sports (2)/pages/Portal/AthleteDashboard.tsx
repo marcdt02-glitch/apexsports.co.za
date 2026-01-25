@@ -1727,7 +1727,7 @@ const AthleteDashboard: React.FC = () => {
                                             Review match footage, analyze opponent structures, and refine your game intelligence.
                                             Tailored for elite performance analysis.
                                         </p>
-                                        <div className="w-full h-[850px] border border-white/20 rounded-3xl overflow-hidden shadow-2xl relative z-20 mt-6 bg-[#0a0a2a]">
+                                        <div className="w-full min-h-[1200px] h-auto border border-white/20 rounded-3xl overflow-hidden shadow-2xl relative z-20 mt-6 bg-[#0a0a2a]">
                                             <TacticalWhiteboard theme={theme} />
                                         </div>
                                     </div>

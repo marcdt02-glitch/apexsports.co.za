@@ -480,7 +480,7 @@ export const TacticalWhiteboard: React.FC<{ theme?: any }> = ({ theme }) => {
                 {/* CANVAS AREA - Dynamic Aspect Ratio to fit V2 images */}
                 <div
                     ref={containerRef}
-                    className={`relative overflow-hidden cursor-crosshair select-none w-full shadow-2xl transition-all duration-300 ${view === 'full' ? 'bg-[#0a0a2a] aspect-[3/4] w-full' : (isPRG ? 'bg-[#2c62c6]' : 'bg-blue-600') + ' max-w-[800px] mx-auto aspect-[3/4] h-auto'
+                    className={`relative overflow-hidden cursor-crosshair select-none w-full shadow-2xl transition-all duration-300 ${view === 'full' ? 'bg-[#0a0a2a] aspect-[3/5] w-full' : (isPRG ? 'bg-[#2c62c6]' : 'bg-blue-600') + ' max-w-[800px] mx-auto aspect-[3/4] h-auto'
                         }`}
                     onMouseMove={handleMouseMove}
                     onMouseUp={handleMouseUp}
@@ -510,10 +510,10 @@ export const TacticalWhiteboard: React.FC<{ theme?: any }> = ({ theme }) => {
                             key={token.id}
                             onMouseDown={(e) => handleTokenDown(e, token.id)}
                             className={`absolute w-10 h-10 rounded-full flex items-center justify-center font-black text-xs border-2 shadow-2xl cursor-move z-20 hover:scale-110 active:scale-125 transition-all
-                                ${token.type === 'attacker' ? 'bg-gradient-to-br from-[#800000] to-[#500000] text-white border-white/20' :
-                                    token.type === 'defender' ? 'bg-gradient-to-br from-[#000050] to-[#000020] text-white border-white/20' :
+                                ${token.type === 'attacker' ? 'bg-orange-500 text-white border-white' :
+                                    token.type === 'defender' ? 'bg-cyan-500 text-black border-white' :
                                         'bg-white text-black border-gray-300'}
-                                ${selectedToken === token.id ? 'ring-4 ring-[#ceb888] scale-110' : ''}
+                                ${selectedToken === token.id ? 'ring-4 ring-yellow-400 scale-110' : ''}
                             `}
                             style={{ left: `${token.x}%`, top: `${token.y}%`, transform: 'translate(-50%, -50%)' }}
                         >
