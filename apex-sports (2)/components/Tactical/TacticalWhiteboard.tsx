@@ -480,7 +480,7 @@ export const TacticalWhiteboard: React.FC<{ theme?: any }> = ({ theme }) => {
                 {/* CANVAS AREA - Dynamic Aspect Ratio to fit V2 images */}
                 <div
                     ref={containerRef}
-                    className={`relative overflow-hidden cursor-crosshair select-none w-full shadow-2xl transition-all duration-300 ${view === 'full' ? 'bg-[#0a0a2a] aspect-[3/5] w-full' : (isPRG ? 'bg-[#2c62c6]' : 'bg-blue-600') + ' max-w-[800px] mx-auto aspect-[3/4] h-auto'
+                    className={`relative overflow-hidden cursor-crosshair select-none w-full shadow-2xl transition-all duration-300 ${view === 'full' ? 'bg-[#0a0a2a] aspect-[3/4] w-full' : (isPRG ? 'bg-[#2c62c6]' : 'bg-blue-600') + ' max-w-[800px] mx-auto aspect-[3/4] h-auto'
                         }`}
                     onMouseMove={handleMouseMove}
                     onMouseUp={handleMouseUp}
@@ -491,7 +491,7 @@ export const TacticalWhiteboard: React.FC<{ theme?: any }> = ({ theme }) => {
                     {/* Dynamic Field Background logic */}
                     <img
                         src={view === 'pc' ? '/images/board-pc.png' : view === 'half' ? '/images/board-half.png' : '/images/board-full.png'}
-                        className="absolute inset-0 w-full h-full pointer-events-none opacity-100 transition-all duration-500"
+                        className={`absolute inset-0 w-full h-full pointer-events-none opacity-100 transition-all duration-500 ${view === 'full' ? 'rotate-90 scale-125' : ''}`}
                         style={getImageStyle()}
                         alt="Pitch"
                     />
