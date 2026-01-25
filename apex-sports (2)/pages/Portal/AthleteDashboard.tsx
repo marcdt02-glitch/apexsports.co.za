@@ -878,8 +878,8 @@ const AthleteDashboard: React.FC = () => {
                             {/* HOME */}
                             <WrappedNavItem active={activeView === 'home'} onClick={() => { setActiveView('home'); setSidebarOpen(false); }} icon={Home} label="Home" theme={theme} />
 
-                            {/* PHYSICAL RESULTS (Hide for PRG) */}
-                            {athlete.membershipType !== 'PRG' && (
+                            {/* PHYSICAL RESULTS (Apex, Mentorship, Standard - Hide for pure PRG) */}
+                            {(athlete.membershipType !== 'PRG' || athlete.productTier === 'Apex' || athlete.package === 'Mentorship') && (
                                 <>
                                     <WrappedNavItem active={activeView === 'dashboard'} onClick={() => { setActiveView('dashboard'); setSidebarOpen(false); }} icon={BarChart2} label="Physical Results" theme={theme} />
                                 </>
@@ -920,7 +920,7 @@ const AthleteDashboard: React.FC = () => {
                             })()}
 
                             {/* REPORTS */}
-                            {athlete.membershipType !== 'PRG' && (() => {
+                            {(athlete.membershipType !== 'PRG' || athlete.productTier === 'Apex' || athlete.package === 'Mentorship') && (() => {
                                 const isUnlocked = isFullAccess;
                                 return (
                                     <button
@@ -936,7 +936,7 @@ const AthleteDashboard: React.FC = () => {
                             })()}
 
                             {/* WELLNESS (Hide for PRG) */}
-                            {athlete.membershipType !== 'PRG' && (
+                            {(athlete.membershipType !== 'PRG' || athlete.productTier === 'Apex' || athlete.package === 'Mentorship') && (
                                 <WrappedNavItem active={activeView === 'wellness'} onClick={() => { setActiveView('wellness'); setSidebarOpen(false); }} icon={Activity} label="Wellness & CNS" theme={theme} />
                             )}
                         </div>
