@@ -30,7 +30,8 @@ interface SavedPlay {
     date: string;
 }
 
-export const TacticalWhiteboard: React.FC = () => {
+export const TacticalWhiteboard: React.FC<{ theme?: any }> = ({ theme }) => {
+    const isPRG = theme?.primary === '#800000';
     const [view, setView] = useState<'full' | 'half' | 'pc'>('full');
     const [mode, setMode] = useState<'drag' | 'draw' | 'line' | 'arrow' | 'text'>('drag');
     const [tokens, setTokens] = useState<Token[]>([]);
@@ -394,10 +395,10 @@ export const TacticalWhiteboard: React.FC = () => {
 
     return (
         <div className="flex flex-col gap-6 h-full">
-            <div className="flex flex-col h-full bg-[#0a0a2a] rounded-3xl overflow-hidden border border-[#ceb888]/30 flex-1 shadow-2xl relative">
+            <div className={`flex flex-col h-full rounded-3xl overflow-hidden border flex-1 shadow-2xl relative transition-colors ${isPRG ? 'bg-[#0a0a2a] border-[#ceb888]/30' : 'bg-neutral-900 border-blue-500/30'}`}>
 
                 {/* TOOLBAR */}
-                <div className="bg-[#000000]/80 backdrop-blur-md p-4 flex flex-wrap items-center justify-between border-b border-[#ceb888]/20 gap-4">
+                <div className={`backdrop-blur-md p-4 flex flex-wrap items-center justify-between border-b gap-4 ${isPRG ? 'bg-[#000000]/80 border-[#ceb888]/20' : 'bg-neutral-950/80 border-blue-500/20'}`}>
 
                     {/* View Switcher */}
                     <div className="flex items-center gap-1 bg-white/5 p-1 rounded-lg border border-white/10">
@@ -406,7 +407,7 @@ export const TacticalWhiteboard: React.FC = () => {
                                 key={v}
                                 onClick={() => resetBoard(v)}
                                 className={`px-4 py-2 rounded-md text-sm font-black uppercase tracking-wider transition-all ${view === v
-                                    ? 'bg-gradient-to-r from-[#800000] to-[#600000] text-white shadow-lg'
+                                    ? (isPRG ? 'bg-gradient-to-r from-[#800000] to-[#600000] text-white shadow-lg' : 'bg-blue-600 text-white shadow-lg')
                                     : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
                             >
                                 {v === 'pc' ? 'Penalty Corners' : v === 'half' ? 'Half Field' : 'Full Field'}
@@ -469,7 +470,7 @@ export const TacticalWhiteboard: React.FC = () => {
                             {isRecording ? 'STOP REC' : 'REC'}
                         </button>
 
-                        <button onClick={saveCurrentPlay} className="flex items-center gap-2 bg-[#ceb888] text-black font-black px-6 py-2 rounded-lg hover:bg-white transition-all shadow-lg hover:shadow-[#ceb888]/20">
+                        <button onClick={saveCurrentPlay} className={`flex items-center gap-2 text-black font-black px-6 py-2 rounded-lg hover:bg-white transition-all shadow-lg ${isPRG ? 'bg-[#ceb888] hover:shadow-[#ceb888]/20' : 'bg-blue-500 hover:shadow-blue-500/20'}`}>
                             <Save className="w-4 h-4" />
                             SAVE
                         </button>
@@ -479,7 +480,7 @@ export const TacticalWhiteboard: React.FC = () => {
                 {/* CANVAS AREA - Dynamic Aspect Ratio to fit V2 images */}
                 <div
                     ref={containerRef}
-                    className={`relative overflow-hidden cursor-crosshair select-none w-full shadow-2xl transition-all duration-300 ${view === 'full' ? 'bg-[#0a0a2a] aspect-square w-full' : 'bg-[#2c62c6] max-w-[800px] mx-auto aspect-[3/4] h-auto'
+                    className={`relative overflow-hidden cursor-crosshair select-none w-full shadow-2xl transition-all duration-300 ${view === 'full' ? 'bg-[#0a0a2a] aspect-[3/4] w-full' : (isPRG ? 'bg-[#2c62c6]' : 'bg-blue-600') + ' max-w-[800px] mx-auto aspect-[3/4] h-auto'
                         }`}
                     onMouseMove={handleMouseMove}
                     onMouseUp={handleMouseUp}

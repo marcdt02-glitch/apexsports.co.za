@@ -1728,7 +1728,7 @@ const AthleteDashboard: React.FC = () => {
                                             Tailored for elite performance analysis.
                                         </p>
                                         <div className="w-full h-[850px] border border-white/20 rounded-3xl overflow-hidden shadow-2xl relative z-20 mt-6 bg-[#0a0a2a]">
-                                            <TacticalWhiteboard />
+                                            <TacticalWhiteboard theme={theme} />
                                         </div>
                                     </div>
                                 </div>
