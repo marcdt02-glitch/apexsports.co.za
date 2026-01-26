@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Download, Save, Target, Brain, Activity, Shield, Zap, Info, Check, Printer, X, Layout as LayoutIcon, Calendar, List, Award, Menu as MenuIcon } from 'lucide-react';
 import jsPDF from 'jspdf';
-import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { updateAthleteGoals } from '../utils/googleIntegration';
 
@@ -65,7 +64,6 @@ const CustomTooltip = ({ title, items }: { title: string, items: string[] }) => 
 );
 
 interface GoalSettingProps {
-    athleteName: string;
     athleteName: string;
     tier: string;
     email: string;
