@@ -480,7 +480,9 @@ export const TacticalWhiteboard: React.FC<{ theme?: any }> = ({ theme }) => {
                 {/* CANVAS AREA - Dynamic Aspect Ratio to fit V2 images */}
                 <div
                     ref={containerRef}
-                    className={`relative overflow-hidden cursor-crosshair select-none w-full shadow-2xl transition-all duration-300 ${view === 'full' ? 'bg-[#0a0a2a] aspect-[2/3] w-full' : (isPRG ? 'bg-[#2c62c6]' : 'bg-blue-600') + ' max-w-[800px] mx-auto aspect-[3/4] h-auto'
+                    className={`relative overflow-hidden cursor-crosshair select-none w-full shadow-2xl transition-all duration-300 mx-auto ${view === 'full'
+                            ? 'bg-[#0a0a2a] aspect-[2/3] max-w-[600px]'
+                            : (isPRG ? 'bg-[#2c62c6]' : 'bg-blue-600') + ' w-full max-w-6xl aspect-video'
                         }`}
                     onMouseMove={handleMouseMove}
                     onMouseUp={handleMouseUp}
@@ -491,7 +493,10 @@ export const TacticalWhiteboard: React.FC<{ theme?: any }> = ({ theme }) => {
                     {/* Dynamic Field Background logic */}
                     <img
                         src={view === 'pc' ? '/images/board-pc.png' : view === 'half' ? '/images/board-half.png' : '/images/board-full.png'}
-                        className={`absolute inset-0 w-full h-full pointer-events-none opacity-100 transition-all duration-500 ${view === 'full' ? 'rotate-90 scale-[1.75] object-contain' : view === 'half' ? 'scale-90 object-cover' : 'object-cover'}`}
+                        className={`absolute inset-0 w-full h-full pointer-events-none opacity-100 transition-all duration-500 ${view === 'full' ? 'rotate-90 scale-[1.75] object-contain'
+                                : view === 'half' ? 'scale-90 object-contain'
+                                    : 'object-contain'
+                            }`}
                         style={view === 'full' ? { objectPosition: 'center' } : getImageStyle()}
                         alt="Pitch"
                     />
