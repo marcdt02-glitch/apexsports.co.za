@@ -69,6 +69,23 @@ export const updateAthleteGoals = async (email: string, goals: { year: string, p
     }
 };
 
+export const saveGoalQuery = async (email: string, newGoal: string): Promise<boolean> => {
+    try {
+        console.log("📤 Saving New Goal...", { email, newGoal });
+        const params = new URLSearchParams();
+        params.append('action', 'saveGoal');
+        params.append('email', email);
+        params.append('goal', newGoal);
+
+        const response = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: params });
+        const result = await response.json();
+        return result.status === 'success';
+    } catch (e) {
+        console.error("Failed to save goal:", e);
+        return false;
+    }
+};
+
 export const fetchAthleteFromGoogle = async (email: string, pin: string): Promise<AthleteData | null> => {
     if (USE_MOCK_FALLBACK) {
         console.log("Google Integration: Using Mock Fallback");

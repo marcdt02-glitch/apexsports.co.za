@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Save, Plus, Clock, MessageSquare } from 'lucide-react';
+import { Save, Plus, Clock, MessageSquare, Target } from 'lucide-react';
 import { saveGoalQuery } from '../utils/googleIntegration';
 
 interface GoalSettingProps {
