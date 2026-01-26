@@ -146,6 +146,6 @@ const GoalSetting: React.FC<GoalSettingProps> = ({ athleteName, email, initialGo
 };
 
 // Simple icon import fallback if Target not imported
-import { Target } from 'lucide-react';
+
 
 export default GoalSetting;
