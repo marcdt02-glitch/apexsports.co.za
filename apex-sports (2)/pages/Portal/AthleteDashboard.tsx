@@ -179,6 +179,17 @@ const AthleteDashboard: React.FC = () => {
     const [showReviewModal, setShowReviewModal] = useState(false);
     const [isSavingReview, setIsSavingReview] = useState(false);
 
+    // View State (Moved up to fix Hook Error #310)
+    const [physicalViewMode, setPhysicalViewMode] = useState<'simple' | 'advanced'>('simple');
+
+    // PILLARS STATE (Moved up to fix Hook Error #310)
+    const [pillarRatings, setPillarRatings] = useState({
+        physical: 80,
+        technical: 65,
+        tactical: 90,
+        psychological: 85
+    });
+
     React.useEffect(() => {
         if (!athlete && athleteId) {
             const timer = setTimeout(() => setSearchTimeout(true), 5000);
@@ -200,7 +211,8 @@ const AthleteDashboard: React.FC = () => {
     }
 
     // View State
-    const [physicalViewMode, setPhysicalViewMode] = useState<'simple' | 'advanced'>('simple');
+    // View State
+    // const [physicalViewMode, setPhysicalViewMode] = useState<'simple' | 'advanced'>('simple'); // Moved up
 
     // Helper for Traffic Light
     const getTrafficColor = (score: number) => {
