@@ -307,12 +307,7 @@ const AthleteDashboard: React.FC = () => {
     const showHeroStat = showAdvancedMetrics; // Only show for Advanced tiers (Clinical)
 
     // PILLARS STATE
-    const [pillarRatings, setPillarRatings] = useState({
-        physical: 80,
-        technical: 65,
-        tactical: 70,
-        lifestyle: 70
-    });
+    // (Moved to top)
 
     // SCIENCE EXPLAINED STATE
     const [showScience, setShowScience] = useState<'physical' | 'pillars' | 'wellness' | null>(null);
