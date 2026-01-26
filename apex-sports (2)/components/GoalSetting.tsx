@@ -1,7 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Download, Save, Target, Brain, Activity, Shield, Zap, Info, Check, Printer, X, Layout as LayoutIcon, Calendar, List, Award, Menu as MenuIcon } from 'lucide-react';
 import jsPDF from 'jspdf';
+import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { updateAthleteGoals } from '../utils/googleIntegration';
 
 // --- Types ---
 type Tab = 'seasonOutcome' | 'seasonProcess' | 'monthly' | 'weekly' | 'cycleReview';
@@ -64,10 +66,13 @@ const CustomTooltip = ({ title, items }: { title: string, items: string[] }) => 
 
 interface GoalSettingProps {
     athleteName: string;
+    athleteName: string;
     tier: string;
+    email: string;
+    initialGoals?: any;
 }
 
-const GoalSetting: React.FC<GoalSettingProps> = ({ athleteName, tier }) => {
+const GoalSetting: React.FC<GoalSettingProps> = ({ athleteName, tier, email, initialGoals }) => {
     const [activeTab, setActiveTab] = useState<Tab>('seasonOutcome');
     const [goals, setGoals] = useState<GoalsData>({
         seasonOutcome: { psychological: '', technical: '', tactical: '', physical: '' },
@@ -81,6 +86,23 @@ const GoalSetting: React.FC<GoalSettingProps> = ({ athleteName, tier }) => {
             pivot: ''
         }
     });
+
+    // Load Initial Data
+    useEffect(() => {
+        if (initialGoals) {
+            console.log("📥 Loading Initial Goals:", initialGoals);
+            try {
+                setGoals(prev => ({
+                    ...prev,
+                    seasonOutcome: typeof initialGoals.year === 'string' && initialGoals.year.startsWith('{') ? JSON.parse(initialGoals.year) : prev.seasonOutcome,
+                    seasonProcess: typeof initialGoals.process === 'string' && initialGoals.process.startsWith('{') ? JSON.parse(initialGoals.process) : prev.seasonProcess,
+                    cycleReview: typeof initialGoals.why === 'string' && initialGoals.why.startsWith('{') ? JSON.parse(initialGoals.why) : prev.cycleReview
+                }));
+            } catch (e) {
+                console.error("Failed to parse initial goals", e);
+            }
+        }
+    }, [initialGoals]);
 
     const [isSaving, setIsSaving] = useState(false);
     const [showExportModal, setShowExportModal] = useState(false);
@@ -108,9 +130,27 @@ const GoalSetting: React.FC<GoalSettingProps> = ({ athleteName, tier }) => {
         }));
     };
 
-    const handleSave = () => {
+    const handleSave = async () => {
         setIsSaving(true);
-        setTimeout(() => { setIsSaving(false); alert("Goals saved successfully!"); }, 1000);
+        try {
+            const payload = {
+                year: JSON.stringify(goals.seasonOutcome),
+                process: JSON.stringify(goals.seasonProcess),
+                why: JSON.stringify(goals.cycleReview)
+            };
+
+            const success = await updateAthleteGoals(email, payload);
+            if (success) {
+                alert("✅ Goals synced to APEX Database!");
+            } else {
+                alert("❌ Sync failed. Please try again.");
+            }
+        } catch (e) {
+            console.error("Save error", e);
+            alert("Error saving goals.");
+        } finally {
+            setIsSaving(false);
+        }
     };
 
     const generatePDF = async (mode?: 'dark' | 'light') => {
