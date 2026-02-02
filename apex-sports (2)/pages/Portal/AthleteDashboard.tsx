@@ -197,6 +197,34 @@ const AthleteDashboard: React.FC = () => {
         }
     }, [athlete, athleteId]);
 
+    // SCIENCE EXPLAINED STATE
+    const [showScience, setShowScience] = useState<'physical' | 'pillars' | 'wellness' | null>(null);
+
+    // --- EDITABLE GOALS STATE ---
+    const [goals, setGoals] = useState({
+        year: '',
+        process: '',
+        why: ''
+    });
+    const [isEditingGoals, setIsEditingGoals] = useState(false);
+
+    // Initialize Goals from LocalStorage (or Athlete Data if available in future)
+    useEffect(() => {
+        if (athlete?.id) {
+            const saved = localStorage.getItem(`apex_goals_${athlete.id}`);
+            if (saved) {
+                setGoals(JSON.parse(saved));
+            } else if (athlete.email === 'admin@apexsports.co.za') {
+                // Default for Admin/Demo
+                setGoals({
+                    year: "Win the League Title & Achieve 90% Pass Completion",
+                    process: "1. Sleep 8+ Hours\n2. Track Wellness Daily\n3. Visualise before every game",
+                    why: "To prove to myself that I can compete at the highest level."
+                });
+            }
+        }
+    }, [athlete?.id]);
+
     if (!athlete) {
         if (searchTimeout) {
             return (
@@ -309,33 +337,11 @@ const AthleteDashboard: React.FC = () => {
     // PILLARS STATE
     // (Moved to top)
 
-    // SCIENCE EXPLAINED STATE
-    const [showScience, setShowScience] = useState<'physical' | 'pillars' | 'wellness' | null>(null);
+    // SCIENCE EXPLAINED STATE (Moved to top)
 
-    // --- EDITABLE GOALS STATE ---
-    const [goals, setGoals] = useState({
-        year: '',
-        process: '',
-        why: ''
-    });
-    const [isEditingGoals, setIsEditingGoals] = useState(false);
+    // --- EDITABLE GOALS STATE (Moved to top)
 
-    // Initialize Goals from LocalStorage (or Athlete Data if available in future)
-    useEffect(() => {
-        if (athlete?.id) {
-            const saved = localStorage.getItem(`apex_goals_${athlete.id}`);
-            if (saved) {
-                setGoals(JSON.parse(saved));
-            } else if (athlete.email === 'admin@apexsports.co.za') {
-                // Default for Admin/Demo
-                setGoals({
-                    year: "Win the League Title & Achieve 90% Pass Completion",
-                    process: "1. Sleep 8+ Hours\n2. Track Wellness Daily\n3. Visualise before every game",
-                    why: "To prove to myself that I can compete at the highest level."
-                });
-            }
-        }
-    }, [athlete?.id]);
+    // Initialize Goals from LocalStorage (or Athlete Data if available in future) (Moved to top)
 
     const handleSaveGoals = () => {
         setIsEditingGoals(false);
