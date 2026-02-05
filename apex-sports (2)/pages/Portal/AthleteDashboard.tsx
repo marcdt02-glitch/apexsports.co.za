@@ -904,13 +904,7 @@ const AthleteDashboard: React.FC = () => {
 
     return (
         <SafetyGuard athlete={athlete}>
-            <CoachReviewModal
-                isOpen={showReviewModal}
-                onClose={() => setShowReviewModal(false)}
-                onConfirm={handleConfirmReview}
-                isSaving={isSavingReview}
-                initialScore={scores?.performance || 75} // Pre-fill with calculated score
-            />
+
             <div className="space-y-8 animate-fade-in">
 
                 <div className="min-h-screen bg-transparent text-white pb-20 font-sans">
