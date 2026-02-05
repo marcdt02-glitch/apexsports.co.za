@@ -114,7 +114,10 @@ export const fetchAthleteFromGoogle = async (email: string, pin: string): Promis
             hipAbductionLeft: 0, hipAbductionRight: 0,
             shoulderInternalRotationLeft: 0, shoulderInternalRotationRight: 0,
             moveHealth: { lastExercises: [] },
-            valdProfileId: '', paymentStatus: 'Active', waiverStatus: 'Signed'
+            valdProfileId: '', paymentStatus: 'Active', waiverStatus: 'Signed',
+            goals: { year: '', process: '', why: '' },
+            coaching: { practiceFolder: '', gameFolder: '', trainingFolder: '' },
+            clinicalNotes: ''
         } as AthleteData;
     }
 

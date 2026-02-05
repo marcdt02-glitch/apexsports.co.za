@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { MessageSquare, X, Send, Bot, AlertTriangle, User, Zap, Activity } from 'lucide-react';
+import { MessageSquare, X, Send, Bot, AlertTriangle, User, Zap } from 'lucide-react';
 
 interface ApexAgentProps {
     athlete?: any; // Optional for Guest mode on Home page

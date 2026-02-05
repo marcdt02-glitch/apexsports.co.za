@@ -174,9 +174,6 @@ const AthleteDashboard: React.FC = () => {
     // Loading State
     const [searchTimeout, setSearchTimeout] = useState(false);
     const [showDebug, setShowDebug] = useState(false); // Debug Toggle
-    // Coach Review Modal State
-    const [showReviewModal, setShowReviewModal] = useState(false);
-    const [isSavingReview, setIsSavingReview] = useState(false);
 
     // View State (Moved up to fix Hook Error #310)
     const [physicalViewMode, setPhysicalViewMode] = useState<'simple' | 'advanced'>('simple');

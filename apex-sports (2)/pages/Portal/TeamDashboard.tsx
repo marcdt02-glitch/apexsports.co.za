@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
-    ChevronRight, Shield, Zap, TrendingUp, LogOut,
+    ChevronRight, Shield, Zap, TrendingUp, LogOut, Trophy, AlertTriangle,
     Brain, Moon, Target, Sparkles, Smile, Download, FileText, Layout, LayoutGrid
 } from 'lucide-react';
+import { Activity as ActivityIcon } from 'lucide-react';
 import {
 
     Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis,
@@ -84,7 +85,14 @@ const generateMockTeam = (count: number): TeamMetric[] => {
         shoulderInternalRotationLeft: 0, shoulderInternalRotationRight: 0,
         moveHealth: { lastExercises: [] },
         valdProfileId: '',
-        paymentStatus: 'Active', waiverStatus: 'Signed'
+        paymentStatus: 'Active', waiverStatus: 'Signed',
+        groinTimeToMax: 1.2, movementQualityScore: 80, imtpRfd200: 0, peakForceAsymmetry: 0,
+        hamstringQuadLeft: 0, hamstringQuadRight: 0, kneeExtensionLeft: 0, kneeExtensionRight: 0,
+        neckExtension: 0, ankleRomLeft: 90, ankleRomRight: 90, shoulderRomLeft: 90, shoulderRomRight: 90,
+        adductionStrengthLeft: 0, adductionStrengthRight: 0,
+        scoreHamstring: 80, scoreQuad: 80, scoreAdduction: 80, scoreAnkle: 80, scoreShoulder: 80, scoreNeck: 80,
+        sleep: 5, stress: 5, soreness: 5, baselineJump: 40,
+        dailyLoad: 500, acwr: 1.1, s2Duration: 0, scoreReadiness: 80,
     } as TeamMetric));
 };
 
@@ -157,7 +165,7 @@ const TeamDashboard: React.FC = () => {
                 <div className="bg-neutral-900/50 border border-neutral-800 rounded-3xl p-6">
                     <div className="flex items-center justify-between mb-6">
                         <h3 className="font-bold flex items-center gap-2">
-                            <Activity className="w-5 h-5 text-blue-400" />
+                            <ActivityIcon className="w-5 h-5 text-blue-400" />
                             Readiness Heatmap (7 Days)
                         </h3>
                         <span className="text-xs bg-neutral-800 px-2 py-1 rounded text-neutral-400">Last Updated: Today</span>
@@ -474,7 +482,7 @@ const TeamDashboard: React.FC = () => {
                             <span className="text-neutral-500 text-sm font-normal">/10</span>
                         </p>
                     </div>
-                    <Activity className="w-8 h-8 text-neutral-700" />
+                    <ActivityIcon className="w-8 h-8 text-neutral-700" />
                 </div>
                 <div className="bg-neutral-900/50 border border-neutral-800 p-6 rounded-2xl flex items-center justify-between">
                     <div>
@@ -731,7 +739,7 @@ const TeamDashboard: React.FC = () => {
 
                     {isLoading ? (
                         <div className="h-96 flex items-center justify-center">
-                            <Activity className="w-10 h-10 text-blue-500 animate-spin" />
+                            <ActivityIcon className="w-10 h-10 text-blue-500 animate-spin" />
                         </div>
                     ) : (
                         <>
