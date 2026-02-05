@@ -1,6 +1,10 @@
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { AthleteData } from '../../utils/dataEngine';
+import { fetchAllAthletes, updateAthleteGoals, updateCoachReview } from '../../utils/googleIntegration';
 import {
     LayoutDashboard, Search, Lock, User, Activity as ActivityIcon, Calendar, Shield,
-    Bell, ChevronRight, X, AlertCircle, RefreshCw, BarChart2
+    Bell, ChevronRight, X, AlertCircle, RefreshCw, BarChart2, Edit3, Save, CheckCircle
 } from 'lucide-react';
 
 export const AdminDashboard: React.FC = () => {
@@ -12,6 +16,34 @@ export const AdminDashboard: React.FC = () => {
     const [filteredAthletes, setFilteredAthletes] = useState<AthleteData[]>([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedAthlete, setSelectedAthlete] = useState<AthleteData | null>(null);
+
+    // Edit State
+    const [isEditingGoals, setIsEditingGoals] = useState(false);
+    const [editGoals, setEditGoals] = useState({ year: '', process: '', why: '' });
+
+    const [isEditingReview, setIsEditingReview] = useState(false);
+    const [editReview, setEditReview] = useState({ score: 0, notes: '' });
+    const [isSaving, setIsSaving] = useState(false);
+
+    // Initialize Edit State when Modal Opens
+    useEffect(() => {
+        if (selectedAthlete) {
+            setEditGoals({
+                year: selectedAthlete.goals?.year || '',
+                process: selectedAthlete.goals?.process || '',
+                why: selectedAthlete.goals?.why || ''
+            });
+
+            setEditReview({
+                score: selectedAthlete.performanceScore || 0,
+                notes: '' // Clinical Notes not generic on core type yet, would need to be fetched or stored. For now, we write-only or display if we map it.
+                // NOTE: 'Clinical Notes' isn't on the core AthleteData interface yet, typically. 
+                // We'll treat it as write-only for this iteration unless we see it in data.
+            });
+            setIsEditingGoals(false);
+            setIsEditingReview(false);
+        }
+    }, [selectedAthlete]);
 
     // Filter Logic
     useEffect(() => {
@@ -53,12 +85,47 @@ export const AdminDashboard: React.FC = () => {
         try {
             const data = await fetchAllAthletes(pin);
             setAthletes(data);
+            // Refresh selected if open
+            if (selectedAthlete) {
+                const updated = data.find(a => a.id === selectedAthlete.id);
+                if (updated) setSelectedAthlete(updated);
+            }
         } catch (err) {
             console.error(err);
         } finally {
             setIsLoading(false);
         }
     };
+
+    const handleSaveGoals = async () => {
+        if (!selectedAthlete) return;
+        setIsSaving(true);
+        const success = await updateAthleteGoals(selectedAthlete.email, editGoals);
+        if (success) {
+            alert('Goals Updated!');
+            setIsEditingGoals(false);
+            refreshData();
+        } else {
+            alert('Failed to update goals.');
+        }
+        setIsSaving(false);
+    };
+
+    const handleSaveReview = async () => {
+        if (!selectedAthlete) return;
+        setIsSaving(true);
+        // Assuming PIN is needed for review, we use the logged-in PIN
+        const success = await updateCoachReview(selectedAthlete.email, pin, editReview.score, editReview.notes);
+        if (success) {
+            alert('Review Saved!');
+            setIsEditingReview(false);
+            refreshData();
+        } else {
+            alert('Failed to save review.');
+        }
+        setIsSaving(false);
+    };
+
 
     const getScoreColor = (score: number) => {
         if (score >= 90) return 'text-green-400';
@@ -222,7 +289,7 @@ export const AdminDashboard: React.FC = () => {
             {/* Detail Modal */}
             {selectedAthlete && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-                    <div className="bg-slate-900 border border-white/10 w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl">
+                    <div className="bg-slate-900 border border-white/10 w-full max-w-6xl max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl">
                         <div className="sticky top-0 bg-slate-900/95 backdrop-blur border-b border-white/10 p-6 flex items-center justify-between z-10">
                             <div className="flex items-center gap-4">
                                 <div className="h-12 w-12 rounded-full bg-slate-800 flex items-center justify-center text-xl font-bold text-white border border-white/10">
@@ -242,67 +309,135 @@ export const AdminDashboard: React.FC = () => {
                         </div>
 
                         <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
-                            {/* Left Col: Goals */}
+                            {/* Left Col: Goals (Editable) */}
                             <div className="space-y-6">
-                                <h3 className="text-lg font-semibold text-blue-400 flex items-center gap-2">
-                                    <AlertCircle className="w-5 h-5" /> Athlete Vision
-                                </h3>
-
-                                <div className="bg-slate-950/50 rounded-xl p-5 border border-white/5">
-                                    <div className="text-xs font-mono text-slate-500 uppercase mb-2">Year Goals</div>
-                                    <p className="text-white whitespace-pre-wrap leading-relaxed">
-                                        {selectedAthlete.goals?.year || <span className="text-slate-600 italic">Not set yet.</span>}
-                                    </p>
+                                <div className="flex items-center justify-between">
+                                    <h3 className="text-lg font-semibold text-blue-400 flex items-center gap-2">
+                                        <AlertCircle className="w-5 h-5" /> Athlete Vision
+                                    </h3>
+                                    <button
+                                        onClick={() => isEditingGoals ? handleSaveGoals() : setIsEditingGoals(true)}
+                                        className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${isEditingGoals ? 'bg-green-600 text-white' : 'bg-slate-800 text-slate-400 hover:text-white'}`}
+                                    >
+                                        {isEditingGoals ? (isSaving ? 'Saving...' : <><Save className="w-3 h-3" /> Save Changes</>) : <><Edit3 className="w-3 h-3" /> Edit Vision</>}
+                                    </button>
                                 </div>
 
-                                <div className="bg-slate-950/50 rounded-xl p-5 border border-white/5">
-                                    <div className="text-xs font-mono text-slate-500 uppercase mb-2">The Process</div>
-                                    <p className="text-white whitespace-pre-wrap leading-relaxed">
-                                        {selectedAthlete.goals?.process || <span className="text-slate-600 italic">Not set yet.</span>}
-                                    </p>
-                                </div>
-
-                                <div className="bg-slate-950/50 rounded-xl p-5 border border-white/5">
-                                    <div className="text-xs font-mono text-slate-500 uppercase mb-2">The Why</div>
-                                    <p className="text-white whitespace-pre-wrap leading-relaxed">
-                                        {selectedAthlete.goals?.why || <span className="text-slate-600 italic">Not set yet.</span>}
-                                    </p>
+                                <div className="bg-slate-950/50 rounded-xl p-5 border border-white/5 space-y-4">
+                                    <div>
+                                        <div className="text-xs font-mono text-slate-500 uppercase mb-2">Year Goals</div>
+                                        {isEditingGoals ? (
+                                            <textarea
+                                                value={editGoals.year}
+                                                onChange={(e) => setEditGoals({ ...editGoals, year: e.target.value })}
+                                                className="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-sm text-white focus:outline-none focus:border-blue-500 h-24"
+                                            />
+                                        ) : (
+                                            <p className="text-white whitespace-pre-wrap leading-relaxed border-l-2 border-blue-500/30 pl-3">
+                                                {selectedAthlete.goals?.year || <span className="text-slate-600 italic">Not set yet.</span>}
+                                            </p>
+                                        )}
+                                    </div>
+                                    <div>
+                                        <div className="text-xs font-mono text-slate-500 uppercase mb-2">The Process</div>
+                                        {isEditingGoals ? (
+                                            <textarea
+                                                value={editGoals.process}
+                                                onChange={(e) => setEditGoals({ ...editGoals, process: e.target.value })}
+                                                className="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-sm text-white focus:outline-none focus:border-blue-500 h-24"
+                                            />
+                                        ) : (
+                                            <p className="text-white whitespace-pre-wrap leading-relaxed border-l-2 border-purple-500/30 pl-3">
+                                                {selectedAthlete.goals?.process || <span className="text-slate-600 italic">Not set yet.</span>}
+                                            </p>
+                                        )}
+                                    </div>
+                                    <div>
+                                        <div className="text-xs font-mono text-slate-500 uppercase mb-2">The Why</div>
+                                        {isEditingGoals ? (
+                                            <textarea
+                                                value={editGoals.why}
+                                                onChange={(e) => setEditGoals({ ...editGoals, why: e.target.value })}
+                                                className="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-sm text-white focus:outline-none focus:border-blue-500 h-24"
+                                            />
+                                        ) : (
+                                            <p className="text-white whitespace-pre-wrap leading-relaxed border-l-2 border-yellow-500/30 pl-3">
+                                                {selectedAthlete.goals?.why || <span className="text-slate-600 italic">Not set yet.</span>}
+                                            </p>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
 
-                            {/* Right Col: Metrics Snapshot */}
+                            {/* Right Col: Admin Review & Metrics */}
                             <div className="space-y-6">
-                                <h3 className="text-lg font-semibold text-emerald-400 flex items-center gap-2">
-                                    <ActivityIcon className="w-5 h-5" /> Recent Metrics
-                                </h3>
+                                {/* Coach Review Block */}
+                                <div className="space-y-4">
+                                    <div className="flex items-center justify-between">
+                                        <h3 className="text-lg font-semibold text-purple-400 flex items-center gap-2">
+                                            <ActivityIcon className="w-5 h-5" /> Coach Review
+                                        </h3>
+                                        <button
+                                            onClick={() => isEditingReview ? handleSaveReview() : setIsEditingReview(true)}
+                                            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${isEditingReview ? 'bg-purple-600 text-white' : 'bg-slate-800 text-slate-400 hover:text-white'}`}
+                                        >
+                                            {isEditingReview ? (isSaving ? 'Saving...' : <><Save className="w-3 h-3" /> Save Review</>) : <><Edit3 className="w-3 h-3" /> Add Review</>}
+                                        </button>
+                                    </div>
 
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div className="bg-slate-800/40 p-4 rounded-xl border border-white/5">
-                                        <div className="text-slate-400 text-xs mb-1">Readiness</div>
-                                        <div className="text-2xl font-bold text-white">{selectedAthlete.readinessScore}%</div>
-                                    </div>
-                                    <div className="bg-slate-800/40 p-4 rounded-xl border border-white/5">
-                                        <div className="text-slate-400 text-xs mb-1">Last Sync</div>
-                                        <div className="text-xl font-bold text-white">{selectedAthlete.lastUpdated}</div>
-                                    </div>
-                                    <div className="bg-slate-800/40 p-4 rounded-xl border border-white/5">
-                                        <div className="text-slate-400 text-xs mb-1">Sleep Score</div>
-                                        <div className="text-2xl font-bold text-white">{selectedAthlete.sleep}/5</div>
-                                    </div>
-                                    <div className="bg-slate-800/40 p-4 rounded-xl border border-white/5">
-                                        <div className="text-slate-400 text-xs mb-1">Soreness</div>
-                                        <div className="text-2xl font-bold text-white">{selectedAthlete.soreness}/5</div>
+                                    <div className="bg-slate-950/50 rounded-xl p-5 border border-white/5 space-y-4">
+                                        {isEditingReview ? (
+                                            <>
+                                                <div>
+                                                    <label className="text-xs font-mono text-slate-500 uppercase mb-2 block">Performance Score (0-100)</label>
+                                                    <input
+                                                        type="number"
+                                                        value={editReview.score}
+                                                        onChange={(e) => setEditReview({ ...editReview, score: parseInt(e.target.value) || 0 })}
+                                                        className="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-white focus:outline-none focus:border-purple-500"
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="text-xs font-mono text-slate-500 uppercase mb-2 block">Clinical Notes</label>
+                                                    <textarea
+                                                        value={editReview.notes}
+                                                        onChange={(e) => setEditReview({ ...editReview, notes: e.target.value })}
+                                                        placeholder="Enter feedback for quarterly report..."
+                                                        className="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-sm text-white focus:outline-none focus:border-purple-500 h-32"
+                                                    />
+                                                </div>
+                                            </>
+                                        ) : (
+                                            <div className="flex items-center justify-center p-6 text-slate-500 italic text-sm border border-dashed border-white/10 rounded-xl">
+                                                Click "Add Review" to submit new scores & notes.
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
 
-                                {/* Additional Info */}
-                                <div className="bg-blue-900/10 p-4 rounded-xl border border-blue-500/20">
-                                    <div className="flex items-center gap-2 text-blue-400 font-semibold mb-2">
-                                        <Calendar className="w-4 h-4" /> Activity Monitor
+                                <div className="border-t border-white/5 pt-6">
+                                    <h3 className="text-lg font-semibold text-emerald-400 flex items-center gap-2 mb-4">
+                                        <ActivityIcon className="w-5 h-5" /> Metrics Snapshot
+                                    </h3>
+
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="bg-slate-800/40 p-4 rounded-xl border border-white/5">
+                                            <div className="text-slate-400 text-xs mb-1">Readiness</div>
+                                            <div className="text-2xl font-bold text-white">{selectedAthlete.readinessScore}%</div>
+                                        </div>
+                                        <div className="bg-slate-800/40 p-4 rounded-xl border border-white/5">
+                                            <div className="text-slate-400 text-xs mb-1">Last Sync</div>
+                                            <div className="text-xl font-bold text-white">{selectedAthlete.lastUpdated}</div>
+                                        </div>
+                                        <div className="bg-slate-800/40 p-4 rounded-xl border border-white/5">
+                                            <div className="text-slate-400 text-xs mb-1">Sleep Score</div>
+                                            <div className="text-2xl font-bold text-white">{selectedAthlete.sleep}/5</div>
+                                        </div>
+                                        <div className="bg-slate-800/40 p-4 rounded-xl border border-white/5">
+                                            <div className="text-slate-400 text-xs mb-1">Soreness</div>
+                                            <div className="text-2xl font-bold text-white">{selectedAthlete.soreness}/5</div>
+                                        </div>
                                     </div>
-                                    <p className="text-sm text-slate-300">
-                                        Admin can monitor activity here. Currently showing latest snapshot from Google Sheet.
-                                    </p>
                                 </div>
                             </div>
                         </div>
