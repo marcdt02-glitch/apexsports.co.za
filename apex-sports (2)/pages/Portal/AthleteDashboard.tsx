@@ -22,8 +22,7 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { generateTechnicalReport, generateDevelopmentReport, generateExecutiveReport, generateQuarterlyReport } from '../../services/ReportService';
 import { PortalCoaching } from '../../components/Coaching/PortalCoaching';
-import { CoachReviewModal } from '../../components/CoachReviewModal'; // Import Modal
-import { updateCoachReview } from '../../utils/googleIntegration'; // Import updateCoachReview
+
 
 
 // --- UI Components ---
