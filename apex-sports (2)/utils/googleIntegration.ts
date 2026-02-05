@@ -86,6 +86,36 @@ export const saveGoalQuery = async (email: string, newGoal: string): Promise<boo
     }
 };
 
+// Generic Metrics Update (Performance & Clinical)
+export const updateAthleteMetrics = async (email: string, pin: string, metrics: any): Promise<boolean> => {
+    try {
+        console.log("📤 Sending Metrics Update...", { email, metricsKeys: Object.keys(metrics) });
+
+        const params = new URLSearchParams();
+        params.append('action', 'update_metrics');
+        params.append('email', email);
+        params.append('pin', pin);
+        params.append('metrics', JSON.stringify(metrics));
+
+        const response = await fetch(APPS_SCRIPT_URL, {
+            method: 'POST',
+            body: params,
+        });
+
+        const result = await response.json();
+        if (result.status === 'success') {
+            console.log("✅ Metrics Saved to Sheet!");
+            return true;
+        } else {
+            console.warn("⚠️ Save Warning:", result.message);
+            return false;
+        }
+    } catch (e) {
+        console.error("❌ Failed to save metrics:", e);
+        return false;
+    }
+};
+
 export const fetchAthleteFromGoogle = async (email: string, pin: string): Promise<AthleteData | null> => {
     if (USE_MOCK_FALLBACK) {
         console.log("Google Integration: Using Mock Fallback");

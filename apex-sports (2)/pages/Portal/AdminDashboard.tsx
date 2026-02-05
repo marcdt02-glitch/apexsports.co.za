@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AthleteData } from '../../utils/dataEngine';
-import { fetchAllAthletes, updateAthleteGoals, updateCoachReview } from '../../utils/googleIntegration';
+import { fetchAllAthletes, updateAthleteGoals, updateCoachReview, updateAthleteMetrics } from '../../utils/googleIntegration';
 import {
     LayoutDashboard, Search, Lock, User, Activity, Calendar, Shield,
     Bell, ChevronRight, X, AlertCircle, RefreshCw, BarChart2, Edit3, Save, CheckCircle
@@ -23,6 +23,10 @@ export const AdminDashboard: React.FC = () => {
 
     const [isEditingReview, setIsEditingReview] = useState(false);
     const [editReview, setEditReview] = useState({ score: 0, notes: '' });
+
+    // New: Manual Metrics State
+    const [isEditingMetrics, setIsEditingMetrics] = useState(false);
+    const [editMetrics, setEditMetrics] = useState<any>({});
     const [isSaving, setIsSaving] = useState(false);
 
     // Initialize Edit State when Modal Opens
@@ -40,8 +44,25 @@ export const AdminDashboard: React.FC = () => {
                 // NOTE: 'Clinical Notes' isn't on the core AthleteData interface yet, typically. 
                 // We'll treat it as write-only for this iteration unless we see it in data.
             });
+
+            // Initialize Metrics
+            setEditMetrics({
+                imtpPeakForce: selectedAthlete.imtpPeakForce || 0,
+                broadJump: selectedAthlete.broadJump || 0,
+                agilityTime: selectedAthlete.agilityTime || 0,
+                readinessScore: selectedAthlete.readinessScore || 0,
+                // Clinical / Strength
+                kneeExtensionLeft: selectedAthlete.kneeExtensionLeft || 0,
+                kneeExtensionRight: selectedAthlete.kneeExtensionRight || 0,
+                hipAbductionLeft: selectedAthlete.hipAbductionLeft || 0,
+                hipAbductionRight: selectedAthlete.hipAbductionRight || 0,
+                adductionStrengthLeft: selectedAthlete.adductionStrengthLeft || 0,
+                adductionStrengthRight: selectedAthlete.adductionStrengthRight || 0,
+            });
+
             setIsEditingGoals(false);
             setIsEditingReview(false);
+            setIsEditingMetrics(false);
         }
     }, [selectedAthlete]);
 
@@ -123,6 +144,20 @@ export const AdminDashboard: React.FC = () => {
             refreshData();
         } else {
             alert('Failed to save review.');
+        }
+        setIsSaving(false);
+    };
+
+    const handleSaveMetrics = async () => {
+        if (!selectedAthlete) return;
+        setIsSaving(true);
+        const success = await updateAthleteMetrics(selectedAthlete.email, pin, editMetrics);
+        if (success) {
+            alert('Metrics Saved!');
+            setIsEditingMetrics(false);
+            refreshData();
+        } else {
+            alert('Failed to save metrics.');
         }
         setIsSaving(false);
     };
@@ -417,28 +452,85 @@ export const AdminDashboard: React.FC = () => {
                                 </div>
 
                                 <div className="border-t border-white/5 pt-6">
-                                    <h3 className="text-lg font-semibold text-emerald-400 flex items-center gap-2 mb-4">
-                                        <Activity className="w-5 h-5" /> Metrics Snapshot
+                                    <h3 className="text-lg font-semibold text-emerald-400 flex items-center justify-between gap-2 mb-4">
+                                        <div className="flex items-center gap-2">
+                                            <Activity className="w-5 h-5" /> Metrics Snapshot
+                                        </div>
+                                        <button
+                                            onClick={() => isEditingMetrics ? handleSaveMetrics() : setIsEditingMetrics(true)}
+                                            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${isEditingMetrics ? 'bg-emerald-600 text-white' : 'bg-slate-800 text-slate-400 hover:text-white'}`}
+                                        >
+                                            {isEditingMetrics ? (isSaving ? 'Saving...' : <><Save className="w-3 h-3" /> Save Metrics</>) : <><Edit3 className="w-3 h-3" /> Edit Data</>}
+                                        </button>
                                     </h3>
 
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <div className="bg-slate-800/40 p-4 rounded-xl border border-white/5">
-                                            <div className="text-slate-400 text-xs mb-1">Readiness</div>
-                                            <div className="text-2xl font-bold text-white">{selectedAthlete.readinessScore}%</div>
+                                    {isEditingMetrics ? (
+                                        <div className="grid grid-cols-2 gap-4">
+                                            {/* Readiness */}
+                                            <div className="space-y-1">
+                                                <label className="text-xs text-slate-500 uppercase">Readiness %</label>
+                                                <input type="number" value={editMetrics.readinessScore} onChange={(e) => setEditMetrics({ ...editMetrics, readinessScore: Number(e.target.value) })} className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white" />
+                                            </div>
+                                            {/* IMTP */}
+                                            <div className="space-y-1">
+                                                <label className="text-xs text-slate-500 uppercase">Peak Force (N)</label>
+                                                <input type="number" value={editMetrics.imtpPeakForce} onChange={(e) => setEditMetrics({ ...editMetrics, imtpPeakForce: Number(e.target.value) })} className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white" />
+                                            </div>
+                                            {/* Broad Jump */}
+                                            <div className="space-y-1">
+                                                <label className="text-xs text-slate-500 uppercase">Broad Jump (cm)</label>
+                                                <input type="number" value={editMetrics.broadJump} onChange={(e) => setEditMetrics({ ...editMetrics, broadJump: Number(e.target.value) })} className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white" />
+                                            </div>
+                                            {/* Agility */}
+                                            <div className="space-y-1">
+                                                <label className="text-xs text-slate-500 uppercase">Agility (s)</label>
+                                                <input type="number" value={editMetrics.agilityTime} onChange={(e) => setEditMetrics({ ...editMetrics, agilityTime: Number(e.target.value) })} className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white" />
+                                            </div>
+
+                                            {/* Divider */}
+                                            <div className="col-span-2 border-t border-white/5 my-2"></div>
+                                            <div className="col-span-2 text-xs font-bold text-slate-500 uppercase mb-2">Clinical Data</div>
+
+                                            {/* Knee Ext L/R */}
+                                            <div className="space-y-1">
+                                                <label className="text-xs text-slate-500 uppercase">Knee Ext L</label>
+                                                <input type="number" value={editMetrics.kneeExtensionLeft} onChange={(e) => setEditMetrics({ ...editMetrics, kneeExtensionLeft: Number(e.target.value) })} className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white" />
+                                            </div>
+                                            <div className="space-y-1">
+                                                <label className="text-xs text-slate-500 uppercase">Knee Ext R</label>
+                                                <input type="number" value={editMetrics.kneeExtensionRight} onChange={(e) => setEditMetrics({ ...editMetrics, kneeExtensionRight: Number(e.target.value) })} className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white" />
+                                            </div>
+
+                                            {/* Hip Abd L/R */}
+                                            <div className="space-y-1">
+                                                <label className="text-xs text-slate-500 uppercase">Hip Abd L</label>
+                                                <input type="number" value={editMetrics.hipAbductionLeft} onChange={(e) => setEditMetrics({ ...editMetrics, hipAbductionLeft: Number(e.target.value) })} className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white" />
+                                            </div>
+                                            <div className="space-y-1">
+                                                <label className="text-xs text-slate-500 uppercase">Hip Abd R</label>
+                                                <input type="number" value={editMetrics.hipAbductionRight} onChange={(e) => setEditMetrics({ ...editMetrics, hipAbductionRight: Number(e.target.value) })} className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white" />
+                                            </div>
                                         </div>
-                                        <div className="bg-slate-800/40 p-4 rounded-xl border border-white/5">
-                                            <div className="text-slate-400 text-xs mb-1">Last Sync</div>
-                                            <div className="text-xl font-bold text-white">{selectedAthlete.lastUpdated}</div>
+                                    ) : (
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div className="bg-slate-800/40 p-4 rounded-xl border border-white/5">
+                                                <div className="text-slate-400 text-xs mb-1">Readiness</div>
+                                                <div className="text-2xl font-bold text-white">{selectedAthlete.readinessScore}%</div>
+                                            </div>
+                                            <div className="bg-slate-800/40 p-4 rounded-xl border border-white/5">
+                                                <div className="text-slate-400 text-xs mb-1">Last Sync</div>
+                                                <div className="text-xl font-bold text-white">{selectedAthlete.lastUpdated}</div>
+                                            </div>
+                                            <div className="bg-slate-800/40 p-4 rounded-xl border border-white/5">
+                                                <div className="text-slate-400 text-xs mb-1">Sleep Score</div>
+                                                <div className="text-2xl font-bold text-white">{selectedAthlete.sleep}/5</div>
+                                            </div>
+                                            <div className="bg-slate-800/40 p-4 rounded-xl border border-white/5">
+                                                <div className="text-slate-400 text-xs mb-1">Soreness</div>
+                                                <div className="text-2xl font-bold text-white">{selectedAthlete.soreness}/5</div>
+                                            </div>
                                         </div>
-                                        <div className="bg-slate-800/40 p-4 rounded-xl border border-white/5">
-                                            <div className="text-slate-400 text-xs mb-1">Sleep Score</div>
-                                            <div className="text-2xl font-bold text-white">{selectedAthlete.sleep}/5</div>
-                                        </div>
-                                        <div className="bg-slate-800/40 p-4 rounded-xl border border-white/5">
-                                            <div className="text-slate-400 text-xs mb-1">Soreness</div>
-                                            <div className="text-2xl font-bold text-white">{selectedAthlete.soreness}/5</div>
-                                        </div>
-                                    </div>
+                                    )}
                                 </div>
                             </div>
                         </div>
