@@ -65,7 +65,8 @@ export const AdminDashboard: React.FC = () => {
 
         try {
             // "9900" is hardcoded in google_apps_script.js for now as the admin key
-            const data = await fetchAllAthletes(pin);
+            const securePin = pin.trim();
+            const data = await fetchAllAthletes(securePin);
             if (data && data.length > 0) {
                 setAthletes(data);
                 setIsAuthenticated(true);

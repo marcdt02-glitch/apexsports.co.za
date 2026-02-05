@@ -177,7 +177,7 @@ export const fetchAllAthletes = async (pin: string): Promise<AthleteData[]> => {
         throw new Error(data.message || "Failed to fetch athletes");
     } catch (err) {
         console.error("Admin Fetch Error:", err);
-        if (pin === '9900') {
+        if (pin.trim() === '9900') {
             console.warn("⚠️ Using Fallback Mock Data for Admin Verification");
             // Use local mock data logic
             return parseAthleteData(MOCK_CSV_DATA);

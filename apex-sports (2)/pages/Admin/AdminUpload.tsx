@@ -13,7 +13,7 @@ const AdminUpload: React.FC = () => {
 
     const handleLogin = (e: React.FormEvent) => {
         e.preventDefault();
-        if (password === 'apex2025') {
+        if (password.trim() === 'apex2025') {
             setIsAuthenticated(true);
         } else {
             alert('Incorrect Password');
