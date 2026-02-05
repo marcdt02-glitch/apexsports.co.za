@@ -112,6 +112,7 @@ export interface AthleteData {
         why: string;
     };
     membershipType?: 'Standard' | 'PRG'; // NEW: Tenant support
+    clinicalNotes?: string; // v17.1 Coach Review Notes
 
     // v38.0 Direct Score Mapping (Backend Calculated)
     performanceScore?: number;
@@ -278,6 +279,7 @@ export const parseAthleteData = (csvString: string): AthleteData[] => {
             scoreAnkle: normAnkle,
             scoreShoulder: Math.min(100, (row['Shoulder Balance'] || 1) * 100),
             scoreNeck: Math.min(100, (row['Neck Ext'] || 200) / 3),
+            clinicalNotes: row['Clinical Notes'] || row['Notes'] || '',
         };
     });
 };

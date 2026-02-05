@@ -350,6 +350,7 @@ const mapGoogleRowToAthlete = (row: any): AthleteData => {
             year: row['Year Goals'] || row['goalsYear'] || '',
             process: row['The Process'] || row['goalsProcess'] || '',
             why: row['The Why'] || row['goalsWhy'] || ''
-        }
+        },
+        clinicalNotes: row['Clinical Notes'] || row['Notes'] || '',
     };
 };

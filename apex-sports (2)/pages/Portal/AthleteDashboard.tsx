@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom'; // Added useNavigate
 import { useData } from '../../context/DataContext';
-import { analyzeAthlete } from '../../utils/dataEngine';
+import { analyzeAthlete, AthleteData } from '../../utils/dataEngine'; // Added AthleteData
 import SafetyGuard from '../../components/SafetyGuard';
 import {
     RadialBarChart, RadialBar, PolarAngleAxis,
@@ -13,9 +13,9 @@ import {
     AlertTriangle, CheckCircle, UploadCloud, AlertCircle, Zap,
     LayoutDashboard, Target, BookOpen, FileText, Menu, X, Save, ExternalLink,
     Activity, Shield, Battery, TrendingUp, ChevronRight, Lock, User, LogOut, MonitorPlay, Home, CheckSquare, BarChart2, Sliders, Layers, Info, Video, Users, Brain, Award, Triangle, Download,
-    Calendar, ChevronLeft, Dumbbell, Settings, Edit3 // Added for lucide-react
+    Calendar, ChevronLeft, Dumbbell, Settings, Edit3, Check, Clock, MapPin, MessageSquare, Play, Search, Sparkles // Added Check, Clock, MapPin, MessageSquare, Play, Search, Sparkles
 } from 'lucide-react';
-import { updateAthleteGoals } from '../../utils/googleIntegration';
+import { updateAthleteGoals, updateCoachReview } from '../../utils/googleIntegration';
 import { VideoLab } from '../../components/VideoLab/VideoLab';
 import { ApexAgent } from '../../components/ApexAI/ApexAgent';
 import html2canvas from 'html2canvas';
@@ -207,6 +207,40 @@ const AthleteDashboard: React.FC = () => {
         why: ''
     });
     const [isEditingGoals, setIsEditingGoals] = useState(false);
+
+    // COACH REVIEW STATE (Physical Dash)
+    const [isEditingReview, setIsEditingReview] = useState(false);
+    const [reviewPin, setReviewPin] = useState('');
+    const [editReview, setEditReview] = useState({ score: 0, notes: '' });
+    const [isReviewSaving, setIsReviewSaving] = useState(false);
+
+    const handleEnterEditReview = () => {
+        const input = prompt("Enter Admin PIN to Edit:");
+        if (input === '9900') {
+            setEditReview({
+                score: athlete?.performanceScore || 0,
+                notes: athlete?.clinicalNotes || ''
+            });
+            setIsEditingReview(true);
+        } else {
+            alert("Incorrect PIN");
+        }
+    };
+
+    const handleSaveReview = async () => {
+        if (!athlete) return;
+        setIsReviewSaving(true);
+        // We use '9900' as the validated pin since we entered mode
+        const success = await updateCoachReview(athlete.email, '9900', editReview.score, editReview.notes);
+        if (success) {
+            alert("Review Saved! Refreshing...");
+            setIsEditingReview(false);
+            window.location.reload(); // Simple refresh to fetch new data
+        } else {
+            alert("Failed to save.");
+        }
+        setIsReviewSaving(false);
+    };
 
     // Initialize Goals from LocalStorage (or Athlete Data if available in future)
     useEffect(() => {
@@ -1585,6 +1619,78 @@ const AthleteDashboard: React.FC = () => {
                                     {/* Right Column: Recommendations & Workload (v15.1) */}
                                     {physicalViewMode === 'advanced' && (
                                         <div className="space-y-8">
+
+                                            {/* v17.1 Coach Review (Admin Editable) */}
+                                            <div className="bg-neutral-900/40 border border-neutral-800 p-6 rounded-3xl relative overflow-hidden">
+                                                <div className="flex items-center justify-between mb-4 relative z-10">
+                                                    <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500 flex items-center gap-2">
+                                                        <Shield className="w-4 h-4 text-emerald-400" />
+                                                        Coach Review
+                                                    </h3>
+                                                    <button
+                                                        onClick={() => isEditingReview ? handleSaveReview() : handleEnterEditReview()}
+                                                        className={`text-[10px] px-2 py-1 rounded font-bold flex items-center gap-1 transition-colors ${isEditingReview ? 'bg-emerald-600 text-white' : 'bg-neutral-800 text-gray-400 hover:text-white'}`}
+                                                    >
+                                                        {isEditingReview ? (isReviewSaving ? 'Saving...' : <><Save className="w-3 h-3" /> Save</>) : <><Edit3 className="w-3 h-3" /> Edit</>}
+                                                    </button>
+                                                </div>
+
+                                                <div className="relative z-10">
+                                                    {isEditingReview ? (
+                                                        <div className="space-y-4">
+                                                            <div>
+                                                                <label className="text-[10px] text-gray-500 uppercase font-bold">Performance Score</label>
+                                                                <input
+                                                                    type="number"
+                                                                    value={editReview.score}
+                                                                    onChange={(e) => setEditReview({ ...editReview, score: parseInt(e.target.value) || 0 })}
+                                                                    className="w-full bg-black border border-neutral-700 rounded p-2 text-white font-mono text-sm mt-1 focus:border-emerald-500 outline-none"
+                                                                />
+                                                            </div>
+                                                            <div>
+                                                                <label className="text-[10px] text-gray-500 uppercase font-bold">Clinical Notes</label>
+                                                                <textarea
+                                                                    value={editReview.notes}
+                                                                    onChange={(e) => setEditReview({ ...editReview, notes: e.target.value })}
+                                                                    className="w-full bg-black border border-neutral-700 rounded p-2 text-white text-sm mt-1 focus:border-emerald-500 outline-none h-24 resize-none"
+                                                                />
+                                                            </div>
+                                                            <button onClick={() => setIsEditingReview(false)} className="text-xs text-red-500 hover:underline">Cancel</button>
+                                                        </div>
+                                                    ) : (
+                                                        <div className="grid grid-cols-1 gap-4">
+                                                            <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-4 flex items-center justify-between">
+                                                                <div>
+                                                                    <p className="text-xs text-gray-500 font-bold uppercase">Performance Score</p>
+                                                                    <p className={`text-2xl font-black ${athlete.performanceScore && athlete.performanceScore >= 90 ? 'text-emerald-400' : athlete.performanceScore && athlete.performanceScore >= 80 ? 'text-blue-400' : 'text-yellow-400'}`}>
+                                                                        {athlete.performanceScore || '-'}
+                                                                    </p>
+                                                                </div>
+                                                                <Activity className="w-8 h-8 text-neutral-800" />
+                                                            </div>
+                                                            {athlete.clinicalNotes ? (
+                                                                <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-4">
+                                                                    <p className="text-xs text-gray-500 font-bold uppercase mb-2">Clinical Notes</p>
+                                                                    <p className="text-sm text-gray-300 leading-relaxed whitespace-pre-wrap">
+                                                                        "{athlete.clinicalNotes}"
+                                                                    </p>
+                                                                    <div className="mt-3 flex items-center gap-2 text-[10px] text-gray-600">
+                                                                        <User className="w-3 h-3" />
+                                                                        <span>Head Coach • {new Date().toLocaleDateString()}</span>
+                                                                    </div>
+                                                                </div>
+                                                            ) : (
+                                                                <div className="text-center py-4 border border-dashed border-neutral-800 rounded-xl">
+                                                                    <p className="text-xs text-gray-600 italic">No review notes available.</p>
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    )}
+                                                </div>
+
+                                                {/* Background Decoration */}
+                                                <div className="absolute -top-10 -right-10 w-32 h-32 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                                            </div>
 
                                             {/* Recommendations */}
 
